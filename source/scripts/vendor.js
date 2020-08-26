@@ -1,0 +1,1 @@
+// const Highcharts = require('highcharts');

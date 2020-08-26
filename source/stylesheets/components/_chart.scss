@@ -1,0 +1,341 @@
+.charts {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.chart {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: width 0.3s ease-out, height 0.5s, transform 0.5s;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 0 2rem;
+  }
+}
+
+.chart__half {
+  width: 100%;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: 48%;
+  }
+}
+
+.chart__half--pt-chart {
+  order: 1;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: initial;
+  }
+}
+
+.chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  order: 2;
+  width: 100%;
+  margin-top: 1.5rem;
+  margin-bottom: 3.5rem;
+  font-size: ms(-1);
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: initial;
+  }
+}
+
+.chart__table-helper {
+  order: 3;
+  width: 100%;
+  font-size: ms(2);
+  font-family: $roboto-font-stack;
+  text-align: center;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: initial;
+  }
+}
+
+.chart__half--pt-table {
+  order: 4;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: initial;
+  }
+}
+
+.chart__half--mat-chart {
+  order: 5;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: initial;
+  }
+}
+
+.chart__legend--mat-legend {
+  order: 6;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    display: none;
+    order: initial;
+  }
+}
+
+.chart__half--mat-table {
+  order: 7;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: initial;
+  }
+}
+
+.chart__legend strong {
+  width: 100%;
+  text-align: center;
+}
+
+.chart__label {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 1rem;
+
+  &::before {
+    display: inline-block;
+    width: 0.8em;
+    height: 0.8em;
+    margin-right: 0.3rem;
+    border-radius: 50%;
+    content: '';
+  }
+}
+
+.chart__label-desigualdade-extrema {
+  &::before {
+    background-color: palette('graph_inequality', 'desigualdade-extrema');
+  }
+}
+
+.chart__label-desigualdade {
+  &::before {
+    background-color: palette('graph_inequality', 'desigualdade');
+  }
+}
+
+.chart__label-desigualdade-alta {
+  &::before {
+    background-color: palette('graph_inequality', 'desigualdade-alta');
+  }
+}
+
+.chart__label-equidade {
+  &::before {
+    background-color: palette('graph_inequality', 'equidade');
+  }
+}
+
+.chart__label-situacoes-atipicas {
+  &::before {
+    background-color: palette('graph_inequality', 'situacoes-atipicas');
+  }
+}
+
+.chart.hidden {
+  width: 0;
+  height: 0;
+  padding: 0;
+  transform: scale(0);
+  transform-origin: center;
+}
+
+.chart.expanded {
+  display: block;
+  width: 100%;
+  padding: 0 2rem;
+  transform: scale(1);
+  transform-origin: center;
+}
+
+.chart.expanded .chart__button--shrink {
+  display: inline-block;
+}
+
+.chart.expanded .chart__button--expand {
+  @media screen and (min-width: breakpoint('desktop')) {
+    display: none;
+  }
+}
+
+.chart__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.chart__button {
+  display: inline-block;
+  width: 2.2rem;
+  height: 2.2rem;
+  margin-left: 0.8em;
+  text-indent: -999em;
+  background-position: center;
+  background-color: transparent;
+  border: 0;
+}
+
+.chart__button--download {
+  background-image: image('download.svg');
+  background-size: 60%;
+  border: 2px solid palette('purple');
+  border-radius: 10px;
+}
+
+.chart__button--expand {
+  display: none;
+  background-image: image('expand.svg');
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    display: inline-block;
+  }
+}
+
+.chart__button--shrink {
+  display: none;
+  background-image: image('shrink.svg');
+}
+
+.chart__header h1 {
+  font-weight: 300;
+}
+
+.chart__main {
+  @extend %loading-bg;
+
+  display: block;
+  width: 100%;
+  min-height: 25em;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    height: 21.875em;
+  }
+}
+
+.chart__main--margin-top {
+  margin-top: 3.875rem;
+}
+
+.chart__main--mat {
+  @media screen and (min-width: breakpoint('desktop')) {
+    // margin-bottom: 11.4rem;
+  }
+}
+
+.chart__table {
+  width: 100%;
+}
+
+.chart__table h2 {
+  font-weight: 300;
+  color: palette('purple');
+  border-bottom: 1px solid palette('gray');
+}
+
+// .chart:nth-child(2) .chart__table h2 {
+//   @media screen and (min-width: breakpoint('desktop')) {
+//     display: none;
+//   }
+// }
+
+.chart__table h3 {
+  margin-bottom: 0.5rem;
+  font-size: ms(2);
+}
+
+.pt-crossed-table h4,
+.mat-crossed-table h4 {
+  padding-top: 1.5rem;
+  margin-top: 1.5rem;
+  font-size: ms(2);
+  border-top: 1px solid palette('gray');
+}
+
+.chart.expanded .chart__table tbody {
+  display: flex;
+}
+
+.chart.expanded .chart__table tr {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.chart.expanded .chart__table td {
+  width: 100%;
+}
+
+.chart.expanded .chart__table td:nth-child(2n) {
+  text-align: left;
+}
+
+// .desigualdade-extrema,
+// .desigualdade-alta,
+// .desigualdade,
+// .equidade,
+// .situacoes-atipicas {
+//   opacity: 0.8;
+// }
+
+.desigualdade-extrema {
+  fill: palette('graph_inequality', 'desigualdade-extrema');
+
+  &.highcharts-point-select {
+    fill: palette('graph_inequality', 'desigualdade-extrema-destak');
+  }
+}
+
+.desigualdade-alta {
+  fill: palette('graph_inequality', 'desigualdade-alta');
+
+  &.highcharts-point-select {
+    fill: palette('graph_inequality', 'desigualdade-alta-destak');
+  }
+}
+
+.desigualdade {
+  fill: palette('graph_inequality', 'desigualdade');
+
+  &.highcharts-point-select {
+    fill: palette('graph_inequality', 'desigualdade-destak');
+  }
+}
+
+.equidade {
+  fill: palette('graph_inequality', 'equidade');
+
+  &.highcharts-point-select {
+    fill: palette('graph_inequality', 'equidade-destak');
+  }
+}
+
+.situacoes-atipicas {
+  fill: palette('graph_inequality', 'situacoes-atipicas');
+
+  &.highcharts-point-select {
+    fill: palette('graph_inequality', 'situacoes-atipicas-destak');
+  }
+}
+
+.highcharts-point-hover,
+.highcharts-point-select {
+  opacity: 1;
+  // fill: palette('purple');
+  stroke: palette('white');
+  stroke-width: 1px;
+}
+

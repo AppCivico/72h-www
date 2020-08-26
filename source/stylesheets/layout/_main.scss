@@ -1,0 +1,13 @@
+.container {
+  @include container;
+}
+
+.container--small {
+  width: 100%;
+  max-width: 59rem;
+  margin: 0 auto;
+}
+
+html {
+  scroll-behavior: smooth;
+}

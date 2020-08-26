@@ -1,0 +1,123 @@
+.overflow {
+  overflow: hidden;
+  @media screen and (min-width: breakpoint('desktop')) {
+    overflow: visible;
+  }
+}
+
+.bg-yellow {
+  position: relative;
+  background: palette('yellow');
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    padding-top: 5em;
+    padding-bottom: 3em;
+  }
+
+  &::before {
+    position: absolute;
+    top: -5.5em;
+    display: block;
+    width: 100%;
+    height: 5.5em;
+    background-image: image('wave-yellow.svg');
+    background-size: cover;
+    content: ' ';
+
+    @media screen and (min-width: breakpoint('tablet')) {
+      top: -7em;
+      height: 7em;
+    }
+
+    @media screen and (min-width: breakpoint('desktop')) {
+      top: -27.2em;
+      height: 27.2em;
+      background-size: cover;
+    }
+  }
+}
+
+.hero-secondary {
+  @include container;
+  position: relative;
+
+  display: flex;
+
+  width: 20em;
+
+  padding-bottom: 11em;
+
+  margin: 0 auto;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+
+    width: auto;
+    max-width: 93.75em;
+
+    padding-top: 4em;
+
+    margin-top: -17rem;
+  }
+
+  @media screen and (min-width: breakpoint('wide')) {
+    padding-bottom: 11rem;
+  }
+}
+
+.hero-secondary__text {
+  min-width: 180px;
+  padding-right: 0.3em;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    max-width: 25em;
+    padding-right: 1.2em;
+    margin-bottom: 10em;
+    margin-left: 5em;
+  }
+}
+
+.hero-secondary__text h2 {
+  padding: 0;
+  margin: 0;
+
+  font-size: ms(13);
+
+  text-shadow: 1px 0 1px palette('red'), -1px 1px 0 palette('green');
+
+  color: palette('purple');
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    font-size: ms(16);
+  }
+}
+
+.hero-secondary__text p {
+  font-size: ms(0);
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    font-size: ms(1);
+  }
+}
+
+.hero-secondary__images {
+  min-width: 7.625em;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    position: relative;
+
+    min-width: 37rem;
+
+    margin-bottom: -4.25em;
+  }
+}
+
+.wave-green {
+  position: relative;
+  display: none;
+
+  width: 100%;
+
+  margin-top: -8em;
+}

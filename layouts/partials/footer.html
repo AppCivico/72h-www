@@ -1,0 +1,52 @@
+<footer class="footer">
+  <div class="container">
+    <img class="footer__logo" src="/images/logo-footer.svg" alt="{{ .Site.Params.title }}">
+    {{ i18n "footerDescription" }}
+
+    <nav>
+      <ul class="footer__menu">
+        {{ with .Site.Menus.header }}
+          {{ range . }}
+          <li>
+            <a href="{{ .URL }}">
+              {{ .Name }}
+            </a>
+          </li>
+          {{ end }}
+        {{ end }}
+      </ul>
+    </nav>
+
+    <address>
+      <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
+    </address>
+
+  {{ with $.Site.Data.socialMedia }}
+
+  <style>
+    {{ range .list }}
+      {{ if .svg }}
+        .{{ .name }} {
+          background-image: url("{{ .svg }}");
+          background-size: 55%;
+          background-position: center;
+        }
+      {{ end }}
+    {{ end }}
+  </style>
+
+  <ul class="social">
+      {{ range .list }}
+      <li>
+          <a href="{{ .url }}" title="{{ .name }}" rel="noopener" class="{{ .name }}">
+          </a>
+      </li>
+      {{ end }}
+  </ul>
+  {{ end }}
+
+    <span class="developed-by">
+      {{ i18n "developedBy" }}
+    </span>
+  </div>
+</footer>

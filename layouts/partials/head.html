@@ -1,0 +1,39 @@
+<html lang="{{ with .Site.Language.Params.locale }}{{ . }}{{ else }}{{ .Site.LanguageCode }}{{ end }}"
+  class="{{ if .IsHome }}home-page {{ end }}{{ $.Scratch.Get "rootClass" }}
+  {{ .Params.rootClass }} {{ if eq (getenv "NODE_ENV") "development" }}grid{{ end }} no-js">
+<head>
+  <meta content="IE=edge" http-equiv="X-UA-Compatible">
+
+  <meta charset="utf-8">
+
+  <link rel="dns-prefetch" href="https://cdn.polyfill.io/">
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+
+  <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
+
+  {{ $style := resources.Get "assets/styles/main.css" | resources.Minify | resources.Fingerprint "sha512" }}
+
+  <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
+
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+
+
+  {{ $vendorJS := resources.Get "assets/scripts/vendor.js" }}
+  {{ $secureVendorJS := $vendorJS | resources.Minify | resources.Fingerprint "sha512" }}
+  <link rel="preload" type="text/javascript" as="script"
+    href="{{ $secureVendorJS.RelPermalink }}" integrity="{{ $secureVendorJS.Data.Integrity }}">
+
+  {{ $js := resources.Get "assets/scripts/index.js" }}
+  {{ $secureJS := $js | resources.Minify | resources.Fingerprint "sha512" }}
+  <link rel="preload" type="text/javascript" as="script"
+    href="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}">
+
+  <script type="text/javascript">
+    document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, '');
+  </script>
+
+  <title>{{ if not .IsHome }}{{ .Title }} &middot; {{ end }}{{ .Site.Title }}</title>
+
+  <!-- Polyfills must load sync, since they need to be active before other script runs -->
+  <script src="https://cdn.polyfill.io/v2/polyfill.min.js"></script>
+</head>

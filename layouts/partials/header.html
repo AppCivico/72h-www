@@ -1,0 +1,24 @@
+<header class="main-header">
+  <div class="main-header__logo">
+    <h1>{{ .Site.Params.name }}</h1>
+  </div>
+  <nav class="main-header__nav">
+    <button class="js-menu-toggle">{{ i18n "menu" }}</button>
+    <div class="main-header__menu-area">
+      <span class="main-header__update">{{ i18n "updateTimes" }}</span>
+      <ul class="js-menu-list">
+        {{ $firstUrlElement := print "/" (index (split .URL "/") 1)  }}
+
+        {{ with .Site.Menus.header }}
+          {{ range . }}
+          <li>
+            <a class="{{ if eq ($firstUrlElement|lower) .URL }} active {{end}}" href="{{ .URL }}">
+              {{ .Name }}
+            </a>
+          </li>
+          {{ end }}
+        {{ end }}
+      </ul>
+    </div>
+  </nav>
+</header>

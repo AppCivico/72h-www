@@ -1,0 +1,47 @@
+.main-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: 1.5rem;
+}
+
+.main-header__logo {
+  position: relative;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+  background-color: palette('main-colors', 'primary');
+  border-right: 6px solid palette('main-colors', 'secondary');
+
+  &::before,
+  &::after {
+    position: absolute;
+    top: 0;
+    right: -0.75rem;
+    display: block;
+    width: 0.375rem;
+    height: 100%;
+    background-color: palette('main-colors', 'tertiary');
+    content: '';
+  }
+
+  &::after {
+    right: -1.125rem;
+    background-color: palette('main-colors', 'quaternary');
+  }
+}
+
+.main-header__logo h1 {
+  @include image-replacement;
+  width: 5.625rem;
+  padding-left: 1rem;
+
+  margin: 0;
+  background-image: image('logo.svg');
+  background-position: center;
+  background-size: contain;
+
+}
+
+.main-header__menu-area {
+  display: none;
+}

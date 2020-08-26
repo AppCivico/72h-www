@@ -1,0 +1,130 @@
+table,
+thead,
+tbody,
+tfoot,
+tr,
+th,
+td {
+  width: auto;
+  height: auto;
+
+  vertical-align: top;
+
+  background-color: transparent;
+
+  border: 0;
+}
+
+table {
+  width: 100%;
+  margin-top: 0;
+  margin-right: 0;
+  margin-bottom: #{$leading * 1em} ;
+  margin-left: 0;
+
+  font-family: inherit;
+  font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'pnum' 0, 'tnum' 1, 'onum' 0, 'lnum' 1, 'dlig' 0;
+
+  border-collapse: collapse;
+  empty-cells: show;
+}
+
+caption {
+}
+
+thead,
+tfoot {
+  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+    display: none;
+  }
+}
+
+tr {
+  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+    @include fallback('margin', 0 0 1.5rem);
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+th {
+  font-weight: bold;
+}
+
+td {
+  font-family: inherit;
+
+  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+    &:empty {
+      display: none;
+    }
+  }
+}
+
+thead th,
+thead td {
+  text-align: left;
+  vertical-align: bottom;
+}
+
+thead th:first-child,
+tfoot th:first-child {
+  text-align: left;
+}
+
+thead > tr:nth-last-of-type(odd) > th,
+thead > tr:nth-last-of-type(odd) > td {
+}
+
+tbody {
+  font-weight: bold;
+  font-family: $roboto-font-stack;
+  color: palette('black', 'lighter');
+}
+
+tbody th {
+  text-align: left;
+}
+
+tbody .destak {
+  color: palette('red');
+}
+
+
+tbody td {
+  // text-align: right;
+
+  font-variant-numeric: lining-nums oldstyle-nums;
+
+  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+    text-align: left;
+
+    &[aria-label] {
+      &::before {
+        display: inline;
+
+        font-weight: font-weight('bold');
+
+        content: attr(aria-label)':\A0';
+      }
+    }
+  }
+}
+
+td img {
+  vertical-align: top;
+}
+
+tbody tr:nth-of-type(odd) > th,
+tbody tr:nth-of-type(odd) > td {
+  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+    background-color: transparent;
+  }
+}
+
+tfoot th,
+tfoot td {
+  vertical-align: top;
+}

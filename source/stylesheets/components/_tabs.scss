@@ -1,0 +1,41 @@
+.tabs {
+  padding: 1rem 0;
+}
+
+.tabs__controller {
+  display: flex;
+  margin-bottom: 2rem;
+  text-align: center;
+}
+
+.tabs__controller a {
+  width: 50%;
+  padding: 0.3rem 0;
+  color: palette('black');
+
+  @media screen and (min-width: breakpoint('tablet')) {
+    font-size: ms(2);
+  }
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    font-size: ms(3);
+  }
+}
+
+.tabs__controller .active {
+  border-bottom: 2px solid palette('gray');
+}
+
+.tabs__content > * {
+  display: none;
+}
+
+.tabs__content > .visible {
+  display: block;
+}
+
+.tabs li {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: 0;
+}

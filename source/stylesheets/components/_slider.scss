@@ -1,0 +1,24 @@
+.slider {
+  @media screen and (min-width: breakpoint('desktop')) {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.tns-nav {
+  text-align: center;
+}
+
+.tns-nav button {
+  width: 1em;
+  height: 1em;
+  padding: 0;
+  margin: 0.2em;
+  background: palette('gray');
+  border: 0;
+  border-radius: 50%;
+}
+
+.tns-nav .tns-nav-active {
+  background: palette('green');
+}

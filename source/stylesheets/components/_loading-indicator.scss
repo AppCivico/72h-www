@@ -1,0 +1,13 @@
+.no-js .js-loading-indicator {
+  display: none;
+}
+
+.js-loading-indicator {
+  @extend %loading-bg;
+  width: 100%;
+  height: 4.375rem;
+  text-indent: -999em;
+  background-position: left;
+  background-color: transparent;
+}
+

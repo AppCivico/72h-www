@@ -1,0 +1,131 @@
+.posts {
+  @media screen and (min-width: breakpoint('tablet')) {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+
+.posts__post {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 3rem;
+
+  @media screen and (min-width: breakpoint('tablet')) {
+    width: calc(100% / 3);
+    padding: 0 1rem;
+
+    &:nth-child(3n+1) {
+      padding-left: 0;
+    }
+  }
+}
+
+.posts--details .posts__post {
+  @media screen and (min-width: breakpoint('tablet')) {
+    width: 100%;
+  }
+}
+
+.posts__main-title {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.posts__title {
+  display: block;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  font-weight: 100;
+  font-size: ms(3);
+}
+
+.posts__title--bold {
+  font-weight: bold;
+}
+
+.posts__author {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: ms(1);
+}
+
+.posts__tags {
+  display: flex;
+  flex-flow: row wrap;
+  flex-wrap: wrap;
+  padding-bottom: 1rem;
+  margin-top: 0;
+  list-style: none;
+  border-bottom: 2px solid palette('gray', 'light');
+}
+
+.posts__tags li {
+  padding-bottom: 0;
+  margin-bottom: 0;
+  margin-left: 0.5rem;
+  border-bottom: 0;
+}
+
+.posts__tags a {
+  font-style: italic;
+  text-decoration: underline;
+  color: palette('black', 'lighter');
+}
+
+.posts__image {
+  margin-bottom: 2rem;
+  line-height: 0;
+  text-align: center;
+  background: palette('gray', 'light');
+}
+
+.posts__image img {
+  border-radius: 5px;
+}
+
+.posts__text {
+  margin-bottom: 0.5rem;
+}
+
+.posts__text h2 {
+  color: palette('orange');
+}
+
+.posts__text time {
+  display: block;
+  margin-bottom: 1rem;
+  font-size: ms(-1);
+}
+
+.posts__section {
+  margin-bottom: 2rem;
+}
+
+.posts__togglable {
+  display: none;
+}
+
+.posts__togglable:target {
+  display: block;
+}
+
+.posts .button {
+  align-self: flex-start;
+}
+
+.posts .posts__center-button {
+  align-self: center;
+}
+
+.posts__end {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 1rem;
+  border-top: 2px solid palette('gray', 'light');
+}
+
+.posts__end a {
+  text-decoration: underline;
+  color: palette('black');
+}

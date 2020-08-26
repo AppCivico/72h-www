@@ -1,0 +1,33 @@
+baseURL: "/"
+defaultContentLanguage: "pt"
+enableGitInfo: true
+enableMissingTranslationPlaceholders: true
+enableRobotsTXT: true
+disableHugoGeneratorInject: true
+buildFuture: true
+disableKinds:
+  - "RSS"
+  - "taxonomyTerm"
+googleAnalytics: ""
+languageCode: "pt-br"
+title: "72Horas"
+menu:
+  header:
+  - identifier: "home"
+    name: "Home"
+    url: "/"
+    weight: 1
+metaDataFormat: "yaml"
+params:
+  name: "72Horas"
+  siteDescription: ""
+  contactEmail: "contato@72horas.com"
+  tagline: ""
+  shareImages:
+    default: "images/sharing/Compartilhamento_blockchain.jpg"
+    twitter: "images/sharing/Compartilhamento_twitter.jpg"
+    facebook: "images/sharing/Compartilhamento_blockchain.jpg"
+  socialNetworksLinks:
+    twitter: "https://twitter.com/appcivico"
+    facebook: "https://www.facebook.com/AppCivicoCSB"
+    youtube: "https://www.youtube.com/channel/UCIuAzzWMogJV0r-mvFmjNNQ"

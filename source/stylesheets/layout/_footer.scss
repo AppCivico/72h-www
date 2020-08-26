@@ -1,0 +1,168 @@
+.site-footer {
+  padding-top: 2em;
+  font-family: $roboto-font-stack;
+  background: palette('red');
+}
+
+.site-footer__content {
+  @include container;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.site-footer .logo {
+  display: block;
+
+  width: 4.7em;
+
+  padding-bottom: 0.5em;
+  margin-right: auto;
+
+  font-size: 1.6em;
+  line-height: 0.7;
+  font-family: 'Montserrat Alternates', sans-serif;
+  letter-spacing: -2.2px;
+
+  text-align: right;
+  text-transform: lowercase;
+
+  color: palette('white');
+
+  background-image: image('logo.svg');
+  background-size: contain;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    font-size: ms(6);
+  }
+
+  i {
+    display: block;
+
+    letter-spacing: -4.3px;
+
+    text-align: left;
+  }
+}
+
+.setubal-logo {
+  display: block;
+
+  width: 5.7em;
+  height: 3.45em;
+
+  text-indent: -999em;
+
+  background-image: image('logo-tide-setubal.svg');
+  background-repeat: no-repeat;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: 6.7em;
+    height: 3.75em;
+  }
+}
+
+
+.site-footer nav {
+  width: 100%;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: 7;
+    width: auto;
+    margin-left: auto;
+  }
+}
+
+.site-footer nav ul {
+  padding: 0;
+}
+
+.site-footer li {
+  padding: 0;
+  margin: 0 0.2em;
+  list-style: none;
+  border-bottom: 0;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    display: inline-block;
+    font-size: ms(1);
+  }
+}
+
+.site-footer nav li a:link,
+.site-footer nav li a:visited {
+  margin-bottom: 0.5em;
+  text-decoration: none;
+  color: palette('white');
+}
+
+.disclaimer,
+.by {
+  width: 100%;
+  font-size: ms(-1);
+  color: palette('white');
+}
+
+.by {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+  font-size: ms(-2);
+  line-height: 2;
+  background-color: palette('red', 'dark');
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: 7;
+    font-size: ms(-1);
+  }
+}
+
+.by a:link,
+.by a:visited {
+  width: 7rem;
+  height: 1.3rem;
+  margin-left: 0.5rem;
+  font-size: 0;
+  text-decoration: none;
+  color: palette('white');
+  background-image: image('appcivico.svg');
+}
+
+.social {
+  width: 100%;
+  padding-left: 0;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: auto;
+  }
+}
+
+.social li {
+  display: inline-block;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  border-bottom: 0;
+}
+
+.social a:link,
+.social a:visited {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.875rem;
+  height: 1.875rem;
+  background-color: palette('green');
+  border-radius: 50%;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: 2.1rem;
+    height: 2.1rem;
+  }
+}
+
+.social a svg {
+  width: 60%;
+  fill: palette('white');
+}

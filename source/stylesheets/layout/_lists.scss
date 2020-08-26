@@ -1,0 +1,19 @@
+ul {
+  padding-top: 0;
+  padding-right: 0;
+  padding-bottom: 0;
+  padding-left: 0;
+}
+
+li {
+  padding-bottom: 2rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid palette('gray');
+}
+
+.unstyled-list li {
+  padding-bottom: 0.3em;
+  margin-bottom: 0.3em;
+  list-style: none;
+  border-bottom: 0;
+}

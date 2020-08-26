@@ -1,0 +1,13 @@
+list:
+  - name: "facebook"
+    url: ""
+    svg: /uploads/facebook.svg
+  - name: "twitter"
+    url: ""
+    svg: /uploads/twitter.svg
+  - name: "whatsapp"
+    url: ""
+    svg: /uploads/whatsapp.svg
+  - name: "instagram"
+    url: ""
+    svg: /uploads/instagram.svg
