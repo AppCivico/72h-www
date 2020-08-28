@@ -7,109 +7,130 @@
       <main>
         <div class="container">
           <div class="big-numbers">
-            <div class="bit-number__box">
+            <div class="big-number__box">
               <h1>Total de repasses distribuido</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
               <span class="big-number__number">
                 R$2,85 <i>Bilhões</i>
               </span>
-              <progress max="100" value="10">10%</progress>
+              <progress class="progress__quartenary" max="100" value="10">10%</progress>
+              <span class="progress__helper">
+                10% distribuidos
+              </span>
             </div>
 
-            <div class="bit-number__box">
+            <div class="big-number__box">
               <h1>Total de repasses distribuido</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
               <span class="big-number__number">
                 R$2,85 <i>Bilhões</i>
               </span>
-              <progress max="100" value="10">10%</progress>
+              <progress class="progress__tertiary" max="100" value="10">10%</progress>
+              <span class="progress__helper">
+                10% distribuidos
+              </span>
             </div>
 
-            <div class="bit-number__box">
+            <div class="big-number__box">
               <h1>Total de repasses distribuido</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
               <span class="big-number__number">
                 R$2,85 <i>Bilhões</i>
               </span>
-              <progress max="100" value="10">10%</progress>
+              <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress>
+              <span class="progress__helper">
+                10% distribuidos
+              </span>
             </div>
-          </div>
 
-          <div class="timer">
-            <h1>Dias Restantes</h1>
-            <div class="timer__numbers">
-              <span>44<i>dias</i></span>
-              <span>10<i>horas</i></span>
-              <span>42<i>minutos</i></span>
-              <span>59<i>segundos</i></span>
+            <div class="big-number__box big-number__timer">
+              <h1>Dias Restantes</h1>
+              <div class="timer__numbers">
+                <span>44<i>dias</i></span>
+                <span>10<i>horas</i></span>
+                <span>42<i>minutos</i></span>
+                <span>59<i>segundos</i></span>
+              </div>
             </div>
           </div>
 
           <div class="filters">
-            <h1>{{ i18n "filters" }}</h1>
-            <button class="filters__hamburguer">{{ i18n "closeFilters" }}</button>
-            <span>{{ i18n "dataBase" }}</span>
+            <button class="filters__toggle">
+              <h1>{{ i18n "filters" }}</h1>
+              <span class="filters__dropdown">{{ i18n "closeFilters" }}</span>
+            </button>
+            <div class="filters__items">
+              <form action="">
+                <select id="states" name="states">
+                  <option value=""></option>
+                </select>
+                <select id="cities" name="cities">
+                  <option value=""></option>
+                </select>
+                <select id="parties" name="parties">
+                  <option value=""></option>
+                </select>
+                <select id="funds" name="funds">
+                  <option value=""></option>
+                </select>
+                <select id="etinicity" name="etinicity">
+                  <option value=""></option>
+                </select>
+                <button>{{ i18n "apply" }}</button>
+              </form>
+            </div>
+            <p>{{ i18n "checkFound" }}</p>
             <div id="js-main-chart" class="main-chart"></div>
           </div>
 
           <div class="big-numbers">
-            <div class="bit-number__box">
+            <div class="big-number__box">
               <h1>Total de repasses distribuido</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
               <span class="big-number__number">
-                R$2,85 <i>Bilhões</i>
+                R$2,85 <i>Milhões</i>
               </span>
-              <progress max="100" value="10">10%</progress>
             </div>
 
-            <div class="bit-number__box">
+            <div class="big-number__box">
               <h1>Total de repasses distribuido</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
               <span class="big-number__number">
-                R$2,85 <i>Bilhões</i>
+                R$2,85 <i>Milhões</i>
               </span>
-              <progress max="100" value="10">10%</progress>
             </div>
 
-            <div class="bit-number__box">
+            <div class="big-number__box">
               <h1>Total de repasses distribuido</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
               <span class="big-number__number">
-                R$2,85 <i>Bilhões</i>
+                R$2,85 <i>Milhões</i>
               </span>
-              <progress max="100" value="10">10%</progress>
             </div>
           </div>
 
           <div class="candidates">
             <h1>{{ i18n "candidatesListing" }}</h1>
-            <div class="candidates__candidate">
-              <span class="candidate__name">
-                Bruno Covas | PSDB | Concorre a Prefeito(a)
-              </span>
-              <span class="candidate__desc">
-                Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
-              </span>
-            </div>
-            <div class="candidates__candidate">
-              <span class="candidate__name">
-                Bruno Covas | PSDB | Concorre a Prefeito(a)
-              </span>
-              <span class="candidate__desc">
-                Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
-              </span>
-            </div>
-            <div class="candidates__candidate">
-              <span class="candidate__name">
-                Bruno Covas | PSDB | Concorre a Prefeito(a)
-              </span>
-              <span class="candidate__desc">
-                Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
-              </span>
-            </div>
-            <button class="button">{{ i18n "seeMore" }}</button>
+            {{ range seq 9 }}
+              <div class="candidates__candidate">
+                <img class="candidates__image" src="https://www.placecage.com/400/300" alt="Bruno Covas">
+                <div class="candidates__text">
+                  <p class="candidates__name">
+                    Bruno Covas | PSDB | Concorre a Prefeito(a)
+                  </p>
+                  <p class="candidates__info">
+                    Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
+                  </p>
+                  <a href="tse" class="button">{{ i18n "seeOnTSE" }}</a>
+                </div>
+              </div>
+            {{ end }}
+
+            <button class="button button--big">{{ i18n "seeMore" }}</button>
           </div>
-          <div class="tweeter">
+
+          <div class="twitter">
+            <h1>{{ .Site.Params.name }} {{ i18n "onTweeter" }}</h1>
             <a
               class="twitter-timeline"
               href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
@@ -118,40 +139,63 @@
               Tweets by TwitterDev
             </a>
             <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-            <a class="button" href="">{{ i18n "follow72hOnTweeter" }}</a>
+
+            <a class="button button--big" href="">
+              {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
+            </a>
           </div>
 
           <div class="parties">
             <h1>{{ i18n "partiesListing" }}</h1>
             <div class="parties__item">
-              <span class="party__name">
-                Bruno Covas | PSDB | Concorre a Prefeito(a)
-              </span>
-              <span class="party__desc">
-                Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
-              </span>
-              <progress class="progress progress__red" max="100" value="5">5%</progress>
+              <img class="parties__image" src="https://www.placecage.com/400/300" alt="">
+              <div class="parties__text">
+                <p class="parties__name">
+                  Partido dos Trabalhadores (PT)
+                </p>
+                <p class="parties__info">
+                  Previsto R$ 2,9 milhões
+                </p>
+                <progress class="progress" max="100" value="5">5%</progress>
+                <span class="progress__helper">
+                  10% distribuidos
+                </span>
+              </div>
             </div>
             <div class="parties__item">
-              <span class="party__name">
-                Bruno Covas | PSDB | Concorre a Prefeito(a)
-              </span>
-              <span class="party__desc">
-                Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
-              </span>
-              <progress class="progress progress__red" max="100" value="5">5%</progress>
+              <img class="parties__image" src="https://www.placecage.com/400/300" alt="">
+              <div class="parties__text">
+                <p class="parties__name">
+                  Partido dos Trabalhadores (PT)
+                </p>
+                <p class="parties__info">
+                  Previsto R$ 2,9 milhões
+                </p>
+                <progress class="progress" max="100" value="5">5%</progress>
+                <span class="progress__helper">
+                  10% distribuidos
+                </span>
+              </div>
             </div>
             <div class="parties__item">
-              <span class="party__name">
-                Bruno Covas | PSDB | Concorre a Prefeito(a)
-              </span>
-              <span class="party__desc">
-                Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
-              </span>
-              <progress class="progress progress__red" max="100" value="5">5%</progress>
+              <img class="parties__image" src="https://www.placecage.com/400/300" alt="">
+              <div class="parties__text">
+                <p class="parties__name">
+                  Partido dos Trabalhadores (PT)
+                </p>
+                <p class="parties__info">
+                  Previsto R$ 2,9 milhões
+                </p>
+                <progress class="progress" max="100" value="5">5%</progress>
+                <span class="progress__helper">
+                  10% distribuidos
+                </span>
+              </div>
             </div>
 
-            <button class="button">{{ i18n "seeMore" }}</button>
+
+
+            <button class="button button--big">{{ i18n "seeMore" }}</button>
           </div>
 
           <div class="partners">
@@ -166,6 +210,8 @@
 
       {{ partial "footer.html" . }}
 
+      {{ partial "scripts.html" . }}
+
       <script src="https://code.highcharts.com/highcharts.js"></script>
       <script src="https://code.highcharts.com/modules/series-label.js"></script>
       <script src="https://code.highcharts.com/modules/exporting.js"></script>
@@ -175,16 +221,16 @@
         Highcharts.chart('js-main-chart', {
 
           title: {
-            text: 'Solar Employment Growth by Sector, 2010-2016'
+            text: 'Repasses Realizados'
           },
 
           subtitle: {
-            text: 'Source: thesolarfoundation.com'
+            text: 'Estes dados são com base no sistema oficial do TSE.'
           },
 
           yAxis: {
             title: {
-              text: 'Number of Employees'
+              text: null
             }
           },
 
@@ -210,20 +256,14 @@
           },
 
           series: [{
-            name: 'Installation',
-            data: [43934, 52503, 57177, 69658, 97031, 119931, 137133, 154175]
+            name: 'Masculino',
+            data: [43934, 52503, 60000, 70000]
           }, {
-            name: 'Manufacturing',
-            data: [24916, 24064, 29742, 29851, 32490, 30282, 38121, 40434]
+            name: 'Feminino',
+            data: [24916, 24064, 25000, 40000]
           }, {
-            name: 'Sales & Distribution',
-            data: [11744, 17722, 16005, 19771, 20185, 24377, 32147, 39387]
-          }, {
-            name: 'Project Development',
-            data: [null, null, 7988, 12169, 15112, 22452, 34400, 34227]
-          }, {
-            name: 'Other',
-            data: [12908, 5948, 8105, 11248, 8989, 11816, 18274, 18111]
+            name: 'Total',
+            data: [7000, 7500, 85000, 110000]
           }],
 
           responsive: {

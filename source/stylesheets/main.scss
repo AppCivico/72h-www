@@ -26,9 +26,9 @@
 // 4. Layout-related sections
 @import
 'layout/main',
-'layout/header';
+'layout/header',
+'layout/footer';
 // 'layout/form',
-// 'layout/footer',
 // 'layout/page-title',
 // 'layout/lists',
 // 'layout/table';
@@ -36,12 +36,17 @@
 // 'layout/h-feed';
 
 // 5. Components
-// @import
-// 'components/hero-main',
-// 'components/hero-secondary',
-// 'components/hero-tertiary',
-// 'components/hero-water',
-// 'components/buttons',
+@import
+'components/hamburguer-menu',
+'components/big-numbers',
+'components/progress',
+'components/filters',
+'components/candidates',
+'components/parties',
+'components/partners',
+'components/buttons',
+'components/social',
+'components/twitter';
 // 'components/testimonials',
 // 'components/slider',
 // 'components/library-list',

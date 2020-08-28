@@ -1,168 +1,100 @@
-.site-footer {
-  padding-top: 2em;
-  font-family: $roboto-font-stack;
-  background: palette('red');
-}
-
-.site-footer__content {
-  @include container;
+.footer {
+  position: relative;
   display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-}
-
-.site-footer .logo {
-  display: block;
-
-  width: 4.7em;
-
-  padding-bottom: 0.5em;
-  margin-right: auto;
-
-  font-size: 1.6em;
-  line-height: 0.7;
-  font-family: 'Montserrat Alternates', sans-serif;
-  letter-spacing: -2.2px;
-
-  text-align: right;
-  text-transform: lowercase;
-
+  justify-content: center;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+  text-align: center;
   color: palette('white');
+  background-color: palette('main-colors', 'primary');
+  border-top: 6px solid palette('main-colors', 'secondary');
 
-  background-image: image('logo.svg');
-  background-size: contain;
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    font-size: ms(6);
-  }
-
-  i {
+  &::before,
+  &::after {
+    position: absolute;
+    top: -0.75rem;
     display: block;
+    width: 100%;
+    height: 0.375rem;
+    background-color: palette('main-colors', 'tertiary');
+    content: '';
+  }
 
-    letter-spacing: -4.3px;
-
-    text-align: left;
+  &::after {
+    top: -1.125rem;
+    background-color: palette('main-colors', 'quaternary');
   }
 }
 
-.setubal-logo {
-  display: block;
-
-  width: 5.7em;
-  height: 3.45em;
-
-  text-indent: -999em;
-
-  background-image: image('logo-tide-setubal.svg');
-  background-repeat: no-repeat;
-
+.footer .container {
   @media screen and (min-width: breakpoint('desktop')) {
-    width: 6.7em;
-    height: 3.75em;
+    justify-content: space-around;
   }
 }
 
-
-.site-footer nav {
+.footer__col {
   width: 100%;
 
   @media screen and (min-width: breakpoint('desktop')) {
-    order: 7;
-    width: auto;
-    margin-left: auto;
+    width: calc(33% - 2rem);
   }
 }
 
-.site-footer nav ul {
-  padding: 0;
-}
-
-.site-footer li {
-  padding: 0;
-  margin: 0 0.2em;
-  list-style: none;
-  border-bottom: 0;
+.footer__logo {
+  width: 7.375rem;
+  height: 7.375rem;
+  margin-right: auto;
+  margin-bottom: 1.5rem;
+  margin-left: auto;
+  background-image: image('logo-footer.svg');
+  background-size: contain;
+  background-color: transparent;
 
   @media screen and (min-width: breakpoint('desktop')) {
-    display: inline-block;
-    font-size: ms(1);
+    width: 13.438rem;
+    height: 2.625rem;
+    background-image: image('logo.svg');
   }
 }
 
-.site-footer nav li a:link,
-.site-footer nav li a:visited {
-  margin-bottom: 0.5em;
-  text-decoration: none;
+.footer p {
+  font-size: ms(-1);
+}
+
+
+.footer nav {
+  width: 100%;
+}
+
+.footer__menu {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 0;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  list-style-type: none;
+}
+
+.footer__menu a {
   color: palette('white');
 }
 
-.disclaimer,
-.by {
+.footer address {
   width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.footer address a {
+  font-style: normal;
+  font-weight: font-weight('bold');
   font-size: ms(-1);
   color: palette('white');
 }
 
-.by {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding-top: 0.5em;
-  padding-bottom: 0.5em;
-  font-size: ms(-2);
-  line-height: 2;
-  background-color: palette('red', 'dark');
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    order: 7;
-    font-size: ms(-1);
-  }
-}
-
-.by a:link,
-.by a:visited {
-  width: 7rem;
-  height: 1.3rem;
-  margin-left: 0.5rem;
-  font-size: 0;
-  text-decoration: none;
-  color: palette('white');
-  background-image: image('appcivico.svg');
-}
-
-.social {
+.footer__developed-by {
   width: 100%;
-  padding-left: 0;
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    width: auto;
-  }
-}
-
-.social li {
-  display: inline-block;
-  padding-bottom: 0;
-  margin-bottom: 0;
-  border-bottom: 0;
-}
-
-.social a:link,
-.social a:visited {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 1.875rem;
-  height: 1.875rem;
-  background-color: palette('green');
-  border-radius: 50%;
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    width: 2.1rem;
-    height: 2.1rem;
-  }
-}
-
-.social a svg {
-  width: 60%;
-  fill: palette('white');
+  font-size: ms(-2);
+  text-transform: uppercase;
 }

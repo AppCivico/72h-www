@@ -1,0 +1,9 @@
+.twitter {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: calc(50% - 2rem);
+  }
+}

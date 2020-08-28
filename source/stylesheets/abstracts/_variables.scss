@@ -23,7 +23,7 @@ $title-font-stack: $basic-title-font-stack !default;
 ///
 /// @example scss
 /// $text-font-stack: ComicSans, $native-font-stack;
-$text-font-stack: $native-font-stack !default;
+$text-font-stack: 'Montserrat' !default;
 
 
 /// Code (monospace) font stack
@@ -105,6 +105,14 @@ $palette: (
     'tertiary': rgb(253, 191, 35),
     'quaternary': rgb(222, 49, 55),
   ),
+  'gray': (
+    // 'x-light': rgb(248, 248, 248),
+    'light': rgb(242, 242, 242),
+    'base': rgb(189, 189, 189),
+    'medium': rgb(145, 142, 144),
+    'dark': rgb(51, 51, 51),
+    // 'x-dark': shade(rgb(64, 68, 71), 10%),
+  ),
   'red': (
     'light': rgb(252, 124, 108),
     'base': rgb(237, 84, 84),
@@ -133,13 +141,6 @@ $palette: (
     'base': rgb(49, 197, 244),
     'dark': rgb(1, 69, 147),
     'x-dark': rgb(37, 37, 37),
-  ),
-  'gray': (
-    'x-light': rgb(248, 248, 248),
-    'light': rgb(229, 231, 234),
-    'base': rgb(151, 153, 156),
-    'dark': rgb(64, 68, 71),
-    'x-dark': shade(rgb(64, 68, 71), 10%),
   ),
   'white': rgb(255, 255, 255),
   'black': (

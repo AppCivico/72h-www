@@ -1,6 +1,35 @@
 - id: menu
   translation: Menu
+- id: candidatesListing
+  translation: "Listagem dos candidatos de São Paulo - SP"
+- id: checkFound
+  translation: "Verifique como está o repasse do Fundo Eleitoral Especial do seu Município ou Estado."
+- id: closeFilters
+  translation: "Minimizar filtros"
+- id: developedBy
+  translation: "desenvolvido por appcívico"
+- id: filters
+  translation: "Filtros"
+- id: footerDescription
+  translation: "Com a plataforma 72H, você pode acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP), pressionando que o dinheiro seja distribuído de forma transparente."
+- id: footerCall
+  translation: "A partir dos dados do DivulgaCand, nós entregamos todos os dias, no seu celular alertas, informações sobre a jornada do fundo eleitoral."
+- id: follow
+  translation: "Seguir"
+- id: onTweeter
+  translation: "no Twitter"
+- id: partnersAndOrganizations
+  translation: "Parceiros e Organizações"
+- id: partiesListing
+  translation: "Listagem da quantidade de recurso disponibilizado para cada partido"
+- id: seeOnTSE
+  translation: "Ver no TSE"
+- id: seeMore
+  translation: "Ver mais"
 - id: teste
   translation: "Análise completa"
 - id: updateTimes
   translation: "Próxima atualização em: 14horas | Última atualização: 03/08/2020 - 12h00 | Visualizações: 1.500 pessoas nas últimas 24 horas"
+
+
+

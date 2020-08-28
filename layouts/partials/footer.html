@@ -1,51 +1,55 @@
 <footer class="footer">
   <div class="container">
-    <img class="footer__logo" src="/images/logo-footer.svg" alt="{{ .Site.Params.title }}">
-    {{ i18n "footerDescription" }}
+    <div class="footer__col">
+      <div class="footer__logo"></div>
+      <p>{{ i18n "footerDescription" }}</p>
+      <p>{{ i18n "footerCall" }}</p>
+    </div>
 
-    <nav>
-      <ul class="footer__menu">
-        {{ with .Site.Menus.header }}
-          {{ range . }}
-          <li>
-            <a href="{{ .URL }}">
-              {{ .Name }}
-            </a>
-          </li>
+    <div class="footer__col">
+      <nav>
+        <ul class="footer__menu">
+          {{ with .Site.Menus.header }}
+            {{ range . }}
+            <li>
+              <a href="{{ .URL }}">
+                {{ .Name }}
+              </a>
+            </li>
+            {{ end }}
           {{ end }}
-        {{ end }}
-      </ul>
-    </nav>
+        </ul>
+      </nav>
+    </div>
 
-    <address>
-      <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
-    </address>
+    <div class="footer__col">
+      <address>
+        <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
+      </address>
 
-  {{ with $.Site.Data.socialMedia }}
+      {{ with $.Site.Data.socialMedia }}
+        <style>
+          {{ range .list }}
+            {{ if .svg }}
+              .{{ .name }} {
+                background-image: url("{{ .svg }}");
+              }
+            {{ end }}
+          {{ end }}
+        </style>
 
-  <style>
-    {{ range .list }}
-      {{ if .svg }}
-        .{{ .name }} {
-          background-image: url("{{ .svg }}");
-          background-size: 55%;
-          background-position: center;
-        }
+        <ul class="social">
+          {{ range .list }}
+            <li>
+                <a href="{{ .url }}" title="{{ .name }}" rel="noopener" class="{{ .name }}">
+                </a>
+            </li>
+          {{ end }}
+        </ul>
       {{ end }}
-    {{ end }}
-  </style>
+    </div>
 
-  <ul class="social">
-      {{ range .list }}
-      <li>
-          <a href="{{ .url }}" title="{{ .name }}" rel="noopener" class="{{ .name }}">
-          </a>
-      </li>
-      {{ end }}
-  </ul>
-  {{ end }}
-
-    <span class="developed-by">
+    <span class="footer__developed-by">
       {{ i18n "developedBy" }}
     </span>
   </div>

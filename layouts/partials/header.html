@@ -3,22 +3,30 @@
     <h1>{{ .Site.Params.name }}</h1>
   </div>
   <nav class="main-header__nav">
-    <button class="js-menu-toggle">{{ i18n "menu" }}</button>
-    <div class="main-header__menu-area">
-      <span class="main-header__update">{{ i18n "updateTimes" }}</span>
-      <ul class="js-menu-list">
-        {{ $firstUrlElement := print "/" (index (split .URL "/") 1)  }}
+    <!-- <button class="hamburguer&#45;menu js&#45;menu&#45;toggle">{{ i18n "menu" }}</button> -->
 
-        {{ with .Site.Menus.header }}
-          {{ range . }}
-          <li>
-            <a class="{{ if eq ($firstUrlElement|lower) .URL }} active {{end}}" href="{{ .URL }}">
-              {{ .Name }}
-            </a>
-          </li>
+    <button class="hamburger hamburger--squeeze js-menu-toggle" type="button">
+      <span class="hamburger-box">
+        <span class="hamburger-inner"></span>
+      </span>
+    </button>
+    <div class="main-header__menu-area js-menu-area">
+      <div class="container">
+        <span class="main-header__update">{{ i18n "updateTimes" }}</span>
+        <ul class="js-menu-list">
+          {{ $firstUrlElement := print "/" (index (split .URL "/") 1)  }}
+
+          {{ with .Site.Menus.header }}
+            {{ range . }}
+            <li>
+              <a class="{{ if eq ($firstUrlElement|lower) .URL }} active {{end}}" href="{{ .URL }}">
+                {{ .Name }}
+              </a>
+            </li>
+            {{ end }}
           {{ end }}
-        {{ end }}
-      </ul>
+        </ul>
+      </div>
     </div>
   </nav>
 </header>

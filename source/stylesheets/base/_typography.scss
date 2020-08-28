@@ -18,7 +18,7 @@ body {
   font-weight: font-weight('text');
   font-size: $body-font-size;
   line-height: $leading;
-  font-family: $text-font-stack;
+  font-family: $monteserrat-font-stack;
 
   color: palette('text', 'dark');
 }
@@ -39,8 +39,9 @@ h6,
 legend,
 caption,
 details > summary {
+  width: 100%;
   font-weight: font-weight('heading');
-  font-family: $roboto-font-stack;
+  font-family: $monteserrat-font-stack;
   font-feature-settings: 'case' 1, 'cpsp' 1, 'cswh' 1, 'liga' 1, 'locl' 1, 'lnum' 1, 'pnum' 1, 'titl' 1, 'zero' 1;
 
   break-after: avoid;
@@ -67,6 +68,10 @@ dt a {
   }
 }
 
+h1 {
+  font-size: ms(2);
+  text-transform: uppercase;
+}
 
 p {
   padding: 0;

@@ -4,6 +4,10 @@
 
 /* CLASSES
 ============================================================================ */
+.margin-bottom-md {
+  margin-bottom: 2.5rem;
+}
+
 %loading-bg {
   background-image: image('loading.svg');
   background-position: 50% 50%;
@@ -68,7 +72,7 @@
   display: none;
 }
 
-img:not([src$='.png']):not([src$='.gif']),
+img:not([src$='.png']):not([src$='.gif']):not([src$='.svg']),
 embed {
   @extend %loading-bg;
 
@@ -110,7 +114,8 @@ textarea {
   &::after,
   &:root::before {
     position: fixed;
-    top: 0;
+    // top: 0;
+    bottom: 0;
     right: 0;
 
     z-index: layer('modal');

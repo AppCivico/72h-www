@@ -1,6 +1,8 @@
 /// Define the element as a container
 /// @author Hugo Giraudel
 @mixin container {
+  display: flex;
+  flex-wrap: wrap;
   padding-right: 1.5rem;
   padding-left: 1.5rem;
 
