@@ -1,3 +1,5 @@
+// sass-lint:disable *
+// sass-lint:disable-all
 // all this is shameless stolen from https://github.com/jonsuh/hamburgers
 // thank you Jonathan for making my life easier
 // Settings
@@ -115,7 +117,7 @@ $hamburger-active-hover-filter: $hamburger-hover-filter !default;
 
     &::after {
       transition: bottom 0.075s 0.12s ease,
-        transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19);
+      transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19);
     }
   }
 
@@ -135,7 +137,7 @@ $hamburger-active-hover-filter: $hamburger-hover-filter !default;
         bottom: 0;
         transform: rotate(-90deg);
         transition: bottom 0.075s ease,
-          transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
+        transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1);
       }
     }
   }

@@ -16,17 +16,17 @@ progress::-webkit-progress-value {
   border-radius: 7px;
 }
 
-progress.progress__secondary::-webkit-progress-value {
+progress.progress__secondary::-webkit-progress-value { // sass-lint:disable-line no-qualifying-elements
   background-color: palette('main-colors', 'secondary');
   border-radius: 7px;
 }
 
-progress.progress__tertiary::-webkit-progress-value {
+progress.progress__tertiary::-webkit-progress-value { // sass-lint:disable-line no-qualifying-elements
   background-color: palette('main-colors', 'tertiary');
   border-radius: 7px;
 }
 
-progress.progress__quartenary::-webkit-progress-value {
+progress.progress__quartenary::-webkit-progress-value { // sass-lint:disable-line no-qualifying-elements
   background-color: palette('main-colors', 'quaternary');
   border-radius: 7px;
 }
