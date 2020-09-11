@@ -7,7 +7,9 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
+    width: calc(50% - 2rem);
     margin-bottom: 3rem;
+    margin-left: auto;
   }
 }
 
@@ -29,10 +31,6 @@
   display: flex;
   justify-content: center;
   margin-bottom: 2rem;
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    width: calc(33% - 2rem);
-  }
 }
 
 .candidates__image {

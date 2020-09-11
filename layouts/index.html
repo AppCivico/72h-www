@@ -8,8 +8,8 @@
         <div class="container">
           <div class="big-numbers">
             <div class="big-number__box">
-              <h1>Total de repasses distribuido</h1>
-              <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
+              <h1>Valor Total Acumulado dos Repasses</h1>
+              <p>Quantidade de Lançamentos: 29869</p>
               <span class="big-number__number">
                 R$2,85 <i>Bilhões</i>
               </span>
@@ -20,8 +20,8 @@
             </div>
 
             <div class="big-number__box">
-              <h1>Total de repasses distribuido</h1>
-              <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
+              <h1>Valor acumulado de repasses do Fundo Especial de Financiamento de Campanhas (FEFC)</h1>
+              <p>Quantidade de Lançamentos: 29869</p>
               <span class="big-number__number">
                 R$2,85 <i>Bilhões</i>
               </span>
@@ -32,8 +32,8 @@
             </div>
 
             <div class="big-number__box">
-              <h1>Total de repasses distribuido</h1>
-              <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
+              <h1>Valor acumulado dos repasses do Fundo Partidário</h1>
+              <p>Quantidade de Lançamentos: 29869</p>
               <span class="big-number__number">
                 R$2,85 <i>Bilhões</i>
               </span>
@@ -109,6 +109,22 @@
             </div>
           </div>
 
+          <div class="twitter">
+            <h1>{{ .Site.Params.name }} {{ i18n "onTweeter" }}</h1>
+            <a
+              class="twitter-timeline"
+              href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
+              data-tweet-limit="3"
+            >
+              Tweets by TwitterDev
+            </a>
+            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+            <a class="button button--big" href="">
+              {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
+            </a>
+          </div>
+
           <div class="candidates">
             <h1>{{ i18n "candidatesListing" }}</h1>
             {{ range seq 9 }}
@@ -129,74 +145,7 @@
             <button class="button button--big">{{ i18n "seeMore" }}</button>
           </div>
 
-          <div class="twitter">
-            <h1>{{ .Site.Params.name }} {{ i18n "onTweeter" }}</h1>
-            <a
-              class="twitter-timeline"
-              href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
-              data-tweet-limit="3"
-            >
-              Tweets by TwitterDev
-            </a>
-            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-            <a class="button button--big" href="">
-              {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
-            </a>
-          </div>
-
-          <div class="parties">
-            <h1>{{ i18n "partiesListing" }}</h1>
-            <div class="parties__item">
-              <img class="parties__image" src="https://www.placecage.com/400/300" alt="">
-              <div class="parties__text">
-                <p class="parties__name">
-                  Partido dos Trabalhadores (PT)
-                </p>
-                <p class="parties__info">
-                  Previsto R$ 2,9 milhões
-                </p>
-                <progress class="progress" max="100" value="5">5%</progress>
-                <span class="progress__helper">
-                  10% distribuidos
-                </span>
-              </div>
-            </div>
-            <div class="parties__item">
-              <img class="parties__image" src="https://www.placecage.com/400/300" alt="">
-              <div class="parties__text">
-                <p class="parties__name">
-                  Partido dos Trabalhadores (PT)
-                </p>
-                <p class="parties__info">
-                  Previsto R$ 2,9 milhões
-                </p>
-                <progress class="progress" max="100" value="5">5%</progress>
-                <span class="progress__helper">
-                  10% distribuidos
-                </span>
-              </div>
-            </div>
-            <div class="parties__item">
-              <img class="parties__image" src="https://www.placecage.com/400/300" alt="">
-              <div class="parties__text">
-                <p class="parties__name">
-                  Partido dos Trabalhadores (PT)
-                </p>
-                <p class="parties__info">
-                  Previsto R$ 2,9 milhões
-                </p>
-                <progress class="progress" max="100" value="5">5%</progress>
-                <span class="progress__helper">
-                  10% distribuidos
-                </span>
-              </div>
-            </div>
-
-
-
-            <button class="button button--big">{{ i18n "seeMore" }}</button>
-          </div>
 
           <div class="partners">
             <h2>{{ i18n "partnersAndOrganizations" }}</h2>
