@@ -4,7 +4,7 @@
 
       {{ partial "header.html" . }}
 
-      <main>
+      <main id="vueHome">
         <div class="container">
           <div class="big-numbers">
             <div class="big-number__box">
@@ -55,28 +55,78 @@
           </div>
 
           <div class="filters">
-            <button class="filters__toggle">
+            <button class="filters__toggle" @click="toggleFilter">
               <h1>{{ i18n "filters" }}</h1>
-              <span class="filters__dropdown">{{ i18n "closeFilters" }}</span>
+              <span
+                v-if="filterOpen"
+                class="filters__dropdown">
+                {{ i18n "closeFilters" }}
+              </span>
+              <span
+                v-else="filterOpen"
+                class="filters__dropdown">
+                {{ i18n "openFilters" }}
+              </span>
             </button>
-            <div class="filters__items">
+            <div class="filters__items" :hidden="!filterOpen">
               <form action="">
-                <select id="states" name="states">
-                  <option value=""></option>
+                <select
+                  id="states"
+                  name="states"
+                  v-model="selectedState"
+                  @change="selectedCity = null">
+                  <option value="null">{{ i18n "allStates" }}</option>
+                  <option
+                    v-for="state in states"
+                    :value="state.id">
+                      {{ "{{ state.name }}" }}
+                  </option>
                 </select>
-                <select id="cities" name="cities">
-                  <option value=""></option>
+                <select
+                  id="cities"
+                  name="cities"
+                  v-model="selectedCity">
+                  <option value="null" selected>{{ i18n "allCities" }}</option>
+                  <option
+                    v-for="city in cities"
+                    :value="city.id">
+                      {{ "{{ city.name }}" }}
+                  </option>
                 </select>
-                <select id="parties" name="parties">
-                  <option value=""></option>
+                <select
+                  id="parties"
+                  name="parties"
+                  v-model="selectedParty">
+                  <option value="null">{{ i18n "allParties" }}</option>
+                  <option
+                    v-for="party in parties"
+                    :value="party.id">
+                      {{ "{{ party.name }}" }}
+                  </option>
                 </select>
-                <select id="funds" name="funds">
-                  <option value=""></option>
+                <select
+                  id="funds"
+                  name="funds"
+                  v-model="selectedFund">
+                  <option value="null">{{ i18n "allFunds" }}</option>
+                  <option
+                    v-for="fund_type in fund_types"
+                    :value="fund_type.id">
+                      {{ "{{ fund_type.name }}" }}
+                  </option>
                 </select>
-                <select id="etinicity" name="etinicity">
-                  <option value=""></option>
+                <select
+                  id="etinicity"
+                  name="etinicity"
+                  v-model="selectedRace">
+                  <option value="null">{{ i18n "allEtinicity" }}</option>
+                  <option
+                    v-for="race in races"
+                    :value="race.id">
+                      {{ "{{ race.name }}" }}
+                  </option>
                 </select>
-                <button>{{ i18n "apply" }}</button>
+                <button class="button button--primary">{{ i18n "apply" }}</button>
               </form>
             </div>
             <p>{{ i18n "checkFound" }}</p>
@@ -118,7 +168,6 @@
             >
               Tweets by TwitterDev
             </a>
-            <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
             <a class="button button--big" href="">
               {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
@@ -159,7 +208,15 @@
 
       {{ partial "footer.html" . }}
 
+
+      <script>
+        {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters" }}
+        window.appFilters = {{ $filters.filters }};
+      </script>
+
       {{ partial "scripts.html" . }}
+
+      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
       <script src="https://code.highcharts.com/highcharts.js"></script>
       <script src="https://code.highcharts.com/modules/series-label.js"></script>

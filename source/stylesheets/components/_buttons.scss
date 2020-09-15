@@ -13,6 +13,10 @@
   border-radius: 72px;
 }
 
+.button--primary {
+  background: palette('main-colors', 'primary');
+}
+
 .button--big {
   align-self: flex-start;
   justify-content: center;

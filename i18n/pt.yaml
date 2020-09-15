@@ -1,3 +1,17 @@
+- id: all
+  translation: Todos
+- id: allCities
+  translation: "Todas as cidades"
+- id: allEtinicity
+  translation: "Todos as cores ou raças"
+- id: allFunds
+  translation: "Todos os fundos"
+- id: allParties
+  translation: "Todos os partidos"
+- id: allStates
+  translation: "Todos os Estados"
+- id: apply
+  translation: Aplicar
 - id: menu
   translation: Menu
 - id: candidatesListing
@@ -18,6 +32,8 @@
   translation: "Seguir"
 - id: onTweeter
   translation: "no Twitter"
+- id: openFilters
+  translation: "Maximizar filtros"
 - id: partnersAndOrganizations
   translation: "Parceiros e Organizações"
 - id: partiesListing
@@ -26,6 +42,8 @@
   translation: "Ver no TSE"
 - id: seeMore
   translation: "Ver mais"
+- id: selectState
+  translation: "Selecione o estado"
 - id: teste
   translation: "Análise completa"
 - id: updateTimes

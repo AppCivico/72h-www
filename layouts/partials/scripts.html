@@ -1,3 +1,9 @@
+{{ if eq (getenv "NODE_ENV") "development" }}
+  <script src="https://vuejs.org/js/vue.js"></script>
+{{ else }}
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
+{{ end }}
+
 {{ $vendorJS := resources.Get "assets/scripts/vendor.js" }}
 {{ $secureVendorJS := $vendorJS | resources.Minify | resources.Fingerprint "sha512" }}
 <script type="text/javascript" src="{{ $secureVendorJS.RelPermalink }}" integrity="{{ $secureVendorJS.Data.Integrity }}"></script>

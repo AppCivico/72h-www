@@ -47,9 +47,32 @@
   }
 }
 
-.filters__items {
+.filters__items[hidden] {
   max-height: 0;
   overflow: hidden;
+}
+
+
+.filters__items {
+  max-height: 5rem;
+}
+
+.filters__items form {
+  display: flex;
+}
+
+.filters__items select {
+  max-width: 11.625rem;
+  min-width: 9.375rem;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+  margin-right: 0.5rem;
+  margin-left: 0.5rem;
+  font-size: ms(-1);
+  font-family: $text-font-stack;
+  background-color: transparent;
+  border: 0;
+  border-bottom: 1px solid palette('main-colors', 'secondary');
 }
 
 .filters p {
