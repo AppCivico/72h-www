@@ -6,13 +6,11 @@
 
       <main id="vueHome">
         <div class="container">
-          <div class="big-numbers">
+          <div class="big-numbers" v-if="!this.loadingBigNumbers">
             <div class="big-number__box">
               <h1>Valor Total Acumulado dos Repasses</h1>
-              <p>Quantidade de Lançamentos: 29869</p>
-              <span class="big-number__number">
-                R$2,85 <i>Bilhões</i>
-              </span>
+              <p>Quantidade de Lançamentos: {{ "{{ mainData.accumulated.total_transfers }}" }}</p>
+              <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.total_value)"></span>
               <progress class="progress__quartenary" max="100" value="10">10%</progress>
               <span class="progress__helper">
                 10% distribuidos
@@ -21,9 +19,8 @@
 
             <div class="big-number__box">
               <h1>Valor acumulado de repasses do Fundo Especial de Financiamento de Campanhas (FEFC)</h1>
-              <p>Quantidade de Lançamentos: 29869</p>
-              <span class="big-number__number">
-                R$2,85 <i>Bilhões</i>
+              <p>Quantidade de Lançamentos: {{ "{{ mainData.accumulated.transfers_special_fund }}" }}</p>
+              <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_special_fund)">
               </span>
               <progress class="progress__tertiary" max="100" value="10">10%</progress>
               <span class="progress__helper">
@@ -33,9 +30,8 @@
 
             <div class="big-number__box">
               <h1>Valor acumulado dos repasses do Fundo Partidário</h1>
-              <p>Quantidade de Lançamentos: 29869</p>
-              <span class="big-number__number">
-                R$2,85 <i>Bilhões</i>
+              <p>Quantidade de Lançamentos: {{ "{{ mainData.accumulated.transfers_party_fund }}" }}</p>
+              <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_party_fund)">
               </span>
               <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress>
               <span class="progress__helper">
@@ -69,7 +65,7 @@
               </span>
             </button>
             <div class="filters__items" :hidden="!filterOpen">
-              <form action="">
+              <form action="" @submit.prevent="updateData">
                 <select
                   id="states"
                   name="states"
@@ -174,24 +170,41 @@
             </a>
           </div>
 
-          <div class="candidates">
+          <div class="candidates" id="js-candidate-box">
             <h1>{{ i18n "candidatesListing" }}</h1>
-            {{ range seq 9 }}
-              <div class="candidates__candidate">
-                <img class="candidates__image" src="https://www.placecage.com/400/300" alt="Bruno Covas">
-                <div class="candidates__text">
-                  <p class="candidates__name">
-                    Bruno Covas | PSDB | Concorre a Prefeito(a)
-                  </p>
-                  <p class="candidates__info">
-                    Quantia recebida R$ 0,00 30% do total Previsto foram de doações de pessoas físicas.
-                  </p>
-                  <a href="tse" class="button">{{ i18n "seeOnTSE" }}</a>
+            <div
+              :aria-busy="loadingCandidates"
+              class="candidates__container">
+              <template v-if="candidates && candidates.candidates.length > 0">
+                <div
+                  v-for="candidate in candidates.candidates"
+                  class="candidates__candidate">
+                  <img class="candidates__image" src="https://www.placecage.com/400/300" :alt="candidate.name">
+                  <div class="candidates__text">
+                    <p class="candidates__name">
+                      {{ "{{ candidate.name }}" }}
+                      {{ " - {{ candidate.party }}" }}
+                      {{ " - {{ candidate.position }}" }}
+                    </p>
+                    <p class="candidates__info">
+                      {{ "{{ candidate.total_transfers }}" }} transferências
+                    </p>
+                    <a href="tse" class="button">{{ i18n "seeOnTSE" }}</a>
+                  </div>
                 </div>
+              </template>
+              <div
+                v-else
+                class="no-results">
+                <p>Sem resultados!</p>
               </div>
-            {{ end }}
 
-            <button class="button button--big">{{ i18n "seeMore" }}</button>
+              <button
+                @click="getCandidates(true)"
+                class="button button--big">
+                {{ i18n "seeMore" }}
+              </button>
+            </div>
           </div>
 
 

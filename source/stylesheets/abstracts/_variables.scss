@@ -113,6 +113,11 @@ $palette: (
     'dark': rgb(51, 51, 51),
     // 'x-dark': shade(rgb(64, 68, 71), 10%),
   ),
+  'loading': (
+    'foreground': hsl(0, 0%, 94%),
+    'base': rgba(212, 212, 212, 0.8),
+    'background': hsla(0, 0%, 7%, 0.8),
+  ),
   'red': (
     'light': rgb(252, 124, 108),
     'base': rgb(237, 84, 84),
@@ -177,10 +182,6 @@ $palette: (
   'disabled': (
     'foreground': hsl(0, 0%, 42%),
     'background': hsl(0, 0%, 94%),
-  ),
-  'loading': (
-    'foreground': hsl(0, 0%, 94%),
-    'background': hsla(0, 0%, 7%, 0.8),
   ),
   'graph_inequality': (
 
