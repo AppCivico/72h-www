@@ -1,7 +1,20 @@
 /* global Vue */
+import Highcharts from 'highcharts';
 import numeral from 'numeral';
-// import 'numeral/locales';
 import config from './config';
+
+Highcharts.setOptions({
+  lang: {
+    printChart: 'Imprimir gráfico',
+    resetZoom: 'Resetar zoom',
+    loading: 'Carregando...',
+  },
+  // tooltip: {
+  //   formatter() {
+  //     return `${this.point.options.city} - ${this.point.options.state}`;
+  //   },
+  // },
+});
 
 numeral.register('locale', 'pt-br', {
   delimiters: {
@@ -29,9 +42,15 @@ if (window.location.href.indexOf('/') > -1) {
     data: {
       loadingBigNumbers: true,
       loadingCandidates: true,
+      loadingChartData: true,
 
       homeLoading: true,
       filterOpen: true,
+
+      chart: null,
+      totalArray: [],
+      femaleArray: [],
+      maleArray: [],
 
       mainData: null,
       candidates: null,
@@ -55,15 +74,71 @@ if (window.location.href.indexOf('/') > -1) {
       cities() {
         return window.appFilters.cities.filter(city => city.region_id === this.selectedState);
       },
-      // loading() {
-      //   return !this.locale;
-      // },
+      chartDates() {
+        const datesArr = Object.keys(this.mainData.chart.filtered[0]);
+        return datesArr.map(date => new Date(`${date} 10:00`)
+          .toLocaleString('pt-BR', { month: 'short', day: 'numeric' }))
+      },
+      chartTotal() {
+        return this.formatCurrency(this.totalArray.reduce((a, b) => a + b, 0));
+      },
+      chartMale() {
+        return this.formatCurrency(this.maleArray.reduce((a, b) => a + b, 0));
+      },
+      chartFemale() {
+        return this.formatCurrency(this.femaleArray.reduce((a, b) => a + b, 0));
+      },
+      formatChartSeries() {
+        return [{
+          name: 'Total',
+          data: this.totalArray,
+        }, {
+          name: 'Mulheres',
+          data: this.femaleArray,
+        }, {
+          name: 'Homens',
+          data: this.maleArray,
+        }]
+      },
+    },
+    watch: {
+      async mainData() {
+        await this.handleData();
+        await this.generateChart();
+      },
     },
     mounted() {
       this.getData();
       this.getCandidates();
     },
     methods: {
+      handleData() {
+        const entries = Object.values(this.mainData.chart.filtered[0]);
+        this.totalArray = [];
+        this.maleArray = [];
+        this.femaleArray = [];
+
+        entries.forEach((entry) => {
+          let total = 0;
+          let male = 0;
+          let female = 0;
+          if (entry) {
+            entry.forEach((item) => {
+              total += item.value;
+              if (item.gender_id === 1) {
+                male += item.value;
+              }
+              if (item.gender_id === 2) {
+                female += item.value;
+              }
+            });
+          }
+          this.totalArray.push(total);
+          this.maleArray.push(male);
+          this.femaleArray.push(female);
+          return true;
+        });
+      },
       formatCurrency(value) {
         return numeral(value).format('$0.00 a');
       },
@@ -75,6 +150,10 @@ if (window.location.href.indexOf('/') > -1) {
         this.getCandidates();
       },
       getData() {
+        this.loadingChartData = true;
+        if (this.chart) {
+          this.chart.showLoading();
+        }
         fetch(`${config.api.domain}index`, {
           method: 'GET',
         })
@@ -85,9 +164,14 @@ if (window.location.href.indexOf('/') > -1) {
           })
           .then(() => {
             this.loadingBigNumbers = false;
+            this.loadingChartData = false;
+            if (this.chart) {
+              this.chart.hideLoading();
+            }
+            return true;
           })
           .catch((error) => {
-            console.error(error);
+            return console.error(error);
           });
       },
       getCandidates(nextPage = false) {
@@ -128,52 +212,38 @@ if (window.location.href.indexOf('/') > -1) {
             console.error(error);
           });
       },
-      // updateFile(event) {
-      //   this.form.file = [event.target.files[0]];
-      //   this.form.fileName = this.form.file[0].name;
-      // },
-      // sendPlan() {
-      //   const data = new FormData();
-      //   data.append('file', this.form.file[0]);
-      //   data.append('name', this.form.name);
-      //   data.append('message', this.form.message);
-      //   data.append('email', this.form.email);
-      //   this.formLoading = true;
-
-      //   fetch(`${config.api.domain}upload_plan`, {
-      //     method: 'POST',
-      //     body: data,
-      //   })
-      //     .then((response) => {
-      //       if (response.status === 200) {
-      //         Swal.fire({
-      //           title: 'Tudo Certo!',
-      //           text: 'Seu plano foi enviado para avaliação',
-      //           icon: 'success',
-      //           confirmButtonText: 'Fechar',
-      //         })
-      //           .then(this.formLoading = false)
-      //           .then(this.resetForm());
-      //       } else {
-      //         Swal.fire({
-      //           title: 'Ops! Algo deu errado',
-      //           text: 'Tivemos um problema no envio, por favor, tente novamente',
-      //           icon: 'error',
-      //           confirmButtonText: 'Fechar',
-      //         })
-      //           .then(this.formLoading = false);
-      //       }
-      //     })
-      //     .catch(() => {
-      //       Swal.fire({
-      //         title: 'Ops! Algo deu errado',
-      //         text: 'Tivemos um problema no envio, por favor, tente novamente',
-      //         icon: 'error',
-      //         confirmButtonText: 'Fechar',
-      //       })
-      //         .then(this.formLoading = false);
-      //     });
-      // },
+      generateChart() {
+        this.chart = Highcharts.chart('js-main-chart', {
+          chart: {
+            type: 'line',
+          },
+          title: {
+            text: 'Repasses Realizados',
+          },
+          subtitle: {
+            text: 'Estes dados são com base no sistema oficial do TSE.',
+          },
+          xAxis: {
+            categories: this.chartDates,
+            // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+          },
+          yAxis: {
+            title: {
+              text: 'valor (R$)',
+            }
+          },
+          plotOptions: {
+            line: {
+              dataLabels: {
+                enabled: false
+              },
+              enableMouseTracking: true
+            }
+          },
+          series: this.formatChartSeries,
+        });
+        return true;
+      },
     },
   });
 }

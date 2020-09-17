@@ -71,7 +71,7 @@
                   name="states"
                   v-model="selectedState"
                   @change="selectedCity = null">
-                  <option value="null">{{ i18n "allStates" }}</option>
+                  <option :value="null">{{ i18n "allStates" }}</option>
                   <option
                     v-for="state in states"
                     :value="state.id">
@@ -82,7 +82,13 @@
                   id="cities"
                   name="cities"
                   v-model="selectedCity">
-                  <option value="null" selected>{{ i18n "allCities" }}</option>
+                  <option :value="null" selected>{{ i18n "allCities" }}</option>
+                  <option
+                    :value="null"
+                    v-if="selectedState === null"
+                    disabled>
+                    Selecione o estado
+                  </option>
                   <option
                     v-for="city in cities"
                     :value="city.id">
@@ -93,7 +99,7 @@
                   id="parties"
                   name="parties"
                   v-model="selectedParty">
-                  <option value="null">{{ i18n "allParties" }}</option>
+                  <option :value="null">{{ i18n "allParties" }}</option>
                   <option
                     v-for="party in parties"
                     :value="party.id">
@@ -104,7 +110,7 @@
                   id="funds"
                   name="funds"
                   v-model="selectedFund">
-                  <option value="null">{{ i18n "allFunds" }}</option>
+                  <option :value="null">{{ i18n "allFunds" }}</option>
                   <option
                     v-for="fund_type in fund_types"
                     :value="fund_type.id">
@@ -115,7 +121,7 @@
                   id="etinicity"
                   name="etinicity"
                   v-model="selectedRace">
-                  <option value="null">{{ i18n "allEtinicity" }}</option>
+                  <option :value="null">{{ i18n "allEtinicity" }}</option>
                   <option
                     v-for="race in races"
                     :value="race.id">
@@ -129,29 +135,23 @@
             <div id="js-main-chart" class="main-chart"></div>
           </div>
 
-          <div class="big-numbers">
-            <div class="big-number__box">
+          <div class="big-numbers" :aria-busy="this.loadingChartData">
+            <div class="big-number__box big-number__box--icon big-number__box--icon-total">
               <h1>Total de repasses distribuido</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
-              <span class="big-number__number">
-                R$2,85 <i>Milhões</i>
-              </span>
+              <span class="big-number__number" v-html="chartTotal"></span>
             </div>
 
-            <div class="big-number__box">
-              <h1>Total de repasses distribuido</h1>
+            <div class="big-number__box big-number__box--icon big-number__box--icon-female">
+              <h1>Distribuição do recurso para o gênero feminino</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
-              <span class="big-number__number">
-                R$2,85 <i>Milhões</i>
-              </span>
+              <span class="big-number__number" v-html="chartFemale"></span>
             </div>
 
-            <div class="big-number__box">
-              <h1>Total de repasses distribuido</h1>
+            <div class="big-number__box big-number__box--icon big-number__box--icon-male">
+              <h1>Distribuição do recurso para o gênero masculino</h1>
               <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
-              <span class="big-number__number">
-                R$2,85 <i>Milhões</i>
-              </span>
+              <span class="big-number__number" v-html="chartMale"></span>
             </div>
           </div>
 
@@ -183,8 +183,8 @@
                   <div class="candidates__text">
                     <p class="candidates__name">
                       {{ "{{ candidate.name }}" }}
-                      {{ " - {{ candidate.party }}" }}
-                      {{ " - {{ candidate.position }}" }}
+                      {{ " - {{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
+                      {{ " - concorre à {{ candidate.position.name }}" }}
                     </p>
                     <p class="candidates__info">
                       {{ "{{ candidate.total_transfers }}" }} transferências
@@ -231,77 +231,11 @@
 
       <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
-      <script src="https://code.highcharts.com/highcharts.js"></script>
-      <script src="https://code.highcharts.com/modules/series-label.js"></script>
-      <script src="https://code.highcharts.com/modules/exporting.js"></script>
-      <script src="https://code.highcharts.com/modules/export-data.js"></script>
-      <script src="https://code.highcharts.com/modules/accessibility.js"></script>
-      <script>
-        Highcharts.chart('js-main-chart', {
-
-          title: {
-            text: 'Repasses Realizados'
-          },
-
-          subtitle: {
-            text: 'Estes dados são com base no sistema oficial do TSE.'
-          },
-
-          yAxis: {
-            title: {
-              text: null
-            }
-          },
-
-          xAxis: {
-            accessibility: {
-              rangeDescription: 'Range: 2010 to 2017'
-            }
-          },
-
-          legend: {
-            layout: 'vertical',
-            align: 'right',
-            verticalAlign: 'middle'
-          },
-
-          plotOptions: {
-            series: {
-              label: {
-                connectorAllowed: false
-              },
-              pointStart: 2010
-            }
-          },
-
-          series: [{
-            name: 'Masculino',
-            data: [43934, 52503, 60000, 70000]
-          }, {
-            name: 'Feminino',
-            data: [24916, 24064, 25000, 40000]
-          }, {
-            name: 'Total',
-            data: [7000, 7500, 85000, 110000]
-          }],
-
-          responsive: {
-            rules: [{
-              condition: {
-                maxWidth: 500
-              },
-              chartOptions: {
-                legend: {
-                  layout: 'horizontal',
-                  align: 'center',
-                  verticalAlign: 'bottom'
-                }
-              }
-            }]
-          }
-
-        });
-      </script>
+      <!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+      <!-- <script src="https://code.highcharts.com/modules/series&#45;label.js"></script> -->
+      <!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
+      <!-- <script src="https://code.highcharts.com/modules/export&#45;data.js"></script> -->
+      <!-- <script src="https://code.highcharts.com/modules/accessibility.js"></script> -->
 
     </body>
 </html>
