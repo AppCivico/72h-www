@@ -1,14 +1,46 @@
 /* global Vue */
+import HighchartsExport from 'highcharts/modules/exporting';
+import HighchartsExportData from 'highcharts/modules/export-data';
 import Highcharts from 'highcharts';
 import numeral from 'numeral';
 import config from './config';
 
+HighchartsExport(Highcharts);
+HighchartsExportData(Highcharts);
+
 Highcharts.setOptions({
   lang: {
+    viewFullscreen: 'Ver em tela cheia',
     printChart: 'Imprimir gráfico',
+    downloadPNG: 'Baixar em PNG',
+    downloadJPEG: 'Baixar em JPG',
+    downloadPDF: 'Baixar em PDF',
+    downloadSVG: 'Baixar em SVG',
+
     resetZoom: 'Resetar zoom',
     loading: 'Carregando...',
   },
+  navigation: {
+    menuItemStyle: {
+      fontSize: 11
+    }
+  },
+  exporting: {
+    buttons: {
+      contextButton: {
+        menuItems: [
+          'viewFullscreen',
+          'printChart',
+          'separator',
+          'downloadPNG',
+          'downloadJPEG',
+          'downloadPDF',
+          'downloadSVG',
+        ],
+      },
+    },
+  },
+
   // tooltip: {
   //   formatter() {
   //     return `${this.point.options.city} - ${this.point.options.state}`;
@@ -49,6 +81,7 @@ if (window.location.href.indexOf('/') > -1) {
 
       chart: null,
       totalArray: [],
+      totalUnfilteredArray: [],
       femaleArray: [],
       maleArray: [],
 
@@ -79,7 +112,7 @@ if (window.location.href.indexOf('/') > -1) {
         return datesArr.map(date => new Date(`${date} 10:00`)
           .toLocaleString('pt-BR', { month: 'short', day: 'numeric' }))
       },
-      chartTotal() {
+      chartTotal() { // filtered
         return this.formatCurrency(this.totalArray.reduce((a, b) => a + b, 0));
       },
       chartMale() {
@@ -91,7 +124,7 @@ if (window.location.href.indexOf('/') > -1) {
       formatChartSeries() {
         return [{
           name: 'Total',
-          data: this.totalArray,
+          data: this.totalUnfilteredArray,
         }, {
           name: 'Mulheres',
           data: this.femaleArray,
@@ -114,9 +147,22 @@ if (window.location.href.indexOf('/') > -1) {
     methods: {
       handleData() {
         const entries = Object.values(this.mainData.chart.filtered[0]);
+        const unfilteredEntries = Object.values(this.mainData.chart.unfiltered[0]);
+
         this.totalArray = [];
+        this.totalUnfilteredArray = [];
         this.maleArray = [];
         this.femaleArray = [];
+
+        unfilteredEntries.forEach((entry) => {
+          let total = 0;
+          if (entry) {
+            entry.forEach((item) => {
+              total += item.value;
+            });
+          }
+          this.totalUnfilteredArray.push(total);
+        });
 
         entries.forEach((entry) => {
           let total = 0;
@@ -125,10 +171,10 @@ if (window.location.href.indexOf('/') > -1) {
           if (entry) {
             entry.forEach((item) => {
               total += item.value;
-              if (item.gender_id === 1) {
+              if (item.candidate.gender_id === 1) {
                 male += item.value;
               }
-              if (item.gender_id === 2) {
+              if (item.candidate.gender_id === 2) {
                 female += item.value;
               }
             });

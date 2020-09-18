@@ -47,7 +47,7 @@ module.exports = _interopRequireDefault;
 },{}],3:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":6}],4:[function(require,module,exports){
+},{"regenerator-runtime":8}],4:[function(require,module,exports){
 /*
  Highcharts JS v7.2.2 (2020-08-24)
 
@@ -526,6 +526,76 @@ this.chartWidth>=B(t.minWidth,0)&&this.chartHeight>=B(t.minHeight,0)}).call(this
 I["parts/Utilities.js"]],function(c,f){var F=f.extend;F(c,{arrayMax:f.arrayMax,arrayMin:f.arrayMin,attr:f.attr,defined:f.defined,erase:f.erase,extend:f.extend,isArray:f.isArray,isClass:f.isClass,isDOMElement:f.isDOMElement,isNumber:f.isNumber,isObject:f.isObject,isString:f.isString,objectEach:f.objectEach,pick:f.pick,pInt:f.pInt,setAnimation:f.setAnimation,splat:f.splat,syncTimeout:f.syncTimeout});return c});I["masters/highcharts.src.js"]._modules=I;return I["masters/highcharts.src.js"]});
 
 },{}],5:[function(require,module,exports){
+/*
+ Highcharts JS v7.2.2 (2020-08-24)
+
+ Exporting module
+
+ (c) 2010-2019 Torstein Honsi
+
+ License: www.highcharts.com/license
+*/
+(function(c){"object"===typeof module&&module.exports?(c["default"]=c,module.exports=c):"function"===typeof define&&define.amd?define("highcharts/modules/export-data",["highcharts","highcharts/modules/exporting"],function(q){c(q);c.Highcharts=q;return c}):c("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(c){function q(b,a,c,F){b.hasOwnProperty(a)||(b[a]=F.apply(null,c))}c=c?c._modules:{};q(c,"mixins/ajax.js",[c["parts/Globals.js"],c["parts/Utilities.js"]],function(b,a){var c=a.objectEach;
+b.ajax=function(a){var h=b.merge(!0,{url:!1,type:"get",dataType:"json",success:!1,error:!1,data:!1,headers:{}},a);a={json:"application/json",xml:"application/xml",text:"text/plain",octet:"application/octet-stream"};var f=new XMLHttpRequest;if(!h.url)return!1;f.open(h.type.toUpperCase(),h.url,!0);h.headers["Content-Type"]||f.setRequestHeader("Content-Type",a[h.dataType]||a.text);c(h.headers,function(a,b){f.setRequestHeader(b,a)});f.onreadystatechange=function(){if(4===f.readyState){if(200===f.status){var a=
+f.responseText;if("json"===h.dataType)try{a=JSON.parse(a)}catch(n){h.error&&h.error(f,n);return}return h.success&&h.success(a)}h.error&&h.error(f,f.responseText)}};try{h.data=JSON.stringify(h.data)}catch(e){}f.send(h.data||!0)};b.getJSON=function(a,c){b.ajax({url:a,success:c,dataType:"json",headers:{"Content-Type":"text/plain"}})}});q(c,"mixins/download-url.js",[c["parts/Globals.js"]],function(b){var a=b.win,c=a.navigator,q=a.document,h=a.URL||a.webkitURL||a,f=/Edge\/\d+/.test(c.userAgent);b.dataURLtoBlob=
+function(b){if((b=b.match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/))&&3<b.length&&a.atob&&a.ArrayBuffer&&a.Uint8Array&&a.Blob&&h.createObjectURL){var c=a.atob(b[3]),e=new a.ArrayBuffer(c.length);e=new a.Uint8Array(e);for(var d=0;d<e.length;++d)e[d]=c.charCodeAt(d);b=new a.Blob([e],{type:b[1]});return h.createObjectURL(b)}};b.downloadURL=function(e,h){var p=q.createElement("a");if("string"===typeof e||e instanceof String||!c.msSaveOrOpenBlob){if(f||2E6<e.length)if(e=b.dataURLtoBlob(e),!e)throw Error("Failed to convert to blob");
+if(void 0!==p.download)p.href=e,p.download=h,q.body.appendChild(p),p.click(),q.body.removeChild(p);else try{var d=a.open(e,"chart");if(void 0===d||null===d)throw Error("Failed to open window");}catch(A){a.location.href=e}}else c.msSaveOrOpenBlob(e,h)}});q(c,"modules/export-data.src.js",[c["parts/Globals.js"],c["parts/Utilities.js"]],function(b,a){function c(b,a){var c=n.navigator,w=-1<c.userAgent.indexOf("WebKit")&&0>c.userAgent.indexOf("Chrome"),l=n.URL||n.webkitURL||n;try{if(c.msSaveOrOpenBlob&&
+n.MSBlobBuilder){var e=new n.MSBlobBuilder;e.append(b);return e.getBlob("image/svg+xml")}if(!w)return l.createObjectURL(new n.Blob(["\ufeff"+b],{type:a}))}catch(G){}}var q=a.defined,h=a.extend,f=a.isObject,e=a.pick,n=b.win,p=n.document,d=b.seriesTypes,A=b.downloadURL,C=b.fireEvent;b.setOptions({exporting:{csv:{columnHeaderFormatter:null,dateFormat:"%Y-%m-%d %H:%M:%S",decimalPoint:null,itemDelimiter:null,lineDelimiter:"\n"},showTable:!1,useMultiLevelHeaders:!0,useRowspanHeaders:!0},lang:{downloadCSV:"Download CSV",
+downloadXLS:"Download XLS",openInCloud:"Open in Highcharts Cloud",viewData:"View data table"}});b.addEvent(b.Chart,"render",function(){this.options&&this.options.exporting&&this.options.exporting.showTable&&!this.options.chart.forExport&&this.viewData()});b.Chart.prototype.setUpKeyToAxis=function(){d.arearange&&(d.arearange.prototype.keyToAxis={low:"y",high:"y"});d.gantt&&(d.gantt.prototype.keyToAxis={start:"x",end:"x"})};b.Chart.prototype.getDataRows=function(a){var c=this.hasParallelCoordinates,
+h=this.time,w=this.options.exporting&&this.options.exporting.csv||{},l=this.xAxis,d={},f=[],p=[],n=[],y,z=function(k,c,g){if(w.columnHeaderFormatter){var d=w.columnHeaderFormatter(k,c,g);if(!1!==d)return d}return k?k instanceof b.Axis?k.options.title&&k.options.title.text||(k.isDatetimeAxis?"DateTime":"Category"):a?{columnTitle:1<g?c:k.name,topLevelColumnTitle:k.name}:k.name+(1<g?" ("+c+")":""):"Category"},D=function(a,c,g){var k={},d={};c.forEach(function(c){var e=(a.keyToAxis&&a.keyToAxis[c]||c)+
+"Axis";e=b.isNumber(g)?a.chart[e][g]:a[e];k[c]=e&&e.categories||[];d[c]=e&&e.isDatetimeAxis});return{categoryMap:k,dateTimeValueAxisMap:d}},g=[];var u=0;this.setUpKeyToAxis();this.series.forEach(function(k){var t=k.options.keys||k.pointArrayMap||["y"],r=t.length,v=!k.requireSorting&&{},f=l.indexOf(k.xAxis),B=D(k,t),m;if(!1!==k.options.includeInDataExport&&!k.options.isInternal&&!1!==k.visible){b.find(g,function(a){return a[0]===f})||g.push([f,u]);for(m=0;m<r;)y=z(k,t[m],t.length),n.push(y.columnTitle||
+y),a&&p.push(y.topLevelColumnTitle||y),m++;var q={chart:k.chart,autoIncrement:k.autoIncrement,options:k.options,pointArrayMap:k.pointArrayMap};k.options.data.forEach(function(a,b){c&&(B=D(k,t,b));var g={series:q};k.pointClass.prototype.applyOptions.apply(g,[a]);a=g.x;var l=k.data[b]&&k.data[b].name;m=0;k.xAxis&&"name"!==k.exportKey||(a=l);v&&(v[a]&&(a+="|"+b),v[a]=!0);d[a]||(d[a]=[],d[a].xValues=[]);d[a].x=g.x;d[a].name=l;for(d[a].xValues[f]=g.x;m<r;)b=t[m],l=g[b],d[a][u+m]=e(B.categoryMap[b][l],
+B.dateTimeValueAxisMap[b]?h.dateFormat(w.dateFormat,l):null,l),m++});u+=m}});for(r in d)Object.hasOwnProperty.call(d,r)&&f.push(d[r]);var r=a?[p,n]:[n];for(u=g.length;u--;){var t=g[u][0];var v=g[u][1];var x=l[t];f.sort(function(a,b){return a.xValues[t]-b.xValues[t]});var E=z(x);r[0].splice(v,0,E);a&&r[1]&&r[1].splice(v,0,E);f.forEach(function(a){var b=a.name;x&&!q(b)&&(x.isDatetimeAxis?(a.x instanceof Date&&(a.x=a.x.getTime()),b=h.dateFormat(w.dateFormat,a.x)):b=x.categories?e(x.names[a.x],x.categories[a.x],
+a.x):a.x);a.splice(v,0,b)})}r=r.concat(f);C(this,"exportData",{dataRows:r});return r};b.Chart.prototype.getCSV=function(a){var b="",c=this.getDataRows(),d=this.options.exporting.csv,l=e(d.decimalPoint,","!==d.itemDelimiter&&a?(1.1).toLocaleString()[1]:"."),h=e(d.itemDelimiter,","===l?";":","),f=d.lineDelimiter;c.forEach(function(a,d){for(var e,m=a.length;m--;)e=a[m],"string"===typeof e&&(e='"'+e+'"'),"number"===typeof e&&"."!==l&&(e=e.toString().replace(".",l)),a[m]=e;b+=a.join(h);d<c.length-1&&(b+=
+f)});return b};b.Chart.prototype.getTable=function(a){var b='<table id="highcharts-data-table-'+this.index+'">',c=this.options,d=a?(1.1).toLocaleString()[1]:".",h=e(c.exporting.useMultiLevelHeaders,!0);a=this.getDataRows(h);var f=0,l=h?a.shift():null,q=a.shift(),n=function(a,b,c,h){var g=e(h,"");b="text"+(b?" "+b:"");"number"===typeof g?(g=g.toString(),","===d&&(g=g.replace(".",d)),b="number"):h||(b="empty");return"<"+a+(c?" "+c:"")+' class="'+b+'">'+g+"</"+a+">"};!1!==c.exporting.tableCaption&&(b+=
+'<caption class="highcharts-table-caption">'+e(c.exporting.tableCaption,c.title.text?c.title.text.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#x27;").replace(/\//g,"&#x2F;"):"Chart")+"</caption>");for(var p=0,z=a.length;p<z;++p)a[p].length>f&&(f=a[p].length);b+=function(a,b,e){var d="<thead>",f=0;e=e||b&&b.length;var g,l=0;if(g=h&&a&&b){a:if(g=a.length,b.length===g){for(;g--;)if(a[g]!==b[g]){g=!1;break a}g=!0}else g=!1;g=!g}if(g){for(d+="<tr>";f<
+e;++f){g=a[f];var m=a[f+1];g===m?++l:l?(d+=n("th","highcharts-table-topheading",'scope="col" colspan="'+(l+1)+'"',g),l=0):(g===b[f]?c.exporting.useRowspanHeaders?(m=2,delete b[f]):(m=1,b[f]=""):m=1,d+=n("th","highcharts-table-topheading",'scope="col"'+(1<m?' valign="top" rowspan="'+m+'"':""),g))}d+="</tr>"}if(b){d+="<tr>";f=0;for(e=b.length;f<e;++f)void 0!==b[f]&&(d+=n("th",null,'scope="col"',b[f]));d+="</tr>"}return d+"</thead>"}(l,q,Math.max(f,q.length));b+="<tbody>";a.forEach(function(a){b+="<tr>";
+for(var c=0;c<f;c++)b+=n(c?"td":"th",null,c?"":'scope="row"',a[c]);b+="</tr>"});b+="</tbody></table>";a={html:b};C(this,"afterGetTable",a);return a.html};b.Chart.prototype.downloadCSV=function(){var a=this.getCSV(!0);A(c(a,"text/csv")||"data:text/csv,\ufeff"+encodeURIComponent(a),this.getFilename()+".csv")};b.Chart.prototype.downloadXLS=function(){var a='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head>\x3c!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>Ark1</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--\x3e<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";} .text{ mso-number-format:"@";}</style><meta name=ProgId content=Excel.Sheet><meta charset=UTF-8></head><body>'+
+this.getTable(!0)+"</body></html>";A(c(a,"application/vnd.ms-excel")||"data:application/vnd.ms-excel;base64,"+n.btoa(unescape(encodeURIComponent(a))),this.getFilename()+".xls")};b.Chart.prototype.viewData=function(){this.dataTableDiv||(this.dataTableDiv=p.createElement("div"),this.dataTableDiv.className="highcharts-data-table",this.renderTo.parentNode.insertBefore(this.dataTableDiv,this.renderTo.nextSibling));this.dataTableDiv.innerHTML=this.getTable();C(this,"afterViewData",this.dataTableDiv)};b.Chart.prototype.openInCloud=
+function(){function a(b){Object.keys(b).forEach(function(c){"function"===typeof b[c]&&delete b[c];f(b[c])&&a(b[c])})}var c=b.merge(this.userOptions);a(c);c={name:c.title&&c.title.text||"Chart title",options:c,settings:{constructor:"Chart",dataProvider:{csv:this.getCSV()}}};var d=JSON.stringify(c);(function(){var a=p.createElement("form");p.body.appendChild(a);a.method="post";a.action="https://cloud-api.highcharts.com/openincloud";a.target="_blank";var b=p.createElement("input");b.type="hidden";b.name=
+"chart";b.value=d;a.appendChild(b);a.submit();p.body.removeChild(a)})()};if(a=b.getOptions().exporting)h(a.menuItemDefinitions,{downloadCSV:{textKey:"downloadCSV",onclick:function(){this.downloadCSV()}},downloadXLS:{textKey:"downloadXLS",onclick:function(){this.downloadXLS()}},viewData:{textKey:"viewData",onclick:function(){this.viewData()}},openInCloud:{textKey:"openInCloud",onclick:function(){this.openInCloud()}}}),a.buttons&&a.buttons.contextButton.menuItems.push("separator","downloadCSV","downloadXLS",
+"viewData","openInCloud");d.map&&(d.map.prototype.exportKey="name");d.mapbubble&&(d.mapbubble.prototype.exportKey="name");d.treemap&&(d.treemap.prototype.exportKey="name")});q(c,"masters/modules/export-data.src.js",[],function(){})});
+
+},{}],6:[function(require,module,exports){
+/*
+ Highcharts JS v7.2.2 (2020-08-24)
+
+ Exporting module
+
+ (c) 2010-2019 Torstein Honsi
+
+ License: www.highcharts.com/license
+*/
+(function(f){"object"===typeof module&&module.exports?(f["default"]=f,module.exports=f):"function"===typeof define&&define.amd?define("highcharts/modules/exporting",["highcharts"],function(k){f(k);f.Highcharts=k;return f}):f("undefined"!==typeof Highcharts?Highcharts:void 0)})(function(f){function k(g,e,f,H){g.hasOwnProperty(e)||(g[e]=H.apply(null,f))}f=f?f._modules:{};k(f,"modules/full-screen.src.js",[f["parts/Globals.js"]],function(g){(g.FullScreen=function(e){this.init(e.parentNode)}).prototype=
+{init:function(e){var g;e.requestFullscreen?g=e.requestFullscreen():e.mozRequestFullScreen?g=e.mozRequestFullScreen():e.webkitRequestFullscreen?g=e.webkitRequestFullscreen():e.msRequestFullscreen&&(g=e.msRequestFullscreen());if(g)g["catch"](function(){alert("Full screen is not supported inside a frame")})}}});k(f,"mixins/navigation.js",[],function(){return{initUpdate:function(g){g.navigation||(g.navigation={updates:[],update:function(g,f){this.updates.forEach(function(e){e.update.call(e.context,g,
+f)})}})},addUpdate:function(g,e){e.navigation||this.initUpdate(e);e.navigation.updates.push({update:g,context:e})}}});k(f,"modules/exporting.src.js",[f["parts/Globals.js"],f["parts/Utilities.js"],f["mixins/navigation.js"]],function(g,e,f){var k=e.discardElement,t=e.extend,I=e.isObject,C=e.objectEach,r=e.pick;e=g.defaultOptions;var w=g.doc,A=g.Chart,x=g.addEvent,J=g.removeEvent,B=g.fireEvent,v=g.createElement,n=g.css,p=g.merge,K=g.isTouchDevice,y=g.win,F=y.navigator.userAgent,D=g.SVGRenderer,G=g.Renderer.prototype.symbols,
+L=/Edge\/|Trident\/|MSIE /.test(F),M=/firefox/i.test(F);t(e.lang,{viewFullscreen:"View in full screen",printChart:"Print chart",downloadPNG:"Download PNG image",downloadJPEG:"Download JPEG image",downloadPDF:"Download PDF document",downloadSVG:"Download SVG vector image",contextButtonTitle:"Chart context menu"});e.navigation||(e.navigation={});p(!0,e.navigation,{buttonOptions:{theme:{},symbolSize:14,symbolX:12.5,symbolY:10.5,align:"right",buttonSpacing:3,height:22,verticalAlign:"top",width:24}});
+p(!0,e.navigation,{menuStyle:{border:"1px solid #999999",background:"#ffffff",padding:"5px 0"},menuItemStyle:{padding:"0.5em 1em",color:"#333333",background:"none",fontSize:K?"14px":"11px",transition:"background 250ms, color 250ms"},menuItemHoverStyle:{background:"#335cad",color:"#ffffff"},buttonOptions:{symbolFill:"#666666",symbolStroke:"#666666",symbolStrokeWidth:3,theme:{padding:5}}});e.exporting={type:"image/png",url:"https://export.highcharts.com/",printMaxWidth:780,scale:2,buttons:{contextButton:{className:"highcharts-contextbutton",
+menuClassName:"highcharts-contextmenu",symbol:"menu",titleKey:"contextButtonTitle",menuItems:"viewFullscreen printChart separator downloadPNG downloadJPEG downloadPDF downloadSVG".split(" ")}},menuItemDefinitions:{viewFullscreen:{textKey:"viewFullscreen",onclick:function(){this.fullscreen=new g.FullScreen(this.container)}},printChart:{textKey:"printChart",onclick:function(){this.print()}},separator:{separator:!0},downloadPNG:{textKey:"downloadPNG",onclick:function(){this.exportChart()}},downloadJPEG:{textKey:"downloadJPEG",
+onclick:function(){this.exportChart({type:"image/jpeg"})}},downloadPDF:{textKey:"downloadPDF",onclick:function(){this.exportChart({type:"application/pdf"})}},downloadSVG:{textKey:"downloadSVG",onclick:function(){this.exportChart({type:"image/svg+xml"})}}}};g.post=function(a,b,c){var d=v("form",p({method:"post",action:a,enctype:"multipart/form-data"},c),{display:"none"},w.body);C(b,function(b,a){v("input",{type:"hidden",name:a,value:b},null,d)});d.submit();k(d)};t(A.prototype,{sanitizeSVG:function(a,
+b){var c=a.indexOf("</svg>")+6,d=a.substr(c);a=a.substr(0,c);b&&b.exporting&&b.exporting.allowHTML&&d&&(d='<foreignObject x="0" y="0" width="'+b.chart.width+'" height="'+b.chart.height+'"><body xmlns="http://www.w3.org/1999/xhtml">'+d+"</body></foreignObject>",a=a.replace("</svg>",d+"</svg>"));a=a.replace(/zIndex="[^"]+"/g,"").replace(/symbolName="[^"]+"/g,"").replace(/jQuery[0-9]+="[^"]+"/g,"").replace(/url\(("|&quot;)(.*?)("|&quot;);?\)/g,"url($2)").replace(/url\([^#]+#/g,"url(#").replace(/<svg /,
+'<svg xmlns:xlink="http://www.w3.org/1999/xlink" ').replace(/ (|NS[0-9]+:)href=/g," xlink:href=").replace(/\n/," ").replace(/(fill|stroke)="rgba\(([ 0-9]+,[ 0-9]+,[ 0-9]+),([ 0-9\.]+)\)"/g,'$1="rgb($2)" $1-opacity="$3"').replace(/&nbsp;/g,"\u00a0").replace(/&shy;/g,"\u00ad");this.ieSanitizeSVG&&(a=this.ieSanitizeSVG(a));return a},getChartHTML:function(){this.styledMode&&this.inlineStyles();return this.container.innerHTML},getSVG:function(a){var b,c=p(this.options,a);c.plotOptions=p(this.userOptions.plotOptions,
+a&&a.plotOptions);c.time=p(this.userOptions.time,a&&a.time);var d=v("div",null,{position:"absolute",top:"-9999em",width:this.chartWidth+"px",height:this.chartHeight+"px"},w.body);var e=this.renderTo.style.width;var q=this.renderTo.style.height;e=c.exporting.sourceWidth||c.chart.width||/px$/.test(e)&&parseInt(e,10)||(c.isGantt?800:600);q=c.exporting.sourceHeight||c.chart.height||/px$/.test(q)&&parseInt(q,10)||400;t(c.chart,{animation:!1,renderTo:d,forExport:!0,renderer:"SVGRenderer",width:e,height:q});
+c.exporting.enabled=!1;delete c.data;c.series=[];this.series.forEach(function(a){b=p(a.userOptions,{animation:!1,enableMouseTracking:!1,showCheckbox:!1,visible:a.visible});b.isInternal||c.series.push(b)});this.axes.forEach(function(a){a.userOptions.internalKey||(a.userOptions.internalKey=g.uniqueKey())});var f=new g.Chart(c,this.callback);a&&["xAxis","yAxis","series"].forEach(function(b){var d={};a[b]&&(d[b]=a[b],f.update(d))});this.axes.forEach(function(b){var a=g.find(f.axes,function(a){return a.options.internalKey===
+b.userOptions.internalKey}),d=b.getExtremes(),c=d.userMin;d=d.userMax;a&&(void 0!==c&&c!==a.min||void 0!==d&&d!==a.max)&&a.setExtremes(c,d,!0,!1)});e=f.getChartHTML();B(this,"getSVG",{chartCopy:f});e=this.sanitizeSVG(e,c);c=null;f.destroy();k(d);return e},getSVGForExport:function(a,b){var c=this.options.exporting;return this.getSVG(p({chart:{borderRadius:0}},c.chartOptions,b,{exporting:{sourceWidth:a&&a.sourceWidth||c.sourceWidth,sourceHeight:a&&a.sourceHeight||c.sourceHeight}}))},getFilename:function(){var a=
+this.userOptions.title&&this.userOptions.title.text,b=this.options.exporting.filename;if(b)return b;"string"===typeof a&&(b=a.toLowerCase().replace(/<\/?[^>]+(>|$)/g,"").replace(/[\s_]+/g,"-").replace(/[^a-z0-9\-]/g,"").replace(/^[\-]+/g,"").replace(/[\-]+/g,"-").substr(0,24).replace(/[\-]+$/g,""));if(!b||5>b.length)b="chart";return b},exportChart:function(a,b){b=this.getSVGForExport(a,b);a=p(this.options.exporting,a);g.post(a.url,{filename:a.filename||this.getFilename(),type:a.type,width:a.width||
+0,scale:a.scale,svg:b},a.formAttributes)},print:function(){function a(a){(b.fixedDiv?[b.fixedDiv,b.scrollingContainer]:[b.container]).forEach(function(b){a.appendChild(b)})}var b=this,c=[],d=w.body,e=d.childNodes,g=b.options.exporting.printMaxWidth,f;if(!b.isPrinting){b.isPrinting=!0;b.pointer.reset(null,0);B(b,"beforePrint");if(f=g&&b.chartWidth>g){var h=[b.options.chart.width,void 0,!1];b.setSize(g,void 0,!1)}[].forEach.call(e,function(a,b){1===a.nodeType&&(c[b]=a.style.display,a.style.display=
+"none")});a(d);setTimeout(function(){y.focus();y.print();setTimeout(function(){a(b.renderTo);[].forEach.call(e,function(a,b){1===a.nodeType&&(a.style.display=c[b]||"")});b.isPrinting=!1;f&&b.setSize.apply(b,h);B(b,"afterPrint")},1E3)},1)}},contextMenu:function(a,b,c,d,e,f,E){var h=this,q=h.options.navigation,p=h.chartWidth,z=h.chartHeight,m="cache-"+a,l=h[m],u=Math.max(e,f);if(!l){h.exportContextMenu=h[m]=l=v("div",{className:a},{position:"absolute",zIndex:1E3,padding:u+"px",pointerEvents:"auto"},
+h.fixedDiv||h.container);var k=v("div",{className:"highcharts-menu"},null,l);h.styledMode||n(k,t({MozBoxShadow:"3px 3px 10px #888",WebkitBoxShadow:"3px 3px 10px #888",boxShadow:"3px 3px 10px #888"},q.menuStyle));l.hideMenu=function(){n(l,{display:"none"});E&&E.setState(0);h.openMenu=!1;n(h.renderTo,{overflow:"hidden"});g.clearTimeout(l.hideTimer);B(h,"exportMenuHidden")};h.exportEvents.push(x(l,"mouseleave",function(){l.hideTimer=y.setTimeout(l.hideMenu,500)}),x(l,"mouseenter",function(){g.clearTimeout(l.hideTimer)}),
+x(w,"mouseup",function(b){h.pointer.inClass(b.target,a)||l.hideMenu()}),x(l,"click",function(){h.openMenu&&l.hideMenu()}));b.forEach(function(a){"string"===typeof a&&(a=h.options.exporting.menuItemDefinitions[a]);if(I(a,!0)){if(a.separator)var b=v("hr",null,null,k);else b=v("div",{className:"highcharts-menu-item",onclick:function(b){b&&b.stopPropagation();l.hideMenu();a.onclick&&a.onclick.apply(h,arguments)},innerHTML:a.text||h.options.lang[a.textKey]},null,k),h.styledMode||(b.onmouseover=function(){n(this,
+q.menuItemHoverStyle)},b.onmouseout=function(){n(this,q.menuItemStyle)},n(b,t({cursor:"pointer"},q.menuItemStyle)));h.exportDivElements.push(b)}});h.exportDivElements.push(k,l);h.exportMenuWidth=l.offsetWidth;h.exportMenuHeight=l.offsetHeight}b={display:"block"};c+h.exportMenuWidth>p?b.right=p-c-e-u+"px":b.left=c-u+"px";d+f+h.exportMenuHeight>z&&"top"!==E.alignOptions.verticalAlign?b.bottom=z-d-u+"px":b.top=d+f-u+"px";n(l,b);n(h.renderTo,{overflow:""});h.openMenu=!0;B(h,"exportMenuShown")},addButton:function(a){var b=
+this,c=b.renderer,d=p(b.options.navigation.buttonOptions,a),e=d.onclick,g=d.menuItems,f=d.symbolSize||12;b.btnCount||(b.btnCount=0);b.exportDivElements||(b.exportDivElements=[],b.exportSVGElements=[]);if(!1!==d.enabled){var h=d.theme,k=h.states,n=k&&k.hover;k=k&&k.select;var z;b.styledMode||(h.fill=r(h.fill,"#ffffff"),h.stroke=r(h.stroke,"none"));delete h.states;e?z=function(a){a&&a.stopPropagation();e.call(b,a)}:g&&(z=function(a){a&&a.stopPropagation();b.contextMenu(m.menuClassName,g,m.translateX,
+m.translateY,m.width,m.height,m);m.setState(2)});d.text&&d.symbol?h.paddingLeft=r(h.paddingLeft,25):d.text||t(h,{width:d.width,height:d.height,padding:0});b.styledMode||(h["stroke-linecap"]="round",h.fill=r(h.fill,"#ffffff"),h.stroke=r(h.stroke,"none"));var m=c.button(d.text,0,0,z,h,n,k).addClass(a.className).attr({title:r(b.options.lang[d._titleKey||d.titleKey],"")});m.menuClassName=a.menuClassName||"highcharts-menu-"+b.btnCount++;if(d.symbol){var l=c.symbol(d.symbol,d.symbolX-f/2,d.symbolY-f/2,
+f,f,{width:f,height:f}).addClass("highcharts-button-symbol").attr({zIndex:1}).add(m);b.styledMode||l.attr({stroke:d.symbolStroke,fill:d.symbolFill,"stroke-width":d.symbolStrokeWidth||1})}m.add(b.exportingGroup).align(t(d,{width:m.width,x:r(d.x,b.buttonOffset)}),!0,"spacingBox");b.buttonOffset+=(m.width+d.buttonSpacing)*("right"===d.align?-1:1);b.exportSVGElements.push(m,l)}},destroyExport:function(a){var b=a?a.target:this;a=b.exportSVGElements;var c=b.exportDivElements,d=b.exportEvents,e;a&&(a.forEach(function(a,
+d){a&&(a.onclick=a.ontouchstart=null,e="cache-"+a.menuClassName,b[e]&&delete b[e],b.exportSVGElements[d]=a.destroy())}),a.length=0);b.exportingGroup&&(b.exportingGroup.destroy(),delete b.exportingGroup);c&&(c.forEach(function(a,d){g.clearTimeout(a.hideTimer);J(a,"mouseleave");b.exportDivElements[d]=a.onmouseout=a.onmouseover=a.ontouchstart=a.onclick=null;k(a)}),c.length=0);d&&(d.forEach(function(a){a()}),d.length=0)}});D.prototype.inlineToAttributes="fill stroke strokeLinecap strokeLinejoin strokeWidth textAnchor x y".split(" ");
+D.prototype.inlineBlacklist=[/-/,/^(clipPath|cssText|d|height|width)$/,/^font$/,/[lL]ogical(Width|Height)$/,/perspective/,/TapHighlightColor/,/^transition/,/^length$/];D.prototype.unstyledElements=["clipPath","defs","desc"];A.prototype.inlineStyles=function(){function a(a){return a.replace(/([A-Z])/g,function(a,b){return"-"+b.toLowerCase()})}function b(c){function m(b,f){u=n=!1;if(g){for(q=g.length;q--&&!n;)n=g[q].test(f);u=!n}"transform"===f&&"none"===b&&(u=!0);for(q=e.length;q--&&!u;)u=e[q].test(f)||
+"function"===typeof b;u||x[f]===b&&"svg"!==c.nodeName||h[c.nodeName][f]===b||(-1!==d.indexOf(f)?c.setAttribute(a(f),b):l+=a(f)+":"+b+";")}var l="",u,n,q;if(1===c.nodeType&&-1===f.indexOf(c.nodeName)){var t=y.getComputedStyle(c,null);var x="svg"===c.nodeName?{}:y.getComputedStyle(c.parentNode,null);if(!h[c.nodeName]){k=r.getElementsByTagName("svg")[0];var v=r.createElementNS(c.namespaceURI,c.nodeName);k.appendChild(v);h[c.nodeName]=p(y.getComputedStyle(v,null));"text"===c.nodeName&&delete h.text.fill;
+k.removeChild(v)}if(M||L)for(var w in t)m(t[w],w);else C(t,m);l&&(t=c.getAttribute("style"),c.setAttribute("style",(t?t+";":"")+l));"svg"===c.nodeName&&c.setAttribute("stroke-width","1px");"text"!==c.nodeName&&[].forEach.call(c.children||c.childNodes,b)}}var c=this.renderer,d=c.inlineToAttributes,e=c.inlineBlacklist,g=c.inlineWhitelist,f=c.unstyledElements,h={},k;c=w.createElement("iframe");n(c,{width:"1px",height:"1px",visibility:"hidden"});w.body.appendChild(c);var r=c.contentWindow.document;r.open();
+r.write('<svg xmlns="http://www.w3.org/2000/svg"></svg>');r.close();b(this.container.querySelector("svg"));k.parentNode.removeChild(k)};G.menu=function(a,b,c,d){return["M",a,b+2.5,"L",a+c,b+2.5,"M",a,b+d/2+.5,"L",a+c,b+d/2+.5,"M",a,b+d-1.5,"L",a+c,b+d-1.5]};G.menuball=function(a,b,c,d){a=[];d=d/3-2;return a=a.concat(this.circle(c-d,b,d,d),this.circle(c-d,b+d+4,d,d),this.circle(c-d,b+2*(d+4),d,d))};A.prototype.renderExporting=function(){var a=this,b=a.options.exporting,c=b.buttons,d=a.isDirtyExporting||
+!a.exportSVGElements;a.buttonOffset=0;a.isDirtyExporting&&a.destroyExport();d&&!1!==b.enabled&&(a.exportEvents=[],a.exportingGroup=a.exportingGroup||a.renderer.g("exporting-group").attr({zIndex:3}).add(),C(c,function(b){a.addButton(b)}),a.isDirtyExporting=!1);x(a,"destroy",a.destroyExport)};x(A,"init",function(){var a=this;a.exporting={update:function(b,c){a.isDirtyExporting=!0;p(!0,a.options.exporting,b);r(c,!0)&&a.redraw()}};f.addUpdate(function(b,c){a.isDirtyExporting=!0;p(!0,a.options.navigation,
+b);r(c,!0)&&a.redraw()},a)});A.prototype.callbacks.push(function(a){a.renderExporting();x(a,"redraw",a.renderExporting)})});k(f,"masters/modules/exporting.src.js",[],function(){})});
+
+},{}],7:[function(require,module,exports){
 /*! @preserve
  * numeral.js
  * version : 2.0.6
@@ -1540,7 +1610,7 @@ I["parts/Utilities.js"]],function(c,f){var F=f.extend;F(c,{arrayMax:f.arrayMax,a
 return numeral;
 }));
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -2290,7 +2360,7 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2304,7 +2374,7 @@ var _default = {
 };
 exports.default = _default;
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2313,6 +2383,10 @@ var _regenerator = _interopRequireDefault(require("@babel/runtime/regenerator"))
 
 var _asyncToGenerator2 = _interopRequireDefault(require("@babel/runtime/helpers/asyncToGenerator"));
 
+var _exporting = _interopRequireDefault(require("highcharts/modules/exporting"));
+
+var _exportData = _interopRequireDefault(require("highcharts/modules/export-data"));
+
 var _highcharts = _interopRequireDefault(require("highcharts"));
 
 var _numeral = _interopRequireDefault(require("numeral"));
@@ -2320,11 +2394,31 @@ var _numeral = _interopRequireDefault(require("numeral"));
 var _config = _interopRequireDefault(require("./config"));
 
 /* global Vue */
+(0, _exporting.default)(_highcharts.default);
+(0, _exportData.default)(_highcharts.default);
+
 _highcharts.default.setOptions({
   lang: {
+    viewFullscreen: 'Ver em tela cheia',
     printChart: 'Imprimir gráfico',
+    downloadPNG: 'Baixar em PNG',
+    downloadJPEG: 'Baixar em JPG',
+    downloadPDF: 'Baixar em PDF',
+    downloadSVG: 'Baixar em SVG',
     resetZoom: 'Resetar zoom',
     loading: 'Carregando...'
+  },
+  navigation: {
+    menuItemStyle: {
+      fontSize: 11
+    }
+  },
+  exporting: {
+    buttons: {
+      contextButton: {
+        menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG']
+      }
+    }
   } // tooltip: {
   //   formatter() {
   //     return `${this.point.options.city} - ${this.point.options.state}`;
@@ -2365,6 +2459,7 @@ if (window.location.href.indexOf('/') > -1) {
       filterOpen: true,
       chart: null,
       totalArray: [],
+      totalUnfilteredArray: [],
       femaleArray: [],
       maleArray: [],
       mainData: null,
@@ -2398,6 +2493,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       chartTotal: function chartTotal() {
+        // filtered
         return this.formatCurrency(this.totalArray.reduce(function (a, b) {
           return a + b;
         }, 0));
@@ -2415,7 +2511,7 @@ if (window.location.href.indexOf('/') > -1) {
       formatChartSeries: function formatChartSeries() {
         return [{
           name: 'Total',
-          data: this.totalArray
+          data: this.totalUnfilteredArray
         }, {
           name: 'Mulheres',
           data: this.femaleArray
@@ -2459,9 +2555,22 @@ if (window.location.href.indexOf('/') > -1) {
         var _this3 = this;
 
         var entries = Object.values(this.mainData.chart.filtered[0]);
+        var unfilteredEntries = Object.values(this.mainData.chart.unfiltered[0]);
         this.totalArray = [];
+        this.totalUnfilteredArray = [];
         this.maleArray = [];
         this.femaleArray = [];
+        unfilteredEntries.forEach(function (entry) {
+          var total = 0;
+
+          if (entry) {
+            entry.forEach(function (item) {
+              total += item.value;
+            });
+          }
+
+          _this3.totalUnfilteredArray.push(total);
+        });
         entries.forEach(function (entry) {
           var total = 0;
           var male = 0;
@@ -2471,11 +2580,11 @@ if (window.location.href.indexOf('/') > -1) {
             entry.forEach(function (item) {
               total += item.value;
 
-              if (item.gender_id === 1) {
+              if (item.candidate.gender_id === 1) {
                 male += item.value;
               }
 
-              if (item.gender_id === 2) {
+              if (item.candidate.gender_id === 2) {
                 female += item.value;
               }
             });
@@ -2608,7 +2717,7 @@ if (window.location.href.indexOf('/') > -1) {
   });
 }
 
-},{"./config":7,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":3,"highcharts":4,"numeral":5}],9:[function(require,module,exports){
+},{"./config":9,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":3,"highcharts":4,"highcharts/modules/export-data":5,"highcharts/modules/exporting":6,"numeral":7}],11:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2619,7 +2728,7 @@ require("./home");
 
 (0, _menuToggle.default)();
 
-},{"./home":8,"./menuToggle":10,"@babel/runtime/helpers/interopRequireDefault":2}],10:[function(require,module,exports){
+},{"./home":10,"./menuToggle":12,"@babel/runtime/helpers/interopRequireDefault":2}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2639,4 +2748,4 @@ function watchMainMenu() {
   }
 }
 
-},{}]},{},[9]);
+},{}]},{},[11]);
