@@ -211,14 +211,12 @@
             </div>
           </div>
 
-
-
           <div class="partners">
             <h2>{{ i18n "partnersAndOrganizations" }}</h2>
-            <img src="https://www.placecage.com/400/300" alt="">
-            <img src="https://www.placecage.com/400/300" alt="">
-            <img src="https://www.placecage.com/400/300" alt="">
-            <img src="https://www.placecage.com/400/300" alt="">
+
+            {{ range where .Site.RegularPages ".Type" "partners" }}
+              <img src="{{ .Params.image }}" alt="{{ .Title }}">
+            {{ end }}
           </div>
         </div>
       </main>

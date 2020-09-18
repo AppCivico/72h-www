@@ -1,0 +1,37 @@
+backend:
+  name: github
+  repo: AppCivico/72h-www # Path to your Github repository
+  branch: master # Branch to update (optional; defaults to master)
+  base_url: https://quirky-lamport-b80cd2.netlify.app/
+  accept_roles:
+    - admin
+media_folder: "static/uploads"
+public_folder: "/uploads"
+collections:
+  -
+    label: "Parceiros e Organizações"
+    name: "partners"
+    folder: "content/partners"
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    fields:
+      -
+        label: "Titulo"
+        name: "title"
+        widget: "string"
+        tagname: "h1"
+        pattern: ['.{3,40}', "Must have between 3 and 40 characters"]
+      -
+        label: "Imagem (400 X 300)"
+        name: "Image"
+        widget: "image"
+      -
+        label: "Ordem"
+        name: "weight"
+        widget: "number"
+      -
+        label: "Rascunho"
+        name: "draft"
+        widget: "boolean"
+        default: true

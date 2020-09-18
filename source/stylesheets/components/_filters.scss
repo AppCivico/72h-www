@@ -59,6 +59,7 @@
 
 .filters__items form {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .filters__items select {
