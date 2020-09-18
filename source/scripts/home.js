@@ -8,46 +8,6 @@ import config from './config';
 HighchartsExport(Highcharts);
 HighchartsExportData(Highcharts);
 
-Highcharts.setOptions({
-  lang: {
-    viewFullscreen: 'Ver em tela cheia',
-    printChart: 'Imprimir gráfico',
-    downloadPNG: 'Baixar em PNG',
-    downloadJPEG: 'Baixar em JPG',
-    downloadPDF: 'Baixar em PDF',
-    downloadSVG: 'Baixar em SVG',
-
-    resetZoom: 'Resetar zoom',
-    loading: 'Carregando...',
-  },
-  navigation: {
-    menuItemStyle: {
-      fontSize: 11
-    }
-  },
-  exporting: {
-    buttons: {
-      contextButton: {
-        menuItems: [
-          'viewFullscreen',
-          'printChart',
-          'separator',
-          'downloadPNG',
-          'downloadJPEG',
-          'downloadPDF',
-          'downloadSVG',
-        ],
-      },
-    },
-  },
-
-  // tooltip: {
-  //   formatter() {
-  //     return `${this.point.options.city} - ${this.point.options.state}`;
-  //   },
-  // },
-});
-
 numeral.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
@@ -76,12 +36,13 @@ if (window.location.href.indexOf('/') > -1) {
       loadingCandidates: true,
       loadingChartData: true,
 
+      selectedLocaleText: 'Brasil',
+
       homeLoading: true,
       filterOpen: true,
 
       chart: null,
       totalArray: [],
-      totalUnfilteredArray: [],
       femaleArray: [],
       maleArray: [],
 
@@ -105,14 +66,14 @@ if (window.location.href.indexOf('/') > -1) {
     },
     computed: {
       cities() {
-        return window.appFilters.cities.filter(city => city.region_id === this.selectedState);
+        return window.appFilters.cities.filter(city => city.region_id === this.selectedState?.id);
       },
       chartDates() {
-        const datesArr = Object.keys(this.mainData.chart.filtered[0]);
+        const datesArr = Object.keys(this.mainData.chart[0]);
         return datesArr.map(date => new Date(`${date} 10:00`)
           .toLocaleString('pt-BR', { month: 'short', day: 'numeric' }))
       },
-      chartTotal() { // filtered
+      chartTotal() {
         return this.formatCurrency(this.totalArray.reduce((a, b) => a + b, 0));
       },
       chartMale() {
@@ -124,7 +85,7 @@ if (window.location.href.indexOf('/') > -1) {
       formatChartSeries() {
         return [{
           name: 'Total',
-          data: this.totalUnfilteredArray,
+          data: this.totalArray,
         }, {
           name: 'Mulheres',
           data: this.femaleArray,
@@ -143,26 +104,83 @@ if (window.location.href.indexOf('/') > -1) {
     mounted() {
       this.getData();
       this.getCandidates();
+      this.setChartOptions();
     },
     methods: {
-      handleData() {
-        const entries = Object.values(this.mainData.chart.filtered[0]);
-        const unfilteredEntries = Object.values(this.mainData.chart.unfiltered[0]);
+      updateLocaleText() {
+        if (this.selectedState && !this.selectedCity) {
+          this.selectedLocaleText = this.selectedState.name;
+        }
+        else if (this.selectedState && this.selectedCity) {
+          this.selectedLocaleText = `${this.selectedCity.name}/${this.selectedState.acronym}`;
+        }
+        else {
+          this.selectedLocaleText = `Brasil`;
+        }
+      },
+      updateUrl() {
+        let url = `${config.api.domain}candidates?results=9`;
 
+        // if (this.selectedParty) {
+        //   url += `&party_id=${this.selectedParty}`;
+        // }
+        // if (this.selectedRace) {
+        //   url += `&race_id=${this.selectedRace}`;
+        // }
+        // if (this.selectedState) {
+        //   url += `&region_id=${this.selectedState}`;
+        // }
+        // if (this.selectedCity) {
+        //   url += `&city_id=${this.selectedCity}`;
+        // }
+      },
+      setChartOptions() {
+        Highcharts.setOptions({
+          lang: {
+            viewFullscreen: 'Ver em tela cheia',
+            printChart: 'Imprimir gráfico',
+            downloadPNG: 'Baixar em PNG',
+            downloadJPEG: 'Baixar em JPG',
+            downloadPDF: 'Baixar em PDF',
+            downloadSVG: 'Baixar em SVG',
+
+            resetZoom: 'Resetar zoom',
+            loading: 'Carregando...',
+          },
+          navigation: {
+            menuItemStyle: {
+              fontSize: 11,
+            },
+          },
+          exporting: {
+            buttons: {
+              contextButton: {
+                menuItems: [
+                  'viewFullscreen',
+                  'printChart',
+                  'separator',
+                  'downloadPNG',
+                  'downloadJPEG',
+                  'downloadPDF',
+                  'downloadSVG',
+                  {
+                    text: 'Custom Option',
+                    onclick: this.sharePage,
+                  },
+                ],
+              },
+            },
+          },
+        });
+      },
+      sharePage() {
+        console.log(`url to share: ${window.location.href}&epoch=${this.mainData.epoch}`);
+      },
+      handleData() {
+        const entries = Object.values(this.mainData.chart[0]);
         this.totalArray = [];
-        this.totalUnfilteredArray = [];
         this.maleArray = [];
         this.femaleArray = [];
-
-        unfilteredEntries.forEach((entry) => {
-          let total = 0;
-          if (entry) {
-            entry.forEach((item) => {
-              total += item.value;
-            });
-          }
-          this.totalUnfilteredArray.push(total);
-        });
 
         entries.forEach((entry) => {
           let total = 0;
@@ -194,6 +212,8 @@ if (window.location.href.indexOf('/') > -1) {
       updateData() {
         this.getData();
         this.getCandidates();
+        this.updateUrl();
+        this.updateLocaleText();
       },
       getData() {
         this.loadingChartData = true;
@@ -231,10 +251,10 @@ if (window.location.href.indexOf('/') > -1) {
           url += `&race_id=${this.selectedRace}`;
         }
         if (this.selectedState) {
-          url += `&region_id=${this.selectedState}`;
+          url += `&region_id=${this.selectedState.id}`;
         }
         if (this.selectedCity) {
-          url += `&city_id=${this.selectedCity}`;
+          url += `&city_id=${this.selectedCity.id}`;
         }
         if (nextPage) {
           url += `&page=${this.candidates_page}`;

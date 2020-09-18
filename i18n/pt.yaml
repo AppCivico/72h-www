@@ -15,7 +15,7 @@
 - id: menu
   translation: Menu
 - id: candidatesListing
-  translation: "Listagem dos candidatos de São Paulo - SP"
+  translation: "Listagem dos candidatos para: "
 - id: checkFound
   translation: "Verifique como está o repasse do Fundo Eleitoral Especial do seu Município ou Estado."
 - id: closeFilters

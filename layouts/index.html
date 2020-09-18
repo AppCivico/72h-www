@@ -74,7 +74,7 @@
                   <option :value="null">{{ i18n "allStates" }}</option>
                   <option
                     v-for="state in states"
-                    :value="state.id">
+                    :value="state">
                       {{ "{{ state.name }}" }}
                   </option>
                 </select>
@@ -91,7 +91,7 @@
                   </option>
                   <option
                     v-for="city in cities"
-                    :value="city.id">
+                    :value="city">
                       {{ "{{ city.name }}" }}
                   </option>
                 </select>
@@ -171,7 +171,10 @@
           </div>
 
           <div class="candidates" id="js-candidate-box">
-            <h1>{{ i18n "candidatesListing" }}</h1>
+            <h1>
+              {{ i18n "candidatesListing" }}
+              {{ "{{ selectedLocaleText }}" }}
+            </h1>
             <div
               :aria-busy="loadingCandidates"
               class="candidates__container">
@@ -200,6 +203,7 @@
               </div>
 
               <button
+                v-if="candidates && candidates.has_more"
                 @click="getCandidates(true)"
                 class="button button--big">
                 {{ i18n "seeMore" }}

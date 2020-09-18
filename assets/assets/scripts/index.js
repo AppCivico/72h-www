@@ -2397,36 +2397,6 @@ var _config = _interopRequireDefault(require("./config"));
 (0, _exporting.default)(_highcharts.default);
 (0, _exportData.default)(_highcharts.default);
 
-_highcharts.default.setOptions({
-  lang: {
-    viewFullscreen: 'Ver em tela cheia',
-    printChart: 'Imprimir gráfico',
-    downloadPNG: 'Baixar em PNG',
-    downloadJPEG: 'Baixar em JPG',
-    downloadPDF: 'Baixar em PDF',
-    downloadSVG: 'Baixar em SVG',
-    resetZoom: 'Resetar zoom',
-    loading: 'Carregando...'
-  },
-  navigation: {
-    menuItemStyle: {
-      fontSize: 11
-    }
-  },
-  exporting: {
-    buttons: {
-      contextButton: {
-        menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG']
-      }
-    }
-  } // tooltip: {
-  //   formatter() {
-  //     return `${this.point.options.city} - ${this.point.options.state}`;
-  //   },
-  // },
-
-});
-
 _numeral.default.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
@@ -2455,11 +2425,11 @@ if (window.location.href.indexOf('/') > -1) {
       loadingBigNumbers: true,
       loadingCandidates: true,
       loadingChartData: true,
+      selectedLocaleText: 'Brasil',
       homeLoading: true,
       filterOpen: true,
       chart: null,
       totalArray: [],
-      totalUnfilteredArray: [],
       femaleArray: [],
       maleArray: [],
       mainData: null,
@@ -2480,11 +2450,13 @@ if (window.location.href.indexOf('/') > -1) {
         var _this = this;
 
         return window.appFilters.cities.filter(function (city) {
-          return city.region_id === _this.selectedState;
+          var _this$selectedState;
+
+          return city.region_id === ((_this$selectedState = _this.selectedState) === null || _this$selectedState === void 0 ? void 0 : _this$selectedState.id);
         });
       },
       chartDates: function chartDates() {
-        var datesArr = Object.keys(this.mainData.chart.filtered[0]);
+        var datesArr = Object.keys(this.mainData.chart[0]);
         return datesArr.map(function (date) {
           return new Date("".concat(date, " 10:00")).toLocaleString('pt-BR', {
             month: 'short',
@@ -2493,7 +2465,6 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       chartTotal: function chartTotal() {
-        // filtered
         return this.formatCurrency(this.totalArray.reduce(function (a, b) {
           return a + b;
         }, 0));
@@ -2511,7 +2482,7 @@ if (window.location.href.indexOf('/') > -1) {
       formatChartSeries: function formatChartSeries() {
         return [{
           name: 'Total',
-          data: this.totalUnfilteredArray
+          data: this.totalArray
         }, {
           name: 'Mulheres',
           data: this.femaleArray
@@ -2549,28 +2520,71 @@ if (window.location.href.indexOf('/') > -1) {
     mounted: function mounted() {
       this.getData();
       this.getCandidates();
+      this.setChartOptions();
     },
     methods: {
+      updateLocaleText: function updateLocaleText() {
+        if (this.selectedState && !this.selectedCity) {
+          this.selectedLocaleText = this.selectedState.name;
+        } else if (this.selectedState && this.selectedCity) {
+          this.selectedLocaleText = "".concat(this.selectedCity.name, "/").concat(this.selectedState.acronym);
+        } else {
+          this.selectedLocaleText = "Brasil";
+        }
+      },
+      updateUrl: function updateUrl() {
+        var url = "".concat(_config.default.api.domain, "candidates?results=9"); // if (this.selectedParty) {
+        //   url += `&party_id=${this.selectedParty}`;
+        // }
+        // if (this.selectedRace) {
+        //   url += `&race_id=${this.selectedRace}`;
+        // }
+        // if (this.selectedState) {
+        //   url += `&region_id=${this.selectedState}`;
+        // }
+        // if (this.selectedCity) {
+        //   url += `&city_id=${this.selectedCity}`;
+        // }
+      },
+      setChartOptions: function setChartOptions() {
+        _highcharts.default.setOptions({
+          lang: {
+            viewFullscreen: 'Ver em tela cheia',
+            printChart: 'Imprimir gráfico',
+            downloadPNG: 'Baixar em PNG',
+            downloadJPEG: 'Baixar em JPG',
+            downloadPDF: 'Baixar em PDF',
+            downloadSVG: 'Baixar em SVG',
+            resetZoom: 'Resetar zoom',
+            loading: 'Carregando...'
+          },
+          navigation: {
+            menuItemStyle: {
+              fontSize: 11
+            }
+          },
+          exporting: {
+            buttons: {
+              contextButton: {
+                menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG', {
+                  text: 'Custom Option',
+                  onclick: this.sharePage
+                }]
+              }
+            }
+          }
+        });
+      },
+      sharePage: function sharePage() {
+        console.log("url to share: ".concat(window.location.href, "&epoch=").concat(this.mainData.epoch));
+      },
       handleData: function handleData() {
         var _this3 = this;
 
-        var entries = Object.values(this.mainData.chart.filtered[0]);
-        var unfilteredEntries = Object.values(this.mainData.chart.unfiltered[0]);
+        var entries = Object.values(this.mainData.chart[0]);
         this.totalArray = [];
-        this.totalUnfilteredArray = [];
         this.maleArray = [];
         this.femaleArray = [];
-        unfilteredEntries.forEach(function (entry) {
-          var total = 0;
-
-          if (entry) {
-            entry.forEach(function (item) {
-              total += item.value;
-            });
-          }
-
-          _this3.totalUnfilteredArray.push(total);
-        });
         entries.forEach(function (entry) {
           var total = 0;
           var male = 0;
@@ -2608,6 +2622,8 @@ if (window.location.href.indexOf('/') > -1) {
       updateData: function updateData() {
         this.getData();
         this.getCandidates();
+        this.updateUrl();
+        this.updateLocaleText();
       },
       getData: function getData() {
         var _this4 = this;
@@ -2654,11 +2670,11 @@ if (window.location.href.indexOf('/') > -1) {
         }
 
         if (this.selectedState) {
-          url += "&region_id=".concat(this.selectedState);
+          url += "&region_id=".concat(this.selectedState.id);
         }
 
         if (this.selectedCity) {
-          url += "&city_id=".concat(this.selectedCity);
+          url += "&city_id=".concat(this.selectedCity.id);
         }
 
         if (nextPage) {
