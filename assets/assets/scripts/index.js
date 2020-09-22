@@ -2804,27 +2804,25 @@ if (window.location.href.indexOf('/') > -1) {
       femaleArray: [],
       maleArray: [],
       mainData: null,
-      mainDataDays: 7,
-      epoch: params.get('epoch') ? params.get('epoch') : null,
+      useEpoch: false,
       candidates: null,
       candidates_page: 1,
       states: window.appFilters.regions,
-      selectedState: params.get('region_id') ? window.appFilters.regions.find(function (region) {
-        return region.id === Number(params.get('region_id'));
-      }) : null,
-      selectedCity: params.get('city_id') ? window.appFilters.cities.find(function (city) {
-        return city.id === Number(params.get('city_id'));
-      }) : null,
+      selectedState: null,
+      selectedCity: null,
       parties: window.appFilters.parties,
-      selectedParty: params.get('party_id') ? window.appFilters.parties.find(function (party) {
-        return party.id === Number(params.get('party_id'));
-      }) : null,
+      selectedParty: null,
       fund_types: window.appFilters.fund_types,
       selectedFund: null,
       races: window.appFilters.races,
-      selectedRace: null
+      selectedRace: null,
+      days: [7, 15, 30, 60, 90],
+      selectedDay: 7
     },
     computed: {
+      epoch: function epoch() {
+        return params.get('epoch') ? params.get('epoch') : this.mainData.epoch;
+      },
       cities: function cities() {
         var _this = this;
 
@@ -2871,7 +2869,7 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL: function shareURL() {
-        return this.mountURL("".concat(window.location.href, "?days=").concat(this.mainDataDays).concat(this.epoch ? "&epoch=".concat(this.mainData.epoch) : ''));
+        return this.mountURL("".concat(window.location.href, "?days=").concat(this.selectedDay));
       }
     },
     watch: {
@@ -2900,12 +2898,15 @@ if (window.location.href.indexOf('/') > -1) {
       }
     },
     mounted: function mounted() {
+      var cleanUri = "".concat(window.location.protocol, "//").concat(window.location.host + window.location.pathname);
       this.populateParams();
       this.getData();
       this.getCandidates();
       this.setChartOptions();
 
       _micromodal.default.init();
+
+      window.history.replaceState({}, document.title, cleanUri);
     },
     methods: {
       populateParams: function populateParams() {
@@ -2928,15 +2929,19 @@ if (window.location.href.indexOf('/') > -1) {
         }
 
         if (params.get('fund_type_id')) {
-          this.selectedParty = window.appFilters.fund_types.find(function (fund) {
+          this.selectedFund = window.appFilters.fund_types.find(function (fund) {
             return fund.id === Number(params.get('fund_type_id'));
           });
         }
 
-        if (params.get('race')) {
-          this.selectedParty = window.appFilters.races.find(function (race) {
+        if (params.get('race_id')) {
+          this.selectedRace = window.appFilters.races.find(function (race) {
             return race.id === Number(params.get('race_id'));
           });
+        }
+
+        if (params.get('days')) {
+          this.selectedDay = Number(params.get('days'));
         }
       },
       updateLocaleText: function updateLocaleText() {
@@ -2955,6 +2960,10 @@ if (window.location.href.indexOf('/') > -1) {
           mountedURL += "&party_id=".concat(this.selectedParty.id);
         }
 
+        if (this.selectedFund) {
+          mountedURL += "&fund_type_id=".concat(this.selectedFund.id);
+        }
+
         if (this.selectedRace) {
           mountedURL += "&race_id=".concat(this.selectedRace.id);
         }
@@ -2965,6 +2974,10 @@ if (window.location.href.indexOf('/') > -1) {
 
         if (this.selectedCity) {
           mountedURL += "&city_id=".concat(this.selectedCity.id);
+        }
+
+        if (this.useEpoch) {
+          mountedURL += "&epoch=".concat(this.epoch);
         }
 
         return mountedURL;
@@ -3009,7 +3022,8 @@ if (window.location.href.indexOf('/') > -1) {
         var entries = Object.values(this.mainData.chart[0]);
         this.totalArray = [];
         this.maleArray = [];
-        this.femaleArray = [];
+        this.femaleArray = []; // this.epoch = this.mainData.epoch;
+
         entries.forEach(function (entry) {
           var total = 0;
           var male = 0;
@@ -3046,8 +3060,6 @@ if (window.location.href.indexOf('/') > -1) {
       },
       updateData: function updateData() {
         this.candidates_page = 1;
-        var cleanUri = "".concat(window.location.protocol, "//").concat(window.location.host + window.location.pathname);
-        window.history.replaceState({}, document.title, cleanUri);
         this.getData();
         this.getCandidates();
         this.updateLocaleText();
@@ -3061,12 +3073,7 @@ if (window.location.href.indexOf('/') > -1) {
           this.chart.showLoading();
         }
 
-        var url = "".concat(_config.default.api.domain, "index?days=").concat(this.mainDataDays);
-
-        if (this.epoch) {
-          url += "&epoch=".concat(this.epoch);
-        }
-
+        var url = "".concat(_config.default.api.domain, "index?days=").concat(this.selectedDay);
         var mountedURL = this.mountURL(url);
         fetch(mountedURL, {
           method: 'GET'

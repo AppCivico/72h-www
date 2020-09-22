@@ -56,25 +56,18 @@ if (window.location.href.indexOf('/') > -1) {
       maleArray: [],
 
       mainData: null,
-      mainDataDays: 7,
-      epoch: params.get('epoch') ? params.get('epoch') : null,
+      useEpoch: false,
 
       candidates: null,
       candidates_page: 1,
 
       states: window.appFilters.regions,
-      selectedState: params.get('region_id')
-        ? window.appFilters.regions.find(region => region.id === Number(params.get('region_id')))
-        : null,
+      selectedState: null,
 
-      selectedCity: params.get('city_id')
-        ? window.appFilters.cities.find(city => city.id === Number(params.get('city_id')))
-        : null,
+      selectedCity: null,
 
       parties: window.appFilters.parties,
-      selectedParty: params.get('party_id')
-        ? window.appFilters.parties.find(party => party.id === Number(params.get('party_id')))
-        : null,
+      selectedParty: null,
 
       fund_types: window.appFilters.fund_types,
       selectedFund: null,
@@ -82,8 +75,13 @@ if (window.location.href.indexOf('/') > -1) {
       races: window.appFilters.races,
       selectedRace: null,
 
+      days: [7, 15, 30, 60, 90],
+      selectedDay: 7,
     },
     computed: {
+      epoch() {
+        return params.get('epoch') ? params.get('epoch') : this.mainData.epoch;
+      },
       cities() {
         return window.appFilters.cities.filter(city => city.region_id === this.selectedState?.id);
       },
@@ -114,9 +112,7 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL() {
-        return this.mountURL(`${window.location.href}?days=${this.mainDataDays}${
-          this.epoch ? `&epoch=${this.mainData.epoch}` : ''
-        }`);
+        return this.mountURL(`${window.location.href}?days=${this.selectedDay}`);
       },
     },
     watch: {
@@ -126,11 +122,14 @@ if (window.location.href.indexOf('/') > -1) {
       },
     },
     mounted() {
+      const cleanUri = `${window.location.protocol}//${window.location.host + window.location.pathname}`;
+
       this.populateParams();
       this.getData();
       this.getCandidates();
       this.setChartOptions();
       MicroModal.init();
+      window.history.replaceState({}, document.title, cleanUri);
     },
     methods: {
       populateParams() {
@@ -144,10 +143,13 @@ if (window.location.href.indexOf('/') > -1) {
           this.selectedParty = window.appFilters.parties.find(party => party.id === Number(params.get('party_id')));
         }
         if (params.get('fund_type_id')) {
-          this.selectedParty = window.appFilters.fund_types.find(fund => fund.id === Number(params.get('fund_type_id')));
+          this.selectedFund = window.appFilters.fund_types.find(fund => fund.id === Number(params.get('fund_type_id')));
         }
-        if (params.get('race')) {
-          this.selectedParty = window.appFilters.races.find(race => race.id === Number(params.get('race_id')));
+        if (params.get('race_id')) {
+          this.selectedRace = window.appFilters.races.find(race => race.id === Number(params.get('race_id')));
+        }
+        if (params.get('days')) {
+          this.selectedDay = Number(params.get('days'));
         }
       },
 
@@ -162,8 +164,12 @@ if (window.location.href.indexOf('/') > -1) {
       },
       mountURL(url) {
         let mountedURL = url;
+
         if (this.selectedParty) {
           mountedURL += `&party_id=${this.selectedParty.id}`;
+        }
+        if (this.selectedFund) {
+          mountedURL += `&fund_type_id=${this.selectedFund.id}`;
         }
         if (this.selectedRace) {
           mountedURL += `&race_id=${this.selectedRace.id}`;
@@ -173,6 +179,9 @@ if (window.location.href.indexOf('/') > -1) {
         }
         if (this.selectedCity) {
           mountedURL += `&city_id=${this.selectedCity.id}`;
+        }
+        if (this.useEpoch) {
+          mountedURL += `&epoch=${this.epoch}`;
         }
 
         return mountedURL;
@@ -225,6 +234,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.totalArray = [];
         this.maleArray = [];
         this.femaleArray = [];
+        // this.epoch = this.mainData.epoch;
 
         entries.forEach((entry) => {
           let total = 0;
@@ -255,8 +265,6 @@ if (window.location.href.indexOf('/') > -1) {
       },
       updateData() {
         this.candidates_page = 1;
-        const cleanUri = `${window.location.protocol}//${window.location.host + window.location.pathname}`;
-        window.history.replaceState({}, document.title, cleanUri);
 
         this.getData();
         this.getCandidates();
@@ -269,10 +277,7 @@ if (window.location.href.indexOf('/') > -1) {
           this.chart.showLoading();
         }
 
-        let url = `${config.api.domain}index?days=${this.mainDataDays}`;
-        if (this.epoch) {
-          url += `&epoch=${this.epoch}`;
-        }
+        const url = `${config.api.domain}index?days=${this.selectedDay}`;
         const mountedURL = this.mountURL(url);
 
         fetch(mountedURL, {

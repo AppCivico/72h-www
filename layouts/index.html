@@ -131,6 +131,16 @@
                       {{ "{{ race.name }}" }}
                   </option>
                 </select>
+                <select
+                  id="days"
+                  name="days"
+                  v-model="selectedDay">
+                  <option
+                    v-for="day in days"
+                    :value="day">
+                    {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
+                  </option>
+                </select>
                 <button class="button button--primary">{{ i18n "apply" }}</button>
               </form>
             </div>
@@ -185,7 +195,7 @@
                 <div
                   v-for="candidate in candidates.candidates"
                   class="candidates__candidate">
-                  <img class="candidates__image" src="https://www.placecage.com/400/300" :alt="candidate.name">
+                  <img class="candidates__image" :src="candidate.picture" :alt="candidate.name">
                   <div class="candidates__text">
                     <p class="candidates__name">
                       {{ "{{ candidate.name }}" }}
@@ -255,7 +265,7 @@
               <footer class="modal__footer">
                 <label for="share-date">
                   <input
-                    v-model="epoch"
+                    v-model="useEpoch"
                     type="checkbox"
                     name="time"
                     id="share-date">

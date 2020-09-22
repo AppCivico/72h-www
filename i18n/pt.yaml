@@ -30,6 +30,8 @@
   translation: "A partir dos dados do DivulgaCand, nós entregamos todos os dias, no seu celular alertas, informações sobre a jornada do fundo eleitoral."
 - id: follow
   translation: "Seguir"
+- id: lastXDays
+  translation: "Últimos {{ .days }} dias"
 - id: onTweeter
   translation: "no Twitter"
 - id: openFilters
