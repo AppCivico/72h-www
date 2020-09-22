@@ -2796,6 +2796,7 @@ if (window.location.href.indexOf('/') > -1) {
       loadingCandidates: true,
       loadingChartData: true,
       shareURLCopied: false,
+      sharingFrom: '',
       selectedLocaleText: 'Brasil',
       homeLoading: true,
       filterOpen: true,
@@ -2869,7 +2870,7 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL: function shareURL() {
-        return this.mountURL("".concat(window.location.href, "?days=").concat(this.selectedDay));
+        return this.mountURL("".concat(window.location.href, "#").concat(this.sharingFrom, "?days=").concat(this.selectedDay));
       }
     },
     watch: {
@@ -2906,9 +2907,21 @@ if (window.location.href.indexOf('/') > -1) {
 
       _micromodal.default.init();
 
+      this.scrollToElement();
       window.history.replaceState({}, document.title, cleanUri);
     },
     methods: {
+      scrollToElement: function scrollToElement() {
+        var hash = window.location.hash.split('?')[0];
+
+        if (hash) {
+          var el = document.querySelector(hash);
+          el.scrollIntoView({
+            block: 'nearest',
+            inline: 'start'
+          });
+        }
+      },
       populateParams: function populateParams() {
         if (params.get('region_id')) {
           this.selectedState = window.appFilters.regions.find(function (region) {
@@ -2988,7 +3001,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.shareURLCopied = true;
       },
       epochToHuman: function epochToHuman(date) {
-        return _dayjs.default.unix(date).format('DD [de] MMMM [de] YYYY [às] hh:mm:ss');
+        return _dayjs.default.unix(date).format('DD [de] MMMM [de] YYYY [às] hh[h]mm[m]ss[s]');
       },
       setChartOptions: function setChartOptions() {
         _highcharts.default.setOptions({

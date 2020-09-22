@@ -44,6 +44,7 @@ if (window.location.href.indexOf('/') > -1) {
       loadingChartData: true,
 
       shareURLCopied: false,
+      sharingFrom: '',
 
       selectedLocaleText: 'Brasil',
 
@@ -112,7 +113,7 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL() {
-        return this.mountURL(`${window.location.href}?days=${this.selectedDay}`);
+        return this.mountURL(`${window.location.href}#${this.sharingFrom}?days=${this.selectedDay}`);
       },
     },
     watch: {
@@ -129,9 +130,18 @@ if (window.location.href.indexOf('/') > -1) {
       this.getCandidates();
       this.setChartOptions();
       MicroModal.init();
+
+      this.scrollToElement();
       window.history.replaceState({}, document.title, cleanUri);
     },
     methods: {
+      scrollToElement() {
+        const hash = window.location.hash.split('?')[0];
+        if (hash) {
+          const el = document.querySelector(hash);
+          el.scrollIntoView({ block: 'nearest', inline: 'start' });
+        }
+      },
       populateParams() {
         if (params.get('region_id')) {
           this.selectedState = window.appFilters.regions.find(region => region.id === Number(params.get('region_id')));
@@ -192,7 +202,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.shareURLCopied = true;
       },
       epochToHuman(date) {
-        return dayjs.unix(date).format('DD [de] MMMM [de] YYYY [às] hh:mm:ss');
+        return dayjs.unix(date).format('DD [de] MMMM [de] YYYY [às] hh[h]mm[m]ss[s]');
       },
       setChartOptions() {
         Highcharts.setOptions({

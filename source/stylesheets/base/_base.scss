@@ -451,14 +451,6 @@ a {
     outline-width: 0;
   }
 
-  /**
-   * Remove the gray background color from active links in IE 10.
-   * @see https://github.com/necolas/normalize.css/issues/473
-   */
-  &:active {
-    background-color: transparent;
-  }
-
   &[target='_blank'],
   &[rel='external'] {
   }

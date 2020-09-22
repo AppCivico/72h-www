@@ -31,3 +31,22 @@
     margin-left: auto;
   }
 }
+
+.button--share {
+  display: flex;
+  padding-left: 1rem;
+  margin-bottom: 1rem;
+  margin-left: auto;
+  color: palette('main-colors', 'secondary');
+  background-color: transparent;
+  border: 1px solid palette('main-colors', 'secondary');
+
+  &::before {
+    width: 1rem;
+    height: 1rem;
+    margin-right: 0.3rem;
+    background-image: image('share.svg');
+    background-size: cover;
+    content: '';
+  }
+}

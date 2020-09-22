@@ -50,9 +50,14 @@
             </div>
           </div>
 
-          <button data-micromodal-trigger="share-modal">Compartilhar</button>
+          <button
+            @click="sharingFrom = 'filters'"
+            data-micromodal-trigger="js-share-modal"
+            class="button button--share">
+            {{ i18n "share" }}
+          </button>
 
-          <div class="filters">
+          <div class="filters" id="filters">
             <button class="filters__toggle" @click="toggleFilter">
               <h1>{{ i18n "filters" }}</h1>
               <span
@@ -66,6 +71,7 @@
                 {{ i18n "openFilters" }}
               </span>
             </button>
+            <p>{{ i18n "checkFound" }}</p>
 
             <div class="filters__items" :hidden="!filterOpen">
               <form action="" @submit.prevent="updateData">
@@ -144,7 +150,6 @@
                 <button class="button button--primary">{{ i18n "apply" }}</button>
               </form>
             </div>
-            <p>{{ i18n "checkFound" }}</p>
             <div id="js-main-chart" class="main-chart"></div>
           </div>
 
@@ -184,6 +189,12 @@
           </div>
 
           <div class="candidates" id="js-candidate-box">
+            <button
+              @click="sharingFrom = 'js-candidate-box'"
+              data-micromodal-trigger="js-share-modal"
+              class="button button--share">
+              {{ i18n "share" }}
+            </button>
             <h1>
               {{ i18n "candidatesListing" }}
               {{ "{{ selectedLocaleText }}" }}
@@ -233,36 +244,54 @@
           </div>
         </div>
 
-        <div class="modal micromodal-slide modal-share" id="share-modal" aria-hidden="true">
+        <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true">
           <div class="modal__overlay" tabindex="-1" data-micromodal-close>
             <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
               <header class="modal__header">
                 <h1>Compartilhar!</h1>
                 <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
               </header>
-              <main class="modal__content" id="share-modal-content">
-                <div class="modal-share">
-                  <a href="" class="modal-share__facebook">Facebook</a>
-                  <a href="" class="modal-share__twitter">Twitter</a>
-                  <a href="" class="modal-share__whatsapp">WhatsApp</a>
-                  <a href="" class="modal-share__telegram">Telegram</a>
-                  <div class="modal-share__input">
-                    <input
-                      :value="shareURL"
-                      id="js-share-url"
-                      type="text"
-                      class="modal-share__input-text"
-                      readonly>
-                    <button
-                      @click="copyShareURL"
-                      class="modal-share__input-button">
-                      Copiar!
-                    </button>
-                    <span v-show="shareURLCopied">Link copiado!</span>
-                  </div>
+              <main class="modal__content share-modal__content" id="share-modal-content">
+                <a
+                  :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`"
+                  target="_blank"
+                  class="share-modal__icon share-modal__icons--facebook">
+                  Facebook
+                </a>
+                <a
+                  :href="`http://twitter.com/share?url=${shareURL}`"
+                  target="_blank"
+                  class="share-modal__icon share-modal__icons--twitter">
+                  Twitter
+                </a>
+                <a
+                  :href="`https://wa.me/?text=${encodeURIComponent(shareURL)}`"
+                  target="_blank"
+                  class="share-modal__icon share-modal__icons--whatsapp">
+                  WhatsApp
+                </a>
+                <a
+                  :href="`https://telegram.me/share/url?url=${shareURL}`"
+                  target="_blank"
+                  class="share-modal__icon share-modal__icons--telegram">
+                  Telegram
+                </a>
+                <div class="share-modal__input">
+                  <input
+                    :value="shareURL"
+                    id="js-share-url"
+                    type="text"
+                    class="share-modal__input-text"
+                    readonly>
+                  <button
+                    @click="copyShareURL"
+                    class="share-modal__input-button button">
+                    Copiar!
+                  </button>
                 </div>
+                <span v-show="shareURLCopied">Link copiado!</span>
               </main>
-              <footer class="modal__footer">
+              <footer class="modal__footer share-modal__footer">
                 <label for="share-date">
                   <input
                     v-model="useEpoch"

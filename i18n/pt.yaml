@@ -1,7 +1,7 @@
 - id: all
   translation: Todos
 - id: allCities
-  translation: "Todas as cidades"
+  translation: "Todos os municípios"
 - id: allEtinicity
   translation: "Todos as cores ou raças"
 - id: allFunds
@@ -46,8 +46,8 @@
   translation: "Ver mais"
 - id: selectState
   translation: "Selecione o estado"
-- id: teste
-  translation: "Análise completa"
+- id: share
+  translation: "Compartilhar"
 - id: updateTimes
   translation: "Próxima atualização em: 14horas | Última atualização: 03/08/2020 - 12h00 | Visualizações: 1.500 pessoas nas últimas 24 horas"
 
