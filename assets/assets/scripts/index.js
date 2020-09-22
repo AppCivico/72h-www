@@ -47,7 +47,13 @@ module.exports = _interopRequireDefault;
 },{}],3:[function(require,module,exports){
 module.exports = require("regenerator-runtime");
 
-},{"regenerator-runtime":8}],4:[function(require,module,exports){
+},{"regenerator-runtime":11}],4:[function(require,module,exports){
+!function(t,e){"object"==typeof exports&&"undefined"!=typeof module?module.exports=e():"function"==typeof define&&define.amd?define(e):t.dayjs=e()}(this,function(){"use strict";var t="millisecond",e="second",n="minute",r="hour",i="day",s="week",u="month",a="quarter",o="year",f="date",h=/^(\d{4})[-/]?(\d{1,2})?[-/]?(\d{0,2})[^0-9]*(\d{1,2})?:?(\d{1,2})?:?(\d{1,2})?.?(\d+)?$/,c=/\[([^\]]+)]|Y{2,4}|M{1,4}|D{1,2}|d{1,4}|H{1,2}|h{1,2}|a|A|m{1,2}|s{1,2}|Z{1,2}|SSS/g,d=function(t,e,n){var r=String(t);return!r||r.length>=e?t:""+Array(e+1-r.length).join(n)+t},$={s:d,z:function(t){var e=-t.utcOffset(),n=Math.abs(e),r=Math.floor(n/60),i=n%60;return(e<=0?"+":"-")+d(r,2,"0")+":"+d(i,2,"0")},m:function t(e,n){if(e.date()<n.date())return-t(n,e);var r=12*(n.year()-e.year())+(n.month()-e.month()),i=e.clone().add(r,u),s=n-i<0,a=e.clone().add(r+(s?-1:1),u);return+(-(r+(n-i)/(s?i-a:a-i))||0)},a:function(t){return t<0?Math.ceil(t)||0:Math.floor(t)},p:function(h){return{M:u,y:o,w:s,d:i,D:f,h:r,m:n,s:e,ms:t,Q:a}[h]||String(h||"").toLowerCase().replace(/s$/,"")},u:function(t){return void 0===t}},l={name:"en",weekdays:"Sunday_Monday_Tuesday_Wednesday_Thursday_Friday_Saturday".split("_"),months:"January_February_March_April_May_June_July_August_September_October_November_December".split("_")},y="en",M={};M[y]=l;var m=function(t){return t instanceof S},D=function(t,e,n){var r;if(!t)return y;if("string"==typeof t)M[t]&&(r=t),e&&(M[t]=e,r=t);else{var i=t.name;M[i]=t,r=i}return!n&&r&&(y=r),r||!n&&y},v=function(t,e){if(m(t))return t.clone();var n="object"==typeof e?e:{};return n.date=t,n.args=arguments,new S(n)},g=$;g.l=D,g.i=m,g.w=function(t,e){return v(t,{locale:e.$L,utc:e.$u,$offset:e.$offset})};var S=function(){function d(t){this.$L=this.$L||D(t.locale,null,!0),this.parse(t)}var $=d.prototype;return $.parse=function(t){this.$d=function(t){var e=t.date,n=t.utc;if(null===e)return new Date(NaN);if(g.u(e))return new Date;if(e instanceof Date)return new Date(e);if("string"==typeof e&&!/Z$/i.test(e)){var r=e.match(h);if(r){var i=r[2]-1||0,s=(r[7]||"0").substring(0,3);return n?new Date(Date.UTC(r[1],i,r[3]||1,r[4]||0,r[5]||0,r[6]||0,s)):new Date(r[1],i,r[3]||1,r[4]||0,r[5]||0,r[6]||0,s)}}return new Date(e)}(t),this.init()},$.init=function(){var t=this.$d;this.$y=t.getFullYear(),this.$M=t.getMonth(),this.$D=t.getDate(),this.$W=t.getDay(),this.$H=t.getHours(),this.$m=t.getMinutes(),this.$s=t.getSeconds(),this.$ms=t.getMilliseconds()},$.$utils=function(){return g},$.isValid=function(){return!("Invalid Date"===this.$d.toString())},$.isSame=function(t,e){var n=v(t);return this.startOf(e)<=n&&n<=this.endOf(e)},$.isAfter=function(t,e){return v(t)<this.startOf(e)},$.isBefore=function(t,e){return this.endOf(e)<v(t)},$.$g=function(t,e,n){return g.u(t)?this[e]:this.set(n,t)},$.unix=function(){return Math.floor(this.valueOf()/1e3)},$.valueOf=function(){return this.$d.getTime()},$.startOf=function(t,a){var h=this,c=!!g.u(a)||a,d=g.p(t),$=function(t,e){var n=g.w(h.$u?Date.UTC(h.$y,e,t):new Date(h.$y,e,t),h);return c?n:n.endOf(i)},l=function(t,e){return g.w(h.toDate()[t].apply(h.toDate("s"),(c?[0,0,0,0]:[23,59,59,999]).slice(e)),h)},y=this.$W,M=this.$M,m=this.$D,D="set"+(this.$u?"UTC":"");switch(d){case o:return c?$(1,0):$(31,11);case u:return c?$(1,M):$(0,M+1);case s:var v=this.$locale().weekStart||0,S=(y<v?y+7:y)-v;return $(c?m-S:m+(6-S),M);case i:case f:return l(D+"Hours",0);case r:return l(D+"Minutes",1);case n:return l(D+"Seconds",2);case e:return l(D+"Milliseconds",3);default:return this.clone()}},$.endOf=function(t){return this.startOf(t,!1)},$.$set=function(s,a){var h,c=g.p(s),d="set"+(this.$u?"UTC":""),$=(h={},h[i]=d+"Date",h[f]=d+"Date",h[u]=d+"Month",h[o]=d+"FullYear",h[r]=d+"Hours",h[n]=d+"Minutes",h[e]=d+"Seconds",h[t]=d+"Milliseconds",h)[c],l=c===i?this.$D+(a-this.$W):a;if(c===u||c===o){var y=this.clone().set(f,1);y.$d[$](l),y.init(),this.$d=y.set(f,Math.min(this.$D,y.daysInMonth())).$d}else $&&this.$d[$](l);return this.init(),this},$.set=function(t,e){return this.clone().$set(t,e)},$.get=function(t){return this[g.p(t)]()},$.add=function(t,a){var f,h=this;t=Number(t);var c=g.p(a),d=function(e){var n=v(h);return g.w(n.date(n.date()+Math.round(e*t)),h)};if(c===u)return this.set(u,this.$M+t);if(c===o)return this.set(o,this.$y+t);if(c===i)return d(1);if(c===s)return d(7);var $=(f={},f[n]=6e4,f[r]=36e5,f[e]=1e3,f)[c]||1,l=this.$d.getTime()+t*$;return g.w(l,this)},$.subtract=function(t,e){return this.add(-1*t,e)},$.format=function(t){var e=this;if(!this.isValid())return"Invalid Date";var n=t||"YYYY-MM-DDTHH:mm:ssZ",r=g.z(this),i=this.$locale(),s=this.$H,u=this.$m,a=this.$M,o=i.weekdays,f=i.months,h=function(t,r,i,s){return t&&(t[r]||t(e,n))||i[r].substr(0,s)},d=function(t){return g.s(s%12||12,t,"0")},$=i.meridiem||function(t,e,n){var r=t<12?"AM":"PM";return n?r.toLowerCase():r},l={YY:String(this.$y).slice(-2),YYYY:this.$y,M:a+1,MM:g.s(a+1,2,"0"),MMM:h(i.monthsShort,a,f,3),MMMM:h(f,a),D:this.$D,DD:g.s(this.$D,2,"0"),d:String(this.$W),dd:h(i.weekdaysMin,this.$W,o,2),ddd:h(i.weekdaysShort,this.$W,o,3),dddd:o[this.$W],H:String(s),HH:g.s(s,2,"0"),h:d(1),hh:d(2),a:$(s,u,!0),A:$(s,u,!1),m:String(u),mm:g.s(u,2,"0"),s:String(this.$s),ss:g.s(this.$s,2,"0"),SSS:g.s(this.$ms,3,"0"),Z:r};return n.replace(c,function(t,e){return e||l[t]||r.replace(":","")})},$.utcOffset=function(){return 15*-Math.round(this.$d.getTimezoneOffset()/15)},$.diff=function(t,f,h){var c,d=g.p(f),$=v(t),l=6e4*($.utcOffset()-this.utcOffset()),y=this-$,M=g.m(this,$);return M=(c={},c[o]=M/12,c[u]=M,c[a]=M/3,c[s]=(y-l)/6048e5,c[i]=(y-l)/864e5,c[r]=y/36e5,c[n]=y/6e4,c[e]=y/1e3,c)[d]||y,h?M:g.a(M)},$.daysInMonth=function(){return this.endOf(u).$D},$.$locale=function(){return M[this.$L]},$.locale=function(t,e){if(!t)return this.$L;var n=this.clone(),r=D(t,e,!0);return r&&(n.$L=r),n},$.clone=function(){return g.w(this.$d,this)},$.toDate=function(){return new Date(this.valueOf())},$.toJSON=function(){return this.isValid()?this.toISOString():null},$.toISOString=function(){return this.$d.toISOString()},$.toString=function(){return this.$d.toUTCString()},d}(),p=S.prototype;return v.prototype=p,[["$ms",t],["$s",e],["$m",n],["$H",r],["$W",i],["$M",u],["$y",o],["$D",f]].forEach(function(t){p[t[1]]=function(e){return this.$g(e,t[0],t[1])}}),v.extend=function(t,e){return t(e,S,v),v},v.locale=D,v.isDayjs=m,v.unix=function(t){return v(1e3*t)},v.en=M[y],v.Ls=M,v});
+
+},{}],5:[function(require,module,exports){
+!function(e,o){"object"==typeof exports&&"undefined"!=typeof module?module.exports=o(require("dayjs")):"function"==typeof define&&define.amd?define(["dayjs"],o):e.dayjs_locale_pt_br=o(e.dayjs)}(this,function(e){"use strict";e=e&&e.hasOwnProperty("default")?e.default:e;var o={name:"pt-br",weekdays:"Domingo_Segunda-feira_Terça-feira_Quarta-feira_Quinta-feira_Sexta-feira_Sábado".split("_"),weekdaysShort:"Dom_Seg_Ter_Qua_Qui_Sex_Sáb".split("_"),weekdaysMin:"Do_2ª_3ª_4ª_5ª_6ª_Sá".split("_"),months:"Janeiro_Fevereiro_Março_Abril_Maio_Junho_Julho_Agosto_Setembro_Outubro_Novembro_Dezembro".split("_"),monthsShort:"Jan_Fev_Mar_Abr_Mai_Jun_Jul_Ago_Set_Out_Nov_Dez".split("_"),ordinal:function(e){return e+"º"},formats:{LT:"HH:mm",LTS:"HH:mm:ss",L:"DD/MM/YYYY",LL:"D [de] MMMM [de] YYYY",LLL:"D [de] MMMM [de] YYYY [às] HH:mm",LLLL:"dddd, D [de] MMMM [de] YYYY [às] HH:mm"},relativeTime:{future:"em %s",past:"há %s",s:"poucos segundos",m:"um minuto",mm:"%d minutos",h:"uma hora",hh:"%d horas",d:"um dia",dd:"%d dias",M:"um mês",MM:"%d meses",y:"um ano",yy:"%d anos"}};return e.locale(o,null,!0),o});
+
+},{"dayjs":4}],6:[function(require,module,exports){
 /*
  Highcharts JS v7.2.2 (2020-08-24)
 
@@ -525,7 +531,7 @@ function(c){return c._id===f}).chartOptions}));t.isResponsiveOptions=!0;y=y.toSt
 this.chartWidth>=B(t.minWidth,0)&&this.chartHeight>=B(t.minHeight,0)}).call(this)&&f.push(c._id)};f.prototype.currentOptions=function(c){function f(c,n,q,g){var b;z(c,function(a,c){if(!g&&-1<v.collectionsWithUpdate.indexOf(c))for(a=t(a),q[c]=[],b=0;b<a.length;b++)n[c][b]&&(q[c][b]={},f(a[b],n[c][b],q[c][b],g+1));else G(a)?(q[c]=F(a)?[]:{},f(a,n[c]||{},q[c],g+1)):q[c]=void 0===n[c]?null:n[c]})}var v=this,y={};f(c,this.options,y,0);return y}});M(I,"masters/highcharts.src.js",[I["parts/Globals.js"],
 I["parts/Utilities.js"]],function(c,f){var F=f.extend;F(c,{arrayMax:f.arrayMax,arrayMin:f.arrayMin,attr:f.attr,defined:f.defined,erase:f.erase,extend:f.extend,isArray:f.isArray,isClass:f.isClass,isDOMElement:f.isDOMElement,isNumber:f.isNumber,isObject:f.isObject,isString:f.isString,objectEach:f.objectEach,pick:f.pick,pInt:f.pInt,setAnimation:f.setAnimation,splat:f.splat,syncTimeout:f.syncTimeout});return c});I["masters/highcharts.src.js"]._modules=I;return I["masters/highcharts.src.js"]});
 
-},{}],5:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /*
  Highcharts JS v7.2.2 (2020-08-24)
 
@@ -556,7 +562,7 @@ function(){function a(b){Object.keys(b).forEach(function(c){"function"===typeof 
 "chart";b.value=d;a.appendChild(b);a.submit();p.body.removeChild(a)})()};if(a=b.getOptions().exporting)h(a.menuItemDefinitions,{downloadCSV:{textKey:"downloadCSV",onclick:function(){this.downloadCSV()}},downloadXLS:{textKey:"downloadXLS",onclick:function(){this.downloadXLS()}},viewData:{textKey:"viewData",onclick:function(){this.viewData()}},openInCloud:{textKey:"openInCloud",onclick:function(){this.openInCloud()}}}),a.buttons&&a.buttons.contextButton.menuItems.push("separator","downloadCSV","downloadXLS",
 "viewData","openInCloud");d.map&&(d.map.prototype.exportKey="name");d.mapbubble&&(d.mapbubble.prototype.exportKey="name");d.treemap&&(d.treemap.prototype.exportKey="name")});q(c,"masters/modules/export-data.src.js",[],function(){})});
 
-},{}],6:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 /*
  Highcharts JS v7.2.2 (2020-08-24)
 
@@ -595,7 +601,360 @@ r.write('<svg xmlns="http://www.w3.org/2000/svg"></svg>');r.close();b(this.conta
 !a.exportSVGElements;a.buttonOffset=0;a.isDirtyExporting&&a.destroyExport();d&&!1!==b.enabled&&(a.exportEvents=[],a.exportingGroup=a.exportingGroup||a.renderer.g("exporting-group").attr({zIndex:3}).add(),C(c,function(b){a.addButton(b)}),a.isDirtyExporting=!1);x(a,"destroy",a.destroyExport)};x(A,"init",function(){var a=this;a.exporting={update:function(b,c){a.isDirtyExporting=!0;p(!0,a.options.exporting,b);r(c,!0)&&a.redraw()}};f.addUpdate(function(b,c){a.isDirtyExporting=!0;p(!0,a.options.navigation,
 b);r(c,!0)&&a.redraw()},a)});A.prototype.callbacks.push(function(a){a.renderExporting();x(a,"redraw",a.renderExporting)})});k(f,"masters/modules/exporting.src.js",[],function(){})});
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
+(function (global, factory) {
+	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof define === 'function' && define.amd ? define(factory) :
+	(global.MicroModal = factory());
+}(this, (function () { 'use strict';
+
+var version = "0.3.1";
+
+var classCallCheck = function (instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+};
+
+var createClass = function () {
+  function defineProperties(target, props) {
+    for (var i = 0; i < props.length; i++) {
+      var descriptor = props[i];
+      descriptor.enumerable = descriptor.enumerable || false;
+      descriptor.configurable = true;
+      if ("value" in descriptor) descriptor.writable = true;
+      Object.defineProperty(target, descriptor.key, descriptor);
+    }
+  }
+
+  return function (Constructor, protoProps, staticProps) {
+    if (protoProps) defineProperties(Constructor.prototype, protoProps);
+    if (staticProps) defineProperties(Constructor, staticProps);
+    return Constructor;
+  };
+}();
+
+var toConsumableArray = function (arr) {
+  if (Array.isArray(arr)) {
+    for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
+
+    return arr2;
+  } else {
+    return Array.from(arr);
+  }
+};
+
+var MicroModal = function () {
+
+  var FOCUSABLE_ELEMENTS = ['a[href]', 'area[href]', 'input:not([disabled]):not([type="hidden"]):not([aria-hidden])', 'select:not([disabled]):not([aria-hidden])', 'textarea:not([disabled]):not([aria-hidden])', 'button:not([disabled]):not([aria-hidden])', 'iframe', 'object', 'embed', '[contenteditable]', '[tabindex]:not([tabindex^="-"])'];
+
+  var Modal = function () {
+    function Modal(_ref) {
+      var targetModal = _ref.targetModal,
+          _ref$triggers = _ref.triggers,
+          triggers = _ref$triggers === undefined ? [] : _ref$triggers,
+          _ref$onShow = _ref.onShow,
+          onShow = _ref$onShow === undefined ? function () {} : _ref$onShow,
+          _ref$onClose = _ref.onClose,
+          onClose = _ref$onClose === undefined ? function () {} : _ref$onClose,
+          _ref$openTrigger = _ref.openTrigger,
+          openTrigger = _ref$openTrigger === undefined ? 'data-micromodal-trigger' : _ref$openTrigger,
+          _ref$closeTrigger = _ref.closeTrigger,
+          closeTrigger = _ref$closeTrigger === undefined ? 'data-micromodal-close' : _ref$closeTrigger,
+          _ref$disableScroll = _ref.disableScroll,
+          disableScroll = _ref$disableScroll === undefined ? false : _ref$disableScroll,
+          _ref$disableFocus = _ref.disableFocus,
+          disableFocus = _ref$disableFocus === undefined ? false : _ref$disableFocus,
+          _ref$awaitCloseAnimat = _ref.awaitCloseAnimation,
+          awaitCloseAnimation = _ref$awaitCloseAnimat === undefined ? false : _ref$awaitCloseAnimat,
+          _ref$debugMode = _ref.debugMode,
+          debugMode = _ref$debugMode === undefined ? false : _ref$debugMode;
+      classCallCheck(this, Modal);
+
+      // Save a reference of the modal
+      this.modal = document.getElementById(targetModal);
+
+      // Save a reference to the passed config
+      this.config = { debugMode: debugMode, disableScroll: disableScroll, openTrigger: openTrigger, closeTrigger: closeTrigger, onShow: onShow, onClose: onClose, awaitCloseAnimation: awaitCloseAnimation, disableFocus: disableFocus
+
+        // Register click events only if prebinding eventListeners
+      };if (triggers.length > 0) this.registerTriggers.apply(this, toConsumableArray(triggers));
+
+      // prebind functions for event listeners
+      this.onClick = this.onClick.bind(this);
+      this.onKeydown = this.onKeydown.bind(this);
+    }
+
+    /**
+     * Loops through all openTriggers and binds click event
+     * @param  {array} triggers [Array of node elements]
+     * @return {void}
+     */
+
+
+    createClass(Modal, [{
+      key: 'registerTriggers',
+      value: function registerTriggers() {
+        var _this = this;
+
+        for (var _len = arguments.length, triggers = Array(_len), _key = 0; _key < _len; _key++) {
+          triggers[_key] = arguments[_key];
+        }
+
+        triggers.forEach(function (trigger) {
+          trigger.addEventListener('click', function () {
+            return _this.showModal();
+          });
+        });
+      }
+    }, {
+      key: 'showModal',
+      value: function showModal() {
+        this.activeElement = document.activeElement;
+        this.modal.setAttribute('aria-hidden', 'false');
+        this.modal.classList.add('is-open');
+        this.setFocusToFirstNode();
+        this.scrollBehaviour('disable');
+        this.addEventListeners();
+        this.config.onShow(this.modal);
+      }
+    }, {
+      key: 'closeModal',
+      value: function closeModal() {
+        var modal = this.modal;
+        this.modal.setAttribute('aria-hidden', 'true');
+        this.removeEventListeners();
+        this.scrollBehaviour('enable');
+        this.activeElement.focus();
+        this.config.onClose(this.modal);
+
+        if (this.config.awaitCloseAnimation) {
+          this.modal.addEventListener('animationend', function handler() {
+            modal.classList.remove('is-open');
+            modal.removeEventListener('animationend', handler, false);
+          }, false);
+        } else {
+          modal.classList.remove('is-open');
+        }
+      }
+    }, {
+      key: 'scrollBehaviour',
+      value: function scrollBehaviour(toggle) {
+        if (!this.config.disableScroll) return;
+        var body = document.querySelector('body');
+        switch (toggle) {
+          case 'enable':
+            Object.assign(body.style, { overflow: 'initial', height: 'initial' });
+            break;
+          case 'disable':
+            Object.assign(body.style, { overflow: 'hidden', height: '100vh' });
+            break;
+          default:
+        }
+      }
+    }, {
+      key: 'addEventListeners',
+      value: function addEventListeners() {
+        this.modal.addEventListener('touchstart', this.onClick);
+        this.modal.addEventListener('click', this.onClick);
+        document.addEventListener('keydown', this.onKeydown);
+      }
+    }, {
+      key: 'removeEventListeners',
+      value: function removeEventListeners() {
+        this.modal.removeEventListener('touchstart', this.onClick);
+        this.modal.removeEventListener('click', this.onClick);
+        document.removeEventListener('keydown', this.onKeydown);
+      }
+    }, {
+      key: 'onClick',
+      value: function onClick(event) {
+        if (event.target.hasAttribute(this.config.closeTrigger)) {
+          this.closeModal();
+          event.preventDefault();
+        }
+      }
+    }, {
+      key: 'onKeydown',
+      value: function onKeydown(event) {
+        if (event.keyCode === 27) this.closeModal(event);
+        if (event.keyCode === 9) this.maintainFocus(event);
+      }
+    }, {
+      key: 'getFocusableNodes',
+      value: function getFocusableNodes() {
+        var nodes = this.modal.querySelectorAll(FOCUSABLE_ELEMENTS);
+        return Object.keys(nodes).map(function (key) {
+          return nodes[key];
+        });
+      }
+    }, {
+      key: 'setFocusToFirstNode',
+      value: function setFocusToFirstNode() {
+        if (this.config.disableFocus) return;
+        var focusableNodes = this.getFocusableNodes();
+        if (focusableNodes.length) focusableNodes[0].focus();
+      }
+    }, {
+      key: 'maintainFocus',
+      value: function maintainFocus(event) {
+        var focusableNodes = this.getFocusableNodes();
+
+        // if disableFocus is true
+        if (!this.modal.contains(document.activeElement)) {
+          focusableNodes[0].focus();
+        } else {
+          var focusedItemIndex = focusableNodes.indexOf(document.activeElement);
+
+          if (event.shiftKey && focusedItemIndex === 0) {
+            focusableNodes[focusableNodes.length - 1].focus();
+            event.preventDefault();
+          }
+
+          if (!event.shiftKey && focusedItemIndex === focusableNodes.length - 1) {
+            focusableNodes[0].focus();
+            event.preventDefault();
+          }
+        }
+      }
+    }]);
+    return Modal;
+  }();
+
+  /**
+   * Modal prototype ends.
+   * Here on code is reposible for detecting and
+   * autobinding event handlers on modal triggers
+   */
+
+  // Keep a reference to the opened modal
+
+
+  var activeModal = null;
+
+  /**
+   * Generates an associative array of modals and it's
+   * respective triggers
+   * @param  {array} triggers     An array of all triggers
+   * @param  {string} triggerAttr The data-attribute which triggers the module
+   * @return {array}
+   */
+  var generateTriggerMap = function generateTriggerMap(triggers, triggerAttr) {
+    var triggerMap = [];
+
+    triggers.forEach(function (trigger) {
+      var targetModal = trigger.attributes[triggerAttr].value;
+      if (triggerMap[targetModal] === undefined) triggerMap[targetModal] = [];
+      triggerMap[targetModal].push(trigger);
+    });
+
+    return triggerMap;
+  };
+
+  /**
+   * Validates whether a modal of the given id exists
+   * in the DOM
+   * @param  {number} id  The id of the modal
+   * @return {boolean}
+   */
+  var validateModalPresence = function validateModalPresence(id) {
+    if (!document.getElementById(id)) {
+      console.warn('MicroModal v' + version + ': \u2757Seems like you have missed %c\'' + id + '\'', 'background-color: #f8f9fa;color: #50596c;font-weight: bold;', 'ID somewhere in your code. Refer example below to resolve it.');
+      console.warn('%cExample:', 'background-color: #f8f9fa;color: #50596c;font-weight: bold;', '<div class="modal" id="' + id + '"></div>');
+      return false;
+    }
+  };
+
+  /**
+   * Validates if there are modal triggers present
+   * in the DOM
+   * @param  {array} triggers An array of data-triggers
+   * @return {boolean}
+   */
+  var validateTriggerPresence = function validateTriggerPresence(triggers) {
+    if (triggers.length <= 0) {
+      console.warn('MicroModal v' + version + ': \u2757Please specify at least one %c\'micromodal-trigger\'', 'background-color: #f8f9fa;color: #50596c;font-weight: bold;', 'data attribute.');
+      console.warn('%cExample:', 'background-color: #f8f9fa;color: #50596c;font-weight: bold;', '<a href="#" data-micromodal-trigger="my-modal"></a>');
+      return false;
+    }
+  };
+
+  /**
+   * Checks if triggers and their corresponding modals
+   * are present in the DOM
+   * @param  {array} triggers   Array of DOM nodes which have data-triggers
+   * @param  {array} triggerMap Associative array of modals and thier triggers
+   * @return {boolean}
+   */
+  var validateArgs = function validateArgs(triggers, triggerMap) {
+    validateTriggerPresence(triggers);
+    if (!triggerMap) return true;
+    for (var id in triggerMap) {
+      validateModalPresence(id);
+    }return true;
+  };
+
+  /**
+   * Binds click handlers to all modal triggers
+   * @param  {object} config [description]
+   * @return void
+   */
+  var init = function init(config) {
+    // Create an config object with default openTrigger
+    var options = Object.assign({}, { openTrigger: 'data-micromodal-trigger' }, config);
+
+    // Collects all the nodes with the trigger
+    var triggers = [].concat(toConsumableArray(document.querySelectorAll('[' + options.openTrigger + ']')));
+
+    // Makes a mappings of modals with their trigger nodes
+    var triggerMap = generateTriggerMap(triggers, options.openTrigger);
+
+    // Checks if modals and triggers exist in dom
+    if (options.debugMode === true && validateArgs(triggers, triggerMap) === false) return;
+
+    // For every target modal creates a new instance
+    for (var key in triggerMap) {
+      var value = triggerMap[key];
+      options.targetModal = key;
+      options.triggers = [].concat(toConsumableArray(value));
+      new Modal(options); // eslint-disable-line no-new
+    }
+  };
+
+  /**
+   * Shows a particular modal
+   * @param  {string} targetModal [The id of the modal to display]
+   * @param  {object} config [The configuration object to pass]
+   * @return {void}
+   */
+  var show = function show(targetModal, config) {
+    var options = config || {};
+    options.targetModal = targetModal;
+
+    // Checks if modals and triggers exist in dom
+    if (options.debugMode === true && validateModalPresence(targetModal) === false) return;
+
+    // stores reference to active modal
+    activeModal = new Modal(options); // eslint-disable-line no-new
+    activeModal.showModal();
+  };
+
+  /**
+   * Closes the active modal
+   * @return {void}
+   */
+  var close = function close() {
+    activeModal.closeModal();
+  };
+
+  return { init: init, show: show, close: close };
+}();
+
+return MicroModal;
+
+})));
+
+},{}],10:[function(require,module,exports){
 /*! @preserve
  * numeral.js
  * version : 2.0.6
@@ -1610,7 +1969,7 @@ b);r(c,!0)&&a.redraw()},a)});A.prototype.callbacks.push(function(a){a.renderExpo
 return numeral;
 }));
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 /**
  * Copyright (c) 2014-present, Facebook, Inc.
  *
@@ -2360,7 +2719,7 @@ try {
   Function("r", "regeneratorRuntime = r")(runtime);
 }
 
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2374,7 +2733,7 @@ var _default = {
 };
 exports.default = _default;
 
-},{}],10:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2389,6 +2748,12 @@ var _exportData = _interopRequireDefault(require("highcharts/modules/export-data
 
 var _highcharts = _interopRequireDefault(require("highcharts"));
 
+var _micromodal = _interopRequireDefault(require("micromodal"));
+
+var _dayjs = _interopRequireDefault(require("dayjs"));
+
+require("dayjs/locale/pt-br");
+
 var _numeral = _interopRequireDefault(require("numeral"));
 
 var _config = _interopRequireDefault(require("./config"));
@@ -2396,6 +2761,8 @@ var _config = _interopRequireDefault(require("./config"));
 /* global Vue */
 (0, _exporting.default)(_highcharts.default);
 (0, _exportData.default)(_highcharts.default);
+
+_dayjs.default.locale('pt-br');
 
 _numeral.default.register('locale', 'pt-br', {
   delimiters: {
@@ -2418,6 +2785,9 @@ _numeral.default.register('locale', 'pt-br', {
 
 _numeral.default.locale('pt-br');
 
+var uri = window.location.search.substring(1);
+var params = new URLSearchParams(uri);
+
 if (window.location.href.indexOf('/') > -1) {
   window.$vueHome = new Vue({
     el: '#vueHome',
@@ -2425,6 +2795,7 @@ if (window.location.href.indexOf('/') > -1) {
       loadingBigNumbers: true,
       loadingCandidates: true,
       loadingChartData: true,
+      shareURLCopied: false,
       selectedLocaleText: 'Brasil',
       homeLoading: true,
       filterOpen: true,
@@ -2433,17 +2804,25 @@ if (window.location.href.indexOf('/') > -1) {
       femaleArray: [],
       maleArray: [],
       mainData: null,
+      mainDataDays: 7,
+      epoch: params.get('epoch') ? params.get('epoch') : null,
       candidates: null,
       candidates_page: 1,
       states: window.appFilters.regions,
-      selectedState: null,
+      selectedState: params.get('region_id') ? window.appFilters.regions.find(function (region) {
+        return region.id === Number(params.get('region_id'));
+      }) : null,
+      selectedCity: params.get('city_id') ? window.appFilters.cities.find(function (city) {
+        return city.id === Number(params.get('city_id'));
+      }) : null,
       parties: window.appFilters.parties,
-      selectedParty: null,
+      selectedParty: params.get('party_id') ? window.appFilters.parties.find(function (party) {
+        return party.id === Number(params.get('party_id'));
+      }) : null,
       fund_types: window.appFilters.fund_types,
       selectedFund: null,
       races: window.appFilters.races,
-      selectedRace: null,
-      selectedCity: null
+      selectedRace: null
     },
     computed: {
       cities: function cities() {
@@ -2490,6 +2869,9 @@ if (window.location.href.indexOf('/') > -1) {
           name: 'Homens',
           data: this.maleArray
         }];
+      },
+      shareURL: function shareURL() {
+        return this.mountURL("".concat(window.location.href, "?days=").concat(this.mainDataDays).concat(this.epoch ? "&epoch=".concat(this.mainData.epoch) : ''));
       }
     },
     watch: {
@@ -2518,33 +2900,82 @@ if (window.location.href.indexOf('/') > -1) {
       }
     },
     mounted: function mounted() {
+      this.populateParams();
       this.getData();
       this.getCandidates();
       this.setChartOptions();
+
+      _micromodal.default.init();
     },
     methods: {
+      populateParams: function populateParams() {
+        if (params.get('region_id')) {
+          this.selectedState = window.appFilters.regions.find(function (region) {
+            return region.id === Number(params.get('region_id'));
+          });
+        }
+
+        if (params.get('city_id')) {
+          this.selectedCity = window.appFilters.cities.find(function (city) {
+            return city.id === Number(params.get('city_id'));
+          });
+        }
+
+        if (params.get('party_id')) {
+          this.selectedParty = window.appFilters.parties.find(function (party) {
+            return party.id === Number(params.get('party_id'));
+          });
+        }
+
+        if (params.get('fund_type_id')) {
+          this.selectedParty = window.appFilters.fund_types.find(function (fund) {
+            return fund.id === Number(params.get('fund_type_id'));
+          });
+        }
+
+        if (params.get('race')) {
+          this.selectedParty = window.appFilters.races.find(function (race) {
+            return race.id === Number(params.get('race_id'));
+          });
+        }
+      },
       updateLocaleText: function updateLocaleText() {
         if (this.selectedState && !this.selectedCity) {
           this.selectedLocaleText = this.selectedState.name;
         } else if (this.selectedState && this.selectedCity) {
           this.selectedLocaleText = "".concat(this.selectedCity.name, "/").concat(this.selectedState.acronym);
         } else {
-          this.selectedLocaleText = "Brasil";
+          this.selectedLocaleText = 'Brasil';
         }
       },
-      updateUrl: function updateUrl() {
-        var url = "".concat(_config.default.api.domain, "candidates?results=9"); // if (this.selectedParty) {
-        //   url += `&party_id=${this.selectedParty}`;
-        // }
-        // if (this.selectedRace) {
-        //   url += `&race_id=${this.selectedRace}`;
-        // }
-        // if (this.selectedState) {
-        //   url += `&region_id=${this.selectedState}`;
-        // }
-        // if (this.selectedCity) {
-        //   url += `&city_id=${this.selectedCity}`;
-        // }
+      mountURL: function mountURL(url) {
+        var mountedURL = url;
+
+        if (this.selectedParty) {
+          mountedURL += "&party_id=".concat(this.selectedParty.id);
+        }
+
+        if (this.selectedRace) {
+          mountedURL += "&race_id=".concat(this.selectedRace.id);
+        }
+
+        if (this.selectedState) {
+          mountedURL += "&region_id=".concat(this.selectedState.id);
+        }
+
+        if (this.selectedCity) {
+          mountedURL += "&city_id=".concat(this.selectedCity.id);
+        }
+
+        return mountedURL;
+      },
+      copyShareURL: function copyShareURL() {
+        document.querySelector('#js-share-url').select();
+        document.execCommand('copy');
+        this.shareURLCopied = true;
+      },
+      epochToHuman: function epochToHuman(date) {
+        return _dayjs.default.unix(date).format('DD [de] MMMM [de] YYYY [às] hh:mm:ss');
       },
       setChartOptions: function setChartOptions() {
         _highcharts.default.setOptions({
@@ -2566,17 +2997,11 @@ if (window.location.href.indexOf('/') > -1) {
           exporting: {
             buttons: {
               contextButton: {
-                menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG', {
-                  text: 'Custom Option',
-                  onclick: this.sharePage
-                }]
+                menuItems: ['viewFullscreen', 'printChart', 'separator', 'downloadPNG', 'downloadJPEG', 'downloadPDF', 'downloadSVG']
               }
             }
           }
         });
-      },
-      sharePage: function sharePage() {
-        console.log("url to share: ".concat(window.location.href, "&epoch=").concat(this.mainData.epoch));
       },
       handleData: function handleData() {
         var _this3 = this;
@@ -2620,9 +3045,11 @@ if (window.location.href.indexOf('/') > -1) {
         this.filterOpen = !this.filterOpen;
       },
       updateData: function updateData() {
+        this.candidates_page = 1;
+        var cleanUri = "".concat(window.location.protocol, "//").concat(window.location.host + window.location.pathname);
+        window.history.replaceState({}, document.title, cleanUri);
         this.getData();
         this.getCandidates();
-        this.updateUrl();
         this.updateLocaleText();
       },
       getData: function getData() {
@@ -2634,7 +3061,14 @@ if (window.location.href.indexOf('/') > -1) {
           this.chart.showLoading();
         }
 
-        fetch("".concat(_config.default.api.domain, "index"), {
+        var url = "".concat(_config.default.api.domain, "index?days=").concat(this.mainDataDays);
+
+        if (this.epoch) {
+          url += "&epoch=".concat(this.epoch);
+        }
+
+        var mountedURL = this.mountURL(url);
+        fetch(mountedURL, {
           method: 'GET'
         }).then(function (response) {
           return response.json();
@@ -2650,7 +3084,8 @@ if (window.location.href.indexOf('/') > -1) {
           }
 
           return true;
-        }).catch(function (error) {
+        }) // eslint-disable-next-line no-console
+        .catch(function (error) {
           return console.error(error);
         });
       },
@@ -2660,29 +3095,14 @@ if (window.location.href.indexOf('/') > -1) {
         var nextPage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         this.loadingCandidates = true;
         var url = "".concat(_config.default.api.domain, "candidates?results=9");
-
-        if (this.selectedParty) {
-          url += "&party_id=".concat(this.selectedParty);
-        }
-
-        if (this.selectedRace) {
-          url += "&race_id=".concat(this.selectedRace);
-        }
-
-        if (this.selectedState) {
-          url += "&region_id=".concat(this.selectedState.id);
-        }
-
-        if (this.selectedCity) {
-          url += "&city_id=".concat(this.selectedCity.id);
-        }
+        var mountedURL = this.mountURL(url);
 
         if (nextPage) {
-          url += "&page=".concat(this.candidates_page);
+          mountedURL += "&page=".concat(this.candidates_page);
           document.querySelector('#js-candidate-box').scrollIntoView();
         }
 
-        fetch(url, {
+        fetch(mountedURL, {
           method: 'GET'
         }).then(function (response) {
           return response.json();
@@ -2693,8 +3113,9 @@ if (window.location.href.indexOf('/') > -1) {
           _this5.loadingCandidates = false;
           _this5.candidates_page = _this5.candidates_page + 1;
           return true;
-        }).catch(function (error) {
-          console.error(error);
+        }) // eslint-disable-next-line no-console
+        .catch(function (error) {
+          return console.error(error);
         });
       },
       generateChart: function generateChart() {
@@ -2733,7 +3154,7 @@ if (window.location.href.indexOf('/') > -1) {
   });
 }
 
-},{"./config":9,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":3,"highcharts":4,"highcharts/modules/export-data":5,"highcharts/modules/exporting":6,"numeral":7}],11:[function(require,module,exports){
+},{"./config":12,"@babel/runtime/helpers/asyncToGenerator":1,"@babel/runtime/helpers/interopRequireDefault":2,"@babel/runtime/regenerator":3,"dayjs":4,"dayjs/locale/pt-br":5,"highcharts":6,"highcharts/modules/export-data":7,"highcharts/modules/exporting":8,"micromodal":9,"numeral":10}],14:[function(require,module,exports){
 "use strict";
 
 var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
@@ -2744,7 +3165,7 @@ require("./home");
 
 (0, _menuToggle.default)();
 
-},{"./home":10,"./menuToggle":12,"@babel/runtime/helpers/interopRequireDefault":2}],12:[function(require,module,exports){
+},{"./home":13,"./menuToggle":15,"@babel/runtime/helpers/interopRequireDefault":2}],15:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -2764,4 +3185,4 @@ function watchMainMenu() {
   }
 }
 
-},{}]},{},[11]);
+},{}]},{},[14]);

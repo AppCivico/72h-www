@@ -50,6 +50,8 @@
             </div>
           </div>
 
+          <button data-micromodal-trigger="share-modal">Compartilhar</button>
+
           <div class="filters">
             <button class="filters__toggle" @click="toggleFilter">
               <h1>{{ i18n "filters" }}</h1>
@@ -64,6 +66,7 @@
                 {{ i18n "openFilters" }}
               </span>
             </button>
+
             <div class="filters__items" :hidden="!filterOpen">
               <form action="" @submit.prevent="updateData">
                 <select
@@ -102,7 +105,7 @@
                   <option :value="null">{{ i18n "allParties" }}</option>
                   <option
                     v-for="party in parties"
-                    :value="party.id">
+                    :value="party">
                       {{ "{{ party.name }}" }}
                   </option>
                 </select>
@@ -113,7 +116,7 @@
                   <option :value="null">{{ i18n "allFunds" }}</option>
                   <option
                     v-for="fund_type in fund_types"
-                    :value="fund_type.id">
+                    :value="fund_type">
                       {{ "{{ fund_type.name }}" }}
                   </option>
                 </select>
@@ -124,7 +127,7 @@
                   <option :value="null">{{ i18n "allEtinicity" }}</option>
                   <option
                     v-for="race in races"
-                    :value="race.id">
+                    :value="race">
                       {{ "{{ race.name }}" }}
                   </option>
                 </select>
@@ -219,6 +222,50 @@
             {{ end }}
           </div>
         </div>
+
+        <div class="modal micromodal-slide modal-share" id="share-modal" aria-hidden="true">
+          <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+              <header class="modal__header">
+                <h1>Compartilhar!</h1>
+                <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+              </header>
+              <main class="modal__content" id="share-modal-content">
+                <div class="modal-share">
+                  <a href="" class="modal-share__facebook">Facebook</a>
+                  <a href="" class="modal-share__twitter">Twitter</a>
+                  <a href="" class="modal-share__whatsapp">WhatsApp</a>
+                  <a href="" class="modal-share__telegram">Telegram</a>
+                  <div class="modal-share__input">
+                    <input
+                      :value="shareURL"
+                      id="js-share-url"
+                      type="text"
+                      class="modal-share__input-text"
+                      readonly>
+                    <button
+                      @click="copyShareURL"
+                      class="modal-share__input-button">
+                      Copiar!
+                    </button>
+                    <span v-show="shareURLCopied">Link copiado!</span>
+                  </div>
+                </div>
+              </main>
+              <footer class="modal__footer">
+                <label for="share-date">
+                  <input
+                    v-model="epoch"
+                    type="checkbox"
+                    name="time"
+                    id="share-date">
+                  Compartilhar dados de <span v-if="mainData">{{ "{{ epochToHuman(mainData.epoch) }}" }}</span>
+                </label>
+              </footer>
+            </div>
+          </div>
+        </div>
+
       </main>
 
       {{ partial "footer.html" . }}

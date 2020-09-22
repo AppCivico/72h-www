@@ -2,11 +2,16 @@
 import HighchartsExport from 'highcharts/modules/exporting';
 import HighchartsExportData from 'highcharts/modules/export-data';
 import Highcharts from 'highcharts';
+import MicroModal from 'micromodal';
+import dayjs from 'dayjs';
+import 'dayjs/locale/pt-br';
 import numeral from 'numeral';
 import config from './config';
 
 HighchartsExport(Highcharts);
 HighchartsExportData(Highcharts);
+
+dayjs.locale('pt-br');
 
 numeral.register('locale', 'pt-br', {
   delimiters: {
@@ -25,8 +30,10 @@ numeral.register('locale', 'pt-br', {
   },
 });
 
-
 numeral.locale('pt-br');
+
+const uri = window.location.search.substring(1);
+const params = new URLSearchParams(uri);
 
 if (window.location.href.indexOf('/') > -1) {
   window.$vueHome = new Vue({
@@ -35,6 +42,8 @@ if (window.location.href.indexOf('/') > -1) {
       loadingBigNumbers: true,
       loadingCandidates: true,
       loadingChartData: true,
+
+      shareURLCopied: false,
 
       selectedLocaleText: 'Brasil',
 
@@ -47,14 +56,25 @@ if (window.location.href.indexOf('/') > -1) {
       maleArray: [],
 
       mainData: null,
+      mainDataDays: 7,
+      epoch: params.get('epoch') ? params.get('epoch') : null,
+
       candidates: null,
       candidates_page: 1,
 
       states: window.appFilters.regions,
-      selectedState: null,
+      selectedState: params.get('region_id')
+        ? window.appFilters.regions.find(region => region.id === Number(params.get('region_id')))
+        : null,
+
+      selectedCity: params.get('city_id')
+        ? window.appFilters.cities.find(city => city.id === Number(params.get('city_id')))
+        : null,
 
       parties: window.appFilters.parties,
-      selectedParty: null,
+      selectedParty: params.get('party_id')
+        ? window.appFilters.parties.find(party => party.id === Number(params.get('party_id')))
+        : null,
 
       fund_types: window.appFilters.fund_types,
       selectedFund: null,
@@ -62,7 +82,6 @@ if (window.location.href.indexOf('/') > -1) {
       races: window.appFilters.races,
       selectedRace: null,
 
-      selectedCity: null,
     },
     computed: {
       cities() {
@@ -71,7 +90,7 @@ if (window.location.href.indexOf('/') > -1) {
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart[0]);
         return datesArr.map(date => new Date(`${date} 10:00`)
-          .toLocaleString('pt-BR', { month: 'short', day: 'numeric' }))
+          .toLocaleString('pt-BR', { month: 'short', day: 'numeric' }));
       },
       chartTotal() {
         return this.formatCurrency(this.totalArray.reduce((a, b) => a + b, 0));
@@ -92,7 +111,12 @@ if (window.location.href.indexOf('/') > -1) {
         }, {
           name: 'Homens',
           data: this.maleArray,
-        }]
+        }];
+      },
+      shareURL() {
+        return this.mountURL(`${window.location.href}?days=${this.mainDataDays}${
+          this.epoch ? `&epoch=${this.mainData.epoch}` : ''
+        }`);
       },
     },
     watch: {
@@ -102,37 +126,64 @@ if (window.location.href.indexOf('/') > -1) {
       },
     },
     mounted() {
+      this.populateParams();
       this.getData();
       this.getCandidates();
       this.setChartOptions();
+      MicroModal.init();
     },
     methods: {
+      populateParams() {
+        if (params.get('region_id')) {
+          this.selectedState = window.appFilters.regions.find(region => region.id === Number(params.get('region_id')));
+        }
+        if (params.get('city_id')) {
+          this.selectedCity = window.appFilters.cities.find(city => city.id === Number(params.get('city_id')));
+        }
+        if (params.get('party_id')) {
+          this.selectedParty = window.appFilters.parties.find(party => party.id === Number(params.get('party_id')));
+        }
+        if (params.get('fund_type_id')) {
+          this.selectedParty = window.appFilters.fund_types.find(fund => fund.id === Number(params.get('fund_type_id')));
+        }
+        if (params.get('race')) {
+          this.selectedParty = window.appFilters.races.find(race => race.id === Number(params.get('race_id')));
+        }
+      },
+
       updateLocaleText() {
         if (this.selectedState && !this.selectedCity) {
           this.selectedLocaleText = this.selectedState.name;
-        }
-        else if (this.selectedState && this.selectedCity) {
+        } else if (this.selectedState && this.selectedCity) {
           this.selectedLocaleText = `${this.selectedCity.name}/${this.selectedState.acronym}`;
-        }
-        else {
-          this.selectedLocaleText = `Brasil`;
+        } else {
+          this.selectedLocaleText = 'Brasil';
         }
       },
-      updateUrl() {
-        let url = `${config.api.domain}candidates?results=9`;
+      mountURL(url) {
+        let mountedURL = url;
+        if (this.selectedParty) {
+          mountedURL += `&party_id=${this.selectedParty.id}`;
+        }
+        if (this.selectedRace) {
+          mountedURL += `&race_id=${this.selectedRace.id}`;
+        }
+        if (this.selectedState) {
+          mountedURL += `&region_id=${this.selectedState.id}`;
+        }
+        if (this.selectedCity) {
+          mountedURL += `&city_id=${this.selectedCity.id}`;
+        }
 
-        // if (this.selectedParty) {
-        //   url += `&party_id=${this.selectedParty}`;
-        // }
-        // if (this.selectedRace) {
-        //   url += `&race_id=${this.selectedRace}`;
-        // }
-        // if (this.selectedState) {
-        //   url += `&region_id=${this.selectedState}`;
-        // }
-        // if (this.selectedCity) {
-        //   url += `&city_id=${this.selectedCity}`;
-        // }
+        return mountedURL;
+      },
+      copyShareURL() {
+        document.querySelector('#js-share-url').select();
+        document.execCommand('copy');
+        this.shareURLCopied = true;
+      },
+      epochToHuman(date) {
+        return dayjs.unix(date).format('DD [de] MMMM [de] YYYY [às] hh:mm:ss');
       },
       setChartOptions() {
         Highcharts.setOptions({
@@ -163,18 +214,11 @@ if (window.location.href.indexOf('/') > -1) {
                   'downloadJPEG',
                   'downloadPDF',
                   'downloadSVG',
-                  {
-                    text: 'Custom Option',
-                    onclick: this.sharePage,
-                  },
                 ],
               },
             },
           },
         });
-      },
-      sharePage() {
-        console.log(`url to share: ${window.location.href}&epoch=${this.mainData.epoch}`);
       },
       handleData() {
         const entries = Object.values(this.mainData.chart[0]);
@@ -210,17 +254,28 @@ if (window.location.href.indexOf('/') > -1) {
         this.filterOpen = !this.filterOpen;
       },
       updateData() {
+        this.candidates_page = 1;
+        const cleanUri = `${window.location.protocol}//${window.location.host + window.location.pathname}`;
+        window.history.replaceState({}, document.title, cleanUri);
+
         this.getData();
         this.getCandidates();
-        this.updateUrl();
         this.updateLocaleText();
       },
       getData() {
         this.loadingChartData = true;
+
         if (this.chart) {
           this.chart.showLoading();
         }
-        fetch(`${config.api.domain}index`, {
+
+        let url = `${config.api.domain}index?days=${this.mainDataDays}`;
+        if (this.epoch) {
+          url += `&epoch=${this.epoch}`;
+        }
+        const mountedURL = this.mountURL(url);
+
+        fetch(mountedURL, {
           method: 'GET',
         })
           .then(response => response.json())
@@ -236,32 +291,21 @@ if (window.location.href.indexOf('/') > -1) {
             }
             return true;
           })
-          .catch((error) => {
-            return console.error(error);
-          });
+          // eslint-disable-next-line no-console
+          .catch(error => console.error(error));
       },
       getCandidates(nextPage = false) {
         this.loadingCandidates = true;
-        let url = `${config.api.domain}candidates?results=9`;
 
-        if (this.selectedParty) {
-          url += `&party_id=${this.selectedParty}`;
-        }
-        if (this.selectedRace) {
-          url += `&race_id=${this.selectedRace}`;
-        }
-        if (this.selectedState) {
-          url += `&region_id=${this.selectedState.id}`;
-        }
-        if (this.selectedCity) {
-          url += `&city_id=${this.selectedCity.id}`;
-        }
+        const url = `${config.api.domain}candidates?results=9`;
+        let mountedURL = this.mountURL(url);
+
         if (nextPage) {
-          url += `&page=${this.candidates_page}`;
+          mountedURL += `&page=${this.candidates_page}`;
           document.querySelector('#js-candidate-box').scrollIntoView();
         }
 
-        fetch(url, {
+        fetch(mountedURL, {
           method: 'GET',
         })
           .then(response => response.json())
@@ -274,9 +318,8 @@ if (window.location.href.indexOf('/') > -1) {
             this.candidates_page = this.candidates_page + 1;
             return true;
           })
-          .catch((error) => {
-            console.error(error);
-          });
+          // eslint-disable-next-line no-console
+          .catch(error => console.error(error));
       },
       generateChart() {
         this.chart = Highcharts.chart('js-main-chart', {
@@ -296,15 +339,15 @@ if (window.location.href.indexOf('/') > -1) {
           yAxis: {
             title: {
               text: 'valor (R$)',
-            }
+            },
           },
           plotOptions: {
             line: {
               dataLabels: {
-                enabled: false
+                enabled: false,
               },
-              enableMouseTracking: true
-            }
+              enableMouseTracking: true,
+            },
           },
           series: this.formatChartSeries,
         });

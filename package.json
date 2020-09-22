@@ -73,6 +73,7 @@
     "awesomplete": "^1.1.5",
     "axios": "^0.19.0",
     "bouncer": "github:cferdinandi/bouncer",
+    "dayjs": "^1.8.36",
     "fuzzysort": "^1.1.4",
     "highcharts": "^7.2.2",
     "imask": "^4.1.3",

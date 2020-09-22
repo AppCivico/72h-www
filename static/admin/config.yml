@@ -1,7 +1,7 @@
 backend:
   name: github
   repo: AppCivico/72h-www # Path to your Github repository
-  branch: master # Branch to update (optional; defaults to master)
+  branch: dev # Branch to update (optional; defaults to master)
   base_url: https://quirky-lamport-b80cd2.netlify.app/
   accept_roles:
     - admin
