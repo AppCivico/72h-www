@@ -1,6 +1,6 @@
 ---
-title: Nova imagem de parceiro vinda do cms
-Image: /uploads/image-057.jpeg
+title: AppCívico
+Image: /uploads/logo-1-.svg
 weight: 3
 draft: false
 ---
