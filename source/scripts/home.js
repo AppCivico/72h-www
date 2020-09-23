@@ -113,7 +113,9 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL() {
-        return this.mountURL(`${window.location.href}#${this.sharingFrom}?days=${this.selectedDay}`);
+        let url = this.mountURL(`${window.location.href}?days=${this.selectedDay}`);
+        url += `#${this.sharingFrom}`;
+        return url;
       },
     },
     watch: {

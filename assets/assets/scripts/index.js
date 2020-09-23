@@ -2870,7 +2870,9 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL: function shareURL() {
-        return this.mountURL("".concat(window.location.href, "#").concat(this.sharingFrom, "?days=").concat(this.selectedDay));
+        var url = this.mountURL("".concat(window.location.href, "?days=").concat(this.selectedDay));
+        url += "#".concat(this.sharingFrom);
+        return url;
       }
     },
     watch: {
