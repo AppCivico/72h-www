@@ -1,9 +1,7 @@
 ---
-title: Professor Francisco Soares
+title: AppCívico 2
 date: 2018-09-14T14:58:16.000Z
-draft: false
-Image: https://www.placecage.com/400/300
+Image: /uploads/logo-1-.svg
 weight: 1
+draft: false
 ---
-
-
