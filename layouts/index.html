@@ -8,9 +8,9 @@
         <div class="container">
           <div class="big-numbers" v-if="!this.loadingBigNumbers">
             <div class="big-number__box">
-              <h1>Valor Total Acumulado dos Repasses</h1>
+              <h1>{{ i18n "accumulatedValue" }}</h1>
               <p>
-                Quantidade de Lançamentos:
+                {{ i18n "entriesQuantity" }}
                 {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
               </p>
               <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.total_value)"></span>
@@ -18,9 +18,9 @@
             </div>
 
             <div class="big-number__box">
-              <h1>Valor acumulado de repasses do Fundo Especial de Financiamento de Campanhas (FEFC)</h1>
+              <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
               <p>
-                Quantidade de Lançamentos:
+                {{ i18n "entriesQuantity" }}
                 {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
               </p>
               <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_special_fund)">
@@ -29,9 +29,9 @@
             </div>
 
             <div class="big-number__box">
-              <h1>Valor acumulado dos repasses do Fundo Partidário</h1>
+              <h1>{{ i18n "accumulatedValueParty" }}</h1>
               <p>
-                Quantidade de Lançamentos:
+                {{ i18n "entriesQuantity" }}
                 {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
               </p>
               <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_party_fund)">
@@ -96,7 +96,7 @@
                     :value="null"
                     v-if="selectedState === null"
                     disabled>
-                    Selecione o estado
+                    {{ i18n "selectedState" }}
                   </option>
                   <option
                     v-for="city in cities"
@@ -155,20 +155,20 @@
 
           <div class="big-numbers" :aria-busy="this.loadingChartData">
             <div class="big-number__box big-number__box--icon big-number__box--icon-total">
-              <h1>Valor total dos repasses acumulados</h1>
-              <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
+              <h1>{{ i18n "accumulatedValue" }}</h1>
+              <p>{{ i18n "bothFundsAmount" }}</p>
               <span class="big-number__number" v-html="chartTotal"></span>
             </div>
 
             <div class="big-number__box big-number__box--icon big-number__box--icon-female">
-              <h1>Valor dos repasses acumulados para o genêro feminino</h1>
-              <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
+              <h1>{{ i18n "accumulatedFemale" }}</h1>
+              <p>{{ i18n "bothFundsAmount" }}</p>
               <span class="big-number__number" v-html="chartFemale"></span>
             </div>
 
             <div class="big-number__box big-number__box--icon big-number__box--icon-male">
-              <h1>Valor dos repasses acumulados para o genêro masculino</h1>
-              <p>Montante referente ao Fundo Especial e Partidário do Território Nacional</p>
+              <h1>{{ i18n "accumulatedMale" }}</h2>
+              <p>{{ i18n "bothFundsAmount" }}</p>
               <span class="big-number__number" v-html="chartMale"></span>
             </div>
           </div>
@@ -210,8 +210,8 @@
                   <div class="candidates__text">
                     <p class="candidates__name">
                       {{ "{{ candidate.name }}" }}
-                      {{ " - {{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
-                      {{ " - concorre à {{ candidate.position.name }}" }}
+                      - {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
+                      - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
                     </p>
                     <p class="candidates__info">
                       {{ "{{ candidate.total_transfers }}" }} transferências
@@ -228,7 +228,7 @@
               <div
                 v-else
                 class="no-results">
-                <p>Sem resultados!</p>
+                <p>{{ i18n "noResults" }}</p>
               </div>
 
               <button
@@ -253,33 +253,33 @@
           <div class="modal__overlay" tabindex="-1" data-micromodal-close>
             <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
               <header class="modal__header">
-                <h1>Compartilhar!</h1>
-                <button class="modal__close" aria-label="Close modal" data-micromodal-close></button>
+                <h1>{{ i18n "shareWithEnthusiasm" }}</h1>
+                <button class="modal__close" aria-label="{{ i18n "closeModal" }}" data-micromodal-close></button>
               </header>
               <main class="modal__content share-modal__content" id="share-modal-content">
                 <a
                   :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`"
                   target="_blank"
                   class="share-modal__icon share-modal__icons--facebook">
-                  Facebook
+                  {{ i18n "facebook" }}
                 </a>
                 <a
                   :href="`http://twitter.com/share?url=${shareURL}`"
                   target="_blank"
                   class="share-modal__icon share-modal__icons--twitter">
-                  Twitter
+                  {{ i18n "twitter" }}
                 </a>
                 <a
                   :href="`https://wa.me/?text=${encodeURIComponent(shareURL)}`"
                   target="_blank"
                   class="share-modal__icon share-modal__icons--whatsapp">
-                  WhatsApp
+                  {{ i18n "whatsapp" }}
                 </a>
                 <a
                   :href="`https://telegram.me/share/url?url=${shareURL}`"
                   target="_blank"
                   class="share-modal__icon share-modal__icons--telegram">
-                  Telegram
+                  {{ i18n "telegram" }}
                 </a>
                 <div class="share-modal__input">
                   <input
@@ -291,10 +291,10 @@
                   <button
                     @click="copyShareURL"
                     class="share-modal__input-button button">
-                    Copiar!
+                    {{ i18n "copy" }}
                   </button>
                 </div>
-                <span v-show="shareURLCopied">Link copiado!</span>
+                <span v-show="shareURLCopied"> {{ i18n "linkCopiedSuccessfully" }}</span>
               </main>
               <footer class="modal__footer share-modal__footer">
                 <label for="share-date">
@@ -303,7 +303,7 @@
                     type="checkbox"
                     name="time"
                     id="share-date">
-                  Compartilhar dados de <span v-if="mainData">{{ "{{ epochToHuman(mainData.epoch) }}" }}</span>
+                    {{ i18n "shareDataFrom" }} <span v-if="mainData">{{ "{{ epochToHuman(mainData.epoch) }}" }}</span>
                 </label>
               </footer>
             </div>

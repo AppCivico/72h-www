@@ -1,3 +1,13 @@
+- id: accumulatedValue
+  translation: "Valor Total Acumulado dos Repasses"
+- id: accumulatedFemale
+  translation: "Valor dos repasses acumulados para o genêro feminino"
+- id: accumulatedMale
+  translation: "Valor dos repasses acumulados para o genêro masculino"
+- id: accumulatedValueSpecial
+  translation: "Valor acumulado de repasses do Fundo Especial de Financiamento de Campanhas (FEFC)"
+- id: accumulatedValueParty
+  translation: "Valor acumulado dos repasses do Fundo Partidário"
 - id: all
   translation: Todos
 - id: allCities
@@ -12,16 +22,22 @@
   translation: "Todos os Estados"
 - id: apply
   translation: Aplicar
-- id: menu
-  translation: Menu
+- id: bothFundsAmount
+  translation: "Montante referente ao Fundo Especial e Partidário do Brasil"
 - id: candidatesListing
   translation: "Listagem dos candidatos para: "
 - id: checkFound
   translation: "Verifique como está o repasse do Fundo Eleitoral Especial do seu Município ou Estado."
 - id: closeFilters
   translation: "Minimizar filtros"
+- id: closeModal
+  translation: "Fechar modal"
+- id: copy
+  translation: "Copiar!"
 - id: developedBy
   translation: "desenvolvido por appcívico"
+- id: entriesQuantity
+  translation: "Quantidade de Lançamentos:"
 - id: filters
   translation: "Filtros"
 - id: footerDescription
@@ -32,6 +48,12 @@
   translation: "Seguir"
 - id: lastXDays
   translation: "Últimos {{ .days }} dias"
+- id: linkCopiedSuccessfully
+  translation: "Link copiado!"
+- id: menu
+  translation: Menu
+- id: noResults
+  translation: "Sem resultados"
 - id: onTweeter
   translation: "no Twitter"
 - id: openFilters
@@ -40,6 +62,8 @@
   translation: "Parceiros e Organizações"
 - id: partiesListing
   translation: "Listagem da quantidade de recurso disponibilizado para cada partido"
+- id: runsFor
+  translation: "Concorre a"
 - id: seeOnTSE
   translation: "Ver no TSE"
 - id: seeMore
@@ -48,8 +72,19 @@
   translation: "Selecione o estado"
 - id: share
   translation: "Compartilhar"
+- id: shareDataFrom
+  translation: "Compartilhar dados de"
+- id: shareWithEnthusiasm
+  translation: "Compartilhar!"
 - id: updateTimes
   translation: "Próxima atualização em: 14horas | Última atualização: 03/08/2020 - 12h00 | Visualizações: 1.500 pessoas nas últimas 24 horas"
 
 
-
+- id: facebook
+  translation: "Facebook"
+- id: twitter
+  translation: "Twitter"
+- id: whatsapp
+  translation: "WhatsApp"
+- id: telegram
+  translation: "Telegram"
