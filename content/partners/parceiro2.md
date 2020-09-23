@@ -1,9 +1,7 @@
 ---
 title: Segundo parceiro
 date: 2018-09-14T14:58:16.000Z
-draft: false
-Image: https://www.placecage.com/300/300
+Image: /uploads/logo-1-.svg
 weight: 2
+draft: false
 ---
-
-
