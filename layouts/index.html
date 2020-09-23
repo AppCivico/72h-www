@@ -12,9 +12,6 @@
               <p>Quantidade de Lançamentos: {{ "{{ mainData.accumulated.total_transfers }}" }}</p>
               <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.total_value)"></span>
               <progress class="progress__quartenary" max="100" value="10">10%</progress>
-              <span class="progress__helper">
-                10% distribuidos
-              </span>
             </div>
 
             <div class="big-number__box">
@@ -23,9 +20,6 @@
               <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_special_fund)">
               </span>
               <progress class="progress__tertiary" max="100" value="10">10%</progress>
-              <span class="progress__helper">
-                10% distribuidos
-              </span>
             </div>
 
             <div class="big-number__box">
@@ -34,9 +28,6 @@
               <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_party_fund)">
               </span>
               <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress>
-              <span class="progress__helper">
-                10% distribuidos
-              </span>
             </div>
 
             <div class="big-number__box big-number__timer">
@@ -216,7 +207,12 @@
                     <p class="candidates__info">
                       {{ "{{ candidate.total_transfers }}" }} transferências
                     </p>
-                    <a href="tse" class="button">{{ i18n "seeOnTSE" }}</a>
+                    <a
+                      :href="candidate.divulgacand_url"
+                      target="_blank"
+                      class="button">
+                      {{ i18n "seeOnTSE" }}
+                    </a>
                   </div>
                 </div>
               </template>
