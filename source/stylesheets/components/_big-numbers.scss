@@ -94,3 +94,36 @@
   font-size: ms(-9);
   color: palette('gray', 'medium');
 }
+
+.big-number__box--icon h1 {
+  display: inline-block;
+
+  &::before {
+    display: inline-block;
+    width: 0.625rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+    vertical-align: text-bottom;
+    background-color: cover;
+    content: '';
+  }
+}
+
+.big-number__box--icon-total h1 {
+  &::before {
+    width: 1.25rem;
+    background-image: image('brazil.svg');
+  }
+}
+
+.big-number__box--icon-female h1 {
+  &::before {
+    background-image: image('female.svg');
+  }
+}
+
+.big-number__box--icon-male h1 {
+  &::before {
+    background-image: image('male.svg');
+  }
+}
