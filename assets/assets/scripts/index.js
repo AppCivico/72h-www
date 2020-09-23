@@ -3081,6 +3081,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.getData();
         this.getCandidates();
         this.updateLocaleText();
+        document.querySelector('#js-main-chart').scrollIntoView();
       },
       getData: function getData() {
         var _this4 = this;
