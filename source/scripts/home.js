@@ -272,6 +272,9 @@ if (window.location.href.indexOf('/') > -1) {
       formatCurrency(value) {
         return numeral(value).format('$0.00 a');
       },
+      formatNumeral(value) {
+        return numeral(value).format();
+      },
       toggleFilter() {
         this.filterOpen = !this.filterOpen;
       },

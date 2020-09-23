@@ -3070,6 +3070,9 @@ if (window.location.href.indexOf('/') > -1) {
       formatCurrency: function formatCurrency(value) {
         return (0, _numeral.default)(value).format('$0.00 a');
       },
+      formatNumeral: function formatNumeral(value) {
+        return (0, _numeral.default)(value).format();
+      },
       toggleFilter: function toggleFilter() {
         this.filterOpen = !this.filterOpen;
       },
