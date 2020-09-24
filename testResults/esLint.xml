@@ -3,9 +3,8 @@
 <testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/config.js">
 <testcase time="0" name="/home/eduruiz/code/72h/source/scripts/config.js" />
 </testsuite>
-<testsuite package="org.eslint" time="0" tests="2" errors="2" name="/home/eduruiz/code/72h/source/scripts/home.js">
-<testcase time="0" name="org.eslint.func-names"><failure message="Unexpected unnamed method &apos;get&apos;."><![CDATA[line 85, col 14, Warning - Unexpected unnamed method &apos;get&apos;. (func-names)]]></failure></testcase>
-<testcase time="0" name="org.eslint.func-names"><failure message="Unexpected unnamed method &apos;set&apos;."><![CDATA[line 89, col 14, Warning - Unexpected unnamed method &apos;set&apos;. (func-names)]]></failure></testcase>
+<testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/home.js">
+<testcase time="0" name="/home/eduruiz/code/72h/source/scripts/home.js" />
 </testsuite>
 <testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/index.js">
 <testcase time="0" name="/home/eduruiz/code/72h/source/scripts/index.js" />

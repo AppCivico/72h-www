@@ -82,11 +82,11 @@ if (window.location.href.indexOf('/') > -1) {
     },
     computed: {
       dataIsOutdated: {
-        // eslint-disable-next-line object-shorthand
+        // eslint-disable-next-line object-shorthand, func-names
         get: function () {
           return this.mainData?.is_outdated;
         },
-        // eslint-disable-next-line object-shorthand
+        // eslint-disable-next-line object-shorthand, func-names
         set: function (value) {
           this.mainData.is_outdated = value;
         },

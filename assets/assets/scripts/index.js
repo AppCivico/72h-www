@@ -2823,13 +2823,13 @@ if (window.location.href.indexOf('/') > -1) {
     },
     computed: {
       dataIsOutdated: {
-        // eslint-disable-next-line object-shorthand
+        // eslint-disable-next-line object-shorthand, func-names
         get: function get() {
           var _this$mainData;
 
           return (_this$mainData = this.mainData) === null || _this$mainData === void 0 ? void 0 : _this$mainData.is_outdated;
         },
-        // eslint-disable-next-line object-shorthand
+        // eslint-disable-next-line object-shorthand, func-names
         set: function set(value) {
           this.mainData.is_outdated = value;
         }
