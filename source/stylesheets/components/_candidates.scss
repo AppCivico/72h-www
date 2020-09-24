@@ -9,7 +9,6 @@
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    width: calc(50% - 2rem);
     margin-bottom: 3rem;
     margin-left: auto;
   }
@@ -20,6 +19,12 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
 }
 
 .candidates h1 {
@@ -40,13 +45,18 @@
   display: flex;
   width: 100%;
   margin-bottom: 2rem;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: calc(33.33333% - 2rem);
+  }
 }
 
 .candidates__image {
   width: 3rem;
   height: 4rem;
   margin-right: 1rem;
-  border-radius: 50%;
+  background-color: palette('gray', 'light');
+  box-shadow: 5px 8px 21px -3px palette('shadow', 'light');
 }
 
 .candidates__name {

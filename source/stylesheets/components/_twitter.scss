@@ -1,9 +1,11 @@
 .twitter {
   display: flex;
   flex-wrap: wrap;
+  margin-right: auto;
   margin-bottom: 2.5rem;
+  margin-left: auto;
 
   @media screen and (min-width: breakpoint('desktop')) {
-    width: calc(50% - 2rem);
+    width: 68%;
   }
 }

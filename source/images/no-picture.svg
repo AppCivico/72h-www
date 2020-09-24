@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="161px" height="225px" viewBox="0 0 161 225" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>Group 18</title>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-18">
+            <rect id="Rectangle" fill="#F2F2F2" x="0" y="0" width="161" height="225"></rect>
+            <g id="Group" transform="translate(49.000000, 81.000000)">
+                <path d="M13,0 L3.25,0 C1.45509,0 0,1.45509 0,3.25 L0,13" id="Path" stroke="#212121" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M50,63 L59.75,63 C61.544975,63 63,61.544975 63,59.75 L63,50" id="Path" stroke="#212121" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M63,13 L63,3.25 C63,1.45509 61.544975,0 59.75,0 L50,0" id="Path" stroke="#212121" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M0,50 L0,59.75 C0,61.544975 1.45509,63 3.25,63 L13,63" id="Path" stroke="#212121" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                <path d="M54,56.753 L54,53.6666667 C54,44.462 46.83648,37 38,37 C29.163456,37 22,44.462 22,53.6666667 L22,56.753 C22,56.8893333 22.106112,57 22.237024,57 L53.76288,57 C53.89376,57 54,56.8893333 54,56.753 Z" id="Path" fill="#646263" fill-rule="nonzero"></path>
+                <path d="M48,49.753 L48,46.6666667 C48,37.462 41.06034,30 32.5,30 C23.939598,30 17,37.462 17,46.6666667 L17,49.753 C17,49.8893333 17.102796,50 17.229617,50 L47.77029,50 C47.89708,50 48,49.8893333 48,49.753 Z" id="Path" stroke="#212121" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path>
+                <circle id="Oval" fill="#BEBEBE" fill-rule="nonzero" cx="38" cy="29" r="10"></circle>
+                <circle id="Oval" stroke="#212121" stroke-width="4" stroke-linecap="round" cx="32" cy="23" r="10"></circle>
+            </g>
+        </g>
+    </g>
+</svg>

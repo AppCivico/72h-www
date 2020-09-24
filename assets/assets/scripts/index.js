@@ -3007,6 +3007,11 @@ if (window.location.href.indexOf('/') > -1) {
       },
       setChartOptions: function setChartOptions() {
         _highcharts.default.setOptions({
+          chart: {
+            style: {
+              fontFamily: 'Montserrat'
+            }
+          },
           lang: {
             viewFullscreen: 'Ver em tela cheia',
             printChart: 'Imprimir gráfico',

@@ -3,6 +3,7 @@
   padding: 0.2rem 1.2rem;
   font-weight: font-weight('bold');
   font-size: ms(-2);
+  font-family: $monteserrat-font-stack;
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
@@ -32,7 +33,7 @@
   }
 }
 
-.button--share {
+.button--icon {
   display: flex;
   padding-left: 1rem;
   margin-bottom: 1rem;
@@ -45,8 +46,19 @@
     width: 1rem;
     height: 1rem;
     margin-right: 0.3rem;
-    background-image: image('share.svg');
     background-size: cover;
     content: '';
+  }
+}
+
+.button--icon-share {
+  &::before {
+    background-image: image('share.svg');
+  }
+}
+
+.button--icon-money {
+  &::before {
+    background-image: image('money.svg');
   }
 }

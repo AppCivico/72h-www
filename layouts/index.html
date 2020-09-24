@@ -4,10 +4,23 @@
 
       {{ partial "header.html" . }}
 
+      <div class="timer">
+        <div class="timer__content">
+          <strong>Dias Restantes</strong>
+          <div class="timer__numbers">
+            <span>44<i>dias</i></span>
+            <span>10<i>horas</i></span>
+            <span>42<i>minutos</i></span>
+            <span>59<i>segundos</i></span>
+          </div>
+        </div>
+      </div>
+
       <main id="vueHome">
         <div class="container">
           <div class="big-numbers" v-if="!this.loadingBigNumbers">
-            <div class="big-number__box">
+            <p class="big-number__update">{{ i18n "updateTimes" }}</p>
+            <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
               <h1>{{ i18n "accumulatedValue" }}</h1>
               <p>
                 {{ i18n "entriesQuantity" }}
@@ -17,7 +30,7 @@
               <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
             </div>
 
-            <div class="big-number__box">
+            <div class="big-number__box big-number__box--border big-number__box--border-tertiary">
               <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
               <p>
                 {{ i18n "entriesQuantity" }}
@@ -28,7 +41,7 @@
               <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
             </div>
 
-            <div class="big-number__box">
+            <div class="big-number__box big-number__box--border big-number__box--border-secondary">
               <h1>{{ i18n "accumulatedValueParty" }}</h1>
               <p>
                 {{ i18n "entriesQuantity" }}
@@ -38,22 +51,12 @@
               </span>
               <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
             </div>
-
-            <div class="big-number__box big-number__timer">
-              <h1>Dias Restantes</h1>
-              <div class="timer__numbers">
-                <span>44<i>dias</i></span>
-                <span>10<i>horas</i></span>
-                <span>42<i>minutos</i></span>
-                <span>59<i>segundos</i></span>
-              </div>
-            </div>
           </div>
 
           <button
             @click="sharingFrom = 'filters'"
             data-micromodal-trigger="js-share-modal"
-            class="button button--share">
+            class="button button--icon button--icon-share">
             {{ i18n "share" }}
           </button>
 
@@ -173,26 +176,11 @@
             </div>
           </div>
 
-          <div class="twitter">
-            <h1>{{ .Site.Params.name }} {{ i18n "onTweeter" }}</h1>
-            <a
-              class="twitter-timeline"
-              href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
-              data-tweet-limit="3"
-            >
-              Tweets by TwitterDev
-            </a>
-
-            <a class="button button--big" href="">
-              {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
-            </a>
-          </div>
-
           <div class="candidates" id="js-candidate-box">
             <button
               @click="sharingFrom = 'js-candidate-box'"
               data-micromodal-trigger="js-share-modal"
-              class="button button--share">
+              class="button button--icon button--icon-share">
               {{ i18n "share" }}
             </button>
             <h1>
@@ -206,7 +194,11 @@
                 <div
                   v-for="candidate in candidates.candidates"
                   class="candidates__candidate">
-                  <img class="candidates__image" :src="candidate.picture" :alt="candidate.name">
+                  <img
+                    class="candidates__image"
+                    :src="candidate.picture"
+                    @error="candidate.picture = 'assets/images/no-picture.svg'"
+                    :alt="candidate.name">
                   <div class="candidates__text">
                     <p class="candidates__name">
                       {{ "{{ candidate.name }}" }}
@@ -238,6 +230,20 @@
                 {{ i18n "seeMore" }}
               </button>
             </div>
+          </div>
+
+          <div class="twitter">
+            <a
+              class="twitter-timeline"
+              href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
+              data-tweet-limit="3"
+            >
+              Tweets by TwitterDev
+            </a>
+
+            <a class="button button--big" href="">
+              {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
+            </a>
           </div>
 
           <div class="partners">

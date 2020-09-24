@@ -32,6 +32,8 @@
   translation: "Minimizar filtros"
 - id: closeModal
   translation: "Fechar modal"
+- id: contribute
+  translation: "Contribua"
 - id: copy
   translation: "Copiar!"
 - id: developedBy
@@ -77,7 +79,7 @@
 - id: shareWithEnthusiasm
   translation: "Compartilhar!"
 - id: updateTimes
-  translation: "Próxima atualização em: 14horas | Última atualização: 03/08/2020 - 12h00 | Visualizações: 1.500 pessoas nas últimas 24 horas"
+  translation: "Próxima atualização em: 14horas | Última atualização: 03/08/2020 - 12h00"
 
 
 - id: facebook
