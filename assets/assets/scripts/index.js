@@ -2805,6 +2805,7 @@ if (window.location.href.indexOf('/') > -1) {
       femaleArray: [],
       maleArray: [],
       mainData: null,
+      epochFromParam: null,
       useEpoch: false,
       candidates: null,
       candidates_page: 1,
@@ -2834,7 +2835,9 @@ if (window.location.href.indexOf('/') > -1) {
         }
       },
       epoch: function epoch() {
-        return params.get('epoch') ? params.get('epoch') : this.mainData.epoch;
+        var _this$mainData2;
+
+        return (_this$mainData2 = this.mainData) === null || _this$mainData2 === void 0 ? void 0 : _this$mainData2.epoch;
       },
       cities: function cities() {
         var _this = this;
@@ -2975,6 +2978,10 @@ if (window.location.href.indexOf('/') > -1) {
 
         if (params.get('days')) {
           this.selectedDay = Number(params.get('days'));
+        }
+
+        if (params.get('epoch')) {
+          this.epochFromParam = Number(params.get('epoch'));
         }
       },
       updateLocaleText: function updateLocaleText() {
@@ -3117,6 +3124,11 @@ if (window.location.href.indexOf('/') > -1) {
 
         var url = "".concat(_config.default.api.domain, "index?days=").concat(this.selectedDay);
         var mountedURL = this.mountURL(url);
+
+        if (this.epochFromParam) {
+          mountedURL += "&epoch=".concat(this.epochFromParam);
+        }
+
         fetch(mountedURL, {
           method: 'GET'
         }).then(function (response) {
@@ -3145,6 +3157,10 @@ if (window.location.href.indexOf('/') > -1) {
         this.loadingCandidates = true;
         var url = "".concat(_config.default.api.domain, "candidates?results=9");
         var mountedURL = this.mountURL(url);
+
+        if (this.epochFromParam) {
+          mountedURL += "&epoch=".concat(this.epochFromParam);
+        }
 
         if (nextPage) {
           mountedURL += "&page=".concat(this.candidates_page);

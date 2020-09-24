@@ -1,4 +1,6 @@
 .timer {
+  z-index: layer('up');
+
   @media screen and (min-width: breakpoint('desktop')) {
     position: absolute;
     top: 0.5rem;

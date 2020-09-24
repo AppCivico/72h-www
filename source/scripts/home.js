@@ -57,6 +57,7 @@ if (window.location.href.indexOf('/') > -1) {
       maleArray: [],
 
       mainData: null,
+      epochFromParam: null,
       useEpoch: false,
 
       candidates: null,
@@ -91,7 +92,7 @@ if (window.location.href.indexOf('/') > -1) {
         },
       },
       epoch() {
-        return params.get('epoch') ? params.get('epoch') : this.mainData.epoch;
+        return this.mainData?.epoch;
       },
       cities() {
         return window.appFilters.cities.filter(city => city.region_id === this.selectedState?.id);
@@ -179,6 +180,9 @@ if (window.location.href.indexOf('/') > -1) {
         if (params.get('days')) {
           this.selectedDay = Number(params.get('days'));
         }
+        if (params.get('epoch')) {
+          this.epochFromParam = Number(params.get('epoch'));
+        }
       },
 
       updateLocaleText() {
@@ -211,7 +215,6 @@ if (window.location.href.indexOf('/') > -1) {
         if (this.useEpoch) {
           mountedURL += `&epoch=${this.epoch}`;
         }
-
         return mountedURL;
       },
       copyShareURL() {
@@ -315,7 +318,11 @@ if (window.location.href.indexOf('/') > -1) {
         }
 
         const url = `${config.api.domain}index?days=${this.selectedDay}`;
-        const mountedURL = this.mountURL(url);
+        let mountedURL = this.mountURL(url);
+
+        if (this.epochFromParam) {
+          mountedURL += `&epoch=${this.epochFromParam}`;
+        }
 
         fetch(mountedURL, {
           method: 'GET',
@@ -341,6 +348,10 @@ if (window.location.href.indexOf('/') > -1) {
 
         const url = `${config.api.domain}candidates?results=9`;
         let mountedURL = this.mountURL(url);
+
+        if (this.epochFromParam) {
+          mountedURL += `&epoch=${this.epochFromParam}`;
+        }
 
         if (nextPage) {
           mountedURL += `&page=${this.candidates_page}`;
