@@ -1,322 +1,323 @@
     {{ partial "head.html" . }}
 
     <body>
+      <div id="vueHome">
+        {{ partial "header.html" . }}
 
-      {{ partial "header.html" . }}
-
-      <div class="timer">
-        <div class="timer__content">
-          <strong>Dias Restantes</strong>
-          <div class="timer__numbers">
-            <span>44<i>dias</i></span>
-            <span>10<i>horas</i></span>
-            <span>42<i>minutos</i></span>
-            <span>59<i>segundos</i></span>
+        <div class="timer">
+          <div class="timer__content">
+            <strong>Dias Restantes</strong>
+            <div class="timer__numbers">
+              <span>44<i>dias</i></span>
+              <span>10<i>horas</i></span>
+              <span>42<i>minutos</i></span>
+              <span>59<i>segundos</i></span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <main id="vueHome">
-        <div class="container">
-          <div class="big-numbers" v-if="!this.loadingBigNumbers">
-            <p class="big-number__update">{{ i18n "updateTimes" }}</p>
-            <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
-              <h1>{{ i18n "accumulatedValue" }}</h1>
-              <p>
-                {{ i18n "entriesQuantity" }}
-                {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
-              </p>
-              <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.total_value)"></span>
-              <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
+        <main>
+          <div class="container">
+            <div class="big-numbers" v-if="!this.loadingBigNumbers">
+              <p class="big-number__update">{{ i18n "updateTimes" }}</p>
+              <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
+                <h1>{{ i18n "accumulatedValue" }}</h1>
+                <p>
+                  {{ i18n "entriesQuantity" }}
+                  {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
+                </p>
+                <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.total_value)"></span>
+                <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
+              </div>
+
+              <div class="big-number__box big-number__box--border big-number__box--border-tertiary">
+                <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
+                <p>
+                  {{ i18n "entriesQuantity" }}
+                  {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
+                </p>
+                <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_special_fund)">
+                </span>
+                <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
+              </div>
+
+              <div class="big-number__box big-number__box--border big-number__box--border-secondary">
+                <h1>{{ i18n "accumulatedValueParty" }}</h1>
+                <p>
+                  {{ i18n "entriesQuantity" }}
+                  {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
+                </p>
+                <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_party_fund)">
+                </span>
+                <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
+              </div>
             </div>
 
-            <div class="big-number__box big-number__box--border big-number__box--border-tertiary">
-              <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
-              <p>
-                {{ i18n "entriesQuantity" }}
-                {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
-              </p>
-              <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_special_fund)">
-              </span>
-              <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
-            </div>
-
-            <div class="big-number__box big-number__box--border big-number__box--border-secondary">
-              <h1>{{ i18n "accumulatedValueParty" }}</h1>
-              <p>
-                {{ i18n "entriesQuantity" }}
-                {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
-              </p>
-              <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_party_fund)">
-              </span>
-              <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
-            </div>
-          </div>
-
-          <button
-            @click="sharingFrom = 'filters'"
-            data-micromodal-trigger="js-share-modal"
-            class="button button--icon button--icon-share">
-            {{ i18n "share" }}
-          </button>
-
-          <div class="filters" id="filters">
-            <button class="filters__toggle" @click="toggleFilter">
-              <h1>{{ i18n "filters" }}</h1>
-              <span
-                v-if="filterOpen"
-                class="filters__dropdown">
-                {{ i18n "closeFilters" }}
-              </span>
-              <span
-                v-else="filterOpen"
-                class="filters__dropdown">
-                {{ i18n "openFilters" }}
-              </span>
-            </button>
-            <p>{{ i18n "checkFound" }}</p>
-
-            <div class="filters__items" :hidden="!filterOpen">
-              <form action="" @submit.prevent="updateData">
-                <select
-                  id="states"
-                  name="states"
-                  v-model="selectedState"
-                  @change="selectedCity = null">
-                  <option :value="null">{{ i18n "allStates" }}</option>
-                  <option
-                    v-for="state in states"
-                    :value="state">
-                      {{ "{{ state.name }}" }}
-                  </option>
-                </select>
-                <select
-                  id="cities"
-                  name="cities"
-                  v-model="selectedCity">
-                  <option :value="null" selected>{{ i18n "allCities" }}</option>
-                  <option
-                    :value="null"
-                    v-if="selectedState === null"
-                    disabled>
-                    {{ i18n "selectedState" }}
-                  </option>
-                  <option
-                    v-for="city in cities"
-                    :value="city">
-                      {{ "{{ city.name }}" }}
-                  </option>
-                </select>
-                <select
-                  id="parties"
-                  name="parties"
-                  v-model="selectedParty">
-                  <option :value="null">{{ i18n "allParties" }}</option>
-                  <option
-                    v-for="party in parties"
-                    :value="party">
-                      {{ "{{ party.name }}" }}
-                  </option>
-                </select>
-                <select
-                  id="funds"
-                  name="funds"
-                  v-model="selectedFund">
-                  <option :value="null">{{ i18n "allFunds" }}</option>
-                  <option
-                    v-for="fund_type in fund_types"
-                    :value="fund_type">
-                      {{ "{{ fund_type.name }}" }}
-                  </option>
-                </select>
-                <select
-                  id="etinicity"
-                  name="etinicity"
-                  v-model="selectedRace">
-                  <option :value="null">{{ i18n "allEtinicity" }}</option>
-                  <option
-                    v-for="race in races"
-                    :value="race">
-                      {{ "{{ race.name }}" }}
-                  </option>
-                </select>
-                <select
-                  id="days"
-                  name="days"
-                  v-model="selectedDay">
-                  <option
-                    v-for="day in days"
-                    :value="day">
-                    {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
-                  </option>
-                </select>
-                <button class="button button--primary">{{ i18n "apply" }}</button>
-              </form>
-            </div>
-            <div id="js-main-chart" class="main-chart"></div>
-          </div>
-
-          <div class="big-numbers" :aria-busy="this.loadingChartData">
-            <div class="big-number__box big-number__box--icon big-number__box--icon-total">
-              <h1>{{ i18n "accumulatedValue" }}</h1>
-              <p>{{ i18n "bothFundsAmount" }}</p>
-              <span class="big-number__number" v-html="chartTotal"></span>
-            </div>
-
-            <div class="big-number__box big-number__box--icon big-number__box--icon-female">
-              <h1>{{ i18n "accumulatedFemale" }}</h1>
-              <p>{{ i18n "bothFundsAmount" }}</p>
-              <span class="big-number__number" v-html="chartFemale"></span>
-            </div>
-
-            <div class="big-number__box big-number__box--icon big-number__box--icon-male">
-              <h1>{{ i18n "accumulatedMale" }}</h2>
-              <p>{{ i18n "bothFundsAmount" }}</p>
-              <span class="big-number__number" v-html="chartMale"></span>
-            </div>
-          </div>
-
-          <div class="candidates" id="js-candidate-box">
             <button
-              @click="sharingFrom = 'js-candidate-box'"
+              @click="sharingFrom = 'filters'"
               data-micromodal-trigger="js-share-modal"
               class="button button--icon button--icon-share">
               {{ i18n "share" }}
             </button>
-            <h1>
-              {{ i18n "candidatesListing" }}
-              {{ "{{ selectedLocaleText }}" }}
-            </h1>
-            <div
-              :aria-busy="loadingCandidates"
-              class="candidates__container">
-              <template v-if="candidates && candidates.candidates.length > 0">
-                <div
-                  v-for="candidate in candidates.candidates"
-                  class="candidates__candidate">
-                  <img
-                    class="candidates__image"
-                    :src="candidate.picture"
-                    @error="candidate.picture = 'assets/images/no-picture.svg'"
-                    :alt="candidate.name">
-                  <div class="candidates__text">
-                    <p class="candidates__name">
-                      {{ "{{ candidate.name }}" }}
-                      - {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
-                      - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
-                    </p>
-                    <p class="candidates__info">
-                      {{ "{{ candidate.total_transfers }}" }} transferências
-                    </p>
-                    <a
-                      :href="candidate.divulgacand_url"
-                      target="_blank"
-                      class="button">
-                      {{ i18n "seeOnTSE" }}
-                    </a>
-                  </div>
-                </div>
-              </template>
-              <div
-                v-else
-                class="no-results">
-                <p>{{ i18n "noResults" }}</p>
+
+            <div class="filters" id="filters">
+              <button class="filters__toggle" @click="toggleFilter">
+                <h1>{{ i18n "filters" }}</h1>
+                <span
+                  v-if="filterOpen"
+                  class="filters__dropdown">
+                  {{ i18n "closeFilters" }}
+                </span>
+                <span
+                  v-else="filterOpen"
+                  class="filters__dropdown">
+                  {{ i18n "openFilters" }}
+                </span>
+              </button>
+              <p>{{ i18n "checkFound" }}</p>
+
+              <div class="filters__items" :hidden="!filterOpen">
+                <form action="" @submit.prevent="updateData">
+                  <select
+                    id="states"
+                    name="states"
+                    v-model="selectedState"
+                    @change="selectedCity = null">
+                    <option :value="null">{{ i18n "allStates" }}</option>
+                    <option
+                      v-for="state in states"
+                      :value="state">
+                        {{ "{{ state.name }}" }}
+                    </option>
+                  </select>
+                  <select
+                    id="cities"
+                    name="cities"
+                    v-model="selectedCity">
+                    <option :value="null" selected>{{ i18n "allCities" }}</option>
+                    <option
+                      :value="null"
+                      v-if="selectedState === null"
+                      disabled>
+                      {{ i18n "selectedState" }}
+                    </option>
+                    <option
+                      v-for="city in cities"
+                      :value="city">
+                        {{ "{{ city.name }}" }}
+                    </option>
+                  </select>
+                  <select
+                    id="parties"
+                    name="parties"
+                    v-model="selectedParty">
+                    <option :value="null">{{ i18n "allParties" }}</option>
+                    <option
+                      v-for="party in parties"
+                      :value="party">
+                        {{ "{{ party.name }}" }}
+                    </option>
+                  </select>
+                  <select
+                    id="funds"
+                    name="funds"
+                    v-model="selectedFund">
+                    <option :value="null">{{ i18n "allFunds" }}</option>
+                    <option
+                      v-for="fund_type in fund_types"
+                      :value="fund_type">
+                        {{ "{{ fund_type.name }}" }}
+                    </option>
+                  </select>
+                  <select
+                    id="etinicity"
+                    name="etinicity"
+                    v-model="selectedRace">
+                    <option :value="null">{{ i18n "allEtinicity" }}</option>
+                    <option
+                      v-for="race in races"
+                      :value="race">
+                        {{ "{{ race.name }}" }}
+                    </option>
+                  </select>
+                  <select
+                    id="days"
+                    name="days"
+                    v-model="selectedDay">
+                    <option
+                      v-for="day in days"
+                      :value="day">
+                      {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
+                    </option>
+                  </select>
+                  <button class="button button--primary">{{ i18n "apply" }}</button>
+                </form>
+              </div>
+              <div id="js-main-chart" class="main-chart"></div>
+            </div>
+
+            <div class="big-numbers" :aria-busy="this.loadingChartData">
+              <div class="big-number__box big-number__box--icon big-number__box--icon-total">
+                <h1>{{ i18n "accumulatedValue" }}</h1>
+                <p>{{ i18n "bothFundsAmount" }}</p>
+                <span class="big-number__number" v-html="chartTotal"></span>
               </div>
 
+              <div class="big-number__box big-number__box--icon big-number__box--icon-female">
+                <h1>{{ i18n "accumulatedFemale" }}</h1>
+                <p>{{ i18n "bothFundsAmount" }}</p>
+                <span class="big-number__number" v-html="chartFemale"></span>
+              </div>
+
+              <div class="big-number__box big-number__box--icon big-number__box--icon-male">
+                <h1>{{ i18n "accumulatedMale" }}</h2>
+                <p>{{ i18n "bothFundsAmount" }}</p>
+                <span class="big-number__number" v-html="chartMale"></span>
+              </div>
+            </div>
+
+            <div class="candidates" id="js-candidate-box">
               <button
-                v-if="candidates && candidates.has_more"
-                @click="getCandidates(true)"
-                class="button button--big">
-                {{ i18n "seeMore" }}
+                @click="sharingFrom = 'js-candidate-box'"
+                data-micromodal-trigger="js-share-modal"
+                class="button button--icon button--icon-share">
+                {{ i18n "share" }}
               </button>
-            </div>
-          </div>
-
-          <div class="twitter">
-            <a
-              class="twitter-timeline"
-              href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
-              data-tweet-limit="3"
-            >
-              Tweets by TwitterDev
-            </a>
-
-            <a class="button button--big" href="">
-              {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
-            </a>
-          </div>
-
-          <div class="partners">
-            <h2>{{ i18n "partnersAndOrganizations" }}</h2>
-
-            {{ range where .Site.RegularPages ".Type" "partners" }}
-              <img src="{{ .Params.image }}" alt="{{ .Title }}">
-            {{ end }}
-          </div>
-        </div>
-
-        <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true">
-          <div class="modal__overlay" tabindex="-1" data-micromodal-close>
-            <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
-              <header class="modal__header">
-                <h1>{{ i18n "shareWithEnthusiasm" }}</h1>
-                <button class="modal__close" aria-label="{{ i18n "closeModal" }}" data-micromodal-close></button>
-              </header>
-              <main class="modal__content share-modal__content" id="share-modal-content">
-                <a
-                  :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`"
-                  target="_blank"
-                  class="share-modal__icon share-modal__icons--facebook">
-                  {{ i18n "facebook" }}
-                </a>
-                <a
-                  :href="`http://twitter.com/share?url=${shareURL}`"
-                  target="_blank"
-                  class="share-modal__icon share-modal__icons--twitter">
-                  {{ i18n "twitter" }}
-                </a>
-                <a
-                  :href="`https://wa.me/?text=${encodeURIComponent(shareURL)}`"
-                  target="_blank"
-                  class="share-modal__icon share-modal__icons--whatsapp">
-                  {{ i18n "whatsapp" }}
-                </a>
-                <a
-                  :href="`https://telegram.me/share/url?url=${shareURL}`"
-                  target="_blank"
-                  class="share-modal__icon share-modal__icons--telegram">
-                  {{ i18n "telegram" }}
-                </a>
-                <div class="share-modal__input">
-                  <input
-                    :value="shareURL"
-                    id="js-share-url"
-                    type="text"
-                    class="share-modal__input-text"
-                    readonly>
-                  <button
-                    @click="copyShareURL"
-                    class="share-modal__input-button button">
-                    {{ i18n "copy" }}
-                  </button>
+              <h1>
+                {{ i18n "candidatesListing" }}
+                {{ "{{ selectedLocaleText }}" }}
+              </h1>
+              <div
+                :aria-busy="loadingCandidates"
+                class="candidates__container">
+                <template v-if="candidates && candidates.candidates.length > 0">
+                  <div
+                    v-for="candidate in candidates.candidates"
+                    class="candidates__candidate">
+                    <img
+                      class="candidates__image"
+                      :src="candidate.picture"
+                      @error="candidate.picture = 'assets/images/no-picture.svg'"
+                      :alt="candidate.name">
+                    <div class="candidates__text">
+                      <p class="candidates__name">
+                        {{ "{{ candidate.name }}" }}
+                        - {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
+                        - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
+                      </p>
+                      <p class="candidates__info">
+                        {{ "{{ candidate.total_transfers }}" }} transferências
+                      </p>
+                      <a
+                        :href="candidate.divulgacand_url"
+                        target="_blank"
+                        class="button">
+                        {{ i18n "seeOnTSE" }}
+                      </a>
+                    </div>
+                  </div>
+                </template>
+                <div
+                  v-else
+                  class="no-results">
+                  <p>{{ i18n "noResults" }}</p>
                 </div>
-                <span v-show="shareURLCopied"> {{ i18n "linkCopiedSuccessfully" }}</span>
-              </main>
-              <footer class="modal__footer share-modal__footer">
-                <label for="share-date">
-                  <input
-                    v-model="useEpoch"
-                    type="checkbox"
-                    name="time"
-                    id="share-date">
-                    {{ i18n "shareDataFrom" }} <span v-if="mainData">{{ "{{ epochToHuman(mainData.epoch) }}" }}</span>
-                </label>
-              </footer>
+
+                <button
+                  v-if="candidates && candidates.has_more"
+                  @click="getCandidates(true)"
+                  class="button button--big">
+                  {{ i18n "seeMore" }}
+                </button>
+              </div>
+            </div>
+
+            <div class="twitter">
+              <a
+                class="twitter-timeline"
+                href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
+                data-tweet-limit="3"
+              >
+                Tweets by TwitterDev
+              </a>
+
+              <a class="button button--big" href="">
+                {{ i18n "follow" }} {{ .Site.Params.name }} {{ i18n "onTweeter" }}
+              </a>
+            </div>
+
+            <div class="partners">
+              <h2>{{ i18n "partnersAndOrganizations" }}</h2>
+
+              {{ range where .Site.RegularPages ".Type" "partners" }}
+                <img src="{{ .Params.image }}" alt="{{ .Title }}">
+              {{ end }}
             </div>
           </div>
-        </div>
 
-      </main>
+          <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true">
+            <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+              <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+                <header class="modal__header">
+                  <h1>{{ i18n "shareWithEnthusiasm" }}</h1>
+                  <button class="modal__close" aria-label="{{ i18n "closeModal" }}" data-micromodal-close></button>
+                </header>
+                <main class="modal__content share-modal__content" id="share-modal-content">
+                  <a
+                    :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--facebook">
+                    {{ i18n "facebook" }}
+                  </a>
+                  <a
+                    :href="`http://twitter.com/share?url=${shareURL}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--twitter">
+                    {{ i18n "twitter" }}
+                  </a>
+                  <a
+                    :href="`https://wa.me/?text=${encodeURIComponent(shareURL)}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--whatsapp">
+                    {{ i18n "whatsapp" }}
+                  </a>
+                  <a
+                    :href="`https://telegram.me/share/url?url=${shareURL}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--telegram">
+                    {{ i18n "telegram" }}
+                  </a>
+                  <div class="share-modal__input">
+                    <input
+                      :value="shareURL"
+                      id="js-share-url"
+                      type="text"
+                      class="share-modal__input-text"
+                      readonly>
+                    <button
+                      @click="copyShareURL"
+                      class="share-modal__input-button button">
+                      {{ i18n "copy" }}
+                    </button>
+                  </div>
+                  <span v-show="shareURLCopied"> {{ i18n "linkCopiedSuccessfully" }}</span>
+                </main>
+                <footer class="modal__footer share-modal__footer">
+                  <label for="share-date">
+                    <input
+                      v-model="useEpoch"
+                      type="checkbox"
+                      name="time"
+                      id="share-date">
+                      {{ i18n "shareDataFrom" }} <span v-if="mainData">{{ "{{ epochToHuman(mainData.epoch) }}" }}</span>
+                  </label>
+                </footer>
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
 
       {{ partial "footer.html" . }}
 

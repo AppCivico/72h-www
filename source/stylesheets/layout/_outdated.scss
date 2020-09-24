@@ -1,0 +1,55 @@
+.outdated {
+  position: sticky;
+  top: 0;
+  display: flex;
+  z-index: layer('default');
+  padding: 1.5rem 0;
+  margin-top: -2rem;
+  margin-bottom: 1.5rem;
+  overflow: hidden;
+  font-size: ms(-1);
+  background-color: palette('main-colors', 'tertiary');
+  transition: max-height 0.3s, padding 0.3s;
+
+  &[hidden] {
+    max-height: 0;
+    padding: 0;
+  }
+}
+
+.outdated .container {
+  display: flex;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.outdated p {
+  margin-bottom: 0;
+}
+
+.outdated .button {
+  padding: 0;
+  font-weight: font-weight('text');
+  font-size: ms(0);
+  font-family: $monteserrat-font-stack;
+  text-decoration: underline;
+  text-transform: none;
+  color: inherit;
+  background-color: transparent;
+  border: 0;
+  appearance: none;
+}
+
+.outdated__close {
+  padding: 0.5rem;
+  margin-left: auto;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  justify-self: flex-end;
+
+  &::before {
+    font-size: ms(2);
+    content: '\2715';
+  }
+}

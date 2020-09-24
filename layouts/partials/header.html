@@ -1,8 +1,6 @@
 <header class="main-header">
   <div class="container">
-    <h1 class="main-header__logo">
-      {{ .Site.Params.name }}
-    </h1>
+    <h1 class="main-header__logo">{{ .Site.Params.name }}</h1>
 
     <button
       @click="sharingFrom = 'filters'"
@@ -12,3 +10,18 @@
     </button>
   </div>
 </header>
+
+<div class="outdated" :hidden="!dataIsOutdated">
+  <div class="container">
+    <p>
+      {{ i18n "oldInfo" }}
+      <span v-if="mainData">{{ " {{ epochToHuman(mainData.epoch) }}" }}</span>
+      {{ i18n "oldInfoUpdate" | safeHTML }}
+    </p>
+    <button
+      @click="closeWarning"
+      aria-label="{{ i18n "closeWarning" }}"
+      class="outdated__close">
+    </button>
+  </div>
+</div>

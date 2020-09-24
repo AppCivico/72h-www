@@ -2821,6 +2821,18 @@ if (window.location.href.indexOf('/') > -1) {
       selectedDay: 7
     },
     computed: {
+      dataIsOutdated: {
+        // eslint-disable-next-line object-shorthand
+        get: function get() {
+          var _this$mainData;
+
+          return (_this$mainData = this.mainData) === null || _this$mainData === void 0 ? void 0 : _this$mainData.is_outdated;
+        },
+        // eslint-disable-next-line object-shorthand
+        set: function set(value) {
+          this.mainData.is_outdated = value;
+        }
+      },
       epoch: function epoch() {
         return params.get('epoch') ? params.get('epoch') : this.mainData.epoch;
       },
@@ -2913,6 +2925,12 @@ if (window.location.href.indexOf('/') > -1) {
       window.history.replaceState({}, document.title, cleanUri);
     },
     methods: {
+      closeWarning: function closeWarning() {
+        this.dataIsOutdated = false;
+      },
+      refreshPage: function refreshPage() {
+        window.location.reload();
+      },
       scrollToElement: function scrollToElement() {
         var hash = window.location.hash.split('?')[0];
 

@@ -32,6 +32,8 @@
   translation: "Minimizar filtros"
 - id: closeModal
   translation: "Fechar modal"
+- id: closeWarning
+  translation: "Fechar aviso"
 - id: contribute
   translation: "Contribua"
 - id: copy
@@ -56,6 +58,10 @@
   translation: Menu
 - id: noResults
   translation: "Sem resultados"
+- id: oldInfo
+  translation: "Os dados deste link não estão atualizados, esses dados são de:"
+- id: oldInfoUpdate
+  translation: "<button class='button' @click='refreshPage'>ver dados atualizados</button>"
 - id: onTweeter
   translation: "no Twitter"
 - id: openFilters

@@ -80,6 +80,16 @@ if (window.location.href.indexOf('/') > -1) {
       selectedDay: 7,
     },
     computed: {
+      dataIsOutdated: {
+        // eslint-disable-next-line object-shorthand
+        get: function () {
+          return this.mainData?.is_outdated;
+        },
+        // eslint-disable-next-line object-shorthand
+        set: function (value) {
+          this.mainData.is_outdated = value;
+        },
+      },
       epoch() {
         return params.get('epoch') ? params.get('epoch') : this.mainData.epoch;
       },
@@ -137,6 +147,12 @@ if (window.location.href.indexOf('/') > -1) {
       window.history.replaceState({}, document.title, cleanUri);
     },
     methods: {
+      closeWarning() {
+        this.dataIsOutdated = false;
+      },
+      refreshPage() {
+        window.location.reload();
+      },
       scrollToElement() {
         const hash = window.location.hash.split('?')[0];
         if (hash) {

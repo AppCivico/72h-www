@@ -7,11 +7,13 @@ $logo-left-desktop: calc(50% - 3.46rem);
 .main-header {
   position: relative;
   display: flex;
+  z-index: layer('up');
   align-items: center;
   justify-content: flex-end;
   height: 4rem;
   padding-top: 0.5rem;
   margin-bottom: 2rem;
+  background-color: palette('white');
   box-shadow: 0 8px 21px -3px palette('shadow', 'light');
 
   &::before {
