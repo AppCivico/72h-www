@@ -19,7 +19,10 @@
         <main>
           <div class="container">
             <div class="big-numbers" v-if="!this.loadingBigNumbers">
-              <p class="big-number__update">{{ i18n "updateTimes" }}</p>
+              <p class="big-number__update">
+                {{ i18n "lastUpdatedAt" }}
+                {{ "{{ mainData ?  new Date(mainData.last_run_at).toLocaleDateString('pt-BR') : '' }}" }}
+              </p>
               <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
                 <h1>{{ i18n "accumulatedValue" }}</h1>
                 <p>
@@ -99,7 +102,7 @@
                       :value="null"
                       v-if="selectedState === null"
                       disabled>
-                      {{ i18n "selectedState" }}
+                      {{ i18n "selectState" }}
                     </option>
                     <option
                       v-for="city in cities"
@@ -157,21 +160,32 @@
             </div>
 
             <div class="big-numbers" :aria-busy="this.loadingChartData">
+              <div>
+              </div>
               <div class="big-number__box big-number__box--icon big-number__box--icon-total">
                 <h1>{{ i18n "accumulatedValue" }}</h1>
-                <p>{{ i18n "bothFundsAmount" }}</p>
+                {{ partial "filterText" }}
+                <p v-else>
+                  {{ i18n "TSEData" }}
+                </p>
                 <span class="big-number__number" v-html="chartTotal"></span>
               </div>
 
               <div class="big-number__box big-number__box--icon big-number__box--icon-female">
                 <h1>{{ i18n "accumulatedFemale" }}</h1>
-                <p>{{ i18n "bothFundsAmount" }}</p>
+                {{ partial "filterText" }}
+                <p v-else>
+                  {{ i18n "TSEData" }}
+                </p>
                 <span class="big-number__number" v-html="chartFemale"></span>
               </div>
 
               <div class="big-number__box big-number__box--icon big-number__box--icon-male">
-                <h1>{{ i18n "accumulatedMale" }}</h2>
-                <p>{{ i18n "bothFundsAmount" }}</p>
+                <h1>{{ i18n "accumulatedMale" }}</h1>
+                {{ partial "filterText" }}
+                <p v-else>
+                  {{ i18n "TSEData" }}
+                </p>
                 <span class="big-number__number" v-html="chartMale"></span>
               </div>
             </div>
@@ -185,8 +199,10 @@
               </button>
               <h1>
                 {{ i18n "candidatesListing" }}
-                {{ "{{ selectedLocaleText }}" }}
               </h1>
+              <div class="candidates__subtitle">
+                {{ partial "filterText" }}
+              </div>
               <div
                 :aria-busy="loadingCandidates"
                 class="candidates__container">
@@ -224,10 +240,17 @@
                 </div>
 
                 <button
+                  v-if="candidates_page > 1"
+                  @click="getCandidates(candidates_page - 1)"
+                  class="button button--medium">
+                  {{ i18n "previous" }}
+                </button>
+
+                <button
                   v-if="candidates && candidates.has_more"
-                  @click="getCandidates(true)"
-                  class="button button--big">
-                  {{ i18n "seeMore" }}
+                  @click="getCandidates(candidates_page + 1)"
+                  class="button button--medium">
+                  {{ i18n "next" }}
                 </button>
               </div>
             </div>
@@ -235,7 +258,7 @@
             <div class="twitter">
               <a
                 class="twitter-timeline"
-                href="https://twitter.com/TwitterDev?ref_src=twsrc%5Etfw"
+                href="https://twitter.com/72horas?ref_src=twsrc%5Etfw"
                 data-tweet-limit="3"
               >
                 Tweets by TwitterDev

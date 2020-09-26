@@ -2767,7 +2767,7 @@ _dayjs.default.locale('pt-br');
 _numeral.default.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
-    decimal: ','
+    decimal: '.'
   },
   abbreviations: {
     thousand: '<i>Mil</i>',
@@ -2797,6 +2797,7 @@ if (window.location.href.indexOf('/') > -1) {
       loadingChartData: true,
       shareURLCopied: false,
       sharingFrom: '',
+      filterText: {},
       selectedLocaleText: 'Brasil',
       homeLoading: true,
       filterOpen: true,
@@ -2921,6 +2922,7 @@ if (window.location.href.indexOf('/') > -1) {
       this.getData();
       this.getCandidates();
       this.setChartOptions();
+      this.updateFilterText();
 
       _micromodal.default.init();
 
@@ -2992,6 +2994,38 @@ if (window.location.href.indexOf('/') > -1) {
         } else {
           this.selectedLocaleText = 'Brasil';
         }
+      },
+      updateFilterText: function updateFilterText() {
+        var _this$selectedState2, _this$selectedCity, _this$selectedParty, _this$selectedFund, _this$selectedRace;
+
+        if ((_this$selectedState2 = this.selectedState) === null || _this$selectedState2 === void 0 ? void 0 : _this$selectedState2.name) {
+          this.filterText.selectedState = this.selectedState.name;
+        }
+
+        if ((_this$selectedCity = this.selectedCity) === null || _this$selectedCity === void 0 ? void 0 : _this$selectedCity.name) {
+          this.filterText.selectedCity = this.selectedCity.name;
+        }
+
+        if ((_this$selectedParty = this.selectedParty) === null || _this$selectedParty === void 0 ? void 0 : _this$selectedParty.name) {
+          this.filterText.selectedParty = this.selectedParty.name;
+        }
+
+        if ((_this$selectedFund = this.selectedFund) === null || _this$selectedFund === void 0 ? void 0 : _this$selectedFund.name) {
+          this.filterText.selectedFund = this.selectedFund.name;
+        }
+
+        if ((_this$selectedRace = this.selectedRace) === null || _this$selectedRace === void 0 ? void 0 : _this$selectedRace.name) {
+          this.filterText.selectedRace = this.selectedRace.name;
+        }
+
+        if (this.selectedDay) {
+          this.filterText.selectedDay = this.selectedDay;
+        } // this.selectedState?.name
+        // this.selectedParty?.name
+        // this.selectedFund?.name
+        // this.selectedParty?.name
+        // this.selectedDay?.name
+
       },
       mountURL: function mountURL(url) {
         var mountedURL = url;
@@ -3111,6 +3145,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.getData();
         this.getCandidates();
         this.updateLocaleText();
+        this.updateFilterText();
         document.querySelector('#js-main-chart').scrollIntoView();
       },
       getData: function getData() {
@@ -3153,7 +3188,7 @@ if (window.location.href.indexOf('/') > -1) {
       getCandidates: function getCandidates() {
         var _this5 = this;
 
-        var nextPage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+        var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         this.loadingCandidates = true;
         var url = "".concat(_config.default.api.domain, "candidates?results=9");
         var mountedURL = this.mountURL(url);
@@ -3162,8 +3197,8 @@ if (window.location.href.indexOf('/') > -1) {
           mountedURL += "&epoch=".concat(this.epochFromParam);
         }
 
-        if (nextPage) {
-          mountedURL += "&page=".concat(this.candidates_page);
+        if (page) {
+          mountedURL += "&page=".concat(page);
           document.querySelector('#js-candidate-box').scrollIntoView();
         }
 
@@ -3176,7 +3211,11 @@ if (window.location.href.indexOf('/') > -1) {
           return true;
         }).then(function () {
           _this5.loadingCandidates = false;
-          _this5.candidates_page = _this5.candidates_page + 1;
+
+          if (page) {
+            _this5.candidates_page = page;
+          }
+
           return true;
         }) // eslint-disable-next-line no-console
         .catch(function (error) {

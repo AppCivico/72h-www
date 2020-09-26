@@ -1,0 +1,11 @@
+<p v-if="Object.keys(filterText).length !== 0">
+  {{ i18n "TSEDataFiltered" }}
+  <span v-for="(value, key, index) in filterText">
+    {{ "{{ key }}" }}
+    <template v-if="key !== 'selectedDays'">
+      {{ "{{ value }}" }}<span v-if="(Object.keys(filterText).length - 1) !== index">, </span></template>
+    <template v-else>
+      {{ i18n "last" }}: {{ "{{ value }}" }} {{ i18n "days" }}<span v-if="(Object.keys(filterText).length - 1) !== index">, </span></template>
+    </template>
+  </span>
+</p>

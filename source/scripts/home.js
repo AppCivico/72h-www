@@ -16,7 +16,7 @@ dayjs.locale('pt-br');
 numeral.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
-    decimal: ',',
+    decimal: '.',
   },
   abbreviations: {
     thousand: '<i>Mil</i>',
@@ -46,6 +46,7 @@ if (window.location.href.indexOf('/') > -1) {
       shareURLCopied: false,
       sharingFrom: '',
 
+      filterText: {},
       selectedLocaleText: 'Brasil',
 
       homeLoading: true,
@@ -142,6 +143,8 @@ if (window.location.href.indexOf('/') > -1) {
       this.getData();
       this.getCandidates();
       this.setChartOptions();
+      this.updateFilterText();
+
       MicroModal.init();
 
       this.scrollToElement();
@@ -193,6 +196,31 @@ if (window.location.href.indexOf('/') > -1) {
         } else {
           this.selectedLocaleText = 'Brasil';
         }
+      },
+      updateFilterText() {
+        if (this.selectedState?.name) {
+          this.filterText.selectedState = this.selectedState.name;
+        }
+        if (this.selectedCity?.name) {
+          this.filterText.selectedCity = this.selectedCity.name;
+        }
+        if (this.selectedParty?.name) {
+          this.filterText.selectedParty = this.selectedParty.name;
+        }
+        if (this.selectedFund?.name) {
+          this.filterText.selectedFund = this.selectedFund.name;
+        }
+        if (this.selectedRace?.name) {
+          this.filterText.selectedRace = this.selectedRace.name;
+        }
+        if (this.selectedDay) {
+          this.filterText.selectedDay = this.selectedDay;
+        }
+        // this.selectedState?.name
+        // this.selectedParty?.name
+        // this.selectedFund?.name
+        // this.selectedParty?.name
+        // this.selectedDay?.name
       },
       mountURL(url) {
         let mountedURL = url;
@@ -308,6 +336,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.getData();
         this.getCandidates();
         this.updateLocaleText();
+        this.updateFilterText();
         document.querySelector('#js-main-chart').scrollIntoView();
       },
       getData() {
@@ -343,7 +372,7 @@ if (window.location.href.indexOf('/') > -1) {
           // eslint-disable-next-line no-console
           .catch(error => console.error(error));
       },
-      getCandidates(nextPage = false) {
+      getCandidates(page = false) {
         this.loadingCandidates = true;
 
         const url = `${config.api.domain}candidates?results=9`;
@@ -353,8 +382,8 @@ if (window.location.href.indexOf('/') > -1) {
           mountedURL += `&epoch=${this.epochFromParam}`;
         }
 
-        if (nextPage) {
-          mountedURL += `&page=${this.candidates_page}`;
+        if (page) {
+          mountedURL += `&page=${page}`;
           document.querySelector('#js-candidate-box').scrollIntoView();
         }
 
@@ -368,7 +397,9 @@ if (window.location.href.indexOf('/') > -1) {
           })
           .then(() => {
             this.loadingCandidates = false;
-            this.candidates_page = this.candidates_page + 1;
+            if (page) {
+              this.candidates_page = page;
+            }
             return true;
           })
           // eslint-disable-next-line no-console

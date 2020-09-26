@@ -25,7 +25,7 @@
 - id: bothFundsAmount
   translation: "Montante referente ao Fundo Especial e Partidário do Brasil"
 - id: candidatesListing
-  translation: "Listagem dos candidatos para: "
+  translation: "Listagem das candidaturas"
 - id: checkFound
   translation: "Verifique como está o repasse do Fundo Eleitoral Especial do seu Município ou Estado."
 - id: closeFilters
@@ -34,10 +34,12 @@
   translation: "Fechar modal"
 - id: closeWarning
   translation: "Fechar aviso"
-- id: contribute
-  translation: "Contribua"
+- id: donate
+  translation: "Doe"
 - id: copy
   translation: "Copiar!"
+- id: days
+  translation: "dias"
 - id: developedBy
   translation: "desenvolvido por appcívico"
 - id: entriesQuantity
@@ -50,12 +52,18 @@
   translation: "A partir dos dados do DivulgaCand, nós entregamos todos os dias, no seu celular alertas, informações sobre a jornada do fundo eleitoral."
 - id: follow
   translation: "Seguir"
-- id: lastXDays
-  translation: "Últimos {{ .days }} dias"
+- id: last
+  translation: "Últimos"
 - id: linkCopiedSuccessfully
   translation: "Link copiado!"
+- id: lastUpdatedAt
+  translation: "Última atualização:"
+- id: lastXDays
+  translation: "Últimos {{ .days }} dias"
 - id: menu
   translation: Menu
+- id: next
+  translation: "Próximo >"
 - id: noResults
   translation: "Sem resultados"
 - id: oldInfo
@@ -70,6 +78,8 @@
   translation: "Parceiros e Organizações"
 - id: partiesListing
   translation: "Listagem da quantidade de recurso disponibilizado para cada partido"
+- id: previous
+  translation: "< Anterior"
 - id: runsFor
   translation: "Concorre a"
 - id: seeOnTSE
@@ -84,8 +94,10 @@
   translation: "Compartilhar dados de"
 - id: shareWithEnthusiasm
   translation: "Compartilhar!"
-- id: updateTimes
-  translation: "Próxima atualização em: 14horas | Última atualização: 03/08/2020 - 12h00"
+- id: TSEData
+  translation: "Estes dados são com base no sistema oficial do TSE"
+- id: TSEDataFiltered
+  translation: "Dados filtrado com base no sistema do TSE:"
 
 
 - id: facebook

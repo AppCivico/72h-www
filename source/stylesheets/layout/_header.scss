@@ -69,5 +69,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
 }
 
 .main-header .button {
+  justify-content: center;
+  min-width: 8rem;
   margin-bottom: 0;
 }
