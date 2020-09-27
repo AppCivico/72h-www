@@ -42,6 +42,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
 
 .main-header .container {
   display: flex;
+  justify-content: flex-end;
   background-color: palette('white');
 }
 
