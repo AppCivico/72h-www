@@ -4,6 +4,7 @@ import HighchartsExportData from 'highcharts/modules/export-data';
 import Highcharts from 'highcharts';
 import MicroModal from 'micromodal';
 import dayjs from 'dayjs';
+import duration from 'dayjs/plugin/duration';
 import 'dayjs/locale/pt-br';
 import numeral from 'numeral';
 import config from './config';
@@ -11,7 +12,9 @@ import config from './config';
 HighchartsExport(Highcharts);
 HighchartsExportData(Highcharts);
 
+dayjs.extend(duration);
 dayjs.locale('pt-br');
+window.dayjs = dayjs;
 
 numeral.register('locale', 'pt-br', {
   delimiters: {
@@ -42,6 +45,9 @@ if (window.location.href.indexOf('/') > -1) {
       loadingBigNumbers: true,
       loadingCandidates: true,
       loadingChartData: true,
+
+      timerStart: Number,
+      timerEnd: Number,
 
       shareURLCopied: false,
       sharingFrom: '',
@@ -82,6 +88,28 @@ if (window.location.href.indexOf('/') > -1) {
       selectedDay: 7,
     },
     computed: {
+      timer() {
+        const actualDate = dayjs.unix(this.timerStart);
+        const endDate = dayjs.unix(this.timerEnd);
+        const diff = endDate.diff(actualDate);
+
+        const timeDuration = dayjs.duration(diff).asMilliseconds();
+        let seconds = Math.floor(timeDuration / 1000);
+        let minutes = Math.floor(seconds / 60);
+        let hours = Math.floor(minutes / 60);
+        const days = Math.floor(hours / 24);
+
+        hours -= (days * 24);
+        minutes = minutes - (days * 24 * 60) - (hours * 60);
+        seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
+
+        return {
+          seconds,
+          minutes,
+          hours,
+          days,
+        };
+      },
       dataIsOutdated: {
         // eslint-disable-next-line object-shorthand, func-names
         get: function () {
@@ -134,6 +162,16 @@ if (window.location.href.indexOf('/') > -1) {
       async mainData() {
         await this.handleData();
         await this.generateChart();
+      },
+      timerStart: {
+        handler(value) {
+          if (value > 0) {
+            setTimeout(() => {
+              this.timerStart = this.timerStart + 1;
+            }, 1000);
+          }
+        },
+        immediate: true,
       },
     },
     mounted() {
@@ -204,11 +242,6 @@ if (window.location.href.indexOf('/') > -1) {
         this.filterText.selectedFund = this.selectedFund?.name;
         this.filterText.selectedRace = this.selectedRace?.name;
         this.filterText.selectedDay = this.selectedDay;
-        // this.selectedState?.name
-        // this.selectedParty?.name
-        // this.selectedFund?.name
-        // this.selectedParty?.name
-        // this.selectedDay?.name
       },
       mountURL(url) {
         let mountedURL = url;
@@ -347,6 +380,8 @@ if (window.location.href.indexOf('/') > -1) {
           .then(response => response.json())
           .then((response) => {
             this.mainData = response;
+            this.timerStart = this.mainData.epoch;
+            this.timerEnd = 1609096439;
             return true;
           })
           .then(() => {

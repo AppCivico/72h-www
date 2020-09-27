@@ -39,7 +39,7 @@
 - id: copy
   translation: "Copiar!"
 - id: days
-  translation: "dias"
+  translation: "Dias"
 - id: developedBy
   translation: "desenvolvido por appcívico"
 - id: entriesQuantity
@@ -108,3 +108,10 @@
   translation: "WhatsApp"
 - id: telegram
   translation: "Telegram"
+
+- id: hours
+  translation: "Horas"
+- id: minutesAbbr
+  translation: "Min"
+- id: secondsAbbr
+  translation: "Seg"

@@ -7,11 +7,11 @@
         <div class="timer">
           <div class="timer__content">
             <strong>Dias Restantes</strong>
-            <div class="timer__numbers">
-              <span>44<i>dias</i></span>
-              <span>10<i>horas</i></span>
-              <span>42<i>minutos</i></span>
-              <span>59<i>segundos</i></span>
+            <div class="timer__numbers" v-if="mainData">
+              <span>{{ "{{ timer.days }}" }}<i>{{ i18n "days" }}</i></span>
+              <span>{{ "{{ timer.hours }}" }}<i>{{ i18n "hours" }}</i></span>
+              <span>{{ "{{ timer.minutes }}" }}<i>{{ i18n "minutesAbbr" }}</i></span>
+              <span>{{ "{{ timer.seconds }}" }}<i>{{ i18n "secondsAbbr" }}</i></span>
             </div>
           </div>
         </div>

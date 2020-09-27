@@ -37,6 +37,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  width: 2.5rem;
   font-weight: font-weight('bold');
   font-size: ms(3);
   text-align: center;
@@ -46,6 +47,6 @@
   width: 100%;
   font-style: normal;
   font-weight: font-weight('normal');
-  font-size: ms(-9);
+  font-size: ms(-6);
   color: palette('gray', 'medium');
 }
