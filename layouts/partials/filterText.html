@@ -1,11 +1,28 @@
 <p v-if="Object.keys(filterText).length !== 0">
   {{ i18n "TSEDataFiltered" }}
   <span v-for="(value, key, index) in filterText">
-    {{ "{{ key }}" }}
-    <template v-if="key !== 'selectedDays'">
-      {{ "{{ value }}" }}<span v-if="(Object.keys(filterText).length - 1) !== index">, </span></template>
-    <template v-else>
-      {{ i18n "last" }}: {{ "{{ value }}" }} {{ i18n "days" }}<span v-if="(Object.keys(filterText).length - 1) !== index">, </span></template>
+    <template v-if="key === 'selectedState'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allStates" }}</template>,
+    </template>
+    <template v-if="key === 'selectedCity'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allCities" }}</template>,
+    </template>
+    <template v-if="key === 'selectedParty'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allParties" }}</template>,
+    </template>
+    <template v-if="key === 'selectedFund'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allFunds" }}</template>,
+    </template>
+    <template v-if="key === 'selectedRace'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allEtinicity" }}</template>,
+    </template>
+    <template v-if="key === 'selectedDay'">
+      {{ i18n "last" }} {{ "{{ value }}" }} {{ i18n "days" }}.
     </template>
   </span>
 </p>

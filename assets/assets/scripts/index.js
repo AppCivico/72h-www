@@ -2998,34 +2998,16 @@ if (window.location.href.indexOf('/') > -1) {
       updateFilterText: function updateFilterText() {
         var _this$selectedState2, _this$selectedCity, _this$selectedParty, _this$selectedFund, _this$selectedRace;
 
-        if ((_this$selectedState2 = this.selectedState) === null || _this$selectedState2 === void 0 ? void 0 : _this$selectedState2.name) {
-          this.filterText.selectedState = this.selectedState.name;
-        }
-
-        if ((_this$selectedCity = this.selectedCity) === null || _this$selectedCity === void 0 ? void 0 : _this$selectedCity.name) {
-          this.filterText.selectedCity = this.selectedCity.name;
-        }
-
-        if ((_this$selectedParty = this.selectedParty) === null || _this$selectedParty === void 0 ? void 0 : _this$selectedParty.name) {
-          this.filterText.selectedParty = this.selectedParty.name;
-        }
-
-        if ((_this$selectedFund = this.selectedFund) === null || _this$selectedFund === void 0 ? void 0 : _this$selectedFund.name) {
-          this.filterText.selectedFund = this.selectedFund.name;
-        }
-
-        if ((_this$selectedRace = this.selectedRace) === null || _this$selectedRace === void 0 ? void 0 : _this$selectedRace.name) {
-          this.filterText.selectedRace = this.selectedRace.name;
-        }
-
-        if (this.selectedDay) {
-          this.filterText.selectedDay = this.selectedDay;
-        } // this.selectedState?.name
+        this.filterText.selectedState = (_this$selectedState2 = this.selectedState) === null || _this$selectedState2 === void 0 ? void 0 : _this$selectedState2.name;
+        this.filterText.selectedCity = (_this$selectedCity = this.selectedCity) === null || _this$selectedCity === void 0 ? void 0 : _this$selectedCity.name;
+        this.filterText.selectedParty = (_this$selectedParty = this.selectedParty) === null || _this$selectedParty === void 0 ? void 0 : _this$selectedParty.name;
+        this.filterText.selectedFund = (_this$selectedFund = this.selectedFund) === null || _this$selectedFund === void 0 ? void 0 : _this$selectedFund.name;
+        this.filterText.selectedRace = (_this$selectedRace = this.selectedRace) === null || _this$selectedRace === void 0 ? void 0 : _this$selectedRace.name;
+        this.filterText.selectedDay = this.selectedDay; // this.selectedState?.name
         // this.selectedParty?.name
         // this.selectedFund?.name
         // this.selectedParty?.name
         // this.selectedDay?.name
-
       },
       mountURL: function mountURL(url) {
         var mountedURL = url;

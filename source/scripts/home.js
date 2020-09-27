@@ -198,24 +198,12 @@ if (window.location.href.indexOf('/') > -1) {
         }
       },
       updateFilterText() {
-        if (this.selectedState?.name) {
-          this.filterText.selectedState = this.selectedState.name;
-        }
-        if (this.selectedCity?.name) {
-          this.filterText.selectedCity = this.selectedCity.name;
-        }
-        if (this.selectedParty?.name) {
-          this.filterText.selectedParty = this.selectedParty.name;
-        }
-        if (this.selectedFund?.name) {
-          this.filterText.selectedFund = this.selectedFund.name;
-        }
-        if (this.selectedRace?.name) {
-          this.filterText.selectedRace = this.selectedRace.name;
-        }
-        if (this.selectedDay) {
-          this.filterText.selectedDay = this.selectedDay;
-        }
+        this.filterText.selectedState = this.selectedState?.name;
+        this.filterText.selectedCity = this.selectedCity?.name;
+        this.filterText.selectedParty = this.selectedParty?.name;
+        this.filterText.selectedFund = this.selectedFund?.name;
+        this.filterText.selectedRace = this.selectedRace?.name;
+        this.filterText.selectedDay = this.selectedDay;
         // this.selectedState?.name
         // this.selectedParty?.name
         // this.selectedFund?.name
