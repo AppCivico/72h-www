@@ -235,8 +235,9 @@
                 </template>
                 <div
                   v-else
-                  class="no-results">
-                  <p>{{ i18n "noResults" }}</p>
+                  class="no-results no-results--candidates">
+                  <img src="assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
+                  <p>{{ i18n "noResultsCandidates" }}</p>
                 </div>
 
                 <button

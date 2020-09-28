@@ -46,6 +46,11 @@
   width: 100%;
 }
 
+.candidates__subtitle p {
+  font-size: ms(-1);
+  color: palette('gray', 'medium');
+}
+
 .candidates__candidate {
   display: flex;
   width: 100%;

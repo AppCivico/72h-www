@@ -26,7 +26,7 @@
   flex-direction: column;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid palette('gray');
+  border-bottom: 1px solid palette('gray', 'light');
 
   @media screen and (min-width: breakpoint('tablet')) {
     width: calc(50% - 2rem);
@@ -95,6 +95,7 @@
   font-style: normal;
   font-weight: font-weight('normal');
   font-size: ms(-8);
+  text-transform: uppercase;
   color: palette('gray', 'medium');
 }
 
