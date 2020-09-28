@@ -24,10 +24,6 @@ params:
   contactEmail: "plataforma.72horas@gmail.com"
   tagline: ""
   shareImages:
-    default: "images/sharing/Compartilhamento_blockchain.jpg"
-    twitter: "images/sharing/Compartilhamento_twitter.jpg"
-    facebook: "images/sharing/Compartilhamento_blockchain.jpg"
-  socialNetworksLinks:
-    twitter: "https://twitter.com/appcivico"
-    facebook: "https://www.facebook.com/AppCivicoCSB"
-    youtube: "https://www.youtube.com/channel/UCIuAzzWMogJV0r-mvFmjNNQ"
+    default: "assets/images/default.jpg"
+    twitter: "assets/images/twitter.jpg"
+    facebook: "assets/images/facebook.jpg"
