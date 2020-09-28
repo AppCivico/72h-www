@@ -3258,7 +3258,7 @@ if (window.location.href.indexOf('/') > -1) {
             text: 'Repasses Realizados'
           },
           subtitle: {
-            text: 'Dados filtrados com base no sistema do TSE: '
+            text: document.querySelector('.js-filter-text').textContent
           },
           xAxis: {
             categories: this.chartDates // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],

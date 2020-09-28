@@ -1,4 +1,4 @@
-<p v-if="Object.keys(filterText).length !== 0">
+<p v-if="Object.keys(filterText).length !== 0" class="js-filter-text">
   {{ i18n "TSEDataFiltered" }}
   <span v-for="(value, key, index) in filterText">
     <template v-if="key === 'selectedState'">
