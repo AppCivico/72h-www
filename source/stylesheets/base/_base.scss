@@ -45,6 +45,15 @@
   cursor: default;
 }
 
+
+[v-cloak] {
+  @extend %loading-el;
+
+  &::after {
+    background-color: palette('white');
+  }
+}
+
 /*
  * Remove the tapping delay on clickable elements (opinionated).
  * 1. Remove the tapping delay in IE 10.
