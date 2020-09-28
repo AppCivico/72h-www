@@ -124,7 +124,9 @@ if (window.location.href.indexOf('/') > -1) {
         return this.mainData?.epoch;
       },
       cities() {
-        return window.appFilters.cities.filter(city => city.region_id === this.selectedState?.id);
+        return window.appFilters.cities
+          .filter(city => city.region_id === this.selectedState?.id)
+          .sort((a, b) => a.name.localeCompare(b.name));
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart[0]);

@@ -2881,6 +2881,8 @@ if (window.location.href.indexOf('/') > -1) {
           var _this$selectedState;
 
           return city.region_id === ((_this$selectedState = _this.selectedState) === null || _this$selectedState === void 0 ? void 0 : _this$selectedState.id);
+        }).sort(function (a, b) {
+          return a.name.localeCompare(b.name);
         });
       },
       chartDates: function chartDates() {
