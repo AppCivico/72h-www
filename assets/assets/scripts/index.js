@@ -2732,7 +2732,7 @@ exports.default = void 0;
 var productionDomains = ['72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
 var _default = {
   api: {
-    domain: productionDomains.indexOf(window.location.hostname) === -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
+    domain: productionDomains.indexOf(window.location.hostname) > -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
   }
 };
 exports.default = _default;
@@ -3258,7 +3258,7 @@ if (window.location.href.indexOf('/') > -1) {
             text: 'Repasses Realizados'
           },
           subtitle: {
-            text: 'Estes dados são com base no sistema oficial do TSE.'
+            text: 'Dados filtrados com base no sistema do TSE: '
           },
           xAxis: {
             categories: this.chartDates // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
