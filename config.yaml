@@ -20,7 +20,7 @@ menu:
 metaDataFormat: "yaml"
 params:
   name: "72Horas"
-  siteDescription: "A Plataforma 72 horas irá acompanhar, analisar e te entregar de forma simples dados eleitorais. Fique informada sobre o uso de do dinheiro público nas Eleições 2020."
+  siteDescription: "A Plataforma 72 horas acompanha em tempo real e entrega de forma simples os repasses dos fundos. Filtro por estado, município, partido, gênero e etnia. Fique por dentro a respeito do uso do dinheiro público nas Eleições 2020."
   contactEmail: "plataforma.72horas@gmail.com"
   tagline: ""
   shareImages:

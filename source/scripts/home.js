@@ -439,7 +439,7 @@ if (window.location.href.indexOf('/') > -1) {
             text: 'Repasses Realizados',
           },
           subtitle: {
-            text: 'Estes dados são com base no sistema oficial do TSE.',
+            text: 'Dados filtrados com base no sistema do TSE: ',
           },
           xAxis: {
             categories: this.chartDates,

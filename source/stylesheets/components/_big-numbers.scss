@@ -103,8 +103,8 @@
 
   &::before {
     display: inline-block;
-    width: 0.625rem;
-    height: 1.25rem;
+    width: 0.725rem;
+    height: 1.75rem;
     margin-right: 0.5rem;
     vertical-align: text-bottom;
     background-size: contain;
@@ -114,8 +114,8 @@
 
 .big-number__box--icon-total h1 {
   &::before {
-    width: 1.25rem;
-    background-image: image('brazil.svg');
+    width: 1.55rem;
+    background-image: image('logo.svg');
   }
 }
 

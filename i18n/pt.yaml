@@ -95,7 +95,7 @@
 - id: TSEData
   translation: "Estes dados são com base no sistema oficial do TSE"
 - id: TSEDataFiltered
-  translation: "Dados filtrado com base no sistema do TSE:"
+  translation: "Dados filtrados com base no sistema do TSE:"
 
 
 - id: facebook
