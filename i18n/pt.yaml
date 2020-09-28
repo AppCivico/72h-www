@@ -78,6 +78,8 @@
   translation: "Listagem da quantidade de recurso disponibilizado para cada partido"
 - id: previous
   translation: "< Anterior"
+- id: remainingDays
+  translation: "Dias Restantes para o 1° Turno"
 - id: runsFor
   translation: "Concorre a"
 - id: seeOnTSE

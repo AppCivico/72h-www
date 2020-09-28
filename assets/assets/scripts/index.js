@@ -2887,10 +2887,7 @@ if (window.location.href.indexOf('/') > -1) {
       chartDates: function chartDates() {
         var datesArr = Object.keys(this.mainData.chart[0]);
         return datesArr.map(function (date) {
-          return new Date("".concat(date, " 10:00")).toLocaleString('pt-BR', {
-            month: 'short',
-            day: 'numeric'
-          });
+          return (0, _dayjs.default)("".concat(date, " 10:00")).format('DD [de] MMM');
         });
       },
       chartTotal: function chartTotal() {
