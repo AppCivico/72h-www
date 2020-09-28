@@ -1,6 +1,6 @@
 ---
 title: Primeiro parceiro
-Image: /uploads/logo-1-.svg
+Image: /uploads/path-23-1-.png
 weight: 1
 draft: false
 ---
