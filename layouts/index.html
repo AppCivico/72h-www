@@ -1,12 +1,12 @@
     {{ partial "head.html" . }}
 
     <body>
-      <div id="vueHome">
+      <div id="vueHome" v-cloak>
         {{ partial "header.html" . }}
 
         <div class="timer">
           <div class="timer__content">
-            <strong>Dias Restantes</strong>
+            <strong>{{ i18n "remainingDays" }}</strong>
             <div class="timer__numbers" v-if="mainData">
               <span>{{ "{{ timer.days }}" }}<i>{{ i18n "days" }}</i></span>
               <span>{{ "{{ timer.hours }}" }}<i>{{ i18n "hours" }}</i></span>

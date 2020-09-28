@@ -130,8 +130,7 @@ if (window.location.href.indexOf('/') > -1) {
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart[0]);
-        return datesArr.map(date => new Date(`${date} 10:00`)
-          .toLocaleString('pt-BR', { month: 'short', day: 'numeric' }));
+        return datesArr.map(date => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       chartTotal() {
         return this.formatCurrency(this.totalArray.reduce((a, b) => a + b, 0));
