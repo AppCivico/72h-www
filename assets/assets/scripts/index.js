@@ -2731,7 +2731,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 var _default = {
   api: {
-    domain: window.location.hostname.indexOf('72h') !== -1 ? 'https://dev-h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
+    domain: window.location.hostname.indexOf('72horas.org') === -1 ? 'https://dev-h72-api.appcivico.com/v1/' : 'https://h72-api.appcivico.com/v1/'
   }
 };
 exports.default = _default;
@@ -2804,8 +2804,8 @@ if (window.location.href.indexOf('/') > -1) {
       loadingBigNumbers: true,
       loadingCandidates: true,
       loadingChartData: true,
-      timerStart: Number,
-      timerEnd: Number,
+      timerStart: 0,
+      timerEnd: 0,
       shareURLCopied: false,
       sharingFrom: '',
       filterText: {},
@@ -2835,10 +2835,8 @@ if (window.location.href.indexOf('/') > -1) {
     },
     computed: {
       timer: function timer() {
-        var actualDate = _dayjs.default.unix(this.timerStart);
-
-        var endDate = _dayjs.default.unix(this.timerEnd);
-
+        var actualDate = (0, _dayjs.default)(this.timerStart);
+        var endDate = (0, _dayjs.default)(this.timerEnd);
         var diff = endDate.diff(actualDate);
 
         var timeDuration = _dayjs.default.duration(diff).asMilliseconds();
@@ -2952,12 +2950,12 @@ if (window.location.href.indexOf('/') > -1) {
         }))();
       },
       timerStart: {
-        handler: function handler(value) {
+        handler: function handler() {
           var _this3 = this;
 
-          if (value > 0) {
+          if ((0, _dayjs.default)(this.timerStart) < (0, _dayjs.default)(this.timerEnd)) {
             setTimeout(function () {
-              _this3.timerStart = _this3.timerStart + 1;
+              _this3.timerStart = (0, _dayjs.default)(_this3.timerStart).add(1, 'second');
             }, 1000);
           }
         },
@@ -3196,8 +3194,8 @@ if (window.location.href.indexOf('/') > -1) {
           return response.json();
         }).then(function (response) {
           _this5.mainData = response;
-          _this5.timerStart = _this5.mainData.epoch;
-          _this5.timerEnd = 1609096439;
+          _this5.timerStart = _this5.mainData.now;
+          _this5.timerEnd = _this5.mainData.election.end_at;
           return true;
         }).then(function () {
           _this5.loadingBigNumbers = false;

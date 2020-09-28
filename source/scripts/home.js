@@ -46,8 +46,8 @@ if (window.location.href.indexOf('/') > -1) {
       loadingCandidates: true,
       loadingChartData: true,
 
-      timerStart: Number,
-      timerEnd: Number,
+      timerStart: 0,
+      timerEnd: 0,
 
       shareURLCopied: false,
       sharingFrom: '',
@@ -89,8 +89,8 @@ if (window.location.href.indexOf('/') > -1) {
     },
     computed: {
       timer() {
-        const actualDate = dayjs.unix(this.timerStart);
-        const endDate = dayjs.unix(this.timerEnd);
+        const actualDate = dayjs(this.timerStart);
+        const endDate = dayjs(this.timerEnd);
         const diff = endDate.diff(actualDate);
 
         const timeDuration = dayjs.duration(diff).asMilliseconds();
@@ -166,10 +166,10 @@ if (window.location.href.indexOf('/') > -1) {
         await this.generateChart();
       },
       timerStart: {
-        handler(value) {
-          if (value > 0) {
+        handler() {
+          if (dayjs(this.timerStart) < dayjs(this.timerEnd)) {
             setTimeout(() => {
-              this.timerStart = this.timerStart + 1;
+              this.timerStart = dayjs(this.timerStart).add(1, 'second');
             }, 1000);
           }
         },
@@ -382,8 +382,8 @@ if (window.location.href.indexOf('/') > -1) {
           .then(response => response.json())
           .then((response) => {
             this.mainData = response;
-            this.timerStart = this.mainData.epoch;
-            this.timerEnd = 1609096439;
+            this.timerStart = this.mainData.now;
+            this.timerEnd = this.mainData.election.end_at;
             return true;
           })
           .then(() => {
