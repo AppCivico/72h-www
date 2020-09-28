@@ -21,7 +21,7 @@ metaDataFormat: "yaml"
 params:
   name: "72Horas"
   siteDescription: ""
-  contactEmail: "contato@72horas.com"
+  contactEmail: "plataforma.72horas@gmail.com"
   tagline: ""
   shareImages:
     default: "images/sharing/Compartilhamento_blockchain.jpg"

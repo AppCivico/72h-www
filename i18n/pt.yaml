@@ -48,8 +48,6 @@
   translation: "Filtros"
 - id: footerDescription
   translation: "Com a plataforma 72H, você pode acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP), pressionando que o dinheiro seja distribuído de forma transparente."
-- id: footerCall
-  translation: "A partir dos dados do DivulgaCand, nós entregamos todos os dias, no seu celular alertas, informações sobre a jornada do fundo eleitoral."
 - id: follow
   translation: "Seguir"
 - id: last

@@ -6,7 +6,6 @@
 
     <div class="footer__col">
       <p>{{ i18n "footerDescription" }}</p>
-      <p>{{ i18n "footerCall" }}</p>
     </div>
 
     <div class="footer__col">
@@ -28,8 +27,9 @@
         <ul class="social">
           {{ range .list }}
             <li>
-                <a href="{{ .url }}" title="{{ .name }}" rel="noopener" class="{{ .name }}">
-                </a>
+              <a href="{{ .url }}" title="{{ .name }}" rel="noopener" class="{{ .name }}" target="_blank">
+                {{ .name }}
+              </a>
             </li>
           {{ end }}
         </ul>

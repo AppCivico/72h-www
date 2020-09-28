@@ -1,13 +1,13 @@
 list:
   - name: "facebook"
-    url: ""
+    url: "https://www.facebook.com/plataforma72horas"
     svg: /uploads/facebook.svg
   - name: "twitter"
-    url: ""
+    url: "https://twitter.com/72horas2"
     svg: /uploads/twitter.svg
   - name: "whatsapp"
-    url: ""
-    svg: /uploads/whatsapp.svg
+    url: "https://medium.com/@plataforma.72horas"
+    svg: /uploads/medium.svg
   - name: "instagram"
-    url: ""
+    url: "https://www.instagram.com/72horas.plataforma/"
     svg: /uploads/instagram.svg
