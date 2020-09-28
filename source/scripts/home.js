@@ -227,7 +227,6 @@ if (window.location.href.indexOf('/') > -1) {
           this.epochFromParam = Number(params.get('epoch'));
         }
       },
-
       updateLocaleText() {
         if (this.selectedState && !this.selectedCity) {
           this.selectedLocaleText = this.selectedState.name;
@@ -439,7 +438,7 @@ if (window.location.href.indexOf('/') > -1) {
             text: 'Repasses Realizados',
           },
           subtitle: {
-            text: 'Dados filtrados com base no sistema do TSE: ',
+            text: document.querySelector('.js-filter-text').textContent,
           },
           xAxis: {
             categories: this.chartDates,
