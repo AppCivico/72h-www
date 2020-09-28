@@ -23,7 +23,8 @@
   @media screen and (min-width: breakpoint('desktop')) {
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: space-between;
+    margin-right: -0.5rem;
+    margin-left: -0.5rem;
   }
 }
 
@@ -51,7 +52,9 @@
   margin-bottom: 2rem;
 
   @media screen and (min-width: breakpoint('desktop')) {
-    width: calc(33.33333% - 2rem);
+    width: calc(33.3333333% - 1rem);
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
   }
 }
 
