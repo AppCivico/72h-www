@@ -345,7 +345,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       formatCurrency(value) {
-        return numeral(value).format('$0.00 a');
+        return numeral(value).format('$0.[00] a').replace('.', ',');
       },
       formatNumeral(value) {
         return numeral(value).format();
