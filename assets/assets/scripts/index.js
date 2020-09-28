@@ -2732,7 +2732,7 @@ exports.default = void 0;
 var productionDomains = ['72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
 var _default = {
   api: {
-    domain: productionDomains.indexOf(window.location.hostname) > -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
+    domain: productionDomains.indexOf(window.location.hostname) === -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
   }
 };
 exports.default = _default;
@@ -3157,7 +3157,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       formatCurrency: function formatCurrency(value) {
-        return (0, _numeral.default)(value).format('$0.00 a');
+        return (0, _numeral.default)(value).format('$0.[00] a').replace('.', ',');
       },
       formatNumeral: function formatNumeral(value) {
         return (0, _numeral.default)(value).format();
