@@ -246,19 +246,21 @@
                   <p>{{ i18n "noResultsCandidates" }}</p>
                 </div>
 
-                <button
-                  v-if="candidates_page > 1"
-                  @click="getCandidates(candidates_page - 1)"
-                  class="button button--medium">
-                  {{ i18n "previous" }}
-                </button>
+                <div class="pagination">
+                  <button
+                    v-if="candidates_page > 1"
+                    @click="getCandidates(candidates_page - 1)"
+                    class="button button--medium">
+                    {{ i18n "previous" }}
+                  </button>
 
-                <button
-                  v-if="candidates && candidates.has_more"
-                  @click="getCandidates(candidates_page + 1)"
-                  class="button button--medium">
-                  {{ i18n "next" }}
-                </button>
+                  <button
+                    v-if="candidates && candidates.has_more"
+                    @click="getCandidates(candidates_page + 1)"
+                    class="button button--medium">
+                    {{ i18n "next" }}
+                  </button>
+                </div>
               </div>
             </div>
 
