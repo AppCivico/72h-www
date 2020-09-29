@@ -96,6 +96,10 @@
   translation: "Compartilhar dados de"
 - id: shareWithEnthusiasm
   translation: "Compartilhar!"
+- id: total
+  translation: "Total:"
+- id: transfers
+  translation: "transferências"
 - id: TSEData
   translation: "Estes dados são com base no sistema oficial do TSE"
 - id: TSEDataFiltered

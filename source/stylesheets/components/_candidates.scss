@@ -78,6 +78,11 @@
 
 .candidates__info {
   width: 100%;
+  margin-bottom: 0;
   font-size: ms(-2);
   color: palette('gray', 'medium');
+}
+
+.candidates__text .button {
+  margin-top: 0.5rem;
 }

@@ -14,7 +14,6 @@ HighchartsExportData(Highcharts);
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
-window.dayjs = dayjs;
 
 numeral.register('locale', 'pt-br', {
   delimiters: {
@@ -22,10 +21,10 @@ numeral.register('locale', 'pt-br', {
     decimal: '.',
   },
   abbreviations: {
-    thousand: '<i>Mil</i>',
-    million: '<i>Milhões</i>',
-    billion: '<i>Bilhões<i>',
-    trillion: '<i>Trilhões</i>',
+    thousand: '<span>Mil</span>',
+    million: '<span>Milhões</span>',
+    billion: '<span>Bilhões<span>',
+    trillion: '<span>Trilhões</span>',
   },
   ordinal: () => 'º',
   currency: {
@@ -276,6 +275,7 @@ if (window.location.href.indexOf('/') > -1) {
       },
       setChartOptions() {
         Highcharts.setOptions({
+          colors: ['#DC3236', '#22B1A7', '#620ED9', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
           chart: {
             style: {
               fontFamily: 'Montserrat',
@@ -343,10 +343,21 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       formatCurrency(value) {
-        return numeral(value).format('$0.[00] a').replace('.', ',');
+        return numeral(value).format('$0[.]00 a').replace('.', ',');
+      },
+      formatCurrencyNoAbbr(value) {
+        // return numeral(value).format('$0.0,[00]');
+        const formatter = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+        return formatter.format(value);
       },
       formatNumeral(value) {
         return numeral(value).format();
+      },
+      formatDateTime(value) {
+        return dayjs(value).format('DD/MM/YYYY [às] HH[h]MM[min]');
       },
       toggleFilter() {
         this.filterOpen = !this.filterOpen;
@@ -447,6 +458,17 @@ if (window.location.href.indexOf('/') > -1) {
             title: {
               text: 'valor (R$)',
             },
+          },
+          tooltip: {
+            // eslint-disable-next-line object-shorthand, func-names
+            pointFormatter: function () {
+              return `${this.series.name}: <b>${window.$vueHome.formatCurrencyNoAbbr(this.y)}</b>`;
+            },
+            // eslint-disable-next-line object-shorthand, func-names
+            // formatter: function () {
+            //   return 'The value for <b>' + this.x +
+            //     '</b> is <b>' + this.y + '</b>';
+            // },
           },
           plotOptions: {
             line: {

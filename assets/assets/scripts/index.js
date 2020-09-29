@@ -2729,10 +2729,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var productionDomains = ['72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
+var productionDomains = ['dev.72horas.org', '72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
 var _default = {
   api: {
-    domain: productionDomains.indexOf(window.location.hostname) > -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
+    domain: productionDomains.indexOf(window.location.hostname) === -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
   }
 };
 exports.default = _default;
@@ -2772,18 +2772,16 @@ _dayjs.default.extend(_duration.default);
 
 _dayjs.default.locale('pt-br');
 
-window.dayjs = _dayjs.default;
-
 _numeral.default.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
     decimal: '.'
   },
   abbreviations: {
-    thousand: '<i>Mil</i>',
-    million: '<i>Milhões</i>',
-    billion: '<i>Bilhões<i>',
-    trillion: '<i>Trilhões</i>'
+    thousand: '<span>Mil</span>',
+    million: '<span>Milhões</span>',
+    billion: '<span>Bilhões<span>',
+    trillion: '<span>Trilhões</span>'
   },
   ordinal: function ordinal() {
     return 'º';
@@ -3088,6 +3086,7 @@ if (window.location.href.indexOf('/') > -1) {
       },
       setChartOptions: function setChartOptions() {
         _highcharts.default.setOptions({
+          colors: ['#DC3236', '#22B1A7', '#620ED9', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
           chart: {
             style: {
               fontFamily: 'Montserrat'
@@ -3154,10 +3153,21 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       formatCurrency: function formatCurrency(value) {
-        return (0, _numeral.default)(value).format('$0.[00] a').replace('.', ',');
+        return (0, _numeral.default)(value).format('$0[.]00 a').replace('.', ',');
+      },
+      formatCurrencyNoAbbr: function formatCurrencyNoAbbr(value) {
+        // return numeral(value).format('$0.0,[00]');
+        var formatter = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+        return formatter.format(value);
       },
       formatNumeral: function formatNumeral(value) {
         return (0, _numeral.default)(value).format();
+      },
+      formatDateTime: function formatDateTime(value) {
+        return (0, _dayjs.default)(value).format('DD/MM/YYYY [às] HH[h]MM[min]');
       },
       toggleFilter: function toggleFilter() {
         this.filterOpen = !this.filterOpen;
@@ -3265,6 +3275,17 @@ if (window.location.href.indexOf('/') > -1) {
             title: {
               text: 'valor (R$)'
             }
+          },
+          tooltip: {
+            // eslint-disable-next-line object-shorthand, func-names
+            pointFormatter: function pointFormatter() {
+              return "".concat(this.series.name, ": <b>").concat(window.$vueHome.formatCurrencyNoAbbr(this.y), "</b>");
+            } // eslint-disable-next-line object-shorthand, func-names
+            // formatter: function () {
+            //   return 'The value for <b>' + this.x +
+            //     '</b> is <b>' + this.y + '</b>';
+            // },
+
           },
           plotOptions: {
             line: {
