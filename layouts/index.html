@@ -222,7 +222,13 @@
                         - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
                       </p>
                       <p class="candidates__info">
-                        {{ "{{ candidate.total_transfers }}" }} transferências
+                        {{ "{{ candidate.total_transfers }}" }} {{ i18n "transfers" }}
+                      </p>
+                      <p class="candidates__info">
+                        {{ "{{ candidate.city.name }}, {{ candidate.city.region.name }}" }}
+                      </p>
+                      <p class="candidates__info">
+                        {{ i18n "total" }} {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
                       </p>
                       <a
                         :href="candidate.divulgacand_url"
