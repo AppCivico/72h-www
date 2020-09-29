@@ -19,7 +19,7 @@ window.dayjs = dayjs;
 numeral.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
-    decimal: '.',
+    decimal: ',',
   },
   abbreviations: {
     thousand: '<span>Mil</span>',
@@ -347,7 +347,12 @@ if (window.location.href.indexOf('/') > -1) {
         return numeral(value).format('$0.[00] a').replace('.', ',');
       },
       formatCurrencyNoAbbr(value) {
-        return numeral(value).format('$0.00').replace('.', ',');
+        // return numeral(value).format('$0.0,[00]');
+        const formatter = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL',
+        });
+        return formatter.format(value);
       },
       formatNumeral(value) {
         return numeral(value).format();
@@ -455,7 +460,7 @@ if (window.location.href.indexOf('/') > -1) {
           tooltip: {
             // eslint-disable-next-line object-shorthand, func-names
             pointFormatter: function () {
-              return `${this.series.name}: <b>${window.$vueHome.formatCurrency(this.y)}</b>`;
+              return `${this.series.name}: <b>${window.$vueHome.formatCurrencyNoAbbr(this.y)}</b>`;
             },
             // eslint-disable-next-line object-shorthand, func-names
             // formatter: function () {

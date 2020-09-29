@@ -2777,7 +2777,7 @@ window.dayjs = _dayjs.default;
 _numeral.default.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
-    decimal: '.'
+    decimal: ','
   },
   abbreviations: {
     thousand: '<span>Mil</span>',
@@ -3158,7 +3158,12 @@ if (window.location.href.indexOf('/') > -1) {
         return (0, _numeral.default)(value).format('$0.[00] a').replace('.', ',');
       },
       formatCurrencyNoAbbr: function formatCurrencyNoAbbr(value) {
-        return (0, _numeral.default)(value).format('$0.00').replace('.', ',');
+        // return numeral(value).format('$0.0,[00]');
+        var formatter = new Intl.NumberFormat('pt-BR', {
+          style: 'currency',
+          currency: 'BRL'
+        });
+        return formatter.format(value);
       },
       formatNumeral: function formatNumeral(value) {
         return (0, _numeral.default)(value).format();
@@ -3273,7 +3278,7 @@ if (window.location.href.indexOf('/') > -1) {
           tooltip: {
             // eslint-disable-next-line object-shorthand, func-names
             pointFormatter: function pointFormatter() {
-              return "".concat(this.series.name, ": <b>").concat(window.$vueHome.formatCurrency(this.y), "</b>");
+              return "".concat(this.series.name, ": <b>").concat(window.$vueHome.formatCurrencyNoAbbr(this.y), "</b>");
             } // eslint-disable-next-line object-shorthand, func-names
             // formatter: function () {
             //   return 'The value for <b>' + this.x +
