@@ -1,4 +1,4 @@
-const productionDomains = ['72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
+const productionDomains = ['dev.72horas.org', '72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
 
 export default {
   api: {

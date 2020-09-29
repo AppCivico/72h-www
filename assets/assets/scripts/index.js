@@ -2729,10 +2729,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var productionDomains = ['72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
+var productionDomains = ['dev.72horas.org', '72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
 var _default = {
   api: {
-    domain: productionDomains.indexOf(window.location.hostname) === -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
+    domain: productionDomains.indexOf(window.location.hostname) > -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
   }
 };
 exports.default = _default;
