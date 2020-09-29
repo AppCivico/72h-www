@@ -18,7 +18,7 @@ dayjs.locale('pt-br');
 numeral.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
-    decimal: ',',
+    decimal: '.',
   },
   abbreviations: {
     thousand: '<span>Mil</span>',
