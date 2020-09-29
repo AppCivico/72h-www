@@ -14,7 +14,6 @@ HighchartsExportData(Highcharts);
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
-window.dayjs = dayjs;
 
 numeral.register('locale', 'pt-br', {
   delimiters: {
@@ -344,7 +343,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       formatCurrency(value) {
-        return numeral(value).format('$0.[00] a').replace('.', ',');
+        return numeral(value).format('$0[.]00 a').replace('.', ',');
       },
       formatCurrencyNoAbbr(value) {
         // return numeral(value).format('$0.0,[00]');
@@ -356,6 +355,9 @@ if (window.location.href.indexOf('/') > -1) {
       },
       formatNumeral(value) {
         return numeral(value).format();
+      },
+      formatDateTime(value) {
+        return dayjs(value).format('DD/MM/YYYY [às] HH[h]MM[min]');
       },
       toggleFilter() {
         this.filterOpen = !this.filterOpen;

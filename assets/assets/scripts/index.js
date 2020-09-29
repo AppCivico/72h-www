@@ -2772,8 +2772,6 @@ _dayjs.default.extend(_duration.default);
 
 _dayjs.default.locale('pt-br');
 
-window.dayjs = _dayjs.default;
-
 _numeral.default.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
@@ -3155,7 +3153,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       formatCurrency: function formatCurrency(value) {
-        return (0, _numeral.default)(value).format('$0.[00] a').replace('.', ',');
+        return (0, _numeral.default)(value).format('$0[.]00 a').replace('.', ',');
       },
       formatCurrencyNoAbbr: function formatCurrencyNoAbbr(value) {
         // return numeral(value).format('$0.0,[00]');
@@ -3167,6 +3165,9 @@ if (window.location.href.indexOf('/') > -1) {
       },
       formatNumeral: function formatNumeral(value) {
         return (0, _numeral.default)(value).format();
+      },
+      formatDateTime: function formatDateTime(value) {
+        return (0, _dayjs.default)(value).format('DD/MM/YYYY [às] HH[h]MM[min]');
       },
       toggleFilter: function toggleFilter() {
         this.filterOpen = !this.filterOpen;

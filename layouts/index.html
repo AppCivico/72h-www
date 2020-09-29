@@ -21,7 +21,7 @@
             <div class="big-numbers" v-if="!this.loadingBigNumbers">
               <p class="big-number__update">
                 {{ i18n "lastUpdatedAt" }}
-                {{ "{{ mainData ?  new Date(mainData.last_run_at).toLocaleDateString('pt-BR') : '' }}" }}
+                {{ "{{ mainData ?  formatDateTime(mainData.last_run_at) : '' }}" }}
               </p>
               <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
                 <h1>{{ i18n "accumulatedValue" }}</h1>
