@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<testsuites>
+<testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/config.js">
+<testcase time="0" name="/home/eduruiz/code/72h/source/scripts/config.js" />
+</testsuite>
+<testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/home.js">
+<testcase time="0" name="/home/eduruiz/code/72h/source/scripts/home.js" />
+</testsuite>
+<testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/index.js">
+<testcase time="0" name="/home/eduruiz/code/72h/source/scripts/index.js" />
+</testsuite>
+<testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/menuToggle/index.js">
+<testcase time="0" name="/home/eduruiz/code/72h/source/scripts/menuToggle/index.js" />
+</testsuite>
+<testsuite package="org.eslint" time="0" tests="1" errors="0" name="/home/eduruiz/code/72h/source/scripts/vendor.js">
+<testcase time="0" name="/home/eduruiz/code/72h/source/scripts/vendor.js" />
+</testsuite>
+</testsuites>

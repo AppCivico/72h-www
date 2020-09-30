@@ -213,6 +213,7 @@
                     <img
                       class="candidates__image"
                       :src="candidate.picture"
+                      @error="candidate.picture = 'assets/images/no-picture.svg'"
                       :alt="candidate.name">
                     <div class="candidates__text">
                       <p class="candidates__name">
