@@ -69,18 +69,11 @@ if (window.location.href.indexOf('/') > -1) {
       candidates: null,
       candidates_page: 1,
 
-      states: window.appFilters.regions,
       selectedState: null,
 
       selectedCity: null,
-
-      parties: window.appFilters.parties,
       selectedParty: null,
-
-      fund_types: window.appFilters.fund_types,
       selectedFund: null,
-
-      races: window.appFilters.races,
       selectedRace: null,
 
       days: ['all', 7, 15, 30, 60, 90],
@@ -122,10 +115,22 @@ if (window.location.href.indexOf('/') > -1) {
       epoch() {
         return this.mainData?.epoch;
       },
+      states() {
+        return window.appFilters.regions.sort((a, b) => a.name.localeCompare(b.name));
+      },
       cities() {
         return window.appFilters.cities
           .filter(city => city.region_id === this.selectedState?.id)
           .sort((a, b) => a.name.localeCompare(b.name));
+      },
+      parties() {
+        return window.appFilters.parties.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      fund_types() {
+        return window.appFilters.fund_types.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      races() {
+        return window.appFilters.races.sort((a, b) => a.name.localeCompare(b.name));
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart[0]);

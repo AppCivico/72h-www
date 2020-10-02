@@ -2820,14 +2820,10 @@ if (window.location.href.indexOf('/') > -1) {
       useEpoch: false,
       candidates: null,
       candidates_page: 1,
-      states: window.appFilters.regions,
       selectedState: null,
       selectedCity: null,
-      parties: window.appFilters.parties,
       selectedParty: null,
-      fund_types: window.appFilters.fund_types,
       selectedFund: null,
-      races: window.appFilters.races,
       selectedRace: null,
       days: ['all', 7, 15, 30, 60, 90],
       selectedDay: 'all'
@@ -2871,6 +2867,11 @@ if (window.location.href.indexOf('/') > -1) {
 
         return (_this$mainData2 = this.mainData) === null || _this$mainData2 === void 0 ? void 0 : _this$mainData2.epoch;
       },
+      states: function states() {
+        return window.appFilters.regions.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
       cities: function cities() {
         var _this = this;
 
@@ -2879,6 +2880,21 @@ if (window.location.href.indexOf('/') > -1) {
 
           return city.region_id === ((_this$selectedState = _this.selectedState) === null || _this$selectedState === void 0 ? void 0 : _this$selectedState.id);
         }).sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
+      parties: function parties() {
+        return window.appFilters.parties.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
+      fund_types: function fund_types() {
+        return window.appFilters.fund_types.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
+      races: function races() {
+        return window.appFilters.races.sort(function (a, b) {
           return a.name.localeCompare(b.name);
         });
       },
