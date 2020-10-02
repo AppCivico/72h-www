@@ -22,7 +22,12 @@
       <template v-else>{{ i18n "allEtinicity" }}</template>,
     </template>
     <template v-if="key === 'selectedDay'">
-      {{ i18n "last" }} {{ "{{ value }}" }} {{ i18n "days" }}.
+      <template v-if='value === "all"'>
+        {{ i18n "allDays" }}
+      </template>
+      <template v-else>
+        {{ i18n "last" }} {{ "{{ value }}" }} {{ i18n "days" }}.
+      </template>
     </template>
   </span>
 </p>
