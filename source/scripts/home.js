@@ -224,7 +224,7 @@ if (window.location.href.indexOf('/') > -1) {
           this.selectedRace = window.appFilters.races.find(race => race.id === Number(params.get('race_id')));
         }
         if (params.get('days')) {
-          this.selectedDay = Number(params.get('days'));
+          this.selectedDay = params.get('days');
         }
         if (params.get('epoch')) {
           this.epochFromParam = Number(params.get('epoch'));

@@ -3037,7 +3037,7 @@ if (window.location.href.indexOf('/') > -1) {
         }
 
         if (params.get('days')) {
-          this.selectedDay = Number(params.get('days'));
+          this.selectedDay = params.get('days');
         }
 
         if (params.get('epoch')) {
