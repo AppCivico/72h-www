@@ -29,7 +29,7 @@
                   {{ i18n "entriesQuantity" }}
                   {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
                 </p>
-                <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.total_value)"></span>
+                <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"></span>
                 <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
               </div>
 
@@ -39,7 +39,7 @@
                   {{ i18n "entriesQuantity" }}
                   {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
                 </p>
-                <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_special_fund)">
+                <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund)">
                 </span>
                 <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
               </div>
@@ -50,7 +50,7 @@
                   {{ i18n "entriesQuantity" }}
                   {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
                 </p>
-                <span class="big-number__number" v-html="formatCurrency(mainData.accumulated.value_party_fund)">
+                <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)">
                 </span>
                 <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
               </div>
@@ -150,7 +150,12 @@
                     <option
                       v-for="day in days"
                       :value="day">
-                      {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
+                      <template v-if='day === "all"'>
+                        {{ i18n "allDays" }}
+                      </template>
+                      <template v-else>
+                        {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
+                      </template>
                     </option>
                   </select>
                   <button class="button button--primary">{{ i18n "apply" }}</button>
@@ -355,8 +360,13 @@
 
 
       <script>
-        {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters" }}
-        window.appFilters = {{ $filters.filters }};
+        {{ if eq (getenv "NODE_ENV") "development" }}
+          {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters" }}
+          window.appFilters = {{ $filters.filters }};
+        {{ else }}
+          {{ $filters := getJSON "https://h72-api.appcivico.com/v1/filters" }}
+          window.appFilters = {{ $filters.filters }};
+        {{ end }}
       </script>
 
       {{ partial "scripts.html" . }}

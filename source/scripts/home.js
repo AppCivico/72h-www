@@ -69,22 +69,15 @@ if (window.location.href.indexOf('/') > -1) {
       candidates: null,
       candidates_page: 1,
 
-      states: window.appFilters.regions,
       selectedState: null,
 
       selectedCity: null,
-
-      parties: window.appFilters.parties,
       selectedParty: null,
-
-      fund_types: window.appFilters.fund_types,
       selectedFund: null,
-
-      races: window.appFilters.races,
       selectedRace: null,
 
-      days: [7, 15, 30, 60, 90],
-      selectedDay: 7,
+      days: ['all', 7, 15, 30, 60, 90],
+      selectedDay: 'all',
     },
     computed: {
       timer() {
@@ -122,23 +115,35 @@ if (window.location.href.indexOf('/') > -1) {
       epoch() {
         return this.mainData?.epoch;
       },
+      states() {
+        return window.appFilters.regions.sort((a, b) => a.name.localeCompare(b.name));
+      },
       cities() {
         return window.appFilters.cities
           .filter(city => city.region_id === this.selectedState?.id)
           .sort((a, b) => a.name.localeCompare(b.name));
+      },
+      parties() {
+        return window.appFilters.parties.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      fund_types() {
+        return window.appFilters.fund_types.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      races() {
+        return window.appFilters.races.sort((a, b) => a.name.localeCompare(b.name));
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart[0]);
         return datesArr.map(date => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       chartTotal() {
-        return this.formatCurrency(this.totalArray.reduce((a, b) => a + b, 0));
+        return this.formatCurrencyNoAbbr(this.totalArray.reduce((a, b) => a + b, 0));
       },
       chartMale() {
-        return this.formatCurrency(this.maleArray.reduce((a, b) => a + b, 0));
+        return this.formatCurrencyNoAbbr(this.maleArray.reduce((a, b) => a + b, 0));
       },
       chartFemale() {
-        return this.formatCurrency(this.femaleArray.reduce((a, b) => a + b, 0));
+        return this.formatCurrencyNoAbbr(this.femaleArray.reduce((a, b) => a + b, 0));
       },
       formatChartSeries() {
         return [{
@@ -219,7 +224,7 @@ if (window.location.href.indexOf('/') > -1) {
           this.selectedRace = window.appFilters.races.find(race => race.id === Number(params.get('race_id')));
         }
         if (params.get('days')) {
-          this.selectedDay = Number(params.get('days'));
+          this.selectedDay = params.get('days');
         }
         if (params.get('epoch')) {
           this.epochFromParam = Number(params.get('epoch'));
@@ -350,6 +355,8 @@ if (window.location.href.indexOf('/') > -1) {
         const formatter = new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           currency: 'BRL',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
         });
         return formatter.format(value);
       },
@@ -409,7 +416,7 @@ if (window.location.href.indexOf('/') > -1) {
       getCandidates(page = false) {
         this.loadingCandidates = true;
 
-        const url = `${config.api.domain}candidates?results=9`;
+        const url = `${config.api.domain}candidates?results=9&days=${this.selectedDay}`;
         let mountedURL = this.mountURL(url);
 
         if (this.epochFromParam) {

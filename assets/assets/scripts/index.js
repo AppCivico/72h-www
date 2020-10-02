@@ -2729,10 +2729,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-var productionDomains = ['dev.72horas.org', '72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
+var productionDomains = ['72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
 var _default = {
   api: {
-    domain: productionDomains.indexOf(window.location.hostname) === -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
+    domain: productionDomains.indexOf(window.location.hostname) > -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
   }
 };
 exports.default = _default;
@@ -2820,17 +2820,13 @@ if (window.location.href.indexOf('/') > -1) {
       useEpoch: false,
       candidates: null,
       candidates_page: 1,
-      states: window.appFilters.regions,
       selectedState: null,
       selectedCity: null,
-      parties: window.appFilters.parties,
       selectedParty: null,
-      fund_types: window.appFilters.fund_types,
       selectedFund: null,
-      races: window.appFilters.races,
       selectedRace: null,
-      days: [7, 15, 30, 60, 90],
-      selectedDay: 7
+      days: ['all', 7, 15, 30, 60, 90],
+      selectedDay: 'all'
     },
     computed: {
       timer: function timer() {
@@ -2871,6 +2867,11 @@ if (window.location.href.indexOf('/') > -1) {
 
         return (_this$mainData2 = this.mainData) === null || _this$mainData2 === void 0 ? void 0 : _this$mainData2.epoch;
       },
+      states: function states() {
+        return window.appFilters.regions.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
       cities: function cities() {
         var _this = this;
 
@@ -2882,6 +2883,21 @@ if (window.location.href.indexOf('/') > -1) {
           return a.name.localeCompare(b.name);
         });
       },
+      parties: function parties() {
+        return window.appFilters.parties.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
+      fund_types: function fund_types() {
+        return window.appFilters.fund_types.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
+      races: function races() {
+        return window.appFilters.races.sort(function (a, b) {
+          return a.name.localeCompare(b.name);
+        });
+      },
       chartDates: function chartDates() {
         var datesArr = Object.keys(this.mainData.chart[0]);
         return datesArr.map(function (date) {
@@ -2889,17 +2905,17 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       chartTotal: function chartTotal() {
-        return this.formatCurrency(this.totalArray.reduce(function (a, b) {
+        return this.formatCurrencyNoAbbr(this.totalArray.reduce(function (a, b) {
           return a + b;
         }, 0));
       },
       chartMale: function chartMale() {
-        return this.formatCurrency(this.maleArray.reduce(function (a, b) {
+        return this.formatCurrencyNoAbbr(this.maleArray.reduce(function (a, b) {
           return a + b;
         }, 0));
       },
       chartFemale: function chartFemale() {
-        return this.formatCurrency(this.femaleArray.reduce(function (a, b) {
+        return this.formatCurrencyNoAbbr(this.femaleArray.reduce(function (a, b) {
           return a + b;
         }, 0));
       },
@@ -3021,7 +3037,7 @@ if (window.location.href.indexOf('/') > -1) {
         }
 
         if (params.get('days')) {
-          this.selectedDay = Number(params.get('days'));
+          this.selectedDay = params.get('days');
         }
 
         if (params.get('epoch')) {
@@ -3159,7 +3175,9 @@ if (window.location.href.indexOf('/') > -1) {
         // return numeral(value).format('$0.0,[00]');
         var formatter = new Intl.NumberFormat('pt-BR', {
           style: 'currency',
-          currency: 'BRL'
+          currency: 'BRL',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
         });
         return formatter.format(value);
       },
@@ -3224,7 +3242,7 @@ if (window.location.href.indexOf('/') > -1) {
 
         var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         this.loadingCandidates = true;
-        var url = "".concat(_config.default.api.domain, "candidates?results=9");
+        var url = "".concat(_config.default.api.domain, "candidates?results=9&days=").concat(this.selectedDay);
         var mountedURL = this.mountURL(url);
 
         if (this.epochFromParam) {
