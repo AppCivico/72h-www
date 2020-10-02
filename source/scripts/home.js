@@ -132,13 +132,13 @@ if (window.location.href.indexOf('/') > -1) {
         return datesArr.map(date => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       chartTotal() {
-        return this.formatCurrency(this.totalArray.reduce((a, b) => a + b, 0));
+        return this.formatCurrencyNoAbbr(this.totalArray.reduce((a, b) => a + b, 0));
       },
       chartMale() {
-        return this.formatCurrency(this.maleArray.reduce((a, b) => a + b, 0));
+        return this.formatCurrencyNoAbbr(this.maleArray.reduce((a, b) => a + b, 0));
       },
       chartFemale() {
-        return this.formatCurrency(this.femaleArray.reduce((a, b) => a + b, 0));
+        return this.formatCurrencyNoAbbr(this.femaleArray.reduce((a, b) => a + b, 0));
       },
       formatChartSeries() {
         return [{
@@ -350,6 +350,8 @@ if (window.location.href.indexOf('/') > -1) {
         const formatter = new Intl.NumberFormat('pt-BR', {
           style: 'currency',
           currency: 'BRL',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
         });
         return formatter.format(value);
       },

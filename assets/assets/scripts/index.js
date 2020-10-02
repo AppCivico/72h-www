@@ -2732,7 +2732,7 @@ exports.default = void 0;
 var productionDomains = ['dev.72horas.org', '72horas.org', 'quirky-lamport-b80cd2.netlify.app'];
 var _default = {
   api: {
-    domain: productionDomains.indexOf(window.location.hostname) === -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
+    domain: productionDomains.indexOf(window.location.hostname) > -1 ? 'https://h72-api.appcivico.com/v1/' : 'https://dev-h72-api.appcivico.com/v1/'
   }
 };
 exports.default = _default;
@@ -2889,17 +2889,17 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       chartTotal: function chartTotal() {
-        return this.formatCurrency(this.totalArray.reduce(function (a, b) {
+        return this.formatCurrencyNoAbbr(this.totalArray.reduce(function (a, b) {
           return a + b;
         }, 0));
       },
       chartMale: function chartMale() {
-        return this.formatCurrency(this.maleArray.reduce(function (a, b) {
+        return this.formatCurrencyNoAbbr(this.maleArray.reduce(function (a, b) {
           return a + b;
         }, 0));
       },
       chartFemale: function chartFemale() {
-        return this.formatCurrency(this.femaleArray.reduce(function (a, b) {
+        return this.formatCurrencyNoAbbr(this.femaleArray.reduce(function (a, b) {
           return a + b;
         }, 0));
       },
@@ -3159,7 +3159,9 @@ if (window.location.href.indexOf('/') > -1) {
         // return numeral(value).format('$0.0,[00]');
         var formatter = new Intl.NumberFormat('pt-BR', {
           style: 'currency',
-          currency: 'BRL'
+          currency: 'BRL',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0
         });
         return formatter.format(value);
       },
