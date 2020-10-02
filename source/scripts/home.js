@@ -83,8 +83,8 @@ if (window.location.href.indexOf('/') > -1) {
       races: window.appFilters.races,
       selectedRace: null,
 
-      days: [7, 15, 30, 60, 90],
-      selectedDay: 7,
+      days: ['all', 7, 15, 30, 60, 90],
+      selectedDay: 'all',
     },
     computed: {
       timer() {
@@ -411,7 +411,7 @@ if (window.location.href.indexOf('/') > -1) {
       getCandidates(page = false) {
         this.loadingCandidates = true;
 
-        const url = `${config.api.domain}candidates?results=9`;
+        const url = `${config.api.domain}candidates?results=9&days=${this.selectedDay}`;
         let mountedURL = this.mountURL(url);
 
         if (this.epochFromParam) {

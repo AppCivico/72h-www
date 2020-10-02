@@ -150,7 +150,12 @@
                     <option
                       v-for="day in days"
                       :value="day">
-                      {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
+                      <template v-if='day === "all"'>
+                        {{ i18n "allDays" }}
+                      </template>
+                      <template v-else>
+                        {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
+                      </template>
                     </option>
                   </select>
                   <button class="button button--primary">{{ i18n "apply" }}</button>

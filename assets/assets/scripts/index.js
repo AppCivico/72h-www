@@ -2829,8 +2829,8 @@ if (window.location.href.indexOf('/') > -1) {
       selectedFund: null,
       races: window.appFilters.races,
       selectedRace: null,
-      days: [7, 15, 30, 60, 90],
-      selectedDay: 7
+      days: ['all', 7, 15, 30, 60, 90],
+      selectedDay: 'all'
     },
     computed: {
       timer: function timer() {
@@ -3226,7 +3226,7 @@ if (window.location.href.indexOf('/') > -1) {
 
         var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         this.loadingCandidates = true;
-        var url = "".concat(_config.default.api.domain, "candidates?results=9");
+        var url = "".concat(_config.default.api.domain, "candidates?results=9&days=").concat(this.selectedDay);
         var mountedURL = this.mountURL(url);
 
         if (this.epochFromParam) {

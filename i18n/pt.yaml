@@ -12,6 +12,8 @@
   translation: Todos
 - id: allCities
   translation: "Todos os municípios"
+- id: allDays
+  translation: "Todo o período"
 - id: allEtinicity
   translation: "Todos as cores ou raças"
 - id: allFunds
