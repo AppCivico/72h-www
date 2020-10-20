@@ -22,6 +22,8 @@
   translation: "Todos os partidos"
 - id: allStates
   translation: "Todos os Estados"
+- id: analysis
+  translation: Análise
 - id: apply
   translation: Aplicar
 - id: bothFundsAmount
@@ -98,6 +100,8 @@
   translation: "Compartilhar dados de"
 - id: shareWithEnthusiasm
   translation: "Compartilhar!"
+- id: supportNetwork
+  translation: "Rede de apoio"
 - id: total
   translation: "Total:"
 - id: transfers

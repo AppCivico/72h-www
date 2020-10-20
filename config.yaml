@@ -13,10 +13,14 @@ languageCode: "pt-br"
 title: "72Horas"
 menu:
   header:
-  - identifier: "home"
-    name: "Home"
-    url: "/"
-    weight: 1
+  # - identifier: "aboutUs"
+  #   name: "Quem Somos"
+  #   url: "/"
+  #   weight: 1
+  - identifier: "donate"
+    name: "Doe"
+    url: "https://www.catarse.me/72horas?ref=project_link"
+    weight: 2
 metaDataFormat: "yaml"
 params:
   name: "72Horas"
