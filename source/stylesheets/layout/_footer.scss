@@ -28,6 +28,8 @@
 }
 
 .footer .container {
+  flex-direction: row;
+
   @media screen and (min-width: breakpoint('desktop')) {
     justify-content: space-around;
   }

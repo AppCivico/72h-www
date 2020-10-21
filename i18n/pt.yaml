@@ -62,6 +62,8 @@
   translation: "Última atualização:"
 - id: lastXDays
   translation: "Últimos {{ .days }} dias"
+- id: loadingData
+  translation: "Carregando dados..."
 - id: menu
   translation: Menu
 - id: next
