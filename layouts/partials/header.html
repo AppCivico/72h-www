@@ -2,13 +2,40 @@
   <div class="container">
     <h1 class="main-header__logo">{{ .Site.Params.name }}</h1>
 
-    <a
-      class="button"
-      href="https://www.catarse.me/72horas?ref=project_link"
-      target="_blank">
-      {{ i18n "donate" }}
-    </a>
+    <button class="hamburger hamburger--squeeze js-menu-toggle" type="button">
+      <span class="hamburger-box">
+        <span class="hamburger-inner"></span>
+      </span>
+    </button>
+
+    <div class="main-header__links js-menu-area">
+      {{ $firstUrlElement := print "/" (index (split .URL "/") 1)  }}
+
+      {{ with .Site.Menus.header }}
+        {{ range . }}
+          <a
+            class="button"
+            href="{{ .URL }}"
+            target="_blank">
+              {{ .Name }}
+          </a>
+        {{ end }}
+      {{ end }}
+
+      {{ with $.Site.Data.socialMedia }}
+        <ul class="social social--header">
+          {{ range .list }}
+            <li>
+              <a href="{{ .url }}" title="{{ .name }}" rel="noopener" class="{{ .name }}" target="_blank">
+                {{ .name }}
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      {{ end }}
+    </div>
   </div>
+
 </header>
 
 <div class="outdated" :hidden="!dataIsOutdated">

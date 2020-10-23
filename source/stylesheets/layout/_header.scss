@@ -20,7 +20,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
     position: absolute;
     top: $logo-top;
     left: $logo-left;
-    z-index: layer('below');
+    z-index: layer('up');
     width: $logo-size;
     height: $logo-size;
     border-radius: 50%;
@@ -35,7 +35,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
   }
 
   @media screen and (min-width: breakpoint('desktop')) {
-    height: 5.625rem;
+    height: 5.825rem;
     padding-right: 0;
   }
 }
@@ -43,7 +43,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
 .main-header .container {
   display: flex;
   justify-content: flex-end;
-  background-color: palette('white');
+  // background-color: palette('white');
 }
 
 .main-header__logo {
@@ -51,6 +51,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
   position: absolute;
   top: $logo-top;
   left: $logo-left;
+  z-index: layer('up');
   width: $logo-size;
   height: $logo-size;
   margin-top: 0;
@@ -66,11 +67,61 @@ $logo-left-desktop: calc(50% - 3.46rem);
     width: $logo-size-desktop;
     height: $logo-size-desktop;
   }
+}
 
+.main-header .hamburger {
+  display: inline-block;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    display: none;
+  }
+}
+
+.main-header__links {
+  position: absolute;
+  top: -14rem;
+  left: 0;
+  display: flex;
+  z-index: layer('default');
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+  background: palette('white');
+  box-shadow: 0 8px 21px -3px palette('shadow', 'light');
+  transition: top 0.3s;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    position: relative;
+    top: auto;
+    left: auto;
+    justify-content: flex-end;
+    width: auto;
+    padding: 0;
+    box-shadow: none;
+  }
+}
+
+.main-header__links.is-active {
+  top: 4rem;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    top: auto;
+  }
 }
 
 .main-header .button {
   justify-content: center;
-  min-width: 8rem;
-  margin-bottom: 0;
+  width: 16.25rem;
+  min-width: 6rem;
+  margin-right: 0.5rem;
+  margin-bottom: 1rem;
+  margin-left: 0.5rem;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: auto;
+    margin-right: 0;
+    margin-bottom: 0;
+    margin-left: 0.5rem;
+  }
 }

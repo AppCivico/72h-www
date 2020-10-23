@@ -1,0 +1,17 @@
+.jumbotron {
+  width: 100%;
+  text-align: center;
+
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    max-width: 60rem;
+    margin-right: auto;
+    margin-left: auto;
+  }
+}
+
+.jumbotron h1 {
+  font-size: ms(5);
+  line-height: 1.2;
+  letter-spacing: -1px;
+}

@@ -22,6 +22,8 @@
   translation: "Todos os partidos"
 - id: allStates
   translation: "Todos os Estados"
+- id: analysis
+  translation: Análise
 - id: apply
   translation: Aplicar
 - id: bothFundsAmount
@@ -46,8 +48,8 @@
   translation: "desenvolvido por appcívico"
 - id: entriesQuantity
   translation: "Quantidade de Lançamentos:"
-- id: filters
-  translation: "Filtros"
+- id: filtersTitle
+  translation: "Faça sua pesquisa"
 - id: footerDescription
   translation: "Com a plataforma 72H, você pode acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP), pressionando para que o dinheiro seja distribuído de forma transparente."
 - id: follow
@@ -60,6 +62,8 @@
   translation: "Última atualização:"
 - id: lastXDays
   translation: "Últimos {{ .days }} dias"
+- id: loadingData
+  translation: "Carregando dados..."
 - id: menu
   translation: Menu
 - id: next
@@ -98,6 +102,8 @@
   translation: "Compartilhar dados de"
 - id: shareWithEnthusiasm
   translation: "Compartilhar!"
+- id: supportNetwork
+  translation: "Rede de apoio"
 - id: total
   translation: "Total:"
 - id: transfers
