@@ -30,6 +30,8 @@
   translation: "Montante referente ao Fundo Especial e Partidário do Brasil"
 - id: candidatesListing
   translation: "Listagem das candidaturas"
+- id: candidatesWhoReceivedFunds
+  translation: "Quantidade de candidaturas prestadoras de contas:"
 - id: checkFound
   translation: "Verifique como está o repasse do Fundo Eleitoral Especial do seu Município ou Estado."
 - id: closeFilters

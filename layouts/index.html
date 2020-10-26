@@ -53,8 +53,14 @@
                 <div class="big-number__box big-number__box--border big-number__box--border-secondary">
                   <h1>{{ i18n "accumulatedValueParty" }}</h1>
                   <p>
-                    {{ i18n "entriesQuantity" }}
-                    {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
+                    <span>
+                      {{ i18n "entriesQuantity" }}
+                      {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
+                    </span>
+                    <span>
+                      {{ i18n "candidatesWhoReceivedFunds" }}
+                      {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
+                    </span>
                   </p>
                   <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)">
                   </span>
