@@ -1,6 +1,6 @@
 ---
 title: Primeiro parceiro
-Image: /uploads/path-23-1-.png
+Image: /uploads/votenelas.jpg
 weight: 1
 draft: false
 ---
