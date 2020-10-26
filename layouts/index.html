@@ -136,6 +136,7 @@
                       v-for="party in parties"
                       :value="party">
                         {{ "{{ party.name }}" }}
+                        {{ "{{ party.acronym ? `- ${party.acronym}` : '' }}" }}
                     </option>
                   </select>
                   <select
