@@ -63,6 +63,16 @@
               </template>
             </div>
 
+            <div class="pie-charts">
+              <h1 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h1>
+              <template v-for="chart in pieCharts">
+                <div class="pie-charts__chart">
+                  <div :id="`js-chart__${chart.type}`"></div>
+                </div>
+              </template>
+            </div>
+
+
             <button
               @click="sharingFrom = 'filters'"
               data-micromodal-trigger="js-share-modal"

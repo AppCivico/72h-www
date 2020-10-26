@@ -83,6 +83,53 @@ p {
   margin-bottom: $leading * 1em;
 }
 
+.border-title {
+  position: relative;
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: ms(3);
+  line-height: 1.2;
+  text-transform: uppercase;
+
+  &::before {
+    position: absolute;
+    top: -0.6rem;
+    width: 4.5rem;
+    height: 0.25rem;
+    border-radius: 10px;
+    content: '';
+  }
+
+  @media screen and (min-width: breakpoint('tablet')) {
+    margin-bottom: 2rem;
+  }
+}
+
+.border-title--primary {
+  &::before {
+    background-color: palette('main-colors', 'primary');
+  }
+}
+
+.border-title--secondary {
+  &::before {
+    background-color: palette('main-colors', 'secondary');
+  }
+}
+
+.border-title--tertiary {
+  &::before {
+    background-color: palette('main-colors', 'tertiary');
+  }
+}
+
+.border-title--quaternary {
+  &::before {
+    background-color: palette('main-colors', 'quaternary');
+  }
+}
+
 .big-text {
   font-weight: font-weight('bold');
   font-size: ms(1);

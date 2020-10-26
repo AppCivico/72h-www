@@ -54,6 +54,8 @@
   translation: "Com a plataforma 72H, você pode acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP), pressionando para que o dinheiro seja distribuído de forma transparente."
 - id: follow
   translation: "Seguir"
+- id: homePieTitle
+  translation: "Total de valores repassados"
 - id: last
   translation: "Últimos"
 - id: linkCopiedSuccessfully

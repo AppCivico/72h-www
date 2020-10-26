@@ -2818,6 +2818,96 @@ if (window.location.href.indexOf('/') > -1) {
       mainData: null,
       epochFromParam: null,
       useEpoch: false,
+      pieCharts: [{
+        type: 'state',
+        total: 1510000000.78,
+        base_color: '#dc5b64',
+        data: [{
+          name: 'São Paulo',
+          y: 61.41
+        }, {
+          name: 'Rio de janeiro',
+          y: 11.84
+        }, {
+          name: 'Minas Gerais',
+          y: 10.85
+        }, {
+          name: 'Edge',
+          y: 4.67
+        }, {
+          name: 'Safari',
+          y: 4.18
+        }, {
+          name: 'Other',
+          y: 7.05
+        }]
+      }, {
+        type: 'party',
+        base_color: '#4e79e6',
+        total: 1510000000.78,
+        data: [{
+          name: 'PT',
+          y: 61.41
+        }, {
+          name: 'PSL',
+          y: 11.84
+        }, {
+          name: 'PSOL',
+          y: 10.85
+        }, {
+          name: 'PSDB',
+          y: 4.67
+        }, {
+          name: 'DEM',
+          y: 4.18
+        }]
+      }, {
+        type: 'ethnicity',
+        total: 1510000000.78,
+        base_color: '#3399b6',
+        data: [{
+          name: 'São Paulo',
+          y: 61.41
+        }, {
+          name: 'Rio de janeiro',
+          y: 11.84
+        }, {
+          name: 'Minas Gerais',
+          y: 10.85
+        }, {
+          name: 'Edge',
+          y: 4.67
+        }, {
+          name: 'Safari',
+          y: 4.18
+        }, {
+          name: 'Other',
+          y: 7.05
+        }]
+      }, {
+        type: 'gender',
+        total: 1510000000.78,
+        base_color: '#edc437',
+        data: [{
+          name: 'São Paulo',
+          y: 61.41
+        }, {
+          name: 'Rio de janeiro',
+          y: 11.84
+        }, {
+          name: 'Minas Gerais',
+          y: 10.85
+        }, {
+          name: 'Edge',
+          y: 4.67
+        }, {
+          name: 'Safari',
+          y: 4.18
+        }, {
+          name: 'Other',
+          y: 7.05
+        }]
+      }],
       candidates: null,
       candidates_page: 1,
       selectedState: null,
@@ -2981,6 +3071,7 @@ if (window.location.href.indexOf('/') > -1) {
       this.getCandidates();
       this.setChartOptions();
       this.updateFilterText();
+      this.generatePieCharts();
 
       _micromodal.default.init();
 
@@ -3168,6 +3259,23 @@ if (window.location.href.indexOf('/') > -1) {
           return true;
         });
       },
+      generatePieChartColors: function generatePieChartColors(baseColor) {
+        var colors = [];
+        var base = baseColor;
+        var i;
+
+        for (i = 0; i < 10; i += 1) {
+          // Start out with a darkened base color (negative brighten), and end
+          // up with a much brighter color
+          if (i === 0) {
+            colors.push(_highcharts.default.color(base).get());
+          }
+
+          colors.push(_highcharts.default.color(base).brighten((i - 3) / 7).get());
+        }
+
+        return colors;
+      },
       formatCurrency: function formatCurrency(value) {
         return (0, _numeral.default)(value).format('$0[.]00 a').replace('.', ',');
       },
@@ -3298,12 +3406,7 @@ if (window.location.href.indexOf('/') > -1) {
             // eslint-disable-next-line object-shorthand, func-names
             pointFormatter: function pointFormatter() {
               return "".concat(this.series.name, ": <b>").concat(window.$vueHome.formatCurrencyNoAbbr(this.y), "</b>");
-            } // eslint-disable-next-line object-shorthand, func-names
-            // formatter: function () {
-            //   return 'The value for <b>' + this.x +
-            //     '</b> is <b>' + this.y + '</b>';
-            // },
-
+            }
           },
           plotOptions: {
             line: {
@@ -3316,6 +3419,66 @@ if (window.location.href.indexOf('/') > -1) {
           series: this.formatChartSeries
         });
         return true;
+      },
+      generatePieCharts: function generatePieCharts() {
+        var _this7 = this;
+
+        this.pieCharts.forEach(function (chart) {
+          _highcharts.default.chart("js-chart__".concat(chart.type), {
+            chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+            },
+            title: {
+              useHTML: true,
+              align: 'left',
+              x: -10,
+              style: {
+                fontSize: '1.26562em'
+              },
+              text: "<span style=\"color: ".concat(chart.base_color, "\">\n                ").concat(_this7.formatCurrencyNoAbbr(chart.total), "</span>\n                repassados por <span style=\"color: ").concat(chart.base_color, "\">").concat(chart.type, "</span>")
+            },
+            credits: {
+              enabled: false
+            },
+            tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+              point: {
+                valueSuffix: '%'
+              }
+            },
+            navigation: {
+              buttonOptions: {
+                x: -30
+              }
+            },
+            plotOptions: {
+              pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                colors: _this7.generatePieChartColors(chart.base_color),
+                dataLabels: {
+                  enabled: true,
+                  format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
+                  distance: -50,
+                  filter: {
+                    property: 'percentage',
+                    operator: '>',
+                    value: 4
+                  }
+                }
+              }
+            },
+            series: [{
+              name: 'Share',
+              data: chart.data
+            }]
+          });
+        });
       }
     }
   });
