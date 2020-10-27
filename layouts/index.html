@@ -160,7 +160,7 @@
                     id="etinicity"
                     name="etinicity"
                     v-model="selectedRace">
-                    <option :value="null">{{ i18n "allEtinicity" }}</option>
+                    <option :value="null">{{ i18n "allEthnicity" }}</option>
                     <option
                       v-for="race in races"
                       :value="race">
@@ -391,6 +391,15 @@
           {{ $filters := getJSON "https://h72-api.appcivico.com/v1/filters" }}
           window.appFilters = {{ $filters.filters }};
         {{ end }}
+      </script>
+
+      <script>
+        window.appDictionary = {
+          "ethnicity": {{ i18n "ethnicity" }},
+          "party": {{ i18n "party" }},
+          "gender": {{ i18n "gender" }},
+          "state": {{ i18n "state" }},
+        }
       </script>
 
       {{ partial "scripts.html" . }}

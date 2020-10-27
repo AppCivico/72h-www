@@ -65,58 +65,12 @@ if (window.location.href.indexOf('/') > -1) {
       mainData: null,
       epochFromParam: null,
       useEpoch: false,
-      pieCharts: [
-        {
-          type: 'state',
-          total: 1510000000.78,
-          base_color: '#dc5b64',
-          data: [
-            { name: 'São Paulo', y: 61.41 },
-            { name: 'Rio de janeiro', y: 11.84 },
-            { name: 'Minas Gerais', y: 10.85 },
-            { name: 'Edge', y: 4.67 },
-            { name: 'Safari', y: 4.18 },
-            { name: 'Other', y: 7.05 },
-          ],
-        },
-        {
-          type: 'party',
-          base_color: '#4e79e6',
-          total: 1510000000.78,
-          data: [
-            { name: 'PT', y: 61.41 },
-            { name: 'PSL', y: 11.84 },
-            { name: 'PSOL', y: 10.85 },
-            { name: 'PSDB', y: 4.67 },
-            { name: 'DEM', y: 4.18 },
-          ],
-        },
-        {
-          type: 'ethnicity',
-          total: 1510000000.78,
-          base_color: '#3399b6',
-          data: [
-            { name: 'São Paulo', y: 61.41 },
-            { name: 'Rio de janeiro', y: 11.84 },
-            { name: 'Minas Gerais', y: 10.85 },
-            { name: 'Edge', y: 4.67 },
-            { name: 'Safari', y: 4.18 },
-            { name: 'Other', y: 7.05 },
-          ],
-        },
-        {
-          type: 'gender',
-          total: 1510000000.78,
-          base_color: '#edc437',
-          data: [
-            { name: 'São Paulo', y: 61.41 },
-            { name: 'Rio de janeiro', y: 11.84 },
-            { name: 'Minas Gerais', y: 10.85 },
-            { name: 'Edge', y: 4.67 },
-            { name: 'Safari', y: 4.18 },
-            { name: 'Other', y: 7.05 },
-          ],
-        },
+      pieCharts: [],
+      pieColors: [
+        '#dc5b64',
+        '#4e79e6',
+        '#3399b6',
+        '#edc437',
       ],
 
       candidates: null,
@@ -220,6 +174,7 @@ if (window.location.href.indexOf('/') > -1) {
       async mainData() {
         await this.handleData();
         await this.generateChart();
+        await this.generatePieCharts();
       },
       timerStart: {
         handler() {
@@ -401,18 +356,40 @@ if (window.location.href.indexOf('/') > -1) {
           return true;
         });
       },
+      handlePieData(data) {
+        return data.map((item) => {
+          const newItem = item;
+          if (item.type === 'state') {
+            newItem.colors = ['#DC5B64', '#DD6367', '#DD6B6A', '#DE746D', '#DE7C70', '#DF8473', '#DF8977', '#E08E7A', '#E0937E', '#E09982', '#E19E85', '#E1A389', '#E1A88F', '#E2AD94', '#E2B39A', '#E2B89F', '#E3BDA4', '#E3C2AA', '#E4C6B0', '#E4CAB6', '#E5CEBC', '#E5D2C2', '#E6D6C8', '#E6DACE', '#E7DED4', '#E8E0D7', '#E8E2DB', '#E9E3DE', '#E9E5E1', '#E9E7E5', '#EAE9E8', '#ECEBEB', '#EDEDED'];
+          }
+          if (item.type === 'party') {
+            newItem.colors = ['#4E79E6', '#537DE7', '#5780E7', '#5C84E8', '#6187E8', '#658BE9', '#6F92EA', '#7396EA', '#789AEB', '#7D9DEC', '#81A1EC', '#86A4ED', '#8BA8ED', '#8FACEE', '#94AFEE', '#99B3EF', '#86B2F2', '#8CB6F2', '#92BAF3', '#92BAF3', '#9BC0F3', '#9EC2F4', '#A7C7F4', '#AAC9F4', '#B3CFF5', '#BAD3F5', '#C0D7F6', '#C9DDF7', '#E1ECF8', '#E4EEF8', '#E7F0F9', '#EAF2F9', '#EDF4F9',           ]
+          }
+          if (item.type === 'gender') {
+            newItem.colors = ['#EDC437', '#F1D060', '#F2D675', '#F5DF92', '#F6E3A2', '#F7E7AE', '#F9EDC3']
+          }
+          if (item.type === 'ethnicity') {
+            newItem.colors = ['#1B78A4', '#3C8EB1', '#5EA3BF', '#7FB9CC', '#A0CED9', '#C2E3E7', '#E3F9F4']
+          }
+          return newItem;
+        });
+      },
       generatePieChartColors(baseColor) {
         const colors = [];
         const base = baseColor;
         let i;
 
-        for (i = 0; i < 10; i += 1) {
+        for (i = 0; i < 33; i += 1) {
           // Start out with a darkened base color (negative brighten), and end
           // up with a much brighter color
           if (i === 0) {
             colors.push(Highcharts.color(base).get());
           }
-          colors.push(Highcharts.color(base).brighten((i - 3) / 7).get());
+          if (i < 6) {
+            colors.push(Highcharts.color(base).brighten(i / 7).get());
+          } else {
+            colors.push(Highcharts.color(base).brighten(i / 34).get());
+          }
         }
         return colors;
       },
@@ -467,6 +444,7 @@ if (window.location.href.indexOf('/') > -1) {
           .then(response => response.json())
           .then((response) => {
             this.mainData = response;
+            this.pieCharts = this.handlePieData(response.accumulated.pie_charts);
             this.timerStart = this.mainData.now;
             this.timerEnd = this.mainData.election.end_at;
             return true;
@@ -569,9 +547,9 @@ if (window.location.href.indexOf('/') > -1) {
               style: {
                 fontSize: '1.26562em',
               },
-              text: `<span style="color: ${chart.base_color}">
+              text: `<span style="color: ${chart.colors[0]}">
                 ${this.formatCurrencyNoAbbr(chart.total)}</span>
-                repassados por <span style="color: ${chart.base_color}">${chart.type}</span>`,
+                repassados por <span style="color: ${chart.colors[0]}">${window.appDictionary[chart.type]}</span>`,
             },
             credits: {
               enabled: false,
@@ -593,16 +571,16 @@ if (window.location.href.indexOf('/') > -1) {
               pie: {
                 allowPointSelect: true,
                 cursor: 'pointer',
-                colors: this.generatePieChartColors(chart.base_color),
+                colors: chart.colors,
                 dataLabels: {
                   enabled: true,
                   format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
-                  distance: -50,
-                  filter: {
-                    property: 'percentage',
-                    operator: '>',
-                    value: 4,
-                  },
+                  // distance: -50,
+                  // filter: {
+                  //   property: 'percentage',
+                  //   operator: '>',
+                  //   value: 4,
+                  // },
                 },
               },
             },
