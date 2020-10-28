@@ -3377,12 +3377,13 @@ if (window.location.href.indexOf('/') > -1) {
             },
             title: {
               useHTML: true,
-              align: 'left',
-              x: -10,
+              align: 'center',
+              // x: -10,
               style: {
-                fontSize: '1.26562em'
+                fontSize: '1.26562em',
+                textTransform: 'uppercase'
               },
-              text: "<span style=\"color: ".concat(chart.colors[0], "\">\n                ").concat(_this7.formatCurrencyNoAbbr(chart.total), "</span>\n                repassados por <span style=\"color: ").concat(chart.colors[0], "\">").concat(window.appDictionary[chart.type], "</span>")
+              text: "por <span style=\"color: ".concat(chart.colors[0], "\">").concat(window.appDictionary[chart.type], "</span>\n              <span style=\"color: ").concat(chart.colors[0], "\">").concat(_this7.formatCurrencyNoAbbr(chart.total), "</span>")
             },
             credits: {
               enabled: false

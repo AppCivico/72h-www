@@ -542,14 +542,14 @@ if (window.location.href.indexOf('/') > -1) {
             },
             title: {
               useHTML: true,
-              align: 'left',
-              x: -10,
+              align: 'center',
+              // x: -10,
               style: {
                 fontSize: '1.26562em',
+                textTransform: 'uppercase',
               },
-              text: `<span style="color: ${chart.colors[0]}">
-                ${this.formatCurrencyNoAbbr(chart.total)}</span>
-                repassados por <span style="color: ${chart.colors[0]}">${window.appDictionary[chart.type]}</span>`,
+              text: `por <span style="color: ${chart.colors[0]}">${window.appDictionary[chart.type]}</span>
+              <span style="color: ${chart.colors[0]}">${this.formatCurrencyNoAbbr(chart.total)}</span>`,
             },
             credits: {
               enabled: false,
