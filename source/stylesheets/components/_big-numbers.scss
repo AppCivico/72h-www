@@ -83,6 +83,9 @@
 }
 
 .big-numbers p {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
   font-size: ms(-1);
   color: palette('gray', 'medium');
 }
