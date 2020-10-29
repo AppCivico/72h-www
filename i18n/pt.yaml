@@ -55,7 +55,7 @@
 - id: filtersTitle
   translation: "Faça sua pesquisa"
 - id: footerDescription
-  translation: "A plataforma 72 horas conta com tecnologia e metodologia inovadora para acompanhamento eleitoral. Os dados coletados podem estar sujeito a condições adicionais. Para mais detalhes, consulte as sobre os dados."
+  translation: "A plataforma 72horas traz inovação tecnológica e metodológica para acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP). Os dados apresentados estão sujeitos a instabilidades e condições adicionais. Para mais detalhes, consulte o link “sobre os dados”."
 - id: follow
   translation: "Seguir"
 - id: gender

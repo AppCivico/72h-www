@@ -32,14 +32,12 @@
                 <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
                   <h1>{{ i18n "accumulatedValue" }}</h1>
                   <p>
-                    <span>
-                      {{ i18n "entriesQuantity" }}
-                      {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
-                    </span>
-                    <span>
-                      {{ i18n "candidatesWhoReceivedFunds" }}
-                      {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
-                    </span>
+                    {{ i18n "entriesQuantity" }}
+                    {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
+                  </p>
+                  <p>
+                    {{ i18n "candidatesWhoReceivedFunds" }}
+                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
                   </p>
                   <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"></span>
                   <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
