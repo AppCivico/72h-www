@@ -5,11 +5,24 @@
     </div>
 
     <div class="footer__col">
-      <p>{{ i18n "footerDescription" }}</p>
+      {{ with .Site.Menus.footer }}
+      <ul class="footer__menu">
+        {{ range . }}
+          <li>
+            <a
+              href="{{ .URL }}"
+              target="_blank">
+                {{ .Name }}
+            </a>
+          </li>
+        {{ end }}
+      </ul>
+      {{ end }}
     </div>
 
     <div class="footer__col">
       <address>
+        <p>{{ i18n "footerDescription" }}</p>
         <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
       </address>
 

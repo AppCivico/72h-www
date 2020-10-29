@@ -1,0 +1,55 @@
+.pie-charts {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  margin-bottom: 2rem;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+}
+
+.pie-charts h1 {
+  width: 100%;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  font-size: ms(3);
+  line-height: 1.2;
+  text-transform: uppercase;
+
+  @media screen and (min-width: breakpoint('tablet')) {
+    margin-bottom: 2rem;
+  }
+}
+
+.pie-charts__chart {
+  width: 100%;
+  padding-top: 1rem;
+  padding-right: 1rem;
+  padding-bottom: 1rem;
+
+  @media screen and (min-width: breakpoint('desktop')) {
+    width: 50%;
+  }
+
+  &::after {
+    display: block;
+    width: 80%;
+    height: 0.062rem;
+    margin-top: 1rem;
+    margin-right: auto;
+    margin-left: auto;
+    background-image: linear-gradient(
+      90deg,
+      palette('gradient', 'white') 0%,
+      palette('gradient', 'grey') 46%,
+      palette('gradient', 'white') 100%);
+    content: '';
+
+
+    @media screen and (min-width: breakpoint('desktop')) {
+      width: 100%;
+    }
+  }
+}

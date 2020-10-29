@@ -9,8 +9,6 @@
     </button>
 
     <div class="main-header__links js-menu-area">
-      {{ $firstUrlElement := print "/" (index (split .URL "/") 1)  }}
-
       {{ with .Site.Menus.header }}
         {{ range . }}
           <a

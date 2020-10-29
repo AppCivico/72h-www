@@ -13,14 +13,35 @@ languageCode: "pt-br"
 title: "72Horas"
 menu:
   header:
-  # - identifier: "aboutUs"
-  #   name: "Quem Somos"
-  #   url: "/"
-  #   weight: 1
+  - identifier: "aboutData"
+    name: "Sobre os dados"
+    url: "https://plataforma-72horas.medium.com/sobre-os-dados-do-72-horas-ae929bd460e6"
+    weight: 1
+  - identifier: "aboutUs"
+    name: "Quem Somos"
+    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
+    weight: 2
   - identifier: "donate"
     name: "Doe"
     url: "https://www.catarse.me/72horas?ref=project_link"
+    weight: 3
+  footer:
+  - identifier: "aboutUs"
+    name: "Quem Somos"
+    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
+    weight: 1
+  - identifier: "aboutData"
+    name: "Sobre os dados"
+    url: "https://plataforma-72horas.medium.com/sobre-os-dados-do-72-horas-ae929bd460e6"
     weight: 2
+  - identifier: "press"
+    name: "Imprensa"
+    url: "https://plataforma-72horas.medium.com/tudo-que-publicaram-da-plataforma-72-horas-na-imprensa-90613983b23c"
+    weight: 3
+  - identifier: "donate"
+    name: "Doe"
+    url: "https://www.catarse.me/72horas?ref=project_link"
+    weight: 4
 metaDataFormat: "yaml"
 params:
   name: "72Horas"

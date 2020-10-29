@@ -40,6 +40,11 @@
   }
 }
 
+
+.big-number__box p {
+  margin-bottom: 0;
+}
+
 .big-number__box--border {
   margin-top: 0.5rem;
 }
@@ -88,6 +93,7 @@
 }
 
 .big-number__number {
+  margin-top: 1rem;
   font-weight: font-weight('bold');
   font-size: ms(6);
 }

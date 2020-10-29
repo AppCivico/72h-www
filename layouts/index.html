@@ -35,6 +35,10 @@
                     {{ i18n "entriesQuantity" }}
                     {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
                   </p>
+                  <p>
+                    {{ i18n "candidatesWhoReceivedFunds" }}
+                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
+                  </p>
                   <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"></span>
                   <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
                 </div>
@@ -62,6 +66,16 @@
                 </div>
               </template>
             </div>
+
+            <div class="pie-charts">
+              <h1 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h1>
+              <template v-for="chart in pieCharts">
+                <div class="pie-charts__chart">
+                  <div :id="`js-chart__${chart.type}`"></div>
+                </div>
+              </template>
+            </div>
+
 
             <button
               @click="sharingFrom = 'filters'"
@@ -126,6 +140,7 @@
                       v-for="party in parties"
                       :value="party">
                         {{ "{{ party.name }}" }}
+                        {{ "{{ party.acronym ? `- ${party.acronym}` : '' }}" }}
                     </option>
                   </select>
                   <select
@@ -143,7 +158,7 @@
                     id="etinicity"
                     name="etinicity"
                     v-model="selectedRace">
-                    <option :value="null">{{ i18n "allEtinicity" }}</option>
+                    <option :value="null">{{ i18n "allEthnicity" }}</option>
                     <option
                       v-for="race in races"
                       :value="race">
@@ -374,6 +389,15 @@
           {{ $filters := getJSON "https://h72-api.appcivico.com/v1/filters" }}
           window.appFilters = {{ $filters.filters }};
         {{ end }}
+      </script>
+
+      <script>
+        window.appDictionary = {
+          "ethnicity": {{ i18n "ethnicity" }},
+          "party": {{ i18n "party" }},
+          "gender": {{ i18n "gender" }},
+          "state": {{ i18n "state" }},
+        }
       </script>
 
       {{ partial "scripts.html" . }}

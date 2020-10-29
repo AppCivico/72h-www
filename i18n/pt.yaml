@@ -14,7 +14,7 @@
   translation: "Todos os municípios"
 - id: allDays
   translation: "Todo o período"
-- id: allEtinicity
+- id: allEthnicity
   translation: "Todos as cores ou raças"
 - id: allFunds
   translation: "Todos os fundos"
@@ -30,6 +30,8 @@
   translation: "Montante referente ao Fundo Especial e Partidário do Brasil"
 - id: candidatesListing
   translation: "Listagem das candidaturas"
+- id: candidatesWhoReceivedFunds
+  translation: "Quantidade de candidaturas prestadoras de contas:"
 - id: checkFound
   translation: "Verifique como está o repasse do Fundo Eleitoral Especial do seu Município ou Estado."
 - id: closeFilters
@@ -48,12 +50,18 @@
   translation: "desenvolvido por appcívico"
 - id: entriesQuantity
   translation: "Quantidade de Lançamentos:"
+- id: ethnicity
+  translation: "Etnia"
 - id: filtersTitle
   translation: "Faça sua pesquisa"
 - id: footerDescription
-  translation: "Com a plataforma 72H, você pode acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP), pressionando para que o dinheiro seja distribuído de forma transparente."
+  translation: "A plataforma 72horas traz inovação tecnológica e metodológica para acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP). Os dados apresentados estão sujeitos a instabilidades e condições adicionais. Para mais detalhes, consulte o link “sobre os dados”."
 - id: follow
   translation: "Seguir"
+- id: gender
+  translation: "Gênero"
+- id: homePieTitle
+  translation: "Total de valores repassados"
 - id: last
   translation: "Últimos"
 - id: linkCopiedSuccessfully
@@ -84,6 +92,8 @@
   translation: "Parceiros e Organizações"
 - id: partiesListing
   translation: "Listagem da quantidade de recurso disponibilizado para cada partido"
+- id: party
+  translation: "Partido"
 - id: previous
   translation: "< Anterior"
 - id: remainingDays
@@ -102,6 +112,8 @@
   translation: "Compartilhar dados de"
 - id: shareWithEnthusiasm
   translation: "Compartilhar!"
+- id: state
+  translation: "Estado"
 - id: supportNetwork
   translation: "Rede de apoio"
 - id: total
