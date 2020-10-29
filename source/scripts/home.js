@@ -140,7 +140,7 @@ if (window.location.href.indexOf('/') > -1) {
         return window.appFilters.races.sort((a, b) => a.name.localeCompare(b.name));
       },
       chartDates() {
-        const datesArr = Object.keys(this.mainData.chart[0]);
+        const datesArr = Object.keys(this.mainData.chart);
         return datesArr.map(date => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       chartTotal() {
@@ -329,27 +329,17 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       handleData() {
-        const entries = Object.values(this.mainData.chart[0]);
+        const entries = Object.values(this.mainData.chart);
         this.totalArray = [];
         this.maleArray = [];
         this.femaleArray = [];
         // this.epoch = this.mainData.epoch;
 
         entries.forEach((entry) => {
-          let total = 0;
-          let male = 0;
-          let female = 0;
-          if (entry) {
-            entry.forEach((item) => {
-              total += item.value;
-              if (item.candidate.gender_id === 1) {
-                male += item.value;
-              }
-              if (item.candidate.gender_id === 2) {
-                female += item.value;
-              }
-            });
-          }
+          const total = entry.F + entry.M;
+          const male = entry.M;
+          const female = entry.F;
+
           this.totalArray.push(total);
           this.maleArray.push(male);
           this.femaleArray.push(female);
