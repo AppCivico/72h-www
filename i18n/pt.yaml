@@ -97,7 +97,7 @@
 - id: previous
   translation: "< Anterior"
 - id: remainingDays
-  translation: "Dias Restantes para o 1° Turno"
+  translation: "Dias Restantes para o 2° Turno"
 - id: runsFor
   translation: "Concorre a"
 - id: seeOnTSE
