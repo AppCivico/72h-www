@@ -2901,7 +2901,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       chartDates: function chartDates() {
-        var datesArr = Object.keys(this.mainData.chart[0]);
+        var datesArr = Object.keys(this.mainData.chart);
         return datesArr.map(function (date) {
           return (0, _dayjs.default)("".concat(date, " 10:00")).format('DD [de] MMM');
         });
@@ -3142,29 +3142,15 @@ if (window.location.href.indexOf('/') > -1) {
       handleData: function handleData() {
         var _this4 = this;
 
-        var entries = Object.values(this.mainData.chart[0]);
+        var entries = Object.values(this.mainData.chart);
         this.totalArray = [];
         this.maleArray = [];
         this.femaleArray = []; // this.epoch = this.mainData.epoch;
 
         entries.forEach(function (entry) {
-          var total = 0;
-          var male = 0;
-          var female = 0;
-
-          if (entry) {
-            entry.forEach(function (item) {
-              total += item.value;
-
-              if (item.candidate.gender_id === 1) {
-                male += item.value;
-              }
-
-              if (item.candidate.gender_id === 2) {
-                female += item.value;
-              }
-            });
-          }
+          var total = entry.F + entry.M;
+          var male = entry.M;
+          var female = entry.F;
 
           _this4.totalArray.push(total);
 
