@@ -17,18 +17,18 @@ menu:
     name: "Sobre os dados"
     url: "https://plataforma-72horas.medium.com/sobre-os-dados-do-72-horas-ae929bd460e6"
     weight: 1
-  - identifier: "aboutUs"
-    name: "Quem Somos"
-    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
+  - identifier: "report"
+    name: "Relatório"
+    url: "https://issuu.com/72horas.org/docs/report72horas.segundoturno"
     weight: 2
   - identifier: "donate"
     name: "Doe"
     url: "https://www.catarse.me/72horas?ref=project_link"
     weight: 3
   footer:
-  - identifier: "aboutUs"
-    name: "Quem Somos"
-    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
+  - identifier: "report"
+    name: "Relatório"
+    url: "https://issuu.com/72horas.org/docs/report72horas.segundoturno"
     weight: 1
   - identifier: "aboutData"
     name: "Sobre os dados"
