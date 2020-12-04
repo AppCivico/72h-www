@@ -45,9 +45,6 @@ if (window.location.href.indexOf('/') > -1) {
       loadingCandidates: true,
       loadingChartData: true,
 
-      timerStart: 0,
-      timerEnd: 0,
-
       shareURLCopied: false,
       sharingFrom: '',
 
@@ -87,28 +84,6 @@ if (window.location.href.indexOf('/') > -1) {
       selectedDay: 'all',
     },
     computed: {
-      timer() {
-        const actualDate = dayjs(this.timerStart);
-        const endDate = dayjs(this.timerEnd);
-        const diff = endDate.diff(actualDate);
-
-        const timeDuration = dayjs.duration(diff).asMilliseconds();
-        let seconds = Math.floor(timeDuration / 1000);
-        let minutes = Math.floor(seconds / 60);
-        let hours = Math.floor(minutes / 60);
-        const days = Math.floor(hours / 24);
-
-        hours -= (days * 24);
-        minutes = minutes - (days * 24 * 60) - (hours * 60);
-        seconds = seconds - (days * 24 * 60 * 60) - (hours * 60 * 60) - (minutes * 60);
-
-        return {
-          seconds,
-          minutes,
-          hours,
-          days,
-        };
-      },
       dataIsOutdated: {
         // eslint-disable-next-line object-shorthand, func-names
         get: function () {
@@ -175,16 +150,6 @@ if (window.location.href.indexOf('/') > -1) {
         await this.handleData();
         await this.generateChart();
         await this.generatePieCharts();
-      },
-      timerStart: {
-        handler() {
-          if (dayjs(this.timerStart) < dayjs(this.timerEnd)) {
-            setTimeout(() => {
-              this.timerStart = dayjs(this.timerStart).add(1, 'second');
-            }, 1000);
-          }
-        },
-        immediate: true,
       },
     },
     mounted() {
@@ -435,8 +400,6 @@ if (window.location.href.indexOf('/') > -1) {
           .then((response) => {
             this.mainData = response;
             this.pieCharts = this.handlePieData(response.accumulated.pie_charts);
-            this.timerStart = this.mainData.now;
-            this.timerEnd = this.mainData.election.end_at;
             return true;
           })
           .then(() => {
