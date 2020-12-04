@@ -2803,8 +2803,6 @@ if (window.location.href.indexOf('/') > -1) {
       loadingBigNumbers: true,
       loadingCandidates: true,
       loadingChartData: true,
-      timerStart: 0,
-      timerEnd: 0,
       shareURLCopied: false,
       sharingFrom: '',
       filterText: {},
@@ -2831,27 +2829,6 @@ if (window.location.href.indexOf('/') > -1) {
       selectedDay: 'all'
     },
     computed: {
-      timer: function timer() {
-        var actualDate = (0, _dayjs.default)(this.timerStart);
-        var endDate = (0, _dayjs.default)(this.timerEnd);
-        var diff = endDate.diff(actualDate);
-
-        var timeDuration = _dayjs.default.duration(diff).asMilliseconds();
-
-        var seconds = Math.floor(timeDuration / 1000);
-        var minutes = Math.floor(seconds / 60);
-        var hours = Math.floor(minutes / 60);
-        var days = Math.floor(hours / 24);
-        hours -= days * 24;
-        minutes = minutes - days * 24 * 60 - hours * 60;
-        seconds = seconds - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60;
-        return {
-          seconds: seconds,
-          minutes: minutes,
-          hours: hours,
-          days: days
-        };
-      },
       dataIsOutdated: {
         // eslint-disable-next-line object-shorthand, func-names
         get: function get() {
@@ -2966,18 +2943,6 @@ if (window.location.href.indexOf('/') > -1) {
             }
           }, _callee);
         }))();
-      },
-      timerStart: {
-        handler: function handler() {
-          var _this3 = this;
-
-          if ((0, _dayjs.default)(this.timerStart) < (0, _dayjs.default)(this.timerEnd)) {
-            setTimeout(function () {
-              _this3.timerStart = (0, _dayjs.default)(_this3.timerStart).add(1, 'second');
-            }, 1000);
-          }
-        },
-        immediate: true
       }
     },
     mounted: function mounted() {
@@ -3140,7 +3105,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       handleData: function handleData() {
-        var _this4 = this;
+        var _this3 = this;
 
         var entries = Object.values(this.mainData.chart);
         this.totalArray = [];
@@ -3152,11 +3117,11 @@ if (window.location.href.indexOf('/') > -1) {
           var male = entry.M;
           var female = entry.F;
 
-          _this4.totalArray.push(total);
+          _this3.totalArray.push(total);
 
-          _this4.maleArray.push(male);
+          _this3.maleArray.push(male);
 
-          _this4.femaleArray.push(female);
+          _this3.femaleArray.push(female);
 
           return true;
         });
@@ -3236,7 +3201,7 @@ if (window.location.href.indexOf('/') > -1) {
         document.querySelector('#js-main-chart').scrollIntoView();
       },
       getData: function getData() {
-        var _this5 = this;
+        var _this4 = this;
 
         this.loadingChartData = true;
 
@@ -3256,17 +3221,15 @@ if (window.location.href.indexOf('/') > -1) {
         }).then(function (response) {
           return response.json();
         }).then(function (response) {
-          _this5.mainData = response;
-          _this5.pieCharts = _this5.handlePieData(response.accumulated.pie_charts);
-          _this5.timerStart = _this5.mainData.now;
-          _this5.timerEnd = _this5.mainData.election.end_at;
+          _this4.mainData = response;
+          _this4.pieCharts = _this4.handlePieData(response.accumulated.pie_charts);
           return true;
         }).then(function () {
-          _this5.loadingBigNumbers = false;
-          _this5.loadingChartData = false;
+          _this4.loadingBigNumbers = false;
+          _this4.loadingChartData = false;
 
-          if (_this5.chart) {
-            _this5.chart.hideLoading();
+          if (_this4.chart) {
+            _this4.chart.hideLoading();
           }
 
           return true;
@@ -3276,7 +3239,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       getCandidates: function getCandidates() {
-        var _this6 = this;
+        var _this5 = this;
 
         var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
         this.loadingCandidates = true;
@@ -3297,13 +3260,13 @@ if (window.location.href.indexOf('/') > -1) {
         }).then(function (response) {
           return response.json();
         }).then(function (response) {
-          _this6.candidates = response;
+          _this5.candidates = response;
           return true;
         }).then(function () {
-          _this6.loadingCandidates = false;
+          _this5.loadingCandidates = false;
 
           if (page) {
-            _this6.candidates_page = page;
+            _this5.candidates_page = page;
           }
 
           return true;
@@ -3351,7 +3314,7 @@ if (window.location.href.indexOf('/') > -1) {
         return true;
       },
       generatePieCharts: function generatePieCharts() {
-        var _this7 = this;
+        var _this6 = this;
 
         this.pieCharts.forEach(function (chart) {
           _highcharts.default.chart("js-chart__".concat(chart.type), {
@@ -3369,7 +3332,7 @@ if (window.location.href.indexOf('/') > -1) {
                 fontSize: '1.26562em',
                 textTransform: 'uppercase'
               },
-              text: "por <span style=\"color: ".concat(chart.colors[0], "\">").concat(window.appDictionary[chart.type], "</span>\n              <span style=\"color: ").concat(chart.colors[0], "\">").concat(_this7.formatCurrencyNoAbbr(chart.total), "</span>")
+              text: "por <span style=\"color: ".concat(chart.colors[0], "\">").concat(window.appDictionary[chart.type], "</span>\n              <span style=\"color: ").concat(chart.colors[0], "\">").concat(_this6.formatCurrencyNoAbbr(chart.total), "</span>")
             },
             credits: {
               enabled: false
