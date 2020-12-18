@@ -15,7 +15,7 @@
     "clean": "npm-run-all --parallel clean:*",
     "clean:dist": "rimraf ./public/**/*.*",
     "clean:testResults": "rimraf ./testResults/**/*.xml",
-    "compile:sass": "node-sass ./source/stylesheets --output-style compressed --output ./assets/assets/styles --source-map \"static/assets/styles\"",
+    "compile:sass": "sass --style compressed ./source/stylesheets ./assets/assets/styles",
     "compress:css": "postcss --use autoprefixer cssnano --safe -r ./assets/assets/styles/**/*.css",
     "compress:img": "imagemin \"./source/images/**/*.{gif,jpg,png,svg}\" --out-dir=./static/assets/images",
     "compile:js": "npm-run-all compile:js:*",
@@ -58,7 +58,6 @@
     "eslint-plugin-vue": "^4.7.1",
     "imagemin-cli": "^3.0.0",
     "modularscale-sass": "^3.0.5",
-    "node-sass": "^4.13.0",
     "npm-run-all": "^4.1.5",
     "onchange": "^4.1.0",
     "postcss-cli": "^6.1.2",
@@ -81,6 +80,7 @@
     "numbro": "^2.1.2",
     "numeral": "^2.0.6",
     "qs": "^6.6.0",
+    "sass": "^1.30.0",
     "tiny-slider": "^2.9.1",
     "vue": "^2.6.10"
   }
