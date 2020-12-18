@@ -19,16 +19,16 @@ menu:
     weight: 1
   - identifier: "report"
     name: "Relatório"
-    url: "https://issuu.com/72horas.org/docs/report72horas.segundoturno"
+    url: "https://issuu.com/72horas.org/docs/relatorio_72horas.org__eleic_a_o2020"
     weight: 2
   - identifier: "donate"
-    name: "Doe"
-    url: "https://www.catarse.me/72horas?ref=project_link"
+    name: "Quem somos"
+    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
     weight: 3
   footer:
   - identifier: "report"
     name: "Relatório"
-    url: "https://issuu.com/72horas.org/docs/report72horas.segundoturno"
+    url: "https://issuu.com/72horas.org/docs/relatorio_72horas.org__eleic_a_o2020"
     weight: 1
   - identifier: "aboutData"
     name: "Sobre os dados"
@@ -39,8 +39,8 @@ menu:
     url: "https://plataforma-72horas.medium.com/tudo-que-publicaram-da-plataforma-72-horas-na-imprensa-90613983b23c"
     weight: 3
   - identifier: "donate"
-    name: "Doe"
-    url: "https://www.catarse.me/72horas?ref=project_link"
+    name: "Quem somos"
+    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
     weight: 4
 metaDataFormat: "yaml"
 params:
