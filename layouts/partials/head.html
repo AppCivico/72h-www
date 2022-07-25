@@ -17,16 +17,11 @@
 
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
 
+  {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.min.js" "vendor/vue.js") | resources.Fingerprint "sha512" }}
+  <link rel="preload" type="text/javascript" as="script" href="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}">
 
-  {{ $vendorJS := resources.Get "assets/scripts/vendor.js" }}
-  {{ $secureVendorJS := $vendorJS | resources.Minify | resources.Fingerprint "sha512" }}
-  <link rel="preload" type="text/javascript" as="script"
-    href="{{ $secureVendorJS.RelPermalink }}" integrity="{{ $secureVendorJS.Data.Integrity }}">
-
-  {{ $js := resources.Get "assets/scripts/index.js" }}
-  {{ $secureJS := $js | resources.Minify | resources.Fingerprint "sha512" }}
-  <link rel="preload" type="text/javascript" as="script"
-    href="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}">
+  {{ $secureJS := resources.Get "scripts/index.js" | js.Build | resources.Minify | resources.Fingerprint "sha512" }}
+  <link rel="preload" type="text/javascript" as="script" href="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}">
 
   <script type="text/javascript">
     document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/, '');

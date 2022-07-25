@@ -1,4 +1,4 @@
-    {{ partial "head.html" . }}
+{{ partial "head.html" . }}
 
     <body>
       <div id="vueHome" v-cloak>
@@ -368,35 +368,7 @@
 
       {{ partial "footer.html" . }}
 
-
-      <script>
-        {{ if eq (getenv "NODE_ENV") "development" }}
-          {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters" }}
-          window.appFilters = {{ $filters.filters }};
-        {{ else }}
-          {{ $filters := getJSON "https://h72-api.appcivico.com/v1/filters" }}
-          window.appFilters = {{ $filters.filters }};
-        {{ end }}
-      </script>
-
-      <script>
-        window.appDictionary = {
-          "ethnicity": {{ i18n "ethnicity" }},
-          "party": {{ i18n "party" }},
-          "gender": {{ i18n "gender" }},
-          "state": {{ i18n "state" }},
-        }
-      </script>
-
       {{ partial "scripts.html" . }}
-
-      <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-
-      <!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
-      <!-- <script src="https://code.highcharts.com/modules/series&#45;label.js"></script> -->
-      <!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
-      <!-- <script src="https://code.highcharts.com/modules/export&#45;data.js"></script> -->
-      <!-- <script src="https://code.highcharts.com/modules/accessibility.js"></script> -->
 
     </body>
 </html>

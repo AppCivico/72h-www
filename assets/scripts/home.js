@@ -1,11 +1,11 @@
 /* global Vue */
-import HighchartsExport from 'highcharts/modules/exporting';
-import HighchartsExportData from 'highcharts/modules/export-data';
-import Highcharts from 'highcharts';
-import MicroModal from 'micromodal';
 import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
 import 'dayjs/locale/pt-br';
+import duration from 'dayjs/plugin/duration';
+import Highcharts from 'highcharts';
+import HighchartsExportData from 'highcharts/modules/export-data';
+import HighchartsExport from 'highcharts/modules/exporting';
+import MicroModal from 'micromodal';
 import numeral from 'numeral';
 import config from './config';
 
@@ -14,6 +14,12 @@ HighchartsExportData(Highcharts);
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
+
+
+console.debug('Highcharts', Highcharts);
+console.debug('HighchartsExportData', HighchartsExportData);
+console.debug('HighchartsExport', HighchartsExport);
+
 
 numeral.register('locale', 'pt-br', {
   delimiters: {
@@ -399,7 +405,14 @@ if (window.location.href.indexOf('/') > -1) {
           .then(response => response.json())
           .then((response) => {
             this.mainData = response;
-            this.pieCharts = this.handlePieData(response.accumulated.pie_charts);
+
+            console.debug('response.accumulated', response.accumulated);
+
+            lala = this.handlePieData(response.accumulated.pie_charts)
+
+            console.debug('lala',lala)
+
+            this.pieCharts = lala;
             return true;
           })
           .then(() => {

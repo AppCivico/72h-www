@@ -1,15 +1,28 @@
-{{ if eq (getenv "NODE_ENV") "development" }}
-  <script src="https://vuejs.org/js/vue.js"></script>
-{{ else }}
-  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.13/dist/vue.js"></script>
-{{ end }}
+<script>
+  {{ if eq (getenv "NODE_ENV") "development" }}
+    {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters" | default $.Site.Data.filters }}
+    window.appFilters = {{ $filters.filters }};
+  {{ else }}
+    {{ $filters := getJSON "https://h72-api.appcivico.com/v1/filters" | default $.Site.Data.filters }}
+    window.appFilters = {{ $filters.filters }};
+  {{ end }}
+</script>
 
-{{ $vendorJS := resources.Get "assets/scripts/vendor.js" }}
-{{ $secureVendorJS := $vendorJS | resources.Minify | resources.Fingerprint "sha512" }}
-<script type="text/javascript" src="{{ $secureVendorJS.RelPermalink }}" integrity="{{ $secureVendorJS.Data.Integrity }}"></script>
+<script>
+  window.appDictionary = {
+    "ethnicity": '{{ i18n "ethnicity" }}',
+    "party": '{{ i18n "party" }}',
+    "gender": '{{ i18n "gender" }}',
+    "state": '{{ i18n "state" }}',
+  }
+</script>
 
-{{ $js := resources.Get "assets/scripts/index.js" }}
-{{ $secureJS := $js | resources.Minify | resources.Fingerprint "sha512" }}
+{{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.min.js" "vendor/vue.js") | resources.Fingerprint "sha512" }}
+<script src="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}"></script>
+
+{{/* $secureJS := resources.Get "scripts/index.js" | js.Build | resources.Babel | resources.Minify | resources.Fingerprint "sha512" */}}
+{{ $secureJS := resources.Get "scripts/index.js" | js.Build | resources.Minify | resources.Fingerprint "sha512" }}
+
 <script type="text/javascript" src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"></script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
@@ -39,3 +52,11 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=2624997807810316&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Facebook Pixel Code -->
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
+<!-- <script src="https://code.highcharts.com/modules/series&#45;label.js"></script> -->
+<!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
+<!-- <script src="https://code.highcharts.com/modules/export&#45;data.js"></script> -->
+<!-- <script src="https://code.highcharts.com/modules/accessibility.js"></script> -->
