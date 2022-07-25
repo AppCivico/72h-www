@@ -12,8 +12,7 @@
 
   <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
 
-  {{ $style := resources.Get "assets/styles/main.css" | resources.Minify | resources.Fingerprint "sha512" }}
-
+  {{ $style := resources.Get "stylesheets/main.scss" | resources.ToCSS | resources.PostCSS | resources.Minify | resources.Fingerprint "sha512" }}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
 
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
