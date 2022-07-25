@@ -11,44 +11,7 @@ disableKinds:
 googleAnalytics: ""
 languageCode: "pt-br"
 title: "72Horas"
-menu:
-  header:
-  - identifier: "aboutData"
-    name: "Sobre os dados"
-    url: "https://plataforma-72horas.medium.com/sobre-os-dados-do-72-horas-ae929bd460e6"
-    weight: 1
-  - identifier: "report"
-    name: "Relatório"
-    url: "https://issuu.com/72horas.org/docs/relatorio_72horas.org__eleic_a_o2020"
-    weight: 2
-  - identifier: "donate"
-    name: "Quem somos"
-    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
-    weight: 3
-  footer:
-  - identifier: "report"
-    name: "Relatório"
-    url: "https://issuu.com/72horas.org/docs/relatorio_72horas.org__eleic_a_o2020"
-    weight: 1
-  - identifier: "aboutData"
-    name: "Sobre os dados"
-    url: "https://plataforma-72horas.medium.com/sobre-os-dados-do-72-horas-ae929bd460e6"
-    weight: 2
-  - identifier: "press"
-    name: "Imprensa"
-    url: "https://plataforma-72horas.medium.com/tudo-que-publicaram-da-plataforma-72-horas-na-imprensa-90613983b23c"
-    weight: 3
-  - identifier: "donate"
-    name: "Quem somos"
-    url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
-    weight: 4
 metaDataFormat: "yaml"
-params:
-  name: "72Horas"
-  siteDescription: "A Plataforma 72 horas acompanha em tempo real e entrega de forma simples os repasses dos fundos. Filtro por estado, município, partido, gênero e etnia. Fique por dentro a respeito do uso do dinheiro público nas Eleições 2020."
-  contactEmail: "plataforma.72horas@gmail.com"
-  tagline: ""
-  shareImages:
-    default: "assets/images/default.jpg"
-    twitter: "assets/images/twitter.jpg"
-    facebook: "assets/images/facebook.jpg"
+
+ignoreErrors:
+  - "error-remote-getjson"

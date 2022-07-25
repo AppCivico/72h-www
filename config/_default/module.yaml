@@ -1,0 +1,10 @@
+mounts:
+  -
+    source: "node_modules/highcharts/"
+    target: "assets/vendor/highcharts/"
+  -
+    source: "node_modules/vue/dist/"
+    target: "assets/vendor/"
+  -
+    source: "assets/"
+    target: "assets/"
