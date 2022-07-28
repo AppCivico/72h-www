@@ -110,14 +110,26 @@ if (window.location.href.indexOf('/') > -1) {
           .map((x) => { return { ...x, label: x.name, helper: this.statesById[x.region_id].acronym};})
           .sort((a, b) => a.name.localeCompare(b.name));
       },
+      citiesById({cities}=this) {
+        return cities.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      },
       parties() {
         return window.appFilters.parties.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      partiesById({ parties } = this) {
+        return parties.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       fund_types() {
         return window.appFilters.fund_types.sort((a, b) => a.name.localeCompare(b.name));
       },
+      fundTypesById({fund_types}=this) {
+        return fund_types.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      },
       races() {
         return window.appFilters.races.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      racesById({ races } = this) {
+        return races.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart);
@@ -227,22 +239,22 @@ if (window.location.href.indexOf('/') > -1) {
         }
       },
       updateFilterText() {
-        this.filterText.selectedState = Array.isArray(this.selectedState)
-          ? this.selectedState?.map(x => x.name).join(', ')
-          : [this.selectedState];
-        this.filterText.selectedCity = Array.isArray(this.selectedCity)
-          ? this.selectedCity?.map(x => x.name).join(', ')
-          : [this.selectedCity];
-        this.filterText.selectedParty = Array.isArray(this.selectedParty)
-          ? this.selectedParty?.map(x => x.name).join(', ')
-          : [this.selectedParty];
-        this.filterText.selectedFund = Array.isArray(this.selectedFund)
-          ? this.selectedFund?.map(x => x.name).join(', ')
-          : [this.selectedFund];
-        this.filterText.selectedRace = Array.isArray(this.selectedRace)
-          ? this.selectedRace?.map(x => x.name).join(', ')
-          : [this.selectedRace];
-        this.filterText.selectedDay = this.selectedDay;
+        const {
+          filterText, selectedState, selectedCity, selectedParty, selectedFund,
+          selectedRace, selectedDay, statesById, citiesById, partiesById,
+          fundTypesById, racesById
+        } = this;
+
+        filterText.selectedState = selectedState?.map(x => statesById[x].name).join(', ');
+
+        filterText.selectedCity = selectedState.length > 1
+          ? selectedCity?.map(x => citiesById[x].name + ' (' + citiesById[x].helper + ')').join(', ')
+        : selectedCity?.map(x => citiesById[x].name).join(', ');
+
+        filterText.selectedParty = selectedParty?.map(x => partiesById[x].name).join(', ');
+        filterText.selectedFund = selectedFund?.map(x => fundTypesById[x].name).join(', ');
+        filterText.selectedRace = selectedRace?.map(x => racesById[x].name).join(', ');
+        filterText.selectedDay = selectedDay;
       },
       mountURL(url) {
         let mountedURL = url;
