@@ -2,6 +2,9 @@
   "compilerOptions": {
     "checkJs": true
   },
+  "include": [
+    "./assets/scripts/**/*"
+  ],
   "exclude": [
     "node_modules",
     "**/node_modules/*"
