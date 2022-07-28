@@ -84,5 +84,11 @@
     "stylelint-selector-bem-pattern": "^2.1.1",
     "tiny-slider": "^2.9.1",
     "vue": "^2.6.10"
-  }
+  },
+  "browserslist": [
+    "iOS >= 11",
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
 }
