@@ -5,6 +5,10 @@ const productionDomains = [
 ];
 
 export default {
+  run: {
+    2020: '2030402020',
+    2022: '2040602022',
+  },
   api: {
     domain: (productionDomains.indexOf(window.location.hostname) > -1
       ? 'https://h72-api.appcivico.com/v1/'
