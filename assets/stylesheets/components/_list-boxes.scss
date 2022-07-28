@@ -42,10 +42,6 @@
 .list-box__option {
   display: inline;
 
-  overflow: hidden;
-
-  text-overflow: ellipsis;
-  white-space: nowrap;
   list-style-type: none;
 
   .list-box:hover &,
@@ -69,7 +65,9 @@
   display: none;
 
   padding: 0;
+  overflow: hidden;
 
+  text-overflow: ellipsis;
   white-space: nowrap;
 
   :checked + & {

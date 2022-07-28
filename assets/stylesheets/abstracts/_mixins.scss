@@ -879,6 +879,6 @@ $no-viewport: false !default;
 }
 
 @mixin focused {
-  outline: 3px dotted scale-color(palette('orange'), $alpha: -15%);
+  outline: 1px dotted scale-color(palette('main-colors', 'primary'), $alpha: -15%);
   outline-offset: 0.25rem;
 }
