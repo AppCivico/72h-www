@@ -263,8 +263,6 @@ if (window.location.href.indexOf('/') > -1) {
             : `&race_id=${this.selectedRace}`;
         }
         if (this.selectedState?.length) {
-          console.debug('this.selectedState', this.selectedState);
-
           mountedURL += Array.isArray(this.selectedState)
             ? '&'+this.selectedState.map(x => `region_id[]=${x}`).join('&')
             : `&region_id=${this.selectedState}`;
