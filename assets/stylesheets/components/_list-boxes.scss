@@ -57,7 +57,9 @@
   .list-box:hover &,
   .list-box:focus &,
   .list-box:focus-within & {
-    display: inline-block;
+    display: block;
+
+    float: left;
   }
 }
 
@@ -93,7 +95,7 @@
   .list-box:hover &,
   .list-box:focus &,
   .list-box:focus-within & {
-    display: inline;
+    display: block;
 
     &::after {
       content: none;
@@ -103,6 +105,8 @@
 
 .list-box__option-helper {
   font-size: ms(-2);
+
+  opacity: 0.65;
 
   &::before {
     content: '(';

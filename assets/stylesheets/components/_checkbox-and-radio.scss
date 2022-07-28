@@ -51,15 +51,19 @@ li label {
   width: $gutter * 0.5;
   height: $gutter * 0.5; /* 3 */
   padding: 0; /* 2 */
+  overflow: hidden;
 
   line-height: $gutter * 0.5; /* 3 */
+  color: palette('main-colors', 'quaternary');
   text-align: center;
   vertical-align: middle;
 
   cursor: pointer;
 
+  border-color: currentcolor;
   border-style: solid;
   border-width: $stroke;
+  appearance: none;
 
   &:hover {
   }
@@ -67,10 +71,16 @@ li label {
   &:focus {
     @include focused;
   }
+
+  &:checked {
+    color: palette('main-colors', 'primary');
+
+    background-color: currentcolor;
+  }
 }
 
 [type='radio'] {
-  border-radius: 50%;
+  border-radius: 100%;
 
   &:indeterminate {
   }
@@ -83,9 +93,6 @@ li label {
   border-radius: $rounded-corner;
 
   &:checked {
-    &::before {
-      content: '×';
-    }
   }
 }
 
