@@ -7,6 +7,7 @@ import HighchartsExportData from 'highcharts/modules/export-data';
 import HighchartsExport from 'highcharts/modules/exporting';
 import MicroModal from 'micromodal';
 import numeral from 'numeral';
+import Choice from './components/Choice.js';
 import config from './config';
 
 HighchartsExport(Highcharts);
@@ -14,12 +15,6 @@ HighchartsExportData(Highcharts);
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
-
-
-console.debug('Highcharts', Highcharts);
-console.debug('HighchartsExportData', HighchartsExportData);
-console.debug('HighchartsExport', HighchartsExport);
-
 
 numeral.register('locale', 'pt-br', {
   delimiters: {
@@ -46,6 +41,9 @@ const params = new URLSearchParams(uri);
 if (window.location.href.indexOf('/') > -1) {
   window.$vueHome = new Vue({
     el: '#vueHome',
+    components: {
+      choice: Choice
+    },
     data: {
       loadingBigNumbers: true,
       loadingCandidates: true,
@@ -79,23 +77,20 @@ if (window.location.href.indexOf('/') > -1) {
       candidates: null,
       candidates_page: 1,
 
-      selectedState: null,
+      selectedState: [],
+      selectedCity: [],
+      selectedParty: [],
+      selectedFund: [],
+      selectedRace: [],
 
-      selectedCity: null,
-      selectedParty: null,
-      selectedFund: null,
-      selectedRace: null,
-
-      days: ['all', 7, 15, 30, 60, 90],
+      days: [{label: 'todos', value: 'all'}, 7, 15, 30, 60, 90],
       selectedDay: 'all',
     },
     computed: {
       dataIsOutdated: {
-        // eslint-disable-next-line object-shorthand, func-names
         get: function () {
           return this.mainData?.is_outdated;
         },
-        // eslint-disable-next-line object-shorthand, func-names
         set: function (value) {
           this.mainData.is_outdated = value;
         },
@@ -106,9 +101,13 @@ if (window.location.href.indexOf('/') > -1) {
       states() {
         return window.appFilters.regions.sort((a, b) => a.name.localeCompare(b.name));
       },
+      statesById({states}=this) {
+        return states.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      },
       cities() {
         return window.appFilters.cities
-          .filter(city => city.region_id === this.selectedState?.id)
+          .filter(city => this.selectedState?.includes(String(city.region_id)))
+          .map((x) => { return { ...x, label: x.name, helper: this.statesById[x.region_id].acronym};})
           .sort((a, b) => a.name.localeCompare(b.name));
       },
       parties() {
@@ -188,62 +187,92 @@ if (window.location.href.indexOf('/') > -1) {
         }
       },
       populateParams() {
-        if (params.get('region_id')) {
-          this.selectedState = window.appFilters.regions.find(region => region.id === Number(params.get('region_id')));
+        const regionId = params.get('region_id')?.split(',').map(x => Number(x));
+        const cityId = params.get('city_id')?.split(',').map(x => Number(x));
+        const partyId = params.get('party_id')?.split(',').map(x => Number(x));
+        const fundTypeId = params.get('fund_type_id')?.split(',').map(x => Number(x));
+        const raceId = params.get('race_id')?.split(',').map(x => Number(x));
+        const days = params.get('days');
+        const epoch = Number(params.get('epoch') || 0);
+
+        if (regionId?.length) {
+          this.selectedState = window.appFilters.regions.filter(region => regionId.includes(region.id));
         }
-        if (params.get('city_id')) {
-          this.selectedCity = window.appFilters.cities.find(city => city.id === Number(params.get('city_id')));
+        if (cityId?.length) {
+          this.selectedCity = window.appFilters.cities.filter(city => cityId.includes(city.id));
         }
-        if (params.get('party_id')) {
-          this.selectedParty = window.appFilters.parties.find(party => party.id === Number(params.get('party_id')));
+        if (partyId?.length) {
+          this.selectedParty = window.appFilters.parties.filter(party => partyId.includes(party.id));
         }
-        if (params.get('fund_type_id')) {
-          this.selectedFund = window.appFilters.fund_types.find(fund => fund.id === Number(params.get('fund_type_id')));
+        if (fundTypeId?.length) {
+          this.selectedFund = window.appFilters.fund_types.filter(fund => fundTypeId.includes(fund.id));
         }
-        if (params.get('race_id')) {
-          this.selectedRace = window.appFilters.races.find(race => race.id === Number(params.get('race_id')));
+        if (raceId?.length) {
+          this.selectedRace = window.appFilters.races.filter(race => raceId.includes(race.id));
         }
-        if (params.get('days')) {
+        if (days) {
           this.selectedDay = params.get('days');
         }
-        if (params.get('epoch')) {
+        if (epoch) {
           this.epochFromParam = Number(params.get('epoch'));
         }
       },
       updateLocaleText() {
-        if (this.selectedState && !this.selectedCity) {
-          this.selectedLocaleText = this.selectedState.name;
-        } else if (this.selectedState && this.selectedCity) {
-          this.selectedLocaleText = `${this.selectedCity.name}/${this.selectedState.acronym}`;
+        if (this.selectedState?.length && !this.selectedCity?.length) {
+          this.selectedLocaleText = this.selectedState.map(x => x.name).join(', ');
+        } else if (this.selectedState?.length && this.selectedCity?.length) {
+          this.selectedLocaleText = `${this.selectedCity.map(x => x.name).join(', ')}/${this.selectedState.map((x) => x.acronym).join(', ')}`;
         } else {
           this.selectedLocaleText = 'Brasil';
         }
       },
       updateFilterText() {
-        this.filterText.selectedState = this.selectedState?.name;
-        this.filterText.selectedCity = this.selectedCity?.name;
-        this.filterText.selectedParty = this.selectedParty?.name;
-        this.filterText.selectedFund = this.selectedFund?.name;
-        this.filterText.selectedRace = this.selectedRace?.name;
+        this.filterText.selectedState = Array.isArray(this.selectedState)
+          ? this.selectedState?.map(x => x.name).join(', ')
+          : [this.selectedState];
+        this.filterText.selectedCity = Array.isArray(this.selectedCity)
+          ? this.selectedCity?.map(x => x.name).join(', ')
+          : [this.selectedCity];
+        this.filterText.selectedParty = Array.isArray(this.selectedParty)
+          ? this.selectedParty?.map(x => x.name).join(', ')
+          : [this.selectedParty];
+        this.filterText.selectedFund = Array.isArray(this.selectedFund)
+          ? this.selectedFund?.map(x => x.name).join(', ')
+          : [this.selectedFund];
+        this.filterText.selectedRace = Array.isArray(this.selectedRace)
+          ? this.selectedRace?.map(x => x.name).join(', ')
+          : [this.selectedRace];
         this.filterText.selectedDay = this.selectedDay;
       },
       mountURL(url) {
         let mountedURL = url;
 
-        if (this.selectedParty) {
-          mountedURL += `&party_id=${this.selectedParty.id}`;
+        if (this.selectedParty?.length) {
+          mountedURL += Array.isArray(this.selectedParty)
+            ? '&'+this.selectedParty.map(x => `party_id[]=${x}`).join('&')
+            : `&party_id=${this.selectedParty}`;
         }
-        if (this.selectedFund) {
-          mountedURL += `&fund_type_id=${this.selectedFund.id}`;
+        if (this.selectedFund?.length) {
+          mountedURL += Array.isArray(this.selectedFund)
+            ? '&'+this.selectedFund.map(x => `fund_type_id[]=${x}`).join('&')
+            : `&fund_type_id=${this.selectedFund}`;
         }
-        if (this.selectedRace) {
-          mountedURL += `&race_id=${this.selectedRace.id}`;
+        if (this.selectedRace?.length) {
+          mountedURL += Array.isArray(this.selectedRace)
+            ? '&'+this.selectedRace.map(x => `race_id[]=${x}`).join('&')
+            : `&race_id=${this.selectedRace}`;
         }
-        if (this.selectedState) {
-          mountedURL += `&region_id=${this.selectedState.id}`;
+        if (this.selectedState?.length) {
+          console.debug('this.selectedState', this.selectedState);
+
+          mountedURL += Array.isArray(this.selectedState)
+            ? '&'+this.selectedState.map(x => `region_id[]=${x}`).join('&')
+            : `&region_id=${this.selectedState}`;
         }
-        if (this.selectedCity) {
-          mountedURL += `&city_id=${this.selectedCity.id}`;
+        if (this.selectedCity?.length) {
+          mountedURL += Array.isArray(this.selectedCity)
+            ? '&'+this.selectedCity.map(x => `city_id[]=${x}`).join('&')
+            : `&city_id=${this.selectedCity}`;
         }
         if (this.useEpoch) {
           mountedURL += `&epoch=${this.epoch}`;
@@ -392,7 +421,7 @@ if (window.location.href.indexOf('/') > -1) {
           this.chart.showLoading();
         }
 
-        const url = `${config.api.domain}index?days=${this.selectedDay}`;
+        const url = `${config.api.domain}index?election_id=${config.run[2022]}&days=${this.selectedDay}`;
         let mountedURL = this.mountURL(url);
 
         if (this.epochFromParam) {
@@ -406,13 +435,7 @@ if (window.location.href.indexOf('/') > -1) {
           .then((response) => {
             this.mainData = response;
 
-            console.debug('response.accumulated', response.accumulated);
-
-            lala = this.handlePieData(response.accumulated.pie_charts)
-
-            console.debug('lala',lala)
-
-            this.pieCharts = lala;
+            this.pieCharts = this.handlePieData(response.accumulated.pie_charts)
             return true;
           })
           .then(() => {
@@ -429,7 +452,7 @@ if (window.location.href.indexOf('/') > -1) {
       getCandidates(page = false) {
         this.loadingCandidates = true;
 
-        const url = `${config.api.domain}candidates?results=9&days=${this.selectedDay}`;
+        const url = `${config.api.domain}candidates?election_id=${config.run[2022]}&results=9&days=${this.selectedDay}`;
         let mountedURL = this.mountURL(url);
 
         if (this.epochFromParam) {

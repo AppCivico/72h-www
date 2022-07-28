@@ -90,84 +90,55 @@
 
               <div class="filters__items" :hidden="!filterOpen">
                 <form action="" @submit.prevent="updateData">
-                  <select
+                  <choice
                     id="states"
                     name="states"
                     v-model="selectedState"
-                    @change="selectedCity = null">
-                    <option :value="null">{{ i18n "allStates" }}</option>
-                    <option
-                      v-for="state in states"
-                      :value="state">
-                        {{ "{{ state.name }}" }}
-                    </option>
-                  </select>
-                  <select
+                    :value="selectedState"
+                    @change="selectedCity = null"
+                    labelForEmpty="{{ i18n "allStates" }}"
+                    :options="states"
+                    multiple
+                  ></choice>
+                  <choice
                     id="cities"
                     name="cities"
-                    v-model="selectedCity">
-                    <option :value="null" selected>{{ i18n "allCities" }}</option>
-                    <option
-                      :value="null"
-                      v-if="selectedState === null"
-                      disabled>
-                      {{ i18n "selectState" }}
-                    </option>
-                    <option
-                      v-for="city in cities"
-                      :value="city">
-                        {{ "{{ city.name }}" }}
-                    </option>
-                  </select>
-                  <select
+                    v-model="selectedCity"
+                    labelForEmpty="{{ i18n "selectState" }}"
+                    :disabled="!selectedState.length"
+                    :options="cities"
+                    multiple
+                  ></choice>
+                  <choice
                     id="parties"
                     name="parties"
-                    v-model="selectedParty">
-                    <option :value="null">{{ i18n "allParties" }}</option>
-                    <option
-                      v-for="party in parties"
-                      :value="party">
-                        {{ "{{ party.name }}" }}
-                        {{ "{{ party.acronym ? `- ${party.acronym}` : '' }}" }}
-                    </option>
-                  </select>
-                  <select
+                    v-model="selectedParty"
+                    :options="parties"
+                    labelForEmpty="{{ i18n "allParties" }}"
+                    multiple
+                  ></choice>
+                  <choice
                     id="funds"
                     name="funds"
-                    v-model="selectedFund">
-                    <option :value="null">{{ i18n "allFunds" }}</option>
-                    <option
-                      v-for="fund_type in fund_types"
-                      :value="fund_type">
-                        {{ "{{ fund_type.name }}" }}
-                    </option>
-                  </select>
-                  <select
+                    v-model="selectedFund"
+                    labelForEmpty="{{ i18n "allFunds" }}"
+                    :options="fund_types"
+                    multiple
+                  ></choice>
+                  <choice
                     id="etinicity"
                     name="etinicity"
-                    v-model="selectedRace">
-                    <option :value="null">{{ i18n "allEthnicity" }}</option>
-                    <option
-                      v-for="race in races"
-                      :value="race">
-                        {{ "{{ race.name }}" }}
-                    </option>
-                  </select>
-                  <select
+                    v-model="selectedRace"
+                    labelForEmpty="{{ i18n "allEthnicity" }}"
+                    :options="races"
+                    multiple
+                  ></choice>
+                  <choice
                     id="days"
                     name="days"
-                    v-model="selectedDay">
-                    <option
-                      v-for="day in days"
-                      :value="day">
-                      <template v-if='day === "all"'>
-                        {{ i18n "allDays" }}
-                      </template>
-                      <template v-else>
-                        {{ i18n "lastXDays" (dict "days" "{{ day }}") }}
-                      </template>
-                    </option>
-                  </select>
+                    v-model="selectedDay"
+                    :options="days"
+                  ></choice>
                   <button class="button button--primary">{{ i18n "apply" }}</button>
                 </form>
               </div>

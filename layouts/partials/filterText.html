@@ -3,23 +3,23 @@
   <span v-for="(value, key, index) in filterText">
     <template v-if="key === 'selectedState'">
       <template v-if="value">{{ "{{ value }}" }}</template>
-      <template v-else>{{ i18n "allStates" }}</template>,
+      <template v-else>{{ i18n "allStates" }}</template>;
     </template>
     <template v-if="key === 'selectedCity'">
       <template v-if="value">{{ "{{ value }}" }}</template>
-      <template v-else>{{ i18n "allCities" }}</template>,
+      <template v-else>{{ i18n "allCities" }}</template>;
     </template>
     <template v-if="key === 'selectedParty'">
       <template v-if="value">{{ "{{ value }}" }}</template>
-      <template v-else>{{ i18n "allParties" }}</template>,
+      <template v-else>{{ i18n "allParties" }}</template>;
     </template>
     <template v-if="key === 'selectedFund'">
       <template v-if="value">{{ "{{ value }}" }}</template>
-      <template v-else>{{ i18n "allFunds" }}</template>,
+      <template v-else>{{ i18n "allFunds" }}</template>;
     </template>
     <template v-if="key === 'selectedRace'">
       <template v-if="value">{{ "{{ value }}" }}</template>
-      <template v-else>{{ i18n "allEthnicity" }}</template>,
+      <template v-else>{{ i18n "allEthnicity" }}</template>;
     </template>
     <template v-if="key === 'selectedDay'">
       <template v-if='value === "all"'>
