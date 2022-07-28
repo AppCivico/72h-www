@@ -871,3 +871,8 @@ $no-viewport: false !default;
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
+
+@mixin focused {
+  outline: 3px dotted scale-color(palette('orange'), $alpha: -15%);
+  outline-offset: 0.25rem;
+}

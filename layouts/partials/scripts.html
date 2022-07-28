@@ -1,3 +1,7 @@
+<script type="text/x-template" id="choice-markup">
+  {{ partial "components/choice.html" }}
+</script>
+
 <script>
   {{ if eq (getenv "NODE_ENV") "development" }}
     {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters" | default $.Site.Data.filters }}

@@ -1,0 +1,108 @@
+@use '../abstracts' as my;
+
+/* checkboxes and radio buttons
+---------------------------------------------------------------------------- */
+
+/**
+ * All checkboxes and readio buttons as list-items
+ * <li><label for="id">label</label> <input type="checkbox" id="id" /></li>
+ */
+fieldset ol,
+fieldset ul {
+  padding: 0;
+  margin: 0;
+}
+
+fieldset ol li,
+fieldset ul li {
+  display: block;
+
+  padding: 0;
+  margin: 0;
+
+  white-space: nowrap;
+  list-style-type: none;
+
+  &::before {
+    content: none;
+  }
+}
+
+li label {
+  display: inline;
+
+  padding: 0 0.5em;
+
+  white-space: normal;
+}
+
+/**
+ * It's recommended that you don't attempt to style these elements.
+ * Firefox's implementation doesn't respect box-sizing, padding, or width.
+ *
+ * 1. Address box sizing set to `content-box` in IE 8/9/10.
+ * 2. Remove excess padding in IE 8/9/10.
+ * 3. Reset height (applied by a rule above).
+ */
+[type='checkbox'],
+[type='radio'] {
+  box-sizing: border-box; /* 1 */
+
+  width: $gutter * 0.5;
+  height: $gutter * 0.5; /* 3 */
+  padding: 0; /* 2 */
+
+  line-height: $gutter * 0.5; /* 3 */
+  text-align: center;
+  vertical-align: middle;
+
+  cursor: pointer;
+
+  border-style: solid;
+  border-width: $stroke;
+
+  &:hover {
+  }
+
+  &:focus {
+    @include focused;
+  }
+}
+
+[type='radio'] {
+  border-radius: 50%;
+
+  &:indeterminate {
+  }
+
+  &:checked {
+  }
+}
+
+[type='checkbox'] {
+  border-radius: $rounded-corner;
+
+  &:checked {
+    &::before {
+      content: '×';
+    }
+  }
+}
+
+li:hover {
+  > input,
+  > label {
+    color: palette('black');
+  }
+}
+
+li :checked + label {
+  font-weight: bold;
+}
+
+[disabled] + label,
+:disabled + label {
+  color: palette('disabled', 'foreground');
+
+  cursor: default;
+}

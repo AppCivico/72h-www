@@ -1,0 +1,116 @@
+.list-box {
+  position: relative;
+
+  height: $gutter;
+  margin-top: 0;
+  margin-bottom: 0;
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  /// @see https://easings.net/#easeOutBack
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-duration: 0.3s;
+  transition-property: height, margin-top, margin-bottom, padding;
+
+  &:hover,
+  &:focus,
+  &:focus-within {
+    z-index: layer('default');
+
+    height: $gutter * 6;
+    padding: $gutter * 0.5;
+    margin-top: $gutter * -1;
+    margin-bottom: $gutter * -4;
+    overflow: auto;
+    overflow-x: clip;
+    overflow-y: auto;
+
+    background-color: palette('white');
+    border-width: 1px;
+    border-radius: 5px;
+    box-shadow: 0 3px 3px palette('shadow', 'buttons');
+  }
+
+  &.list-box--empty,
+  &:empty {
+    pointer-events: none;
+  }
+}
+
+.list-box__option {
+  display: inline;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  list-style-type: none;
+
+  .list-box:hover &,
+  .list-box:focus &,
+  .list-box:focus-within & {
+    display: block;
+  }
+}
+
+.list-box__box {
+  display: none;
+
+  .list-box:hover &,
+  .list-box:focus &,
+  .list-box:focus-within & {
+    display: inline-block;
+  }
+}
+
+.list-box__option-label {
+  display: none;
+
+  padding: 0;
+
+  white-space: nowrap;
+
+  :checked + & {
+    display: inline-block;
+
+    font-weight: inherit;
+
+    &::after {
+      float: right;
+
+      color: palette('gray');
+
+      content: ', ';
+    }
+  }
+
+  .list-box__option--last-selected > & {
+    &::after {
+      content: none;
+    }
+  }
+
+  .list-box:hover &,
+  .list-box:focus &,
+  .list-box:focus-within & {
+    display: inline;
+
+    &::after {
+      content: none;
+    }
+  }
+}
+
+.list-box__option-helper {
+  font-size: ms(-2);
+
+  &::before {
+    content: '(';
+  }
+
+  &::after {
+    content: ')';
+  }
+}
