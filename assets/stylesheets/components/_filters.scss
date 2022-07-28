@@ -75,8 +75,12 @@
   display: flex;
 
   max-height: 25rem;
-  // overflow: hidden;
+
   transition: max-height 0.3s;
+
+  &[hidden] {
+    overflow: hidden;
+  }
 
   @media screen and (min-width: breakpoint('desktop')) {
     max-height: 5rem;
