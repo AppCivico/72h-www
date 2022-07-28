@@ -20,9 +20,7 @@
 {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.min.js" "vendor/vue.js") | resources.Fingerprint "sha512" }}
 <script src="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}"></script>
 
-{{/* $secureJS := resources.Get "scripts/index.js" | js.Build | resources.Babel | resources.Minify | resources.Fingerprint "sha512" */}}
-{{ $secureJS := resources.Get "scripts/index.js" | js.Build | resources.Minify | resources.Fingerprint "sha512" }}
-
+{{ $secureJS := resources.Get "scripts/index.js" | resources.Babel | js.Build | resources.Minify | resources.Fingerprint "sha512" }}
 <script type="text/javascript" src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"></script>
 
 <!-- Global site tag (gtag.js) - Google Analytics -->
