@@ -86,6 +86,7 @@
     }
   }
 
+  .list-box__option--empty > &,
   .list-box__option--last-selected > & {
     &::after {
       content: none;

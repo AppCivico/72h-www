@@ -16,6 +16,24 @@
   </option>
 </select>
 <ul class="list-box" :class="{'list-box--empty': !normalizedOptions.length}" tabindex="0" v-else>
+  <li class="list-box__option list-box__option--empty">
+    <input
+      :id="`option__${ name }--empty`"
+      value=""
+      :checked="!currentValues.length"
+      :type="normalizedType"
+      :name="name"
+      v-bind="$attrs"
+      @input="emit($event)"
+      class="list-box__box"
+    />
+    <label
+      :for="`option__${ name }--empty`"
+      class="list-box__option-label"
+      >
+      {{ "{{ labelForEmpty }}" }}
+    </label>
+  </li>
   <li
     v-for="option in normalizedOptions"
     :key="option.value"

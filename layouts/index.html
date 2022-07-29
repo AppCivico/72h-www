@@ -96,7 +96,7 @@
                     v-model="selectedState"
                     :value="selectedState"
                     @change="selectedCity = null"
-                    labelForEmpty="{{ i18n "allStates" }}"
+                    label-for-empty="{{ i18n "allStates" }}"
                     :options="states"
                     multiple
                   ></choice>
@@ -104,7 +104,7 @@
                     id="cities"
                     name="cities"
                     v-model="selectedCity"
-                    labelForEmpty="{{ i18n "selectState" }}"
+                    label-for-empty="{{ i18n "selectState" }}"
                     :disabled="!selectedState.length"
                     :options="cities"
                     multiple
@@ -114,14 +114,14 @@
                     name="parties"
                     v-model="selectedParty"
                     :options="parties"
-                    labelForEmpty="{{ i18n "allParties" }}"
+                    label-for-empty="{{ i18n "allParties" }}"
                     multiple
                   ></choice>
                   <choice
                     id="funds"
                     name="funds"
                     v-model="selectedFund"
-                    labelForEmpty="{{ i18n "allFunds" }}"
+                    label-for-empty="{{ i18n "allFunds" }}"
                     :options="fund_types"
                     multiple
                   ></choice>
@@ -129,7 +129,7 @@
                     id="etinicity"
                     name="etinicity"
                     v-model="selectedRace"
-                    labelForEmpty="{{ i18n "allEthnicity" }}"
+                    label-for-empty="{{ i18n "allEthnicity" }}"
                     :options="races"
                     multiple
                   ></choice>

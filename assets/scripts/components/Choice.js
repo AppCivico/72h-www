@@ -66,10 +66,13 @@ export default {
       const { multiple = false, currentValues = [] } = this;
 
       if (multiple) {
-        const newValues = e.target.checked
-          ? currentValues.concat([value])
-          // eslint-disable-next-line eqeqeq
-          : currentValues.filter((x) => x != value);
+        let newValues = [];
+        if (value) {
+          newValues = e.target.checked
+            ? currentValues.concat([value])
+            // eslint-disable-next-line eqeqeq
+            : currentValues.filter((x) => x != value);
+        }
         this.$emit('input', newValues);
       } else {
         this.$emit('input', value);
