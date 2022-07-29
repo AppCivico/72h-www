@@ -54,10 +54,10 @@ export default {
       }
       return 'checkbox';
     },
-    lastSelected({ currentValues } = this) {
-      return currentValues.length
-        ? currentValues[currentValues.length - 1]
-        : '';
+    lastSelected({ currentValues, normalizedOptions } = this) {
+      return !currentValues.length
+        ? ''
+        : normalizedOptions.findLast((x) => currentValues.includes(String(x.value)))?.value;
     }
   },
   methods: {
