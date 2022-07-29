@@ -1,9 +1,9 @@
 - id: accumulatedValue
   translation: "Valor Total Acumulado dos Repasses"
 - id: accumulatedFemale
-  translation: "Valor dos repasses acumulados para o genêro feminino"
+  translation: "Valor dos repasses acumulados para o gênero feminino"
 - id: accumulatedMale
-  translation: "Valor dos repasses acumulados para o genêro masculino"
+  translation: "Valor dos repasses acumulados para o gênero masculino"
 - id: accumulatedValueSpecial
   translation: "Valor acumulado de repasses do Fundo Especial de Financiamento de Campanhas (FEFC)"
 - id: accumulatedValueParty
@@ -47,7 +47,7 @@
 - id: days
   translation: "Dias"
 - id: developedBy
-  translation: "desenvolvido por appcívico"
+  translation: "desenvolvido por AppCívico"
 - id: entriesQuantity
   translation: "Quantidade de Lançamentos:"
 - id: ethnicity
