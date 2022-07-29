@@ -70,7 +70,6 @@
   }
 }
 
-
 .filters__items {
   display: flex;
 
@@ -79,6 +78,7 @@
   transition: max-height 0.3s;
 
   &[hidden] {
+    max-height: 0;
     overflow: hidden;
   }
 
@@ -87,20 +87,15 @@
   }
 }
 
-.filters__items[hidden] {
-  max-height: 0;
-}
-
-
 .filters__items form {
   display: flex;
 
   flex-wrap: wrap;
 
+  width: 100%;
+
   @media screen and (min-width: breakpoint('desktop')) {
     flex-wrap: nowrap;
-
-    width: 100%;
   }
 }
 

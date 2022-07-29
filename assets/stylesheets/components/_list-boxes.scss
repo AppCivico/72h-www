@@ -21,8 +21,6 @@
 
     height: $gutter * 6;
     padding: $gutter * 0.5;
-    margin-top: $gutter * -1;
-    margin-bottom: $gutter * -4;
     overflow: auto;
     overflow-x: clip;
     overflow-y: auto;
@@ -31,6 +29,11 @@
     border-width: 1px;
     border-radius: 5px;
     box-shadow: 0 3px 3px palette('shadow', 'buttons');
+
+    @media screen and (min-width: breakpoint('desktop')) {
+      margin-top: $gutter * -1;
+      margin-bottom: $gutter * -4;
+    }
   }
 
   &.list-box--empty,
