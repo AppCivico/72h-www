@@ -8,6 +8,47 @@
   margin: 0 auto;
 }
 
+.filterable-area {
+  @include clearfix;
+
+  position: relative;
+  z-index: layer('default');
+
+  padding-top: $gutter * 2;
+  margin-bottom: $gutter * 2;
+
+  background-color: palette('white');
+  box-shadow: 0 8px 21px -3px palette('shadow', 'light'), 0 -3px 21px -3px palette('shadow', 'light');
+
+  .container {
+    display: block;
+  }
+
+  .filters {
+    @media screen and (min-width: breakpoint('wide')) {
+      position: sticky;
+      top: $gutter;
+      z-index: layer('default');
+
+      float: left;
+      width: 20%;
+      padding-right: $gutter;
+
+      ~ * {
+        width: 80%;
+        margin-left: 20%;
+
+        transition: width margin-left 0.3s;
+      }
+
+      &[hidden] ~ * {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+}
+
 html {
   scroll-behavior: smooth;
 }

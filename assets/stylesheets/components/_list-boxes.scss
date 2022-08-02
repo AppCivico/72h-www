@@ -34,6 +34,11 @@
       margin-top: $gutter * -1;
       margin-bottom: $gutter * -4;
     }
+
+    @media screen and (min-width: breakpoint('wide')) {
+      margin-top: 0;
+      margin-bottom: $gutter;
+    }
   }
 
   &.list-box--empty,
