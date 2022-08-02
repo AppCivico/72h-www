@@ -1,0 +1,29 @@
+%hardware-acceleration {
+  perspective: 1000px;
+
+  transform: translateZ(0);
+
+  will-change: height padding-top padding-bottom;
+
+  backface-visibility: hidden;
+}
+
+.expand-enter-active[class],
+.expand-leave-active[class] {
+  @extend %hardware-acceleration;
+
+  overflow: hidden;
+
+  transition-timing-function: ease-in-out;
+  transition-duration: 300ms;
+  transition-property: height opacity padding-top padding-bottom;
+}
+
+.expand-enter[class],
+.expand-leave-to[class] {
+  @extend %hardware-acceleration;
+
+  height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}

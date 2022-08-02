@@ -8,6 +8,7 @@ import HighchartsExport from 'highcharts/modules/exporting';
 import MicroModal from 'micromodal';
 import numeral from 'numeral';
 import Choice from './components/Choice.js';
+import TransitionExpand from './components/TransitionExpand.js';
 import config from './config';
 
 HighchartsExport(Highcharts);
@@ -42,7 +43,8 @@ if (window.location.href.indexOf('/') > -1) {
   window.$vueHome = new Vue({
     el: '#vueHome',
     components: {
-      choice: Choice
+      choice: Choice,
+      'transition-expand': TransitionExpand,
     },
     data: {
       loadingBigNumbers: true,

@@ -63,8 +63,8 @@
                 </div>
               </template>
             </div>
-
           </div>
+
           <div class="filterable-area">
             <div class="container">
               <button
@@ -90,9 +90,8 @@
 
               <p>{{ i18n "checkFound" }}</p>
 
-              <div class="filters" id="filters">
-
-                <div class="filters__items" :hidden="!filterOpen">
+              <div class="filters" id="filters" :hidden="!filterOpen">
+                <div class="filters__items">
                   <form action="" @submit.prevent="updateData">
                     <choice
                       id="states"
@@ -148,38 +147,38 @@
                 </div>
               </div>
 
-              <div id="js-main-chart" class="main-chart"></div>
+              <div id="js-main-chart" class="main-chart" :aria-busy="loadingChartData"></div>
 
-              <div class="big-numbers" :aria-busy="this.loadingChartData">
-                <div>
-                </div>
-                <div class="big-number__box big-number__box--icon big-number__box--icon-total">
-                  <h1>{{ i18n "accumulatedValue" }}</h1>
-                  {{ partial "filterText" }}
-                  <p v-else>
-                    {{ i18n "TSEData" }}
-                  </p>
-                  <span class="big-number__number" v-html="chartTotal"></span>
-                </div>
+              <transition-expand>
+                <div class="big-numbers" v-if="!loadingChartData">
+                  <div class="big-number__box big-number__box--icon big-number__box--icon-total">
+                    <h1>{{ i18n "accumulatedValue" }}</h1>
+                    {{ partial "filterText" }}
+                    <p v-else>
+                      {{ i18n "TSEData" }}
+                    </p>
+                    <span class="big-number__number" v-html="chartTotal"></span>
+                  </div>
 
-                <div class="big-number__box big-number__box--icon big-number__box--icon-female">
-                  <h1>{{ i18n "accumulatedFemale" }}</h1>
-                  {{ partial "filterText" }}
-                  <p v-else>
-                    {{ i18n "TSEData" }}
-                  </p>
-                  <span class="big-number__number" v-html="chartFemale"></span>
-                </div>
+                  <div class="big-number__box big-number__box--icon big-number__box--icon-female">
+                    <h1>{{ i18n "accumulatedFemale" }}</h1>
+                    {{ partial "filterText" }}
+                    <p v-else>
+                      {{ i18n "TSEData" }}
+                    </p>
+                    <span class="big-number__number" v-html="chartFemale"></span>
+                  </div>
 
-                <div class="big-number__box big-number__box--icon big-number__box--icon-male">
-                  <h1>{{ i18n "accumulatedMale" }}</h1>
-                  {{ partial "filterText" }}
-                  <p v-else>
-                    {{ i18n "TSEData" }}
-                  </p>
-                  <span class="big-number__number" v-html="chartMale"></span>
+                  <div class="big-number__box big-number__box--icon big-number__box--icon-male">
+                    <h1>{{ i18n "accumulatedMale" }}</h1>
+                    {{ partial "filterText" }}
+                    <p v-else>
+                      {{ i18n "TSEData" }}
+                    </p>
+                    <span class="big-number__number" v-html="chartMale"></span>
+                  </div>
                 </div>
-              </div>
+              </transition-expand>
 
               <div class="candidates" id="js-candidate-box">
                 <button
@@ -194,65 +193,64 @@
                 <div class="candidates__subtitle">
                   {{ partial "filterText" }}
                 </div>
-                <div
-                  :aria-busy="loadingCandidates"
-                  class="candidates__container">
-                  <template v-if="candidates && candidates.candidates.length > 0">
-                    <div
-                      v-for="candidate in candidates.candidates"
-                      class="candidates__candidate">
-                      <img
-                        class="candidates__image"
-                        :src="candidate.picture"
-                        @error="candidate.picture = 'assets/images/no-picture.svg'"
-                        :alt="candidate.name">
-                      <div class="candidates__text">
-                        <p class="candidates__name">
-                          {{ "{{ candidate.name }}" }}
-                          - {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
-                          - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
-                        </p>
-                        <p class="candidates__info">
-                          {{ "{{ candidate.total_transfers }}" }} {{ i18n "transfers" }}
-                        </p>
-                        <p class="candidates__info">
-                          {{ "{{ candidate.city.name }}, {{ candidate.city.region.name }}" }}
-                        </p>
-                        <p class="candidates__info">
-                          {{ i18n "total" }} {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
-                        </p>
-                        <a
-                          :href="candidate.divulgacand_url"
-                          target="_blank"
-                          class="button">
-                          {{ i18n "seeOnTSE" }}
-                        </a>
+                <transition-expand>
+                  <div v-if="!loadingCandidates" class="candidates__container">
+                    <template v-if="candidates && candidates.candidates.length > 0">
+                      <div
+                        v-for="candidate in candidates.candidates"
+                        class="candidates__candidate">
+                        <img
+                          class="candidates__image"
+                          :src="candidate.picture"
+                          @error="candidate.picture = 'assets/images/no-picture.svg'"
+                          :alt="candidate.name">
+                        <div class="candidates__text">
+                          <p class="candidates__name">
+                            {{ "{{ candidate.name }}" }}
+                            - {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
+                            - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
+                          </p>
+                          <p class="candidates__info">
+                            {{ "{{ candidate.total_transfers }}" }} {{ i18n "transfers" }}
+                          </p>
+                          <p class="candidates__info">
+                            {{ "{{ candidate.city.name }}, {{ candidate.city.region.name }}" }}
+                          </p>
+                          <p class="candidates__info">
+                            {{ i18n "total" }} {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
+                          </p>
+                          <a
+                            :href="candidate.divulgacand_url"
+                            target="_blank"
+                            class="button">
+                            {{ i18n "seeOnTSE" }}
+                          </a>
+                        </div>
                       </div>
+                    </template>
+                    <div
+                      v-else
+                      class="no-results no-results--candidates">
+                      <img src="assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
+                      <p>{{ i18n "noResultsCandidates" }}</p>
                     </div>
-                  </template>
-                  <div
-                    v-else
-                    class="no-results no-results--candidates">
-                    <img src="assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
-                    <p>{{ i18n "noResultsCandidates" }}</p>
-                  </div>
+                    <div class="pagination">
+                      <button
+                        v-if="candidates_page > 1"
+                        @click="getCandidates(candidates_page - 1)"
+                        class="button button--medium">
+                        {{ i18n "previous" }}
+                      </button>
 
-                  <div class="pagination">
-                    <button
-                      v-if="candidates_page > 1"
-                      @click="getCandidates(candidates_page - 1)"
-                      class="button button--medium">
-                      {{ i18n "previous" }}
-                    </button>
-
-                    <button
-                      v-if="candidates && candidates.has_more"
-                      @click="getCandidates(candidates_page + 1)"
-                      class="button button--medium">
-                      {{ i18n "next" }}
-                    </button>
+                      <button
+                        v-if="candidates && candidates.has_more"
+                        @click="getCandidates(candidates_page + 1)"
+                        class="button button--medium">
+                        {{ i18n "next" }}
+                      </button>
+                    </div>
                   </div>
-                </div>
+                </transition-expand>
               </div>
             </div>
           </div>
