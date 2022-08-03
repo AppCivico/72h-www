@@ -55,10 +55,10 @@
               </template>
             </div>
 
-            <div class="pie-charts">
+            <div class="intro-charts">
               <h1 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h1>
-              <template v-for="chart in pieCharts">
-                <div class="pie-charts__chart">
+              <template v-for="chart in introCharts">
+                <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`">
                   <div :id="`js-chart__${chart.type}`"></div>
                 </div>
               </template>

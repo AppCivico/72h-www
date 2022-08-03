@@ -10,6 +10,8 @@ import numeral from 'numeral';
 import Choice from './components/Choice.js';
 import TransitionExpand from './components/TransitionExpand.js';
 import config from './config';
+import colorsPerTypeOfData from './utilities/colorsPerTypeOfData';
+import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 
 HighchartsExport(Highcharts);
 HighchartsExportData(Highcharts);
@@ -68,7 +70,7 @@ if (window.location.href.indexOf('/') > -1) {
       mainData: null,
       epochFromParam: null,
       useEpoch: false,
-      pieCharts: [],
+      introCharts: [],
       pieColors: [
         '#dc5b64',
         '#4e79e6',
@@ -138,13 +140,13 @@ if (window.location.href.indexOf('/') > -1) {
         return datesArr.map(date => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       chartTotal() {
-        return this.formatCurrencyNoAbbr(this.totalArray.reduce((a, b) => a + b, 0));
+        return formatCurrencyNoAbbr(this.totalArray.reduce((a, b) => a + b, 0));
       },
       chartMale() {
-        return this.formatCurrencyNoAbbr(this.maleArray.reduce((a, b) => a + b, 0));
+        return formatCurrencyNoAbbr(this.maleArray.reduce((a, b) => a + b, 0));
       },
       chartFemale() {
-        return this.formatCurrencyNoAbbr(this.femaleArray.reduce((a, b) => a + b, 0));
+        return formatCurrencyNoAbbr(this.femaleArray.reduce((a, b) => a + b, 0));
       },
       formatChartSeries() {
         return [{
@@ -168,7 +170,7 @@ if (window.location.href.indexOf('/') > -1) {
       async mainData() {
         await this.handleData();
         await this.generateChart();
-        await this.generatePieCharts();
+        await this.generateIntroCharts();
       },
     },
     mounted() {
@@ -179,7 +181,7 @@ if (window.location.href.indexOf('/') > -1) {
       this.getCandidates();
       this.setChartOptions();
       this.updateFilterText();
-      this.generatePieCharts();
+      this.generateIntroCharts();
 
       MicroModal.init();
 
@@ -358,6 +360,29 @@ if (window.location.href.indexOf('/') > -1) {
           return true;
         });
       },
+      handleColumnData(data) {
+        const colorsFor = colorsPerTypeOfData;
+
+        return data.map((item) => {
+          const newItem = item;
+
+          newItem.xAxis = {
+            categories: [],
+          };
+
+          newItem.total = 0;
+
+          newItem.data.sort((a, b) => a.name.localeCompare(b.name));
+
+          for (let i = 0; i < newItem.data.length; i+= 1) {
+            newItem.data[i].color = colorsFor[item.type]?.[i];
+            newItem.xAxis.categories.push(newItem.data[i].name);
+            newItem.data[i].name = null;
+            newItem.total += newItem.data[i].y;
+          }
+          return newItem;
+        });
+      },
       handlePieData(data) {
         return data.map((item) => {
           const newItem = item;
@@ -398,16 +423,7 @@ if (window.location.href.indexOf('/') > -1) {
       formatCurrency(value) {
         return numeral(value).format('$0[.]00 a').replace('.', ',');
       },
-      formatCurrencyNoAbbr(value) {
-        // return numeral(value).format('$0.0,[00]');
-        const formatter = new Intl.NumberFormat('pt-BR', {
-          style: 'currency',
-          currency: 'BRL',
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0,
-        });
-        return formatter.format(value);
-      },
+      formatCurrencyNoAbbr,
       formatNumeral(value) {
         return numeral(value).format();
       },
@@ -447,7 +463,7 @@ if (window.location.href.indexOf('/') > -1) {
           .then((response) => {
             this.mainData = response;
 
-            this.pieCharts = this.handlePieData(response.accumulated.pie_charts)
+            this.introCharts = this.handleColumnData(response.accumulated.pie_charts)
             return true;
           })
           .then(() => {
@@ -532,14 +548,23 @@ if (window.location.href.indexOf('/') > -1) {
         });
         return true;
       },
-      generatePieCharts() {
-        this.pieCharts.forEach((chart) => {
+      generateIntroCharts() {
+        this.introCharts.forEach((chart) => {
           Highcharts.chart(`js-chart__${chart.type}`, {
             chart: {
               plotBackgroundColor: null,
               plotBorderWidth: null,
               plotShadow: false,
-              type: 'pie',
+              type: 'column',
+            },
+            xAxis: chart.xAxis,
+            yAxis: {
+              labels: {
+                enabled: false,
+              },
+              title: {
+                enabled: false,
+              }
             },
             title: {
               useHTML: true,
@@ -549,14 +574,15 @@ if (window.location.href.indexOf('/') > -1) {
                 fontSize: '1.26562em',
                 textTransform: 'uppercase',
               },
-              text: `por <span style="color: ${chart.colors[0]}">${window.appDictionary[chart.type]}</span>
-              <span style="color: ${chart.colors[0]}">${this.formatCurrencyNoAbbr(chart.total)}</span>`,
+              text: `por <span style="color: ${chart.data[0].color}">${window.appDictionary[chart.type]}</span>`,
             },
             credits: {
               enabled: false,
             },
             tooltip: {
-              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
+              pointFormatter: function () {
+                return window.$vueHome.formatCurrencyNoAbbr(this.y);
+              },
             },
             accessibility: {
               point: {
@@ -569,25 +595,21 @@ if (window.location.href.indexOf('/') > -1) {
               },
             },
             plotOptions: {
-              pie: {
+              column: {
                 allowPointSelect: true,
                 cursor: 'pointer',
-                colors: chart.colors,
                 dataLabels: {
                   enabled: true,
-                  format: '<b>{point.name}</b><br>{point.percentage:.1f} %',
-                  // distance: -50,
-                  // filter: {
-                  //   property: 'percentage',
-                  //   operator: '>',
-                  //   value: 4,
-                  // },
+                  pointFormatter: function () {
+                    return `${Number(this.y / chart.total * 100).toFixed(2)}%`;
+                  },
                 },
               },
             },
             series: [{
               name: 'Share',
               data: chart.data,
+              showInLegend: false
             }],
           });
         });
