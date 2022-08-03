@@ -35,29 +35,6 @@
   @media screen and (min-width: breakpoint('desktop')) {
     width: 50%;
   }
-
-  &::after {
-    display: block;
-
-    width: 80%;
-    height: 0.062rem;
-    margin-top: 1rem;
-    margin-right: auto;
-    margin-left: auto;
-
-    content: '';
-
-    background-image: linear-gradient(
-      90deg,
-      palette('gradient', 'white') 0%,
-      palette('gradient', 'grey') 46%,
-      palette('gradient', 'white') 100%);
-
-
-    @media screen and (min-width: breakpoint('desktop')) {
-      width: 100%;
-    }
-  }
 }
 
 .intro-charts__chart--party,
