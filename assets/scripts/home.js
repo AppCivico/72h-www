@@ -559,12 +559,9 @@ if (window.location.href.indexOf('/') > -1) {
             },
             xAxis: chart.xAxis,
             yAxis: {
-              labels: {
-                enabled: false,
-              },
               title: {
-                enabled: false,
-              }
+                text: 'valor (R$)',
+              },
             },
             title: {
               useHTML: true,
