@@ -47,6 +47,10 @@
       }
     }
   }
+
+  .filters__items form {
+    background-color: palette('gray', 'x-light');
+  }
 }
 
 html {
