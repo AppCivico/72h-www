@@ -1,12 +1,11 @@
 /**
  * 1. Add text decoration inheritance in all browsers (opinionated).
- * 2. Add vertical alignment inheritence in all browsers (opinionated).
+ * 2. Add vertical alignment inheritance in all browsers (opinionated).
  */
 *,
 ::before,
 ::after {
   line-height: inherit;
-
   text-decoration: inherit; /* 1 */
   vertical-align: inherit; /* 2 */
 }
@@ -15,12 +14,12 @@
  * Basic typography style for copy text
  */
 body {
-  font-weight: font-weight('text');
-  font-size: $body-font-size;
-  line-height: $leading;
   font-family: $monteserrat-font-stack;
-
+  font-size: $body-font-size;
+  font-weight: font-weight('text');
+  line-height: $leading;
   color: palette('text', 'dark');
+  vertical-align: baseline;
 }
 
 /* HEADINGS AND TITLES */
@@ -40,8 +39,9 @@ legend,
 caption,
 details > summary {
   width: 100%;
-  font-weight: font-weight('heading');
+
   font-family: $monteserrat-font-stack;
+  font-weight: font-weight('heading');
   font-feature-settings: 'case' 1, 'cpsp' 1, 'cswh' 1, 'liga' 1, 'locl' 1, 'lnum' 1, 'pnum' 1, 'titl' 1, 'zero' 1;
 
   break-after: avoid;
@@ -57,14 +57,12 @@ h6 a,
 legend a,
 caption a,
 dt a {
+  color: inherit;
   text-decoration: inherit;
 
-  color: inherit;
-
   &:link {
-    text-decoration: inherit;
-
     color: inherit;
+    text-decoration: inherit;
   }
 }
 
@@ -85,9 +83,11 @@ p {
 
 .border-title {
   position: relative;
+
   width: 100%;
   margin-top: 0;
   margin-bottom: 1rem;
+
   font-size: ms(3);
   line-height: 1.2;
   text-transform: uppercase;
@@ -95,10 +95,13 @@ p {
   &::before {
     position: absolute;
     top: -0.6rem;
+
     width: 4.5rem;
     height: 0.25rem;
-    border-radius: 10px;
+
     content: '';
+
+    border-radius: 10px;
   }
 
   @media screen and (min-width: breakpoint('tablet')) {
@@ -131,28 +134,32 @@ p {
 }
 
 .big-text {
-  font-weight: font-weight('bold');
   font-size: ms(1);
+  font-weight: font-weight('bold');
   color: palette('purple');
 }
 
 .simple-link:link,
 .simple-link:visited {
-  font-weight: bold;
   font-size: ms(2);
-  text-decoration: underline;
+  font-weight: bold;
   color: palette('orange');
+  text-decoration: underline;
 }
 
 .icon-link {
   &::before {
     display: inline-block;
+
     width: 1.5em;
     height: 1.5em;
     margin-right: 0.3em;
+
     vertical-align: top;
-    background-size: cover;
+
     content: '';
+
+    background-size: cover;
   }
 }
 
@@ -245,9 +252,8 @@ abbr {
  */
 dfn {
   @extend %abbr-title;
-
-  font-style: italic; /* 1 */
   font-size: 1em;
+  font-style: italic; /* 1 */
 }
 
 /**
@@ -311,7 +317,6 @@ sup {
 
   font-size: 83.3333%; /* 1 */
   line-height: 0;
-
   vertical-align: baseline;
 }
 
@@ -345,8 +350,8 @@ kbd,
 pre,
 samp,
 var {
-  font-size: 1em; /* 1 */
   font-family: $code-font-stack, monospace, monospace; /* 2 */
+  font-size: 1em; /* 1 */
 }
 
 code {
@@ -390,7 +395,6 @@ s {
 %updated {
   &::before {
     font-weight: bold;
-
     text-decoration: none;
 
     content: '[update] ';
@@ -464,8 +468,8 @@ del {
 
 blockquote {
   font-size: ms(3);
-  text-align: center;
   color: palette('black');
+  text-align: center;
 
   @media screen and (min-width: breakpoint('desktop')) {
     padding-top: 2em;
@@ -488,7 +492,6 @@ blockquote > p {
 q,
 blockquote {
   font-style: italic;
-
   color: palette('quotes');
 }
 
@@ -523,7 +526,6 @@ blockquote.verse p { // sass-lint:disable-line no-qualifying-elements
   display: inline-block;
 
   width: auto;
-
   margin-right: auto;
   margin-left: auto;
 
