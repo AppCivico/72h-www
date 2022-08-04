@@ -27,7 +27,17 @@
                     {{ i18n "candidatesWhoReceivedFunds" }}
                     {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
                   </p>
-                  <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"></span>
+                  <span class="big-number__dividend"
+                  v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"></span>
+                  <br>
+                  <span class="big-number__divisor">
+                    <span class="big-number__math-sign">&divide;</span>
+                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
+                  </span>
+                  <br>
+                  <span class="big-number__quotient">
+                    <output v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value/mainData.accumulated.total_candidates_who_received)"></output><span class="big-number__math-sign">∕</span><small>candidatura</small>
+                  </span>
                   <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
                 </div>
 
@@ -37,7 +47,16 @@
                     {{ i18n "entriesQuantity" }}
                     {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
                   </p>
-                  <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund)">
+                  <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund)">
+                  </span>
+                  <br>
+                  <span class="big-number__divisor">
+                    <span class="big-number__math-sign">&divide;</span>
+                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
+                  </span>
+                  <br>
+                  <span class="big-number__quotient">
+                    <output v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund/mainData.accumulated.total_candidates_who_received)"></output><span class="big-number__math-sign">∕</span><small>candidatura</small>
                   </span>
                   <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
                 </div>
@@ -48,8 +67,18 @@
                     {{ i18n "entriesQuantity" }}
                     {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
                   </p>
-                  <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)">
+                  <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)">
                   </span>
+                  <br>
+                  <span class="big-number__divisor">
+                    <span class="big-number__math-sign">&divide;</span>
+                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
+                  </span>
+                  <br>
+                  <span class="big-number__quotient">
+                    <output v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund/mainData.accumulated.total_candidates_who_received)"></output><span class="big-number__math-sign">∕</span><small>candidatura</small>
+                  </span>
+
                   <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
                 </div>
               </template>
@@ -157,7 +186,17 @@
                     <p v-else>
                       {{ i18n "TSEData" }}
                     </p>
-                    <span class="big-number__number" v-html="chartTotal"></span>
+                    <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartTotal)"></span>
+                    <br>
+                    <span class="big-number__divisor">
+                      <span class="big-number__math-sign">&divide;</span>
+                      {{ "{{ totalArray.length }}" }}
+                    </span>
+
+                    <span class="big-number__quotient big-number__quotient--total">
+                      <output v-html="formatCurrencyNoAbbr(chartTotal /
+                      totalArray.length)"></output><span class="big-number__math-sign">∕</span><small>candidatura</small>
+                    </span>
                   </div>
 
                   <div class="big-number__box big-number__box--icon big-number__box--icon-female">
@@ -166,7 +205,17 @@
                     <p v-else>
                       {{ i18n "TSEData" }}
                     </p>
-                    <span class="big-number__number" v-html="chartFemale"></span>
+                    <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartFemale)"></span>
+                    <br>
+                    <span class="big-number__divisor">
+                      <span class="big-number__math-sign">&divide;</span>
+                      {{ "{{ femaleArray.length }}" }}
+                    </span>
+                    <br>
+                    <span class="big-number__quotient big-number__quotient--female">
+                      <output v-html="formatCurrencyNoAbbr(chartFemale /
+                      femaleArray.length)"></output><span class="big-number__math-sign">∕</span><small>candidata</small>
+                    </span>
                   </div>
 
                   <div class="big-number__box big-number__box--icon big-number__box--icon-male">
@@ -175,7 +224,17 @@
                     <p v-else>
                       {{ i18n "TSEData" }}
                     </p>
-                    <span class="big-number__number" v-html="chartMale"></span>
+                    <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartMale)"></span>
+                    <br>
+                    <span class="big-number__divisor">
+                      <span class="big-number__math-sign">&divide;</span>
+                      {{ "{{ maleArray.length }}" }}
+                    </span>
+                    <br>
+                    <span class="big-number__quotient big-number__quotient--male">
+                      <output v-html="formatCurrencyNoAbbr(chartMale /
+                      maleArray.length)"></output><span class="big-number__math-sign">∕</span><small>candidato</small>
+                    </span>
                   </div>
                 </div>
               </transition-expand>

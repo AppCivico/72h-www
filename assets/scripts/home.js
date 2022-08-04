@@ -140,13 +140,13 @@ if (window.location.href.indexOf('/') > -1) {
         return datesArr.map(date => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       chartTotal() {
-        return formatCurrencyNoAbbr(this.totalArray.reduce((a, b) => a + b, 0));
+        return this.totalArray.reduce((a, b) => a + b, 0);
       },
       chartMale() {
-        return formatCurrencyNoAbbr(this.maleArray.reduce((a, b) => a + b, 0));
+        return this.maleArray.reduce((a, b) => a + b, 0);
       },
       chartFemale() {
-        return formatCurrencyNoAbbr(this.femaleArray.reduce((a, b) => a + b, 0));
+        return this.femaleArray.reduce((a, b) => a + b, 0);
       },
       formatChartSeries() {
         return [{
