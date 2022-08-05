@@ -111,6 +111,10 @@
   color: palette('gray', 'medium');
 }
 
+.big-number small {
+  opacity: 0.65;
+}
+
 .big-number__number {
   margin-top: 1rem;
 
@@ -175,8 +179,6 @@
 
   font-size: 1em;
   text-overflow: ellipsis;
-
-  opacity: 0.65;
 }
 
 .big-number__box--icon h1 {
