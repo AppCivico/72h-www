@@ -7,7 +7,7 @@ import HighchartsExportData from 'highcharts/modules/export-data';
 import HighchartsExport from 'highcharts/modules/exporting';
 import MicroModal from 'micromodal';
 import numeral from 'numeral';
-import Choice from './components/Choice.js';
+import listBox from './components/listBox.js';
 import TransitionExpand from './components/TransitionExpand.js';
 import config from './config';
 import colorsPerTypeOfData from './utilities/colorsPerTypeOfData';
@@ -45,7 +45,7 @@ if (window.location.href.indexOf('/') > -1) {
   window.$vueHome = new Vue({
     el: '#vueHome',
     components: {
-      choice: Choice,
+      'list-box': listBox,
       'transition-expand': TransitionExpand,
     },
     data: {

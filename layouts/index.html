@@ -122,7 +122,7 @@
               <div class="filters" id="filters" :hidden="!filterOpen">
                 <div class="filters__items">
                   <form action="" @submit.prevent="updateData">
-                    <choice
+                    <list-box
                       id="states"
                       name="states"
                       v-model="selectedState"
@@ -131,8 +131,8 @@
                       label-for-empty="{{ i18n "allStates" }}"
                       :options="states"
                       multiple
-                    ></choice>
-                    <choice
+                    ></list-box>
+                    <list-box
                       id="cities"
                       name="cities"
                       v-model="selectedCity"
@@ -140,37 +140,37 @@
                       :disabled="!selectedState.length"
                       :options="cities"
                       multiple
-                    ></choice>
-                    <choice
+                    ></list-box>
+                    <list-box
                       id="parties"
                       name="parties"
                       v-model="selectedParty"
                       :options="parties"
                       label-for-empty="{{ i18n "allParties" }}"
                       multiple
-                    ></choice>
-                    <choice
+                    ></list-box>
+                    <list-box
                       id="funds"
                       name="funds"
                       v-model="selectedFund"
                       label-for-empty="{{ i18n "allFunds" }}"
                       :options="fund_types"
                       multiple
-                    ></choice>
-                    <choice
+                    ></list-box>
+                    <list-box
                       id="ethnicity"
                       name="ethnicity"
                       v-model="selectedRace"
                       label-for-empty="{{ i18n "allEthnicity" }}"
                       :options="races"
                       multiple
-                    ></choice>
-                    <choice
+                    ></list-box>
+                    <list-box
                       id="days"
                       name="days"
                       v-model="selectedDay"
                       :options="days"
-                    ></choice>
+                    ></list-box>
                     <button class="button button--primary">{{ i18n "apply" }}</button>
                   </form>
                 </div>

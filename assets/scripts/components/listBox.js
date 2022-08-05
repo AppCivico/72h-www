@@ -1,6 +1,6 @@
 export default {
-  name: 'Choice',
-  template: "#choice-markup",
+  name: 'ListBox',
+  template: "#list-box-markup",
   inheritAttrs: false,
   props: {
     options: {
@@ -64,6 +64,10 @@ export default {
     emit(e) {
       const { value } = e.target;
       const { multiple = false, currentValues = [] } = this;
+
+      console.debug('e', e);
+      console.debug('e.target', e.target);
+      console.debug('e.currentTarget', e.currentTarget);
 
       if (multiple) {
         let newValues = [];
