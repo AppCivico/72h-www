@@ -1,6 +1,9 @@
 .main-chart {
   min-height: 25rem;
-  margin-top: 1.5rem;
+  margin-top: $gutter;
+  margin-bottom: $gutter * 2;
 
-  border-radius: 6px;
+  @media screen and (min-width: breakpoint('desktop')) {
+    margin-bottom: $gutter * 4;
+  }
 }

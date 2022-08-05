@@ -514,6 +514,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.chart = Highcharts.chart('js-main-chart', {
           chart: {
             type: 'line',
+            backgroundColor: 'transparent',
           },
           title: {
             text: 'Repasses Realizados',
