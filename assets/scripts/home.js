@@ -89,6 +89,8 @@ if (window.location.href.indexOf('/') > -1) {
 
       days: [{label: 'todos', value: 'all'}, 7, 15, 30, 60, 90],
       selectedDay: 'all',
+
+      previouslyUsedFiltersAsQueryString: '',
     },
     computed: {
       dataIsOutdated: {
@@ -161,10 +163,52 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL() {
-        let url = this.mountURL(`${window.location.href}?days=${this.selectedDay}`);
+        let url = `${window.location.href}?days=${this.selectedDay}${this.filtersAsQueryString}`;
         url += `#${this.sharingFrom}`;
         return url;
       },
+
+      isFilterableChartOutdated({ previouslyUsedFiltersAsQueryString, filtersAsQueryString} = this ) {
+        return previouslyUsedFiltersAsQueryString !== filtersAsQueryString;
+      },
+
+      filtersAsQueryString() {
+        let mountedURL = '';
+
+        if (this.selectedParty?.length) {
+          mountedURL += Array.isArray(this.selectedParty)
+            ? '&' + this.selectedParty.map(x => `party_id[]=${x}`).join('&')
+            : `&party_id=${this.selectedParty}`;
+        }
+        if (this.selectedFund?.length) {
+          mountedURL += Array.isArray(this.selectedFund)
+            ? '&' + this.selectedFund.map(x => `fund_type_id[]=${x}`).join('&')
+            : `&fund_type_id=${this.selectedFund}`;
+        }
+        if (this.selectedRace?.length) {
+          mountedURL += Array.isArray(this.selectedRace)
+            ? '&' + this.selectedRace.map(x => `race_id[]=${x}`).join('&')
+            : `&race_id=${this.selectedRace}`;
+        }
+        if (this.selectedState?.length) {
+          mountedURL += Array.isArray(this.selectedState)
+            ? '&' + this.selectedState.map(x => `region_id[]=${x}`).join('&')
+            : `&region_id=${this.selectedState}`;
+
+            // to prevent a submission of a city by mistake, we require a state
+            // to be selected as well
+            if (this.selectedCity?.length) {
+              mountedURL += Array.isArray(this.selectedCity)
+                ? '&' + this.selectedCity.map(x => `city_id[]=${x}`).join('&')
+                : `&city_id=${this.selectedCity}`;
+            }
+        }
+        if (this.useEpoch) {
+          mountedURL += `&epoch=${this.epoch}`;
+        }
+
+        return mountedURL;
+      }
     },
     watch: {
       async mainData() {
@@ -259,39 +303,6 @@ if (window.location.href.indexOf('/') > -1) {
         filterText.selectedFund = selectedFund?.map(x => fundTypesById[x].name).join(', ');
         filterText.selectedRace = selectedRace?.map(x => racesById[x].name).join(', ');
         filterText.selectedDay = selectedDay;
-      },
-      mountURL(url) {
-        let mountedURL = url;
-
-        if (this.selectedParty?.length) {
-          mountedURL += Array.isArray(this.selectedParty)
-            ? '&'+this.selectedParty.map(x => `party_id[]=${x}`).join('&')
-            : `&party_id=${this.selectedParty}`;
-        }
-        if (this.selectedFund?.length) {
-          mountedURL += Array.isArray(this.selectedFund)
-            ? '&'+this.selectedFund.map(x => `fund_type_id[]=${x}`).join('&')
-            : `&fund_type_id=${this.selectedFund}`;
-        }
-        if (this.selectedRace?.length) {
-          mountedURL += Array.isArray(this.selectedRace)
-            ? '&'+this.selectedRace.map(x => `race_id[]=${x}`).join('&')
-            : `&race_id=${this.selectedRace}`;
-        }
-        if (this.selectedState?.length) {
-          mountedURL += Array.isArray(this.selectedState)
-            ? '&'+this.selectedState.map(x => `region_id[]=${x}`).join('&')
-            : `&region_id=${this.selectedState}`;
-        }
-        if (this.selectedCity?.length) {
-          mountedURL += Array.isArray(this.selectedCity)
-            ? '&'+this.selectedCity.map(x => `city_id[]=${x}`).join('&')
-            : `&city_id=${this.selectedCity}`;
-        }
-        if (this.useEpoch) {
-          mountedURL += `&epoch=${this.epoch}`;
-        }
-        return mountedURL;
       },
       copyShareURL() {
         document.querySelector('#js-share-url').select();
@@ -449,14 +460,13 @@ if (window.location.href.indexOf('/') > -1) {
           this.chart.showLoading();
         }
 
-        const url = `${config.api.domain}index?election_id=${config.run[2022]}&days=${this.selectedDay}`;
-        let mountedURL = this.mountURL(url);
+        let url = `${config.api.domain}index?election_id=${config.run[2022]}&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
         if (this.epochFromParam) {
-          mountedURL += `&epoch=${this.epochFromParam}`;
+          url += `&epoch=${this.epochFromParam}`;
         }
 
-        fetch(mountedURL, {
+        fetch(url, {
           method: 'GET',
         })
           .then(response => response.json())
@@ -472,6 +482,9 @@ if (window.location.href.indexOf('/') > -1) {
             if (this.chart) {
               this.chart.hideLoading();
             }
+
+            this.previouslyUsedFiltersAsQueryString = this.filtersAsQueryString;
+
             return true;
           })
           // eslint-disable-next-line no-console
@@ -480,19 +493,18 @@ if (window.location.href.indexOf('/') > -1) {
       getCandidates(page = false) {
         this.loadingCandidates = true;
 
-        const url = `${config.api.domain}candidates?election_id=${config.run[2022]}&results=9&days=${this.selectedDay}`;
-        let mountedURL = this.mountURL(url);
+        let url = `${config.api.domain}candidates?election_id=${config.run[2022]}&results=9&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
         if (this.epochFromParam) {
-          mountedURL += `&epoch=${this.epochFromParam}`;
+          url += `&epoch=${this.epochFromParam}`;
         }
 
         if (page) {
-          mountedURL += `&page=${page}`;
+          url += `&page=${page}`;
           document.querySelector('#js-candidate-box').scrollIntoView();
         }
 
-        fetch(mountedURL, {
+        fetch(url, {
           method: 'GET',
         })
           .then(response => response.json())

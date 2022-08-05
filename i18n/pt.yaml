@@ -84,6 +84,8 @@
   translation: "Os dados deste link não estão atualizados, esses dados são de:"
 - id: oldInfoUpdate
   translation: "<button class='button' @click='refreshPage'>ver dados atualizados</button>"
+- id: oldChart
+  translation: "Esse gráfico aguarda pela <button @click.prevent='updateData' class='button button--primary'>aplicação</button> da nova filtragem"
 - id: onTweeter
   translation: "no Twitter"
 - id: openFilters

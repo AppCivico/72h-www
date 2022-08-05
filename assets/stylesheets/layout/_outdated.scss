@@ -1,14 +1,19 @@
 .outdated {
   position: sticky;
   top: 0;
-  display: flex;
   z-index: layer('default');
+
+  display: flex;
+
   padding: 1.5rem 0;
   margin-top: -2rem;
   margin-bottom: 1.5rem;
   overflow: hidden;
+
   font-size: ms(-1);
+
   background-color: palette('main-colors', 'tertiary');
+
   transition: max-height 0.3s, padding 0.3s;
 
   &[hidden] {
@@ -19,8 +24,10 @@
 
 .outdated .container {
   display: flex;
-  align-items: center;
+
   flex-wrap: nowrap;
+
+  align-items: center;
 }
 
 .outdated p {
@@ -29,27 +36,50 @@
 
 .outdated .button {
   padding: 0;
-  font-weight: font-weight('text');
-  font-size: ms(0);
+
   font-family: $monteserrat-font-stack;
+  font-size: ms(0);
+  font-weight: font-weight('text');
+  color: inherit;
   text-decoration: underline;
   text-transform: none;
-  color: inherit;
+
   background-color: transparent;
   border: 0;
   appearance: none;
 }
 
 .outdated__close {
+  justify-self: flex-end;
+
   padding: 0.5rem;
   margin-left: auto;
+
   text-decoration: none;
+
   background: transparent;
   border: 0;
-  justify-self: flex-end;
 
   &::before {
     font-size: ms(2);
+
     content: '\2715';
   }
+}
+
+%updated-chart {
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-duration: 0.3s;
+  transition-property: opacity, filter;
+}
+
+.updated-chart {
+  @extend %updated-chart;
+}
+
+.outdated-chart {
+  @extend %updated-chart;
+
+  filter: grayscale(65%)brightness(35%)contrast(35%);
+  opacity: 0.35;
 }

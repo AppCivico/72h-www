@@ -179,10 +179,18 @@
                 </div>
               </div>
 
-              <div id="js-main-chart" class="main-chart" :aria-busy="loadingChartData"></div>
+              <div class="outdated" :hidden="!isFilterableChartOutdated">
+                <div class="container">
+                  <p>
+                    {{ i18n "oldChart" | safeHTML }}
+                  </p>
+                </div>
+              </div>
+
+              <div id="js-main-chart" class="main-chart" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData"></div>
 
               <transition-expand>
-                <div class="big-numbers" v-if="!loadingChartData">
+                <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" v-if="!loadingChartData">
                   <div class="big-number__box big-number__box--icon big-number__box--icon-total">
                     <h1>{{ i18n "accumulatedValue" }}</h1>
                     {{ partial "filterText" }}
