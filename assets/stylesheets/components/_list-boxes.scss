@@ -17,7 +17,7 @@
   &:hover,
   &:focus,
   &:focus-within {
-    z-index: layer('default');
+    z-index: layer('dropdown');
 
     height: $gutter * 6;
     padding: $gutter * 0.5;
