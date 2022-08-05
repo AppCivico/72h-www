@@ -33,7 +33,7 @@
 - id: candidatesWhoReceivedFunds
   translation: "Quantidade de candidaturas prestadoras de contas:"
 - id: checkFound
-  translation: "Verifique como está o repasse do Fundo Eleitoral Especial do seu Município ou Estado."
+  translation: "Acompanhe como os recursos financeiros estão sendo declarados  e distribuídos durante a campanha eleitoral."
 - id: closeFilters
   translation: "Minimizar filtros"
 - id: closeModal
