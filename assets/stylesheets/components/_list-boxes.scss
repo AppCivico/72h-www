@@ -92,7 +92,7 @@
     &::after {
       float: right;
 
-      color: palette('gray');
+      color: palette('gray', 'medium');
 
       content: ', ';
     }
