@@ -9,19 +9,25 @@
 *,
 ::before,
 ::after {
-  background-repeat: no-repeat;
-
   box-sizing: inherit;
 
   tab-size: inherit;
+
+  background-repeat: no-repeat;
+
+  @media (prefers-reduced-motion: reduce) {
+    /* stylelint-disable-next-line declaration-no-important */
+    transition: none !important;
+    /* stylelint-disable-next-line declaration-no-important */
+    animation: none !important;
+  }
 }
 
 /* User interaction (https://www.w3.org/TR/html5/editing.html)
 ========================================================================== */
 ::selection {
-  text-shadow: none;
-
   color: palette('selection', 'foreground');
+  text-shadow: none;
 
   background-color: palette('selection', 'background');
 }
@@ -94,22 +100,19 @@ textarea,
  * www.456bereastreet.com/archive/201012/controlling_text_size_in_safari_for_ios_without_disabling_user_zoom/
  */
 html {
-  height: 100%; /* 2 */
+  box-sizing: border-box;
 
+  height: 100%; /* 2 */
   padding: 0;
   margin: 0;
-
   overflow-y: scroll; /* 3 */
 
   font-size: 100.01%; /* 1 */
-
-  text-size-adjust: 100%; /* 4 */
+  tab-size: 4;
 
   background: palette('white');
 
-  box-sizing: border-box;
-
-  tab-size: 4;
+  text-size-adjust: 100%; /* 4 */
 }
 
 /**
@@ -124,7 +127,6 @@ body {
 
   height: 100vh; /* 2 */
   min-height: 100%;
-
   margin: 0;
 
   color: palette('black');
@@ -219,7 +221,6 @@ template {
 }
 
 
-
 /* BLOCK TEXT
 ============================================================================ */
 
@@ -232,25 +233,21 @@ template {
 /**
  */
 hr {
+  box-sizing: content-box; /* 1 */
+  display: block;
+
+  height: 0; /* 1 */
+  padding: 0;
+  overflow: visible; /* 2 */
   /* line-height */
   // @include fallback('margin', calc(#{$leading * 1em} - 1px) 0 #{$leading * 1em}, #{$leading * 1em} 0);
 
   clear: both;
 
-  display: block;
-
-  height: 0; /* 1 */
-
-  padding: 0;
-
-  overflow: visible; /* 2 */
-
   color: palette('gray');
 
   border: 0;
   border-top: 1px solid palette('gray');
-
-  box-sizing: content-box; /* 1 */
 }
 
 /* MEDIA ELEMENTS
@@ -314,8 +311,7 @@ iframe,
 img,
 object {
   font-size: 83.3333%;
-
-  color: currentColor;
+  color: currentcolor;
 
   border-style: none;
 }
@@ -338,7 +334,6 @@ video > source {
 .ie:not(.ie6-8),
 object > img {
   position: relative;
-
   z-index: layer('below');
 
   font-size: 1em;
@@ -353,7 +348,6 @@ object > img {
 /// @link https://bitsofco.de/styling-broken-images/
 %broken-image {
   font-style: normal;
-
   text-align: center;
 
   &::before {
@@ -368,7 +362,6 @@ object > img {
     display: block;
 
     font-size: small;
-
     color: palette('gray');
 
     content: '(url: ' attr(src) ')';
@@ -382,9 +375,8 @@ object > img {
  */
 img {
   @extend %broken-image;
-
-  height: auto;
   max-width: 100%;
+  height: auto;
 
   image-rendering: optimizeQuality; /* 1 */
   -ms-interpolation-mode: bicubic; /* 1 */ // sass-lint:disable-line no-misspelled-properties
@@ -421,7 +413,6 @@ a {
   margin: 0;
 
   font-size: 100%;
-
   vertical-align: baseline;
 
   @include on-event {
@@ -479,11 +470,9 @@ address {
 pre {
   padding: $leading * 0.5rem $gutter * 0.5;
   margin: 0 0 $leading * 1rem;
-
   overflow: auto;
 
   font-size: ms(-1);
-
   color: palette('text', 'light');
 
   background-color: palette('text', 'dark');
