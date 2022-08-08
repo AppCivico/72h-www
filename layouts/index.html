@@ -6,10 +6,13 @@
 
         <main>
           <div class="container">
-            <div class="jumbotron">
+            <header class="jumbotron">
               <h1>{{ .Title }}</h1>
+                {{ with $.Site.Params.run }}
+                  <p role="doc-subtitle">{{ . }}</p>
+                {{ end }}
               {{ .Content }}
-            </div>
+            </header>
 
             <div class="big-numbers" :aria-busy="this.loadingBigNumbers">
               <template v-if="!this.loadingBigNumbers">
