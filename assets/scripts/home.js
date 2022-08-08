@@ -382,7 +382,11 @@ if (window.location.href.indexOf('/') > -1) {
 
         newItem.total = 0;
 
-        newItem.data.sort((a, b) => a.name.localeCompare(b.name));
+        if (['party', 'state'].indexOf(item.type) > -1 ) {
+          newItem.data.sort((a, b) => b.y - a.y);
+        } else {
+          newItem.data.sort((a, b) => a.name.localeCompare(b.name));
+        }
 
         for (let i = 0; i < newItem.data.length; i+= 1) {
           newItem.data[i].color = colorsPerTypeOfData[item.type]?.[i];
