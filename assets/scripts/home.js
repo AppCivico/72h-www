@@ -371,46 +371,43 @@ if (window.location.href.indexOf('/') > -1) {
           return true;
         });
       },
-      handleColumnData(data) {
-        const colorsFor = colorsPerTypeOfData;
+      handleColumnData(item) {
+        const newItem = item;
 
-        return data.map((item) => {
-          const newItem = item;
+        newItem.chartType = 'column';
 
-          newItem.xAxis = {
-            categories: [],
-          };
+        newItem.xAxis = {
+          categories: [],
+        };
 
-          newItem.total = 0;
+        newItem.total = 0;
 
-          newItem.data.sort((a, b) => a.name.localeCompare(b.name));
+        newItem.data.sort((a, b) => a.name.localeCompare(b.name));
 
-          for (let i = 0; i < newItem.data.length; i+= 1) {
-            newItem.data[i].color = colorsFor[item.type]?.[i];
-            newItem.xAxis.categories.push(newItem.data[i].name);
-            newItem.data[i].name = null;
-            newItem.total += newItem.data[i].y;
-          }
-          return newItem;
-        });
+        for (let i = 0; i < newItem.data.length; i+= 1) {
+          newItem.data[i].color = colorsPerTypeOfData[item.type]?.[i];
+          newItem.xAxis.categories.push(newItem.data[i].name);
+          newItem.data[i].name = null;
+          newItem.total += newItem.data[i].y;
+        }
+        return newItem;
       },
-      handlePieData(data) {
-        return data.map((item) => {
-          const newItem = item;
-          if (item.type === 'state') {
-            newItem.colors = ['#DC5B64', '#DD6367', '#DD6B6A', '#DE746D', '#DE7C70', '#DF8473', '#DF8977', '#E08E7A', '#E0937E', '#E09982', '#E19E85', '#E1A389', '#E1A88F', '#E2AD94', '#E2B39A', '#E2B89F', '#E3BDA4', '#E3C2AA', '#E4C6B0', '#E4CAB6', '#E5CEBC', '#E5D2C2', '#E6D6C8', '#E6DACE', '#E7DED4', '#E8E0D7', '#E8E2DB', '#E9E3DE', '#E9E5E1', '#E9E7E5', '#EAE9E8', '#ECEBEB', '#EDEDED'];
-          }
-          if (item.type === 'party') {
-            newItem.colors = ['#4E79E6', '#537DE7', '#5780E7', '#5C84E8', '#6187E8', '#658BE9', '#6F92EA', '#7396EA', '#789AEB', '#7D9DEC', '#81A1EC', '#86A4ED', '#8BA8ED', '#8FACEE', '#94AFEE', '#99B3EF', '#86B2F2', '#8CB6F2', '#92BAF3', '#92BAF3', '#9BC0F3', '#9EC2F4', '#A7C7F4', '#AAC9F4', '#B3CFF5', '#BAD3F5', '#C0D7F6', '#C9DDF7', '#E1ECF8', '#E4EEF8', '#E7F0F9', '#EAF2F9', '#EDF4F9'];
-          }
-          if (item.type === 'gender') {
-            newItem.colors = ['#EDC437', '#F1D060', '#F2D675', '#F5DF92', '#F6E3A2', '#F7E7AE', '#F9EDC3'];
-          }
-          if (item.type === 'ethnicity') {
-            newItem.colors = ['#1B78A4', '#3C8EB1', '#5EA3BF', '#7FB9CC', '#A0CED9', '#C2E3E7', '#E3F9F4'];
-          }
-          return newItem;
-        });
+      handlePieData(item) {
+        const newItem = item;
+        newItem.chartType = 'pie';
+        if (item.type === 'state') {
+          newItem.colors = ['#DC5B64', '#DD6367', '#DD6B6A', '#DE746D', '#DE7C70', '#DF8473', '#DF8977', '#E08E7A', '#E0937E', '#E09982', '#E19E85', '#E1A389', '#E1A88F', '#E2AD94', '#E2B39A', '#E2B89F', '#E3BDA4', '#E3C2AA', '#E4C6B0', '#E4CAB6', '#E5CEBC', '#E5D2C2', '#E6D6C8', '#E6DACE', '#E7DED4', '#E8E0D7', '#E8E2DB', '#E9E3DE', '#E9E5E1', '#E9E7E5', '#EAE9E8', '#ECEBEB', '#EDEDED'];
+        }
+        if (item.type === 'party') {
+          newItem.colors = ['#4E79E6', '#537DE7', '#5780E7', '#5C84E8', '#6187E8', '#658BE9', '#6F92EA', '#7396EA', '#789AEB', '#7D9DEC', '#81A1EC', '#86A4ED', '#8BA8ED', '#8FACEE', '#94AFEE', '#99B3EF', '#86B2F2', '#8CB6F2', '#92BAF3', '#92BAF3', '#9BC0F3', '#9EC2F4', '#A7C7F4', '#AAC9F4', '#B3CFF5', '#BAD3F5', '#C0D7F6', '#C9DDF7', '#E1ECF8', '#E4EEF8', '#E7F0F9', '#EAF2F9', '#EDF4F9'];
+        }
+        if (item.type === 'gender') {
+          newItem.colors = ['#EDC437', '#F1D060', '#F2D675', '#F5DF92', '#F6E3A2', '#F7E7AE', '#F9EDC3'];
+        }
+        if (item.type === 'ethnicity') {
+          newItem.colors = ['#1B78A4', '#3C8EB1', '#5EA3BF', '#7FB9CC', '#A0CED9', '#C2E3E7', '#E3F9F4'];
+        }
+        return newItem;
       },
       generatePieChartColors(baseColor) {
         const colors = [];
@@ -471,9 +468,14 @@ if (window.location.href.indexOf('/') > -1) {
         })
           .then(response => response.json())
           .then((response) => {
+            const pieCharts = ['ethnicity', 'gender'];
             this.mainData = response;
 
-            this.introCharts = this.handleColumnData(response.accumulated.pie_charts)
+            if (Array.isArray(response?.accumulated?.pie_charts)) {
+              this.introCharts = response.accumulated.pie_charts
+                .map((x) => pieCharts.indexOf(x.type) > -1 ? this.handlePieData(x) : this.handleColumnData(x));
+            }
+
             return true;
           })
           .then(() => {
@@ -568,10 +570,10 @@ if (window.location.href.indexOf('/') > -1) {
               plotBackgroundColor: null,
               plotBorderWidth: null,
               plotShadow: false,
-              type: 'column',
+              type: chart.chartType,
             },
             xAxis: chart.xAxis,
-            yAxis: {
+            yAxis: chart.chartType === 'pie' ? undefined : {
               title: {
                 text: 'valor (R$)',
               },
@@ -605,9 +607,10 @@ if (window.location.href.indexOf('/') > -1) {
               },
             },
             plotOptions: {
-              column: {
+              [chart.chartType]: {
                 allowPointSelect: true,
                 cursor: 'pointer',
+                colors: chart.colors,
                 dataLabels: {
                   enabled: true,
                   pointFormatter: function () {
@@ -617,9 +620,9 @@ if (window.location.href.indexOf('/') > -1) {
               },
             },
             series: [{
-              name: 'Share',
+              name: window.appDictionary[chart.type],
               data: chart.data,
-              showInLegend: false
+              showInLegend: chart.chartType === 'pie'
             }],
           });
         });
