@@ -30,18 +30,9 @@
                     {{ i18n "candidatesWhoReceivedFunds" }}
                     {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
                   </p>
-                  <span class="big-number__dividend"
-                  v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"></span>
-                  <br>
-                  <span class="big-number__divisor">
-                    <span class="big-number__math-sign">&divide;</span>
-                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
-                    <small>candidaturas</small>
-                  </span>
-                  <br>
-                  <span class="big-number__quotient">
-                    <output v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value/mainData.accumulated.total_candidates_who_received)"></output>
-                  </span>
+                  <span class="big-number__number"
+                    v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"
+                  />
                   <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
                 </div>
 
@@ -51,18 +42,9 @@
                     {{ i18n "entriesQuantity" }}
                     {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
                   </p>
-                  <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund)">
-                  </span>
-                  <br>
-                  <span class="big-number__divisor">
-                    <span class="big-number__math-sign">&divide;</span>
-                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
-                    <small>candidaturas</small>
-                  </span>
-                  <br>
-                  <span class="big-number__quotient">
-                    <output v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund/mainData.accumulated.total_candidates_who_received)"></output>
-                  </span>
+                  <span class="big-number__number"
+                    v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund)"
+                  />
                   <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
                 </div>
 
@@ -72,19 +54,9 @@
                     {{ i18n "entriesQuantity" }}
                     {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
                   </p>
-                  <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)">
-                  </span>
-                  <br>
-                  <span class="big-number__divisor">
-                    <span class="big-number__math-sign">&divide;</span>
-                    {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
-                    <small>candidaturas</small>
-                  </span>
-                  <br>
-                  <span class="big-number__quotient">
-                    <output v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund/mainData.accumulated.total_candidates_who_received)"></output>
-                  </span>
-
+                  <span class="big-number__number"
+                    v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)"
+                  />
                   <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
                 </div>
               </template>
