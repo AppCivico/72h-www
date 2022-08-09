@@ -100,55 +100,73 @@
               <div class="filters" id="filters" :hidden="!filterOpen">
                 <div class="filters__items">
                   <form action="" @submit.prevent="updateData">
-                    <list-box
-                      id="states"
-                      name="states"
-                      v-model="selectedState"
-                      :value="selectedState"
-                      @change="selectedCity = null"
-                      label-for-empty="{{ i18n "allStates" }}"
-                      :options="states"
-                      multiple
-                    ></list-box>
-                    <list-box
-                      id="cities"
-                      name="cities"
-                      v-model="selectedCity"
-                      label-for-empty="{{ i18n "allCities" }}"
-                      :disabled="!selectedState.length"
-                      :options="cities"
-                      multiple
-                    ></list-box>
-                    <list-box
-                      id="parties"
-                      name="parties"
-                      v-model="selectedParty"
-                      :options="parties"
-                      label-for-empty="{{ i18n "allParties" }}"
-                      multiple
-                    ></list-box>
-                    <list-box
-                      id="funds"
-                      name="funds"
-                      v-model="selectedFund"
-                      label-for-empty="{{ i18n "allFunds" }}"
-                      :options="fund_types"
-                      multiple
-                    ></list-box>
-                    <list-box
-                      id="ethnicity"
-                      name="ethnicity"
-                      v-model="selectedRace"
-                      label-for-empty="{{ i18n "allEthnicity" }}"
-                      :options="races"
-                      multiple
-                    ></list-box>
-                    <list-box
-                      id="days"
-                      name="days"
-                      v-model="selectedDay"
-                      :options="days"
-                    ></list-box>
+                    <fieldset class="filters__item list-box__wrapper" v-if="states && states.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "states" }}</legend>
+                      <list-box
+                        id="states"
+                        name="states"
+                        v-model="selectedState"
+                        :value="selectedState"
+                        @change="selectedCity = null"
+                        label-for-empty="{{ i18n "allStates" }}"
+                        :options="states"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="cities && cities.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "cities" }}</legend>
+                      <list-box
+                        id="cities"
+                        name="cities"
+                        v-model="selectedCity"
+                        label-for-empty="{{ i18n "allCities" }}"
+                        :disabled="!selectedState.length"
+                        :options="cities"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="parties && parties.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "parties" }}</legend>
+                      <list-box
+                        id="parties"
+                        name="parties"
+                        v-model="selectedParty"
+                        :options="parties"
+                        label-for-empty="{{ i18n "allParties" }}"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="fund_types && fund_types.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "types" }}</legend>
+                      <list-box
+                        id="funds"
+                        name="funds"
+                        v-model="selectedFund"
+                        label-for-empty="{{ i18n "allFunds" }}"
+                        :options="fund_types"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="races && races.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "ethnicities" }}</legend>
+                      <list-box
+                        id="ethnicity"
+                        name="ethnicity"
+                        v-model="selectedRace"
+                        label-for-empty="{{ i18n "allEthnicity" }}"
+                        :options="races"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper">
+                      <legend class="like-a__label list-box__label">{{ i18n "interval" }}</legend>
+                      <list-box
+                        id="days"
+                        name="days"
+                        v-model="selectedDay"
+                        :options="days"
+                      ></list-box>
+                    </fieldset>
                     <button class="button button--primary">{{ i18n "apply" }}</button>
                   </form>
                 </div>

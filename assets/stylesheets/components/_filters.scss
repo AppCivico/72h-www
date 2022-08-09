@@ -73,8 +73,6 @@
 .filters__items {
   display: flex;
 
-  max-height: 25rem;
-
   transition: max-width max-height 0.3s;
 
   &[hidden] {
@@ -84,10 +82,6 @@
     @media screen and (min-width: breakpoint('wide')) {
       max-width: 0;
     }
-  }
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    max-height: 5rem;
   }
 
   @media screen and (min-width: breakpoint('wide')) {
@@ -104,58 +98,53 @@
 
   width: 100%;
 
-  @media screen and (min-width: breakpoint('desktop')) {
-    flex-wrap: nowrap;
-  }
-
   @media screen and (min-width: breakpoint('wide')) {
     display: block;
   }
 }
 
 .filters__items select,
-.filters__items .list-box {
+.filters__items .filters__item {
+  flex-grow: 1;
+
   width: 100%;
+  min-width: 15rem;
   padding-right: 0.5rem;
   padding-left: 0.5rem;
   margin-right: 0.5rem;
-  margin-bottom: 2rem;
+  margin-bottom: $gutter;
   margin-left: 0.5rem;
 
   font-family: $text-font-stack;
-  font-size: ms(-1);
-
-  border-color: palette('main-colors', 'secondary');
-  border-style: solid;
-  border-width: 0 0 1px;
 
   @media screen and (min-width: breakpoint('tablet')) {
     width: calc(50% - 1rem);
   }
 
   @media screen and (min-width: breakpoint('desktop')) {
-    max-width: 11.625rem;
-    // min-width: 9.375rem;
+    width: calc(33% - #{$gutter * 2});
     padding-right: 0.1rem;
     padding-left: 0.1rem;
     margin-right: 0.1rem;
-    margin-bottom: 0;
     margin-left: 0.1rem;
-
-    font-size: ms(-2);
   }
 
   @media screen and (min-width: breakpoint('wide')) {
-    width: 100%;
-    max-width: none;
-    padding-left: 0.5rem;
+    width: auto;
+    min-width: 0;
+    max-width: 100%;
+    padding-left: 0;
     margin-right: 0.5rem;
-    margin-bottom: 2rem;
+    margin-bottom: $gutter * 2;
   }
 }
 
-.filters__items select {
+.filters__items select,
+.filters__items .list-box {
   background-color: transparent;
+  border-color: palette('main-colors', 'secondary');
+  border-style: solid;
+  border-width: 0 0 1px;
 }
 
 .filters__items select[disabled],
@@ -169,10 +158,12 @@
 }
 
 .filters .button {
+  align-self: flex-end;
   justify-content: center;
 
   width: 100%;
   padding: 0.5rem 1rem;
+  margin-bottom: $gutter;
 
   font-size: ms(0);
   text-align: center;

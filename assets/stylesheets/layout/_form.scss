@@ -1,46 +1,44 @@
-.bg-alabaster {
-  padding: 3rem 0 2rem;
-  overflow: hidden;
-  background: palette('alabaster');
-}
-
 form {
-  @include container;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
 }
 
-.modal-user-popup {
+fieldset {
+  padding: 0;
+
+  border: 0;
+}
+
+legend {
+  display: block;
+
   padding: 0;
 }
 
-form h1 {
-  font-size: ms(8);
-  text-shadow: 1px -1px 1px palette('yellow'), -1px 1px 0 palette('green');
-  color: palette('blue', 'dark');
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    font-size: ms(10);
-  }
-}
-
+.like-a__label,
 form label {
   display: block;
-  margin-top: 0.5em;
-  text-transform: lowercase;
 
-  @media screen and (min-width: breakpoint('desktop')) {
-    font-size: ms(3);
-  }
+  font-size: ms(-1);
+  font-weight: inherit;
+  color: palette('gray', 'medium');
+  text-transform: lowercase;
+}
+
+label {
+  cursor: pointer;
 }
 
 form input,
 form textarea {
   display: block;
+
   width: 100%;
   margin-bottom: 2rem;
+
   font-size: ms(1);
   color: palette('black', 'lighter');
+
+  cursor: text;
+
   background: transparent;
   border: 0;
   border-bottom: 1px solid palette('black', 'opacity');
@@ -57,13 +55,16 @@ form textarea {
 form .error-message {
   margin-top: -2rem;
   margin-bottom: 2rem;
+
   font-size: ms(-1);
-  color: palette('red');
+  color: palette('label', 'danger');
 }
 
 .response-message {
   padding: 0.51rem;
+
   color: palette('white');
+
   border-radius: 7px;
 }
 
@@ -74,4 +75,3 @@ form .error-message {
 .response-message--error {
   background-color: palette('label', 'danger');
 }
-
