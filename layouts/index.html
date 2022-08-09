@@ -191,13 +191,14 @@
                       {{ i18n "TSEData" }}
                     </p>
                     <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartTotal)"></span>
-                    <br>
+                    <br />
                     <span class="big-number__divisor">
                       <span class="big-number__math-sign">&divide;</span>
                       {{ "{{ totalArray.length }}" }} <small>candidaturas</small>
                     </span>
-
+                    <br />
                     <span class="big-number__quotient big-number__quotient--total">
+                      <span class="big-number__math-sign">&equals;</span>
                       <output v-html="formatCurrencyNoAbbr(chartTotal /
                       totalArray.length)"></output>
                     </span>
@@ -210,13 +211,14 @@
                       {{ i18n "TSEData" }}
                     </p>
                     <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartFemale)"></span>
-                    <br>
+                    <br />
                     <span class="big-number__divisor">
                       <span class="big-number__math-sign">&divide;</span>
                       {{ "{{ femaleArray.length }}" }} <small>candidatas</small>
                     </span>
-                    <br>
+                    <br />
                     <span class="big-number__quotient big-number__quotient--female">
+                      <span class="big-number__math-sign">&equals;</span>
                       <output v-html="formatCurrencyNoAbbr(chartFemale /
                       femaleArray.length)"></output>
                     </span>
@@ -229,13 +231,14 @@
                       {{ i18n "TSEData" }}
                     </p>
                     <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartMale)"></span>
-                    <br>
+                    <br />
                     <span class="big-number__divisor">
                       <span class="big-number__math-sign">&divide;</span>
                       {{ "{{ maleArray.length }}" }} <small>candidatos</small>
                     </span>
-                    <br>
+                    <br />
                     <span class="big-number__quotient big-number__quotient--male">
+                      <span class="big-number__math-sign">&equals;</span>
                       <output v-html="formatCurrencyNoAbbr(chartMale /
                       maleArray.length)"></output>
                     </span>

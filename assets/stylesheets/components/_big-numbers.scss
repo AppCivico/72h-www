@@ -51,6 +51,9 @@
   }
 }
 
+.big-number__box br {
+  display: none; // to prevent bugs on flex at Webkit/blink
+}
 
 .big-number__box p {
   margin-bottom: 0;
@@ -168,6 +171,12 @@
 
   font-size: ms(2);
   font-weight: font-weight('bold');
+}
+
+.big-number__quotient .big-number__math-sign + output {
+  flex-grow: 0;
+
+  margin-left: 0.25em;
 }
 
 .big-number__quotient small {
