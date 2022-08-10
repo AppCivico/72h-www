@@ -51,7 +51,7 @@ export default {
       }
       return 'checkbox';
     },
-    lastSelected({ currentValues = [], normalizedOptions = [] } = this) {
+    lastSelected({ currentValues, normalizedOptions } = this) {
       let i = normalizedOptions.length - 1;
 
       while (normalizedOptions[i]) {
@@ -67,11 +67,7 @@ export default {
   methods: {
     emit(e) {
       const { value } = e.target;
-      const { multiple = false, currentValues = [] } = this;
-
-      console.debug('e', e);
-      console.debug('e.target', e.target);
-      console.debug('e.currentTarget', e.currentTarget);
+      const { multiple, currentValues } = this;
 
       if (multiple) {
         let newValues = [];
@@ -80,7 +76,10 @@ export default {
             ? currentValues.concat([value])
             // eslint-disable-next-line eqeqeq
             : currentValues.filter((x) => x != value);
+        } else {
+          this.$refs.empty.checked = true;
         }
+
         this.$emit('input', newValues);
       } else {
         this.$emit('input', value);

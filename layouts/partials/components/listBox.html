@@ -21,11 +21,12 @@
       :id="`option__${ name }--empty`"
       value=""
       :checked="!currentValues.length"
-      :type="normalizedType"
+      type="radio"
       :name="name"
       v-bind="$attrs"
-      @input="emit($event)"
+      @change.prevent="emit($event)"
       class="list-box__input list-box__input--empty"
+      ref="empty"
     />
     <label
       :for="`option__${ name }--empty`"
@@ -53,7 +54,7 @@
       :type="normalizedType"
       :name="name"
       v-bind="$attrs"
-      @input="emit($event)"
+      @change.prevent="emit($event)"
       class="list-box__input"
     />
     <label
