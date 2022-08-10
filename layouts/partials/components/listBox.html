@@ -25,7 +25,7 @@
       :name="name"
       v-bind="$attrs"
       @input="emit($event)"
-      class="list-box__box list-box__box--empty"
+      class="list-box__input list-box__input--empty"
     />
     <label
       :for="`option__${ name }--empty`"
@@ -54,7 +54,7 @@
       :name="name"
       v-bind="$attrs"
       @input="emit($event)"
-      class="list-box__box"
+      class="list-box__input"
     />
     <label
       :for="`option__${ name }--${ option.id || option }`"

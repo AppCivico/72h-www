@@ -76,7 +76,7 @@
   }
 }
 
-.list-box__box {
+.list-box__input {
   display: none;
 
   flex-shrink: 0;
@@ -95,7 +95,7 @@
   }
 }
 
-.list-box__box--empty {
+.list-box__input--empty {
   border-radius: 100%;
 }
 
