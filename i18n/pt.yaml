@@ -86,8 +86,6 @@
   translation: "Sem resultados"
 - id: noResultsCandidates
   translation: "Não há repasses para candidaturas com este perfil de busca"
-- id: oldChart
-  translation: "Esse gráfico aguarda pela <button @click.prevent='updateData' class='button button--primary'>aplicação</button> da nova filtragem"
 - id: oldInfo
   translation: "Os dados deste link não estão atualizados, esses dados são de:"
 - id: oldInfoUpdate
