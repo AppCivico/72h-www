@@ -34,16 +34,13 @@ export default {
     },
   },
   computed: {
-    currentValues({ value } = this) {
-      if (Array.isArray(value)) {
-        return value.map((x) => (x ? String(x) : x));
-      } else if (typeof value === 'object') {
-        return value.map((x) => (x ? String(x) : x));
-      }
-      return [(value ? String(value) : value)];
+    currentValues({ value = '' } = this) {
+      return value && Array.isArray(value)
+        ? value.map((x) => String(x))
+        : [String(value)];
     },
     normalizedOptions({ options } = this) {
-      return options.map((x) => { return typeof x === 'object' ? {...x, id: x.id || x.value, label: x.label || x.acronym || x.name, value: x.value || x.id } : x});
+      return options.map((x) => { return typeof x === 'object' ? {...x, id: x.id || x.value, label: x.label || x.acronym || x.name, value: String(x.value || x.id) } : x}) || [];
     },
     normalizedType({ multiple, options } = this) {
       if (!multiple) {
@@ -54,10 +51,17 @@ export default {
       }
       return 'checkbox';
     },
-    lastSelected({ currentValues, normalizedOptions } = this) {
-      return !currentValues.length
-        ? ''
-        : normalizedOptions.findLast((x) => currentValues.includes(String(x.value)))?.value;
+    lastSelected({ currentValues = [], normalizedOptions = [] } = this) {
+      let i = normalizedOptions.length - 1;
+
+      while (normalizedOptions[i]) {
+        const value = String(normalizedOptions[i]?.value);
+        if (currentValues.includes(value)) {
+          return value;
+        }
+        i -= 1;
+      }
+      return ''
     }
   },
   methods: {

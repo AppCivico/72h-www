@@ -39,9 +39,9 @@
     :key="option.value"
     class="list-box__option"
     :class="{
-      'list-box__option--selected': currentValues.includes(String(option.value)),
-      'list-box__option--last-selected': String(lastSelected) ===
-        String(option.value) || String(lastSelected) === String(option)
+      'list-box__option--selected': currentValues.includes(option.value),
+      'list-box__option--last-selected': lastSelected ===
+        option.value || lastSelected === String(option)
     }"
   >
     <input
