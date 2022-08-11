@@ -218,12 +218,12 @@
 
 .big-number__box--icon-female h1 {
   &::before {
-    background-image: image('female.svg');
+    background-image: image('icons/female.svg');
   }
 }
 
 .big-number__box--icon-male h1 {
   &::before {
-    background-image: image('male.svg');
+    background-image: image('icons/male.svg');
   }
 }

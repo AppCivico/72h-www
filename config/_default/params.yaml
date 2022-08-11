@@ -4,6 +4,6 @@ run: 2022
 contactEmail: "plataforma.72horas@gmail.com"
 tagline: ""
 shareImages:
-  default: "assets/images/default.jpg"
-  twitter: "assets/images/twitter.jpg"
-  facebook: "assets/images/facebook.jpg"
+  default: "assets/images/sharing/default.jpg"
+  twitter: "assets/images/sharing/twitter.jpg"
+  facebook: "assets/images/sharing/facebook.jpg"

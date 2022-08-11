@@ -82,12 +82,12 @@
 
 .button--icon-share {
   &::before {
-    background-image: image('share.svg');
+    background-image: image('icons/share.svg');
   }
 }
 
 .button--icon-money {
   &::before {
-    background-image: image('money.svg');
+    background-image: image('icons/money.svg');
   }
 }
