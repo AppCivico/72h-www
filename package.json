@@ -57,10 +57,12 @@
   },
   "dependencies": {
     "@babel/eslint-parser": "^7.18.9",
+    "@babel/polyfill": "^7.12.1",
     "@vue/component-compiler-utils": "^3.0.0",
     "@vue/eslint-config-airbnb": "^6.0.0",
     "awesomplete": "^1.1.5",
     "axios": "^0.19.0",
+    "core-js": "^3.24.1",
     "dayjs": "^1.8.36",
     "formbouncerjs": "^1.4.6",
     "fuzzysort": "^1.1.4",
