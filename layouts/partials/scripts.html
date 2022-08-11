@@ -4,10 +4,10 @@
 
 <script>
   {{ if eq (getenv "NODE_ENV") "development" }}
-    {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters" | default $.Site.Data.filters }}
+    {{ $filters := getJSON "https://dev-h72-api.appcivico.com/v1/filters?election_id=2040602022" | default $.Site.Data.filters }}
     window.appFilters = {{ $filters.filters }};
   {{ else }}
-    {{ $filters := getJSON "https://h72-api.appcivico.com/v1/filters" | default $.Site.Data.filters }}
+    {{ $filters := getJSON "https://h72-api.appcivico.com/v1/filters?election_id=2040602022" | default $.Site.Data.filters }}
     window.appFilters = {{ $filters.filters }};
   {{ end }}
 </script>
