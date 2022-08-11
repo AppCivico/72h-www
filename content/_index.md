@@ -5,4 +5,6 @@ Image: /uploads/page-1-1-.png
 weight: 3
 draft: false
 ---
-Educação política para a participação no processo eleitoral, à partir da transparência da distribuição dos recursos públicos declarados pelas candidaturas.
+Educação política para a participação cidadã no processo eleitoral à partir da
+transparência e acompanhamento da distribuição dos recursos de financiamento de
+campanha declarados pelas candidaturas.
