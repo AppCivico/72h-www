@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "audit-deps": "rimraf -f package-lock.json && synp --source-file yarn.lock && npm audit & rimraf -f package-lock.json",
-    "prebuild": "npm-run-all --parallel lint clean",
+    "prebuild": "npm-run-all --parallel clean",
     "build": "cross-env NODE_ENV=production",
     "postbuild": "hugo --ignoreCache --cleanDestinationDir",
     "clean": "npm-run-all --parallel clean:*",
