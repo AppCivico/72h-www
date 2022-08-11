@@ -1,7 +1,9 @@
 .social {
   display: flex;
+
   align-items: flex-start;
   justify-content: center;
+
   width: 100%;
   padding-left: 0;
 }
@@ -9,6 +11,7 @@
 .social--header {
   margin-top: 0.8rem;
   margin-bottom: 0;
+
   filter: contrast(0.5);
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -18,27 +21,34 @@
 
 .social li {
   display: inline-block;
+
   padding-bottom: 0;
   margin-right: 0.2rem;
   margin-bottom: 0;
   margin-left: 0.2rem;
+
   border-bottom: 0;
 }
 
 .social a:link,
 .social a:visited {
   display: flex;
+
   align-items: center;
   justify-content: center;
+
   width: 1.5rem;
   height: 1.5rem;
   margin-bottom: 0;
+
   text-indent: -999em;
+
   background-position: center;
   background-size: contain;
 }
 
 .social a svg {
   width: 60%;
+
   fill: palette('white');
 }

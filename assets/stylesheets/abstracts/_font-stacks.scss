@@ -13,7 +13,7 @@
 // Android: 'Roboto',
 // Basic web fallback: 'Helvetica Neue', Arial, sans-serif !default;
 
-$native-font-stack: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif !default;
+$native-font-stack: -apple-system, system-ui, blinkmacsystemfont, 'Segoe UI', 'Roboto', 'Helvetica Neue', arial, sans-serif !default;
 
 ///
 /// Default font stack for code samples, considering the platform.
@@ -29,7 +29,7 @@ $native-font-stack: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', 'R
 /// 	font-family: $basic-code-font-stack;
 /// }
 ///
-$basic-code-font-stack: Consolas, 'Liberation Mono', Menlo, Courier, monospace !default;
+$basic-code-font-stack: consolas, 'Liberation Mono', menlo, courier, monospace !default;
 
 
 $basic-title-font-stack: 'Open Sans', 'Helvetica Neue Light', 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif !default;
@@ -132,7 +132,6 @@ $rockwell-bold-font-stack: 'Rockwell Extra Bold', 'Rockwell Bold', monospace !de
 $times-new-roman-font-stack: 'TimesNewRoman', 'Times New Roman', 'Times', 'Baskerville', serif !default;
 
 
-
 /// Sans-Serif font-stacks
 
 /// @link http://www.cssfontstack.com/Arial
@@ -211,7 +210,6 @@ $trebuchet-font-stack: 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', '
 $verdana-font-stack: 'Verdana', 'Geneva', sans-serif !default;
 
 
-
 /// Monospaced font-stacks
 
 /// @link http://www.cssfontstack.com/Consolas
@@ -233,7 +231,6 @@ $monaco-font-stack: 'monaco', 'Consolas', 'Lucida Console', monospace !default;
 $andale-font-stack: 'Andale Mono', 'AndaleMono', monospace !default;
 
 
-
 /// Fantasy font-stacks
 
 /// @link http://www.cssfontstack.com/Copperplate
@@ -243,12 +240,10 @@ $copperplate-font-stack: 'Copperplate', 'Copperplate Gothic Light', fantasy !def
 $papyrus-font-stack: 'Papyrus', fantasy !default;
 
 
-
 /// Script font-stacks
 
 /// @link http://www.cssfontstack.com/Brush-Script-MT
 $brush-font-stack: 'Brush Script MT', cursive !default;
-
 
 
 /// Google font-stacks

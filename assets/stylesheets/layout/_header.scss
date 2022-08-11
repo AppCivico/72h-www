@@ -6,13 +6,17 @@ $logo-left-desktop: calc(50% - 3.46rem);
 
 .main-header {
   position: relative;
-  display: flex;
   z-index: layer('up');
+
+  display: flex;
+
   align-items: center;
   justify-content: flex-end;
+
   height: 4rem;
   padding-top: 0.5rem;
   margin-bottom: 2rem;
+
   background-color: palette('white');
   box-shadow: 0 8px 21px -3px palette('shadow', 'light');
 
@@ -21,14 +25,18 @@ $logo-left-desktop: calc(50% - 3.46rem);
     top: $logo-top;
     left: $logo-left;
     z-index: layer('up');
+
     width: $logo-size;
     height: $logo-size;
-    border-radius: 50%;
+
     content: '';
+
+    border-radius: 50%;
     box-shadow: 0 8px 21px -3px palette('shadow', 'light');
 
     @media screen and (min-width: breakpoint('desktop')) {
       left: $logo-left-desktop;
+
       width: $logo-size-desktop;
       height: $logo-size-desktop;
     }
@@ -42,6 +50,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
 
 .main-header .container {
   display: flex;
+
   justify-content: flex-end;
   // background-color: palette('white');
 }
@@ -52,10 +61,12 @@ $logo-left-desktop: calc(50% - 3.46rem);
   top: $logo-top;
   left: $logo-left;
   z-index: layer('up');
+
   width: $logo-size;
   height: $logo-size;
   margin-top: 0;
   margin-bottom: 0;
+
   background-image: image('logo.svg');
   background-position: center;
   background-size: contain;
@@ -64,6 +75,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
 
   @media screen and (min-width: breakpoint('desktop')) {
     left: $logo-left-desktop;
+
     width: $logo-size-desktop;
     height: $logo-size-desktop;
   }
@@ -81,23 +93,32 @@ $logo-left-desktop: calc(50% - 3.46rem);
   position: absolute;
   top: -14rem;
   left: 0;
-  display: flex;
   z-index: layer('default');
+
+  display: flex;
+
   flex-wrap: wrap;
+
   justify-content: center;
+
   width: 100%;
   padding: 1rem;
+
   background: palette('white');
   box-shadow: 0 8px 21px -3px palette('shadow', 'light');
+
   transition: top 0.3s;
 
   @media screen and (min-width: breakpoint('desktop')) {
     position: relative;
     top: auto;
     left: auto;
+
     justify-content: flex-end;
+
     width: auto;
     padding: 0;
+
     box-shadow: none;
   }
 }
@@ -112,6 +133,7 @@ $logo-left-desktop: calc(50% - 3.46rem);
 
 .main-header .button {
   justify-content: center;
+
   width: 16.25rem;
   min-width: 6rem;
   margin-right: 0.5rem;

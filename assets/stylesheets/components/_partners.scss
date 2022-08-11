@@ -1,7 +1,10 @@
 .partners {
   display: flex;
+
   flex-wrap: wrap;
+
   justify-content: center;
+
   width: 100%;
 
   @media screen and (min-width: breakpoint('tablet')) {
@@ -12,6 +15,7 @@
 .partners h2 {
   width: 100%;
   margin-bottom: 2rem;
+
   text-transform: uppercase;
 
   @media screen and (min-width: breakpoint('tablet')) {

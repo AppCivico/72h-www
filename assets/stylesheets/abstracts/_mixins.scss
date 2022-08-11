@@ -61,7 +61,7 @@
 /// }
 ///
 @mixin alt-ampersand {
-  .amp { // sass-lint:disable-line no-qualifying-elements
+  .amp {
     @include _italic-overflow;
     font-family: $ampersand-font-stack;
     font-size: 2em;
@@ -93,7 +93,7 @@
 /// }
 ///
 @mixin alt-preposition {
-  .alt { // sass-lint:disable-line no-qualifying-elements
+  .alt {
     @include _italic-overflow;
 
     font-family: $alt-font-stack;
@@ -145,11 +145,11 @@
 /// }
 ///
 @mixin inline-block-wrapper {
-  // sass-lint:disable-block no-duplicate-properties
   $_inline-block-font-stack: 'FreeSans', 'Arimo', 'Droid Sans', 'Helvetica', 'Arial', sans-serif;
   font-family: $_inline-block-font-stack;
   font-size: 0;
   letter-spacing: -0.31em; /* Webkit: collapse white-space between units */
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
   letter-spacing: normal\9; /* reset IE < 8 */
 
   word-spacing: -0.43em\9; /* IE < 8: collapse white-space between units */
@@ -267,7 +267,6 @@
 /// @access private
 ///
 @mixin _font-smoothing($value: true) {
-  // sass-lint:disable-block no-vendor-prefixes
   @if ($value == true) {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -304,7 +303,7 @@
 ///
 @mixin icon-font {
   @include _font-smoothing(true);
-  font-size: 14px; /* font-awesome pixel perfection is at 14px and multiples of 14 */ // sass-lint:disable-line property-units
+  font-size: 14px; /* font-awesome pixel perfection is at 14px and multiples of 14 */
 
   font-style: normal;
   font-weight: normal;
@@ -409,7 +408,7 @@
   overflow: hidden !important;
   /* stylelint-disable-next-line declaration-no-important */
   clip: rect(1px 1px 1px 1px) !important;
-  /* stylelint-disable-next-line declaration-no-important */
+  /* stylelint-disable-next-line declaration-no-important, declaration-block-no-duplicate-properties */
   clip: rect(1px, 1px, 1px, 1px) !important;
   /* stylelint-disable-next-line declaration-no-important */
   clip-path: inset(50%) !important;
@@ -597,7 +596,6 @@ $no-viewport: false !default;
     }
   }
 
-  // sass-lint:disable-block indentation brace-style
   @if (index($fallback-units, 'alpha') != null and $no-alpha != false) or
     (index($fallback-units, 'calc') != null and $no-calc != false) or
     (index($fallback-units, 'gradient') != null and $no-gradient != false) or
@@ -631,8 +629,6 @@ $no-viewport: false !default;
 /// }
 ///
 @mixin viewport-unit($property, $value) {
-  // sass-lint:disable-block indentation
-
   #{$property}: $value;
 
   $unit: unit($value);
@@ -719,7 +715,7 @@ $no-viewport: false !default;
     @error 'Direction must be either `top`, `right`, `bottom` or `left`.';
   }
 
-  border-#{_opposite-direction($direction)}: ($size * 1.5) solid $color; // sass-lint:disable-line property-sort-order
+  border-#{_opposite-direction($direction)}: ($size * 1.5) solid $color;
 
   @if $direction == top or $direction == bottom {
     border-right: $perpendicular-borders;
@@ -747,12 +743,16 @@ $no-viewport: false !default;
 
 @mixin debug-map($map) {
   @at-root {
+    /* stylelint-disable-next-line scss/at-rule-no-unknown */
     @debug-map {
       // these properties are for debug only. They do not exist
-      // sass-lint:disable-block no-misspelled-properties
+      /* stylelint-disable-next-line property-no-unknown */
       __toString__: inspect($map);
+      /* stylelint-disable-next-line property-no-unknown */
       __length__: length($map);
+      /* stylelint-disable-next-line property-no-unknown */
       __depth__: depth($map);
+      /* stylelint-disable-next-line property-no-unknown */
       __keys__: map-keys($map);
 
       __properties__ {

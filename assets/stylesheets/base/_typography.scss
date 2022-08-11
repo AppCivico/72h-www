@@ -265,19 +265,19 @@ dfn {
  * @see https://github.com/necolas/normalize.css/pull/342#issuecomment-173801037
  */
 
-// sass-lint:disable no-mergeable-selectors
+
 b,
 strong {
-  // sass-lint:disable-block no-duplicate-properties
   font-weight: bold;
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
   font-weight: inherit; /* 1 */
 }
 
+/* stylelint-disable-next-line no-duplicate-selectors */
 b,
 strong {
   font-weight: font-weight('bold'); /* 2 */
 }
-// sass-lint:enable no-mergeable-selectors
 
 em,
 i {
@@ -366,10 +366,11 @@ kbd {
  * Contain overflow in all browsers.
  */
 pre {
-  // sass-lint:disable-block no-duplicate-properties
   word-wrap: break-word; /* IE */
   white-space: pre; /* CSS2 */
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
   white-space: pre-wrap; /* CSS 2.1 */
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
   white-space: pre-line; /* CSS 3 (and 2.1 as well, actually) */
 }
 
@@ -518,11 +519,13 @@ blockquote li {
   font-size: 1em;
 }
 
-blockquote.verse { // sass-lint:disable-line no-qualifying-elements
+/* stylelint-disable-next-line selector-no-qualifying-type */
+blockquote.verse {
   text-align: center;
 }
 
-blockquote.verse p { // sass-lint:disable-line no-qualifying-elements
+/* stylelint-disable-next-line selector-no-qualifying-type */
+blockquote.verse p {
   display: inline-block;
 
   width: auto;

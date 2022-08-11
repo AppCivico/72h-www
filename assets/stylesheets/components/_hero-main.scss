@@ -1,6 +1,8 @@
 .bg-red {
   position: relative;
+
   overflow: hidden;
+
   background: palette('red');
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -17,11 +19,11 @@
   @media screen and (min-width: breakpoint('desktop')) {
     display: flex;
 
-    align-items: center;
     flex-direction: row-reverse;
 
-    max-width: 93.75em;
+    align-items: center;
 
+    max-width: 93.75em;
     margin: 0 auto;
   }
 
@@ -32,13 +34,11 @@
 
   padding: 0 2.6em;
 
-  font-family: 'Roboto', monospace;
-
+  font-family: Roboto, monospace;
   color: palette('white');
 
   @media screen and (min-width: breakpoint('desktop')) {
     max-width: 37.5em;
-
     padding-right: 2em;
     margin: 0;
 
@@ -48,16 +48,13 @@
 
 .hero-main__text h1 {
   min-height: 5.5em;
-
   padding: 1em 0;
   margin: 0;
 
-  line-height: 1.2;
   font-family: inherit;
-
-  text-align: center;
-
+  line-height: 1.2;
   color: inherit;
+  text-align: center;
 
   @media screen and (min-width: breakpoint('desktop')) {
     min-height: auto;
@@ -66,7 +63,6 @@
 
     font-size: ms(11);
     line-height: 1;
-
     text-align: inherit;
   }
 }
@@ -79,13 +75,11 @@
     display: inline-block;
 
     width: 21.25em;
-
     margin-top: 0.625em;
 
     font-size: ms(0);
   }
 }
-
 
 
 .hero-main__images {
@@ -100,9 +94,8 @@
 
   @media screen and (min-width: breakpoint('desktop')) {
     width: 43.75em;
-    height: 35.625em;
     max-width: auto;
-
+    height: 35.625em;
     margin-top: 60px;
     margin-left: 0;
   }
@@ -112,6 +105,7 @@
   position: absolute;
   top: -6rem;
   left: 0;
+
   width: 100%;
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -156,13 +150,11 @@
   height: 0.4em;
 
   background: palette('white');
-
   border-radius: 50%;
 
   @media screen and (min-width: breakpoint('desktop')) {
     top: -0.7em;
     left: 28.8em;
-
     z-index: 4;
 
     width: 0.8em;

@@ -5,6 +5,7 @@
     position: absolute;
     top: 0.5rem;
     left: 3rem;
+
     max-width: 75rem;
   }
 
@@ -17,36 +18,44 @@
   max-width: 13.125rem;
   margin-right: auto;
   margin-left: auto;
-  text-align: center;
+
   color: palette('gray', 'medium');
+  text-align: center;
 }
 
 .timer strong {
-  font-weight: font-weight('text');
   font-size: ms(-2);
+  font-weight: font-weight('text');
 }
 
 .timer__numbers {
   display: flex;
+
   justify-content: space-between;
+
   margin-right: auto;
   margin-left: auto;
 }
 
 .timer span {
   display: flex;
+
   flex-wrap: wrap;
+
   justify-content: center;
+
   width: 2.5rem;
-  font-weight: font-weight('bold');
+
   font-size: ms(3);
+  font-weight: font-weight('bold');
   text-align: center;
 }
 
 .timer span i {
   width: 100%;
+
+  font-size: ms(-6);
   font-style: normal;
   font-weight: font-weight('normal');
-  font-size: ms(-6);
   color: palette('gray', 'medium');
 }

@@ -13,7 +13,7 @@
     "clean:testResults": "rimraf ./testResults/**/*.xml",
     "prelint": "rimraf ./testResults/**/*.xml",
     "lint": "npm-run-all --parallel lint:*",
-    "lint:sass": "sass-lint \"./assets/stylesheets/**/*.scss\" --verbose --no-exit --format junit --output ./testResults/sassLint.xml",
+    "lint:sass": "stylelint \"./assets/stylesheets/**/*.scss\" --formatter verbose --output-file ./testResults/sassLint.txt",
     "lint:es": "eslint --ext .es,.js \"./assets/scripts/**\" --format junit --output-file ./testResults/esLint.xml",
     "serve": "npm-run-all start:*",
     "start:hugo": "cross-env NODE_ENV=development hugo server --noHTTPCache=true --ignoreCache --templateMetrics --disableFastRender --verbose",

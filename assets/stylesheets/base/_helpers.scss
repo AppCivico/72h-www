@@ -9,10 +9,10 @@
 }
 
 %loading-bg {
-  background-image: image('loading.svg');
-  background-position: 50% 50%;
-  background-repeat: no-repeat;
   background-color: palette('loading', 'foreground');
+  background-image: image('loading.svg');
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
 }
 
 %loading-el {
@@ -27,12 +27,15 @@
     bottom: 0;
     left: 0;
     z-index: layer('modal');
+
     width: 100%;
     height: 100%;
+
+    content: '';
+
+    background-color: palette('loading');
     background-image: image('loading.gif');
     background-position: top center;
-    background-color: palette('loading');
-    content: '';
   }
 }
 
@@ -119,13 +122,11 @@ textarea {
     // top: 0;
     right: 0;
     bottom: 0;
-
     z-index: layer('modal');
 
     font-size: 1rem;
 
     pointer-events: none;
-
     content: 'breakpoint: phone';
   }
 
@@ -133,10 +134,10 @@ textarea {
     bottom: 0;
     left: 0;
 
+    content: '';
+
     background-image: grid-image(2);
     background-position: center top;
-
-    content: '';
 
     @media screen and (min-width: breakpoint('phablet')) {
       background-image: grid-image(3);
@@ -160,7 +161,6 @@ textarea {
     padding: $gutter;
 
     background-color: palette('debug');
-
     opacity: 0.75;
 
     @media screen and (min-width: breakpoint('phablet')) {

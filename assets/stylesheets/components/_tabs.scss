@@ -4,13 +4,16 @@
 
 .tabs__controller {
   display: flex;
+
   margin-bottom: 2rem;
+
   text-align: center;
 }
 
 .tabs__controller a {
   width: 50%;
   padding: 0.3rem 0;
+
   color: palette('black');
 
   @media screen and (min-width: breakpoint('tablet')) {
@@ -37,5 +40,6 @@
 .tabs li {
   padding-bottom: 0;
   margin-bottom: 0;
+
   border-bottom: 0;
 }

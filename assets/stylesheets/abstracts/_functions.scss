@@ -408,7 +408,6 @@ $_default-text-color--light: palette('text', 'light');
 }
 
 
-
 /// Get a z-index value from a layer name
 ///
 /// @access public
@@ -422,12 +421,11 @@ $_default-text-color--light: palette('text', 'light');
 /// 		z-index: layer('modal');
 /// 	}
 @function layer($layer: 'default') {
-  // sass-lint:disable-block indentation
   $default-layers: (
-  'modal': 5000,
-  'dropdown': 4000,
-  'default': 1,
-  'below': -1,
+    'modal': 5000,
+    'dropdown': 4000,
+    'default': 1,
+    'below': -1,
   );
 
   @if variable-exists('layers') and type-of($layers) == 'map' {

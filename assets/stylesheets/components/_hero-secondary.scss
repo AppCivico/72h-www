@@ -1,5 +1,6 @@
 .overflow {
   overflow: hidden;
+
   @media screen and (min-width: breakpoint('desktop')) {
     overflow: visible;
   }
@@ -7,6 +8,7 @@
 
 .bg-yellow {
   position: relative;
+
   background: palette('yellow');
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -17,21 +19,28 @@
   &::before {
     position: absolute;
     top: -5.5em;
+
     display: block;
+
     width: 100%;
     height: 5.5em;
+
+    content: ' ';
+
     background-image: image('wave-yellow.svg');
     background-size: cover;
-    content: ' ';
 
     @media screen and (min-width: breakpoint('tablet')) {
       top: -7em;
+
       height: 7em;
     }
 
     @media screen and (min-width: breakpoint('desktop')) {
       top: -27.2em;
+
       height: 27.2em;
+
       background-size: cover;
     }
   }
@@ -44,20 +53,17 @@
   display: flex;
 
   width: 20em;
-
   padding-bottom: 11em;
-
   margin: 0 auto;
 
   @media screen and (min-width: breakpoint('desktop')) {
     flex-direction: row-reverse;
+
     justify-content: flex-end;
 
     width: auto;
     max-width: 93.75em;
-
     padding-top: 4em;
-
     margin-top: -17rem;
   }
 
@@ -83,10 +89,8 @@
   margin: 0;
 
   font-size: ms(13);
-
-  text-shadow: 1px 0 1px palette('red'), -1px 1px 0 palette('green');
-
   color: palette('purple');
+  text-shadow: 1px 0 1px palette('red'), -1px 1px 0 palette('green');
 
   @media screen and (min-width: breakpoint('desktop')) {
     font-size: ms(16);
@@ -108,16 +112,15 @@
     position: relative;
 
     min-width: 37rem;
-
     margin-bottom: -4.25em;
   }
 }
 
 .wave-green {
   position: relative;
+
   display: none;
 
   width: 100%;
-
   margin-top: -8em;
 }

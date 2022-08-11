@@ -263,7 +263,7 @@ svg:not(:root) {
  * SVGs should fallback to their surrounding text color
  */
 svg {
-  fill: currentColor;
+  fill: currentcolor;
 }
 
 a > svg {
@@ -378,8 +378,9 @@ img {
   max-width: 100%;
   height: auto;
 
-  image-rendering: optimizeQuality; /* 1 */
-  -ms-interpolation-mode: bicubic; /* 1 */ // sass-lint:disable-line no-misspelled-properties
+  image-rendering: optimizequality; /* 1 */
+  /* stylelint-disable-next-line property-no-unknown */
+  interpolation-mode: bicubic; /* 1 */
 }
 
 [usemap] {
@@ -408,7 +409,6 @@ a > picture {
 /* links
 ============================================================================ */
 a {
-  // sass-lint:disable-block property-sort-order
   padding: 0;
   margin: 0;
 
@@ -423,7 +423,7 @@ a {
     text-decoration: inherit;
 
     cursor: pointer;
-    -webkit-tap-highlight-color: palette('tap-highlight'); // sass-lint:disable-line no-vendor-prefixes
+    -webkit-tap-highlight-color: palette('tap-highlight');
   }
 
   &:visited {

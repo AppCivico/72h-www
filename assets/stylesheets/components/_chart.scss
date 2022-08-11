@@ -1,20 +1,28 @@
 .charts {
   display: flex;
+
   flex-wrap: wrap;
+
   width: 100%;
 }
 
 .chart {
   display: flex;
+
   flex-direction: column;
+
   width: 100%;
+
   transition: width 0.3s ease-out, height 0.5s, transform 0.5s;
 
   @media screen and (min-width: breakpoint('desktop')) {
     display: flex;
+
     flex-direction: row;
     flex-wrap: wrap;
+
     justify-content: space-around;
+
     padding: 0 2rem;
   }
 }
@@ -37,12 +45,17 @@
 
 .chart__legend {
   display: flex;
+
   flex-wrap: wrap;
+
   justify-content: center;
+
   order: 2;
+
   width: 100%;
   margin-top: 1.5rem;
   margin-bottom: 3.5rem;
+
   font-size: ms(-1);
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -52,9 +65,11 @@
 
 .chart__table-helper {
   order: 3;
+
   width: 100%;
-  font-size: ms(2);
+
   font-family: $roboto-font-stack;
+  font-size: ms(2);
   text-align: center;
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -83,6 +98,7 @@
 
   @media screen and (min-width: breakpoint('desktop')) {
     display: none;
+
     order: initial;
   }
 }
@@ -97,22 +113,29 @@
 
 .chart__legend strong {
   width: 100%;
+
   text-align: center;
 }
 
 .chart__label {
   display: flex;
-  align-items: center;
+
   flex-shrink: 0;
+
+  align-items: center;
+
   margin-left: 1rem;
 
   &::before {
     display: inline-block;
+
     width: 0.8em;
     height: 0.8em;
     margin-right: 0.3rem;
-    border-radius: 50%;
+
     content: '';
+
+    border-radius: 50%;
   }
 }
 
@@ -150,14 +173,17 @@
   width: 0;
   height: 0;
   padding: 0;
+
   transform: scale(0);
   transform-origin: center;
 }
 
 .chart.expanded {
   display: block;
+
   width: 100%;
   padding: 0 2rem;
+
   transform: scale(1);
   transform-origin: center;
 }
@@ -174,19 +200,24 @@
 
 .chart__header {
   display: flex;
+
   align-items: center;
   justify-content: space-between;
+
   width: 100%;
 }
 
 .chart__button {
   display: inline-block;
+
   width: 2.2rem;
   height: 2.2rem;
   margin-left: 0.8em;
+
   text-indent: -999em;
-  background-position: center;
+
   background-color: transparent;
+  background-position: center;
   border: 0;
 }
 
@@ -199,6 +230,7 @@
 
 .chart__button--expand {
   display: none;
+
   background-image: image('expand.svg');
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -208,6 +240,7 @@
 
 .chart__button--shrink {
   display: none;
+
   background-image: image('shrink.svg');
 }
 
@@ -219,6 +252,7 @@
   @extend %loading-bg;
 
   display: block;
+
   width: 100%;
   min-height: 25em;
 
@@ -244,6 +278,7 @@
 .chart__table h2 {
   font-weight: 300;
   color: palette('purple');
+
   border-bottom: 1px solid palette('gray');
 }
 
@@ -255,6 +290,7 @@
 
 .chart__table h3 {
   margin-bottom: 0.5rem;
+
   font-size: ms(2);
 }
 
@@ -262,7 +298,9 @@
 .mat-crossed-table h4 {
   padding-top: 1.5rem;
   margin-top: 1.5rem;
+
   font-size: ms(2);
+
   border-top: 1px solid palette('gray');
 }
 
@@ -272,6 +310,7 @@
 
 .chart.expanded .chart__table tr {
   display: flex;
+
   flex-wrap: wrap;
 }
 

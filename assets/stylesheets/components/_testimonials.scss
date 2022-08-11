@@ -5,12 +5,15 @@
     position: absolute;
     top: -6em;
     right: 0;
+
     width: 100%;
     height: 6em;
-    background-image: image('wave-white.svg');
-    background-size: cover;
-    background-repeat: no-repeat;
+
     content: '';
+
+    background-image: image('wave-white.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
   }
 }
 
@@ -34,21 +37,25 @@
 
 .testimonials__content {
   position: relative;
+
   display: flex;
+
   flex-direction: column;
 
   @media screen and (min-width: breakpoint('desktop')) {
-    align-items: flex-start;
     flex-direction: row;
+
+    align-items: flex-start;
   }
 }
 
 .testimonials h4 {
   margin-top: 0;
   margin-bottom: 1.8rem;
+
   font-size: ms(7);
-  text-shadow: 1px -1px 0 palette('yellow'), -1px 1px 0 palette('yellow');
   color: palette('green');
+  text-shadow: 1px -1px 0 palette('yellow'), -1px 1px 0 palette('yellow');
 
   @media screen and (min-width: breakpoint('desktop')) {
     font-size: ms(9);
@@ -57,8 +64,10 @@
 
 .testimonials blockquote {
   position: relative;
+
   padding: 0;
   margin: 0;
+
   font-size: ms(0);
   text-align: left;
 
@@ -81,6 +90,7 @@
 .testimonials blockquote:nth-child(3) .testimonials__content {
   @media screen and (min-width: breakpoint('desktop')) {
     flex-wrap: wrap;
+
     width: 27rem;
   }
 }
@@ -91,8 +101,10 @@
     top: 3em;
     right: -3em;
     left: auto;
+
     width: 10.75rem;
     height: 25.25rem;
+
     background-image: image('circle-border.svg');
     background-position: top left;
     border: 0;
@@ -120,7 +132,9 @@
     right: 0.5rem;
     bottom: 7rem;
     left: auto;
+
     padding-left: 2.5rem;
+
     background: palette('yellow');
   }
 }
@@ -144,6 +158,7 @@
 .testimonials blockquote:nth-child(4) .testimonials__content {
   @media screen and (min-width: breakpoint('desktop')) {
     flex-wrap: wrap;
+
     width: 27rem;
   }
 }
@@ -154,10 +169,12 @@
     top: -1rem;
     right: 10rem;
     left: auto;
+
     width: 3.312rem;
     height: 3.25rem;
-    background-position: top left;
+
     background-color: palette('orange');
+    background-position: top left;
     border: 0;
     border-radius: 0 0 100%;
   }
@@ -169,14 +186,18 @@
     position: absolute;
     right: 4rem;
     bottom: 14rem;
+
     display: block;
+
     width: 5.5rem;
     height: 5.5rem;
+
+    content: '';
+
+    border-color: palette('red');
     border-top: 6px solid;
     border-left: 6px solid;
-    border-color: palette('red');
     border-radius: 100% 0 0;
-    content: '';
   }
 }
 
@@ -213,10 +234,12 @@
 .testimonials figure {
   padding: 0;
   margin: 0 0 3em;
+
   text-align: center;
 
   @media screen and (min-width: breakpoint('desktop')) {
     order: 1;
+
     text-align: left;
   }
 }
@@ -225,16 +248,21 @@
   position: absolute;
   top: 0;
   left: 0;
+
   width: 3.938em;
   height: 3.938em;
+
+  content: '';
+
   border: 2px solid palette('green');
   border-radius: 50%;
-  content: '';
 }
 
 .testimonials figure img {
   order: 1;
+
   width: 14rem;
+
   border-radius: 50%;
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -244,16 +272,20 @@
 
 .testimonials p {
   position: relative;
+
   order: 3;
+
   padding: 0 2em;
-  font-weight: 300;
-  font-size: ms(1);
-  line-height: 1.42;
+
   font-family: $roboto-font-stack;
+  font-size: ms(1);
+  font-weight: 300;
+  line-height: 1.42;
   color: palette('black', 'lighter');
 
   @media screen and (min-width: breakpoint('desktop')) {
     order: 1;
+
     max-width: 340px;
   }
 }
@@ -263,10 +295,13 @@
   position: absolute;
   top: -1.688em;
   left: 0;
+
   width: 1.688em;
   height: 1.25em;
-  background-image: image('quote.svg');
+
   content: '';
+
+  background-image: image('quote.svg');
 }
 
 .testimonials p::after {
@@ -274,6 +309,7 @@
   right: 0;
   bottom: -1.25em;
   left: auto;
+
   transform: rotate(180deg);
 }
 
@@ -281,15 +317,21 @@
   position: absolute;
   top: 10rem;
   right: 0;
+
   display: flex;
+
   align-items: center;
+
   order: 2;
+
   width: 6.875em;
   height: 6.875em;
   padding: 0.625em 0.875em 0;
-  font-weight: 600;
+
   font-size: ms(-2);
+  font-weight: 600;
   line-height: 1;
+
   background: palette('yellow', 'opacity');
   border-radius: 50%;
 
@@ -297,8 +339,10 @@
     top: 10rem;
     right: 0;
     left: 17rem;
+
     width: 8.25rem;
     height: 8.25rem;
+
     font-size: ms(0);
   }
 
@@ -306,5 +350,4 @@
     display: none;
   }
 }
-
 

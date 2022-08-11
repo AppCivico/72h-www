@@ -1,5 +1,6 @@
 .bg-blue {
   position: relative;
+
   background: palette('green', 'hero');
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -10,12 +11,15 @@
     position: absolute;
     top: -6em;
     right: 0;
+
     width: 100%;
     height: 16em;
-    background-image: image('wave-blue.svg');
-    background-size: cover;
-    background-repeat: no-repeat;
+
     content: '';
+
+    background-image: image('wave-blue.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
 
     @media screen and (min-width: breakpoint('phablet')) {
       top: -8em;
@@ -34,19 +38,17 @@
   display: flex;
 
   max-width: 20em;
-
   padding-bottom: 13em;
-
   margin: 0 auto;
 
   @media screen and (min-width: breakpoint('desktop')) {
     flex-direction: row-reverse;
+
     justify-content: flex-start;
 
     width: auto;
     max-width: 93.75em;
     min-height: 38rem;
-
     padding-top: 4em;
   }
 
@@ -55,6 +57,7 @@
 .hero-water__text {
   position: relative;
   z-index: 2;
+
   max-width: 8.875em;
 
   @media screen and (min-width: breakpoint('desktop')) {
@@ -68,12 +71,10 @@
 
     font-size: ms(14);
     line-height: 0.8;
-    letter-spacing: -1.65px;
-
-    text-shadow: 1px -1px 0 palette('blue', 'light'), -1px 1px 0 palette('yellow');
-
-    vertical-align: middle;
     color: palette('blue', 'dark');
+    text-shadow: 1px -1px 0 palette('blue', 'light'), -1px 1px 0 palette('yellow');
+    letter-spacing: -1.65px;
+    vertical-align: middle;
 
     span {
       font-size: ms(-4);
@@ -86,11 +87,11 @@
 
   p {
     font-size: ms(0);
-
     color: palette('black', 'lighter');
 
     @media screen and (min-width: breakpoint('desktop')) {
       padding-left: 6em;
+
       font-size: ms(1);
     }
   }
@@ -98,11 +99,13 @@
 
 .hero-water__images {
   position: relative;
+
   width: 10rem;
   height: 25rem;
 
   @media screen and (min-width: breakpoint('desktop')) {
     top: 0;
+
     width: 100%;
   }
 }
@@ -110,12 +113,14 @@
 .hero-water__images .map-single-book {
   position: relative;
   top: 7rem;
+
   width: 100%;
 
   @media screen and (min-width: breakpoint('desktop')) {
     position: absolute;
     top: 0;
     left: 0;
+
     width: 31.25em;
   }
 
@@ -128,7 +133,6 @@
   position: relative;
 
   width: 100%;
-
   margin-top: -8.125em;
 
   @media screen and (min-width: breakpoint('desktop')) {

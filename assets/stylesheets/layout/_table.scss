@@ -11,7 +11,6 @@ td {
   vertical-align: top;
 
   background-color: transparent;
-
   border: 0;
 }
 
@@ -19,14 +18,14 @@ table {
   width: 100%;
   margin-top: 0;
   margin-right: 0;
-  margin-bottom: #{$leading * 1em} ;
+  margin-bottom: #{$leading * 1em};
   margin-left: 0;
 
   font-family: inherit;
   font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'pnum' 0, 'tnum' 1, 'onum' 0, 'lnum' 1, 'dlig' 0;
 
-  border-collapse: collapse;
   empty-cells: show;
+  border-collapse: collapse;
 }
 
 caption {
@@ -79,8 +78,8 @@ thead > tr:nth-last-of-type(odd) > td {
 }
 
 tbody {
-  font-weight: bold;
   font-family: $roboto-font-stack;
+  font-weight: bold;
   color: palette('black', 'lighter');
 }
 
