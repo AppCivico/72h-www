@@ -314,7 +314,7 @@ if (window.location.href.indexOf('/') > -1) {
       },
       setChartOptions() {
         Highcharts.setOptions({
-          colors: ['#DC3236', '#22B1A7', '#620ED9', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+          colors: ['#DC3236', '#620ED9', '#22B1A7', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
           chart: {
             style: {
               fontFamily: 'Montserrat',
