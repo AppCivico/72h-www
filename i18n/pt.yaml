@@ -138,8 +138,8 @@
   translation: "Estes dados são com base no sistema oficial do TSE"
 - id: TSEDataFiltered
   translation: "Dados filtrados com base no sistema do TSE:"
-- id: types
-  translation: "Tipos"
+- id: fundingTypes
+  translation: "Tipos de financiamento"
 
 
 - id: facebook
