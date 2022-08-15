@@ -15,12 +15,13 @@
     {{ "{{ option.label || option }}" }}
   </option>
 </select>
-<ul class="list-box" :class="{'list-box--empty': !normalizedOptions.length}" tabindex="0" v-else>
-  <li class="list-box__option list-box__option--empty" v-if="labelForEmpty">
+<ul class="list-box" :class="{'list-box--empty': !normalizedOptions.length}"
+tabindex="0" @focus="return false" v-else>
+  <li class="list-box__option list-box__option--empty" v-if="labelForEmpty || !required">
     <input
       :id="`option__${ name }--empty`"
       value=""
-      :checked="!currentValues.length"
+      :checked="!currentValues.length || currentValues.includes('')"
       type="radio"
       :name="name"
       v-bind="$attrs"
@@ -49,7 +50,7 @@
       :id="`option__${ name }--${ option.id || option }`"
       :key="`option__${ option.id || option }`"
       :value="option.value || option"
-      :checked="currentValues.includes(String(option.value))"
+      :checked="currentValues.includes(option.value)"
       :true-value="option.value || option"
       :type="normalizedType"
       :name="name"
