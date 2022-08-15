@@ -1,5 +1,5 @@
 .list-box__wrapper {
-  max-height: $gutter * 3;
+  height: $gutter * 2;
   overflow: visible;
 }
 
@@ -20,8 +20,8 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 
-  /// @see https://easings.net/#easeOutBack
-  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-timing-function: ease-out;
+
   transition-duration: 0.3s;
   transition-property: max-height, margin-top, margin-bottom, padding;
 
@@ -44,6 +44,9 @@
     border-width: 1px;
     border-radius: 5px;
     box-shadow: 0 3px 3px palette('shadow', 'buttons');
+
+    /// @see https://easings.net/#easeOutBack
+    transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 
     @media screen and (min-width: breakpoint('desktop')) {
     }
@@ -104,6 +107,7 @@
 
   flex-grow: 1;
 
+  min-height: $leading * 1em;
   padding: 0;
   overflow: hidden;
 
