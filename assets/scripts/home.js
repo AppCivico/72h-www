@@ -115,49 +115,49 @@ if (window.location.href.indexOf('/') > -1) {
         return this.mainData?.epoch;
       },
       states() {
-        return window.appFilters.regions.sort((a, b) => a.name.localeCompare(b.name));
+        return window.appFilters.regions?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       statesById({states}=this) {
         return states.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       cities() {
         return window.appFilters.cities
-          .filter(city => this.selectedState?.includes(String(city.region_id)))
+          ?.filter(city => this.selectedState?.includes(String(city.region_id)))
           .map((x) => { return { ...x, label: x.name, helper: this.statesById[x.region_id].acronym};})
-          .sort((a, b) => a.name.localeCompare(b.name));
+          .sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       citiesById({cities}=this) {
         return cities.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       offices() {
-        return window.appFilters.offices.sort((a, b) => a.id - b.id);
+        return window.appFilters.offices?.sort((a, b) => a.id - b.id) || [];
       },
       officesById({ offices } = this) {
         return offices.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       parties() {
-        return window.appFilters.parties.sort((a, b) => a.name.localeCompare(b.name));
+        return window.appFilters.parties?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       partiesById({ parties } = this) {
         return parties.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       fund_types() {
-        return window.appFilters.fund_types.sort((a, b) => a.name.localeCompare(b.name));
+        return window.appFilters.fund_types?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       fundTypesById({fund_types}=this) {
         return fund_types.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       reelection() {
-        return window.appFilters.reelection.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name)));
+        return window.appFilters.reelection?.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name))) || [];
       },
       races() {
-        return window.appFilters.races.sort((a, b) => a.name.localeCompare(b.name));
+        return window.appFilters.races?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       racesById({ races } = this) {
         return races.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       schooling() {
-        return window.appFilters.schooling.sort((a, b) => a.name.localeCompare(b.name));
+        return window.appFilters.schooling?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       schoolingById({ schooling } = this) {
         return schooling.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
@@ -304,25 +304,25 @@ if (window.location.href.indexOf('/') > -1) {
         const days = params.get('days');
         const epoch = Number(params.get('epoch') || 0);
 
-        if (regionId?.length) {
+        if (regionId?.length && window.appFilters.regions) {
           this.selectedState = window.appFilters.regions.filter(region => regionId.includes(region.id));
         }
-        if (cityId?.length) {
+        if (cityId?.length && window.appFilters.cities) {
           this.selectedCity = window.appFilters.cities.filter(city => cityId.includes(city.id));
         }
-        if (officeId?.length) {
-          this.selectedOffices = window.appFilters.parties.filter(office => officeId.includes(office.id));
+        if (officeId?.length && window.appFilters.offices) {
+          this.selectedOffices = window.appFilters.offices.filter(office => officeId.includes(office.id));
         }
-        if (partyId?.length) {
+        if (partyId?.length && window.appFilters.parties) {
           this.selectedParty = window.appFilters.parties.filter(party => partyId.includes(party.id));
         }
-        if (fundTypeId?.length) {
+        if (fundTypeId?.length && window.appFilters.fund_types) {
           this.selectedFund = window.appFilters.fund_types.filter(fund => fundTypeId.includes(fund.id));
         }
-        if (raceId?.length) {
+        if (raceId?.length && window.appFilters.races) {
           this.selectedRace = window.appFilters.races.filter(race => raceId.includes(race.id));
         }
-        if (schoolingId?.length) {
+        if (schoolingId?.length && window.appFilters.schooling) {
           this.selectedSchooling = window.appFilters.schooling.filter(schooling => schoolingId.includes(schooling.id));
         }
         if (reelection) {
