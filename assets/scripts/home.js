@@ -15,12 +15,6 @@ HighchartsExportData(Highcharts);
 dayjs.extend(duration);
 dayjs.locale('pt-br');
 
-
-console.debug('Highcharts', Highcharts);
-console.debug('HighchartsExportData', HighchartsExportData);
-console.debug('HighchartsExport', HighchartsExport);
-
-
 numeral.register('locale', 'pt-br', {
   delimiters: {
     thousands: '.',
@@ -406,13 +400,8 @@ if (window.location.href.indexOf('/') > -1) {
           .then((response) => {
             this.mainData = response;
 
-            console.debug('response.accumulated', response.accumulated);
+            this.pieCharts = this.handlePieData(response.accumulated.pie_charts);
 
-            lala = this.handlePieData(response.accumulated.pie_charts)
-
-            console.debug('lala',lala)
-
-            this.pieCharts = lala;
             return true;
           })
           .then(() => {
