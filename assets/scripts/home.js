@@ -347,8 +347,8 @@ if (window.location.href.indexOf('/') > -1) {
       updateFilterText() {
         const {
           filterText, selectedState, selectedCity, selectedParty, selectedFund,
-          selectedRace, selectedDay, statesById, citiesById, partiesById,
-          fundTypesById, officesById, racesById, schoolingById, isReelectionSelected
+          selectedRace, selectedDay, statesById, citiesById, partiesById, selectedOffices,
+          fundTypesById, officesById, racesById, schoolingById, isReelectionSelected, selectedSchooling
         } = this;
 
         filterText.selectedState = selectedState?.map(x => statesById[x].name).join(', ');
