@@ -25,7 +25,7 @@ export default {
     },
     type: {
       type: String,
-      default: 'multiple_choice',
+      default: 'single_choice',
     },
     value: {
       type: [Array, Number, String],
@@ -40,7 +40,9 @@ export default {
         : [String(value)];
     },
     normalizedOptions({ options } = this) {
-      return options.map((x) => { return typeof x === 'object' ? {...x, id: x.id || x.value, label: x.label || x.acronym || x.name, value: String(x.value || x.id) } : x}) || [];
+      return options.map((x) => {
+        return typeof x === 'object' ? {
+          ...x, id: x.id || x.value, label: x.label || x.acronym || x.name, value: String(typeof x.value !== 'undefined' ? x.value : x.id) } : x}) || [];
     },
     normalizedType({ multiple, options } = this) {
       if (!multiple) {
