@@ -17,11 +17,15 @@
 - id: allEthnicity
   translation: "Todas as etnias"
 - id: allFunds
-  translation: "Todos os fundos"
+  translation: "Todos os tipos"
+- id: allOffices
+  translation: "Todos os cargos"
 - id: allParties
   translation: "Todos os partidos"
+- id: allSchooling
+  translation: "Qualquer escolaridade"
 - id: allStates
-  translation: "Brasil"
+  translation: "Todos os Estados"
 - id: analysis
   translation: Análise
 - id: apply
@@ -62,12 +66,20 @@
   translation: "Seguir"
 - id: footerDescription
   translation: "A plataforma 72horas traz inovação tecnológica e metodológica para acompanhar, divulgar, compreender e questionar a dinâmica do repasse do fundo eleitoral (FEFC) e partidário (FP). Os dados apresentados estão sujeitos a instabilidades e condições adicionais. Para mais detalhes, consulte o link “sobre os dados”."
+- id: fundingTypes
+  translation: "Tipos de financiamento"
 - id: gender
   translation: "Gênero"
 - id: homePieTitle
   translation: "Total de valores repassados"
 - id: interval
   translation: "Período"
+- id: isReelection
+  translation: "Considerar reeleição?"
+- id: isReelecting
+  translation: Concorrendo a reeleição
+- id: isNotReelecting
+  translation: Sem mandato atual
 - id: last
   translation: "Últimos"
 - id: lastUpdatedAt
@@ -86,6 +98,8 @@
   translation: "Sem resultados"
 - id: noResultsCandidates
   translation: "Não há repasses para candidaturas com este perfil de busca"
+- id: offices
+  translation: "Cargos"
 - id: oldInfo
   translation: "Os dados deste link não estão atualizados, esses dados são de:"
 - id: oldInfoUpdate
@@ -130,6 +144,12 @@
   translation: "Estados"
 - id: supportNetwork
   translation: "Rede de apoio"
+- id: toLimitInterval
+  translation: "Limitar intervalo?"
+- id: toIgnore
+  translation: "ignorar"
+- id: toSelect
+  translation: "selecionar"
 - id: total
   translation: "Total:"
 - id: transfers
@@ -138,9 +158,6 @@
   translation: "Estes dados são com base no sistema oficial do TSE"
 - id: TSEDataFiltered
   translation: "Dados filtrados com base no sistema do TSE:"
-- id: fundingTypes
-  translation: "Tipos de financiamento"
-
 
 - id: facebook
   translation: "Facebook"

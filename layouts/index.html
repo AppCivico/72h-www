@@ -125,6 +125,17 @@
                         multiple
                       ></list-box>
                     </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="offices && offices.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "offices" }}</legend>
+                      <list-box
+                        id="offices"
+                        name="offices"
+                        v-model="selectedOffices"
+                        :options="offices"
+                        label-for-empty="{{ i18n "allOffices" }}"
+                        multiple
+                      ></list-box>
+                    </fieldset>
                     <fieldset class="filters__item list-box__wrapper" v-if="parties && parties.length">
                       <legend class="like-a__label list-box__label">{{ i18n "parties" }}</legend>
                       <list-box
@@ -158,13 +169,35 @@
                         multiple
                       ></list-box>
                     </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="schooling && schooling.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "schooling" }}</legend>
+                      <list-box
+                        id="schooling"
+                        name="schooling"
+                        v-model="selectedSchooling"
+                        label-for-empty="{{ i18n "toIgnore" }}"
+                        :options="schooling"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="reelection && reelection.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "isReelection" }}</legend>
+                      <list-box
+                        id="isReelection"
+                        name="isReelection"
+                        v-model="isReelectionSelected"
+                        label-for-empty="{{ i18n "toIgnore" }}"
+                        :options="reelection"
+                      ></list-box>
+                    </fieldset>
                     <fieldset class="filters__item list-box__wrapper">
-                      <legend class="like-a__label list-box__label">{{ i18n "interval" }}</legend>
+                      <legend class="like-a__label list-box__label">{{ i18n "toLimitInterval" }}</legend>
                       <list-box
                         id="days"
                         name="days"
                         v-model="selectedDay"
                         :options="days"
+                        required
                       ></list-box>
                     </fieldset>
                     <button class="button button--primary">{{ i18n "apply" }}</button>

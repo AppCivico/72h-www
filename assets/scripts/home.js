@@ -83,11 +83,21 @@ if (window.location.href.indexOf('/') > -1) {
 
       selectedState: [],
       selectedCity: [],
+      selectedOffices: [],
       selectedParty: [],
       selectedFund: [],
       selectedRace: [],
+      selectedSchooling: [],
+      isReelectionSelected: '',
 
-      days: [{label: 'todos', value: 'all'}, 7, 15, 30, 60, 90],
+      days: [
+        {label: 'ignorar', value: 'all'},
+        {label: 'últimos 7 dias', value: 7},
+        {label: 'últimos 15 dias', value: 15},
+        {label: 'últimos 30 dias', value: 30},
+        {label: 'últimos 60 dias', value: 60},
+        {label: 'últimos 90 dias', value: 90},
+      ],
       selectedDay: 'all',
 
       previouslyUsedFiltersAsQueryString: '',
@@ -119,6 +129,12 @@ if (window.location.href.indexOf('/') > -1) {
       citiesById({cities}=this) {
         return cities.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
+      offices() {
+        return window.appFilters.offices.sort((a, b) => a.id - b.id);
+      },
+      officesById({ offices } = this) {
+        return offices.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      },
       parties() {
         return window.appFilters.parties.sort((a, b) => a.name.localeCompare(b.name));
       },
@@ -131,11 +147,20 @@ if (window.location.href.indexOf('/') > -1) {
       fundTypesById({fund_types}=this) {
         return fund_types.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
+      reelection() {
+        return window.appFilters.reelection.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name)));
+      },
       races() {
         return window.appFilters.races.sort((a, b) => a.name.localeCompare(b.name));
       },
       racesById({ races } = this) {
         return races.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      },
+      schooling() {
+        return window.appFilters.schooling.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      schoolingById({ schooling } = this) {
+        return schooling.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart);
@@ -175,6 +200,11 @@ if (window.location.href.indexOf('/') > -1) {
       filtersAsQueryString() {
         let mountedURL = '';
 
+        if (this.selectedOffices?.length) {
+          mountedURL += Array.isArray(this.selectedOffices)
+            ? '&' + this.selectedOffices.map(x => `office_id[]=${x}`).join('&')
+            : `&office_id=${this.selectedOffices}`;
+        }
         if (this.selectedParty?.length) {
           mountedURL += Array.isArray(this.selectedParty)
             ? '&' + this.selectedParty.map(x => `party_id[]=${x}`).join('&')
@@ -189,6 +219,14 @@ if (window.location.href.indexOf('/') > -1) {
           mountedURL += Array.isArray(this.selectedRace)
             ? '&' + this.selectedRace.map(x => `race_id[]=${x}`).join('&')
             : `&race_id=${this.selectedRace}`;
+        }
+        if (this.selectedSchooling?.length) {
+          mountedURL += Array.isArray(this.selectedSchooling)
+            ? '&' + this.selectedSchooling.map(x => `schooling_id[]=${x}`).join('&')
+            : `&schooling_id=${this.selectedSchooling}`;
+        }
+        if (this.isReelectionSelected) {
+          mountedURL += `&reelection=${this.isReelectionSelected}`;
         }
         if (this.selectedState?.length) {
           mountedURL += Array.isArray(this.selectedState)
@@ -215,6 +253,14 @@ if (window.location.href.indexOf('/') > -1) {
         await this.handleData();
         await this.generateChart();
         await this.generateIntroCharts();
+      },
+      selectedState(newValue) {
+        // when a state is unselected, we need to remove its cities from selection
+        // as well. However, we keep cities in case of empty states to save the
+        // user from select everything again on an bad state selection
+        if (this.selectedCity.length) {
+          this.selectedCity = this.selectedCity.filter(x => this.citiesById[x]);
+        }
       },
     },
     mounted() {
@@ -250,8 +296,11 @@ if (window.location.href.indexOf('/') > -1) {
         const regionId = params.get('region_id')?.split(',').map(x => Number(x));
         const cityId = params.get('city_id')?.split(',').map(x => Number(x));
         const partyId = params.get('party_id')?.split(',').map(x => Number(x));
+        const officeId = params.get('office_id')?.split(',').map(x => Number(x));
         const fundTypeId = params.get('fund_type_id')?.split(',').map(x => Number(x));
         const raceId = params.get('race_id')?.split(',').map(x => Number(x));
+        const schoolingId = params.get('schooling_id')?.split(',').map(x => Number(x));
+        const reelection = params.get('reelection');
         const days = params.get('days');
         const epoch = Number(params.get('epoch') || 0);
 
@@ -260,6 +309,9 @@ if (window.location.href.indexOf('/') > -1) {
         }
         if (cityId?.length) {
           this.selectedCity = window.appFilters.cities.filter(city => cityId.includes(city.id));
+        }
+        if (officeId?.length) {
+          this.selectedOffices = window.appFilters.parties.filter(office => officeId.includes(office.id));
         }
         if (partyId?.length) {
           this.selectedParty = window.appFilters.parties.filter(party => partyId.includes(party.id));
@@ -270,8 +322,14 @@ if (window.location.href.indexOf('/') > -1) {
         if (raceId?.length) {
           this.selectedRace = window.appFilters.races.filter(race => raceId.includes(race.id));
         }
+        if (schoolingId?.length) {
+          this.selectedSchooling = window.appFilters.schooling.filter(schooling => schoolingId.includes(schooling.id));
+        }
+        if (reelection) {
+          this.isReelectionSelected = isReelectionSelected != 0 ? 1 : 0;
+        }
         if (days) {
-          this.selectedDay = params.get('days');
+          this.selectedDay = days;
         }
         if (epoch) {
           this.epochFromParam = Number(params.get('epoch'));
@@ -290,18 +348,35 @@ if (window.location.href.indexOf('/') > -1) {
         const {
           filterText, selectedState, selectedCity, selectedParty, selectedFund,
           selectedRace, selectedDay, statesById, citiesById, partiesById,
-          fundTypesById, racesById
+          fundTypesById, officesById, racesById, schoolingById, isReelectionSelected
         } = this;
 
         filterText.selectedState = selectedState?.map(x => statesById[x].name).join(', ');
 
-        filterText.selectedCity = selectedState.length > 1
-          ? selectedCity?.map(x => citiesById[x].name + ' (' + citiesById[x].helper + ')').join(', ')
-        : selectedCity?.map(x => citiesById[x].name).join(', ');
+        if (Object.keys(citiesById).length) {
+          filterText.selectedCity = selectedState.length > 1
+            ? selectedCity?.map(x => citiesById[x].name + ' (' + citiesById[x].helper + ')').join(', ')
+          : selectedCity?.map(x => citiesById[x].name).join(', ');
+        } else {
+          if (!!filterText.selectedCity) {
+            delete filterText.selectedCity;
+          }
+        }
 
+        filterText.selectedOffices = selectedOffices?.map(x => officesById[x].name).join(', ');
         filterText.selectedParty = selectedParty?.map(x => partiesById[x].name).join(', ');
         filterText.selectedFund = selectedFund?.map(x => fundTypesById[x].name).join(', ');
         filterText.selectedRace = selectedRace?.map(x => racesById[x].name).join(', ');
+        filterText.selectedSchooling = selectedSchooling?.map(x => schoolingById[x].name).join(', ');
+
+        if (isReelectionSelected) {
+          filterText.isReelectionSelected === isReelectionSelected;
+        } else {
+          if (!!filterText.isReelectionSelected) {
+            delete filterText.isReelectionSelected;
+          }
+        }
+
         filterText.selectedDay = selectedDay;
       },
       copyShareURL() {

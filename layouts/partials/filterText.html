@@ -9,6 +9,14 @@
       <template v-if="value">{{ "{{ value }}" }}</template>
       <template v-else>{{ i18n "allCities" }}</template>;
     </template>
+    <template v-if="key === 'selectedOffice'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allOffices" }}</template>;
+    </template>
+    <template v-if="key === 'isReelectionSelected'">
+      <template v-if="value === '0'">{{ i18n "isNotReelecting" }}</template>
+      <template v-else>{{ i18n "isReelecting" }}</template>;
+    </template>
     <template v-if="key === 'selectedParty'">
       <template v-if="value">{{ "{{ value }}" }}</template>
       <template v-else>{{ i18n "allParties" }}</template>;
@@ -20,6 +28,10 @@
     <template v-if="key === 'selectedRace'">
       <template v-if="value">{{ "{{ value }}" }}</template>
       <template v-else>{{ i18n "allEthnicity" }}</template>;
+    </template>
+    <template v-if="key === 'selectedSchooling'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allSchooling" }}</template>;
     </template>
     <template v-if="key === 'selectedDay'">
       <template v-if='value === "all"'>
