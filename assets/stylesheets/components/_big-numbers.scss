@@ -6,6 +6,7 @@
   width: 100%;
   min-height: 12.5rem;
   margin-top: 2rem;
+  margin-bottom: $gutter * 3;
 
   text-align: center;
 
@@ -22,10 +23,43 @@
   }
 }
 
+.big-numbers--intro {
+  @media screen and (min-width: breakpoint('desktop')) {
+    &::before,
+    &::after {
+      align-self: center;
+
+      width: calc(25% - 2rem);
+      // width: 4.5rem;
+      height: 0.25rem;
+
+      content: '';
+
+      background-color: palette('main-colors', 'quaternary');
+      border-radius: $gutter;
+    }
+
+    &::before {
+      order: 1;
+    }
+
+    &::after {
+      order: 3;
+    }
+  }
+}
+
+.big-numbers .pay-attention-to,
 .big-numbers .big-number__update {
   width: 100%;
 
   font-size: ms(-2);
+}
+
+.big-numbers .pay-attention-to {
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: 5;
+  }
 }
 
 .big-number__box {
@@ -45,9 +79,21 @@
   }
 
   @media screen and (min-width: breakpoint('desktop')) {
-    order: 1;
+    order: 4;
 
     width: calc(33.3333% - 2rem);
+  }
+}
+
+.big-number__box--total {
+  @media screen and (min-width: breakpoint('desktop')) {
+    order: 2;
+
+    width: calc(50% - 2rem);
+
+    &[class] h1::before {
+      content: none;
+    }
   }
 }
 
@@ -125,6 +171,17 @@
   font-weight: font-weight('bold');
 }
 
+.big-number__not-so-big {
+  font-size: ms(2);
+  font-weight: font-weight('bold');
+}
+
+.big-number__not-so-big small {
+  font-size: ms(-3);
+  font-weight: font-weight('normal');
+  color: palette('gray', 'medium');
+}
+
 .big-number__number span {
   font-size: ms(-8);
   font-style: normal;
@@ -168,6 +225,7 @@
   flex-grow: 1;
 
   padding: 0;
+  margin-right: 0.25em;
 
   font-size: ms(2);
   font-weight: font-weight('bold');

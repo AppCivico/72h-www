@@ -1,0 +1,28 @@
+.pay-attention-to {
+  $fg-color: palette('label', 'warning');
+  $bg-color: palette('white');
+
+  text-align: right;
+
+  &[class] {
+    color: text-contrast($bg-color, $fg-color, $level: 'AA');
+  }
+
+  &::before {
+    display: inline-block;
+
+    width: 1.5em;
+    height: 1.5em;
+
+    font-family: $alt-font-stack;
+    font-style: italic;
+    font-weight: font-weight('bold');
+    color: $bg-color;
+    text-align: center;
+
+    content: 'i';
+
+    background-color: $fg-color;
+    border-radius: 100%;
+  }
+}

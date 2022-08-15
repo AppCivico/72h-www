@@ -1,7 +1,15 @@
+- id: accumulatedCrowdfunding
+  translation: "Valor acumulado de arrecadações por financiamento coletivo"
+- id: accumulatedDirectDonation
+  translation: "Valor acumulado de doações diretas"
 - id: accumulatedFemale
   translation: "Valor dos repasses acumulados para o gênero feminino"
 - id: accumulatedMale
   translation: "Valor dos repasses acumulados para o gênero masculino"
+- id: accumulatedOtherResources
+  translation: "Valor acumulado de outros recursos"
+- id: accumulatedSelfFunding
+  translation: "Valor acumulado de auto-financiamento"
 - id: accumulatedValue
   translation: "Valor Total Acumulado dos Repasses"
 - id: accumulatedValueParty
@@ -30,12 +38,36 @@
   translation: Análise
 - id: apply
   translation: Aplicar
+- id: averageByCandidate
+  translation: "média por candidatura"
+- id: averageByCandidateFemale
+  translation: "média por candidata"
+- id: averageByCandidateMale
+  translation: "média por candidato"
 - id: bothFundsAmount
   translation: "Montante referente ao Fundo Especial e Partidário do Brasil"
+- id: byCandidate
+  one: "Por candidatura"
+  other: "Por candidaturas"
+- id: byCandidateFemale
+  one: "Por candidata"
+  other: "Por candidatas"
+- id: byCandidateMale
+  one: "Por candidato"
+  other: "Por candidatos"
+- id: candidate
+  one: "candidatura"
+  other: "candidaturas"
+- id: candidateFemale
+  one: "candidata"
+  other: "candidatas"
+- id: candidateMale
+  one: "candidato"
+  other: "candidatos"
 - id: candidatesListing
   translation: "Listagem das candidaturas"
 - id: candidatesWhoReceivedFunds
-  translation: "Quantidade de candidaturas prestadoras de contas:"
+  translation: "Candidaturas prestadoras de contas"
 - id: checkFound
   translation: "Acompanhe como os recursos financeiros estão sendo declarados  e distribuídos durante a campanha eleitoral."
 - id: cities
@@ -98,6 +130,8 @@
   translation: "Sem resultados"
 - id: noResultsCandidates
   translation: "Não há repasses para candidaturas com este perfil de busca"
+- id: ofCandidates
+  translation: "Das candidaturas"
 - id: offices
   translation: "Cargos"
 - id: oldInfo
