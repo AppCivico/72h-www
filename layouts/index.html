@@ -316,6 +316,8 @@
                     <p v-else>
                       {{ i18n "TSEData" }}
                     </p>
+                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(chartTotal)"></span>
+                    {{/*
                     <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartTotal)"></span>
                     <br />
                     <span class="big-number__divisor">
@@ -328,6 +330,7 @@
                       <output v-html="formatCurrencyNoAbbr(chartTotal /
                       totalArray.length)"></output> {{ i18n "byCandidate" 2 | lower }}
                     </span>
+                    */}}
                   </div>
 
                   <div class="big-number__box big-number__box--icon big-number__box--icon-female">
@@ -336,6 +339,8 @@
                     <p v-else>
                       {{ i18n "TSEData" }}
                     </p>
+                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(chartFemale)"></span>
+                    {{/*
                     <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartFemale)"></span>
                     <br />
                     <span class="big-number__divisor">
@@ -348,6 +353,7 @@
                       <output v-html="formatCurrencyNoAbbr(chartFemale /
                       femaleArray.length)"></output> {{ i18n "byCandidateFemale" 2 | lower }}
                     </span>
+                    */}}
                   </div>
 
                   <div class="big-number__box big-number__box--icon big-number__box--icon-male">
@@ -356,6 +362,8 @@
                     <p v-else>
                       {{ i18n "TSEData" }}
                     </p>
+                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(chartMale)"></span>
+                    {{/*
                     <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(chartMale)"></span>
                     <br />
                     <span class="big-number__divisor">
@@ -368,6 +376,7 @@
                       <output v-html="formatCurrencyNoAbbr(chartMale /
                       maleArray.length)"></output> {{ i18n "byCandidateMale" 2 | lower }}
                     </span>
+                    */}}
                   </div>
                 </div>
               </transition-expand>
