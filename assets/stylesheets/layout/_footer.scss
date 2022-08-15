@@ -102,8 +102,14 @@
   }
 }
 
+.footer__menu ul {
+  padding-left: $gutter;
+}
+
 .footer__menu li {
   margin-bottom: 0.25rem;
+
+  list-style-type: none;
 }
 
 .footer__menu a {

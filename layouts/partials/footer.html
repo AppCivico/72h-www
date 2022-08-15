@@ -9,11 +9,26 @@
       <ul class="footer__menu">
         {{ range . }}
           <li>
-            <a
-              href="{{ .URL }}"
-              target="_blank">
+            {{ if .HasChildren }}
+              {{ if .URL }}
+                <a href="{{ .URL }}" target="_blank">
+                    {{ .Name }}
+                </a>
+              {{ else }}
                 {{ .Name }}
-            </a>
+              {{ end }}
+              <ul class="sub-menu">
+                  {{ range .Children }}
+                      <li>
+                          <a href="{{ .URL }}" target="_blank">{{ .Name }}</a>
+                      </li>
+                  {{ end }}
+              </ul>
+            {{ else }}
+              <a href="{{ .URL }}" target="_blank">
+                  {{ .Name }}
+              </a>
+            {{ end }}
           </li>
         {{ end }}
       </ul>

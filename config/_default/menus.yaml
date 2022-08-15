@@ -28,3 +28,10 @@ footer:
   name: "Quem somos"
   url: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
   weight: 4
+- identifier: "runs2020"
+  name: "Eleição de 2020"
+  url: "https://2020.72horas.org/"
+  parent: "previousRuns"
+- identifier: "previousRuns"
+  name: "Eleições anteriores"
+  weight: 5
