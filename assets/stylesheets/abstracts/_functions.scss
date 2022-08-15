@@ -1,3 +1,4 @@
+@use 'sass:string';
 // -----------------------------------------------------------------------------
 // This file contains all application-wide Sass functions.
 // -----------------------------------------------------------------------------
@@ -9,7 +10,7 @@
 /// @param {String} $path - asset path
 /// @return {Url}
 @function asset($base, $type, $path) {
-  @return url('#{$base}#{$type}#{$path}');
+  @return url('#{$base}#{$type}#{$path}?#{unique-id()}');
 }
 
 /// Returns URL to an image based on its path
