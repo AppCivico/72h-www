@@ -693,7 +693,10 @@ if (window.location.href.indexOf('/') > -1) {
                 dataLabels: {
                   enabled: true,
                   pointFormatter: function () {
-                    return `${Number(this.y / chart.total * 100).toFixed(2)}%`;
+
+                    return this.percentage
+                      ? `${this.percentage.toFixed(2)}%`
+                      : `${Number(this.y / chart.total * 100).toFixed(2)}%`;
                   },
                 },
               },
