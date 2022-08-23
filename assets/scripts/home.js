@@ -589,6 +589,12 @@ if (window.location.href.indexOf('/') > -1) {
           document.querySelector('#js-candidate-box').scrollIntoView();
         }
 
+        if (page === false) {
+          if(this.candidates?.candidates) {
+            this.candidates.candidates = [];
+          }
+        }
+
         fetch(url, {
           method: 'GET',
         })
