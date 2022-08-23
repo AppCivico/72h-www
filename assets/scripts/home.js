@@ -53,6 +53,10 @@ if (window.location.href.indexOf('/') > -1) {
       loadingCandidates: true,
       loadingChartData: true,
 
+      errorMessages: {
+        candidates: '',
+      },
+
       shareURLCopied: false,
       sharingFrom: '',
 
@@ -588,20 +592,33 @@ if (window.location.href.indexOf('/') > -1) {
         fetch(url, {
           method: 'GET',
         })
-          .then(response => response.json())
           .then((response) => {
-            this.candidates = response;
-            return true;
+            if (!response.ok) {
+              throw new Error('Network response was not OK. Status: ' + response.status);
+            }
+            return response.json()
           })
-          .then(() => {
-            this.loadingCandidates = false;
+          .then((response) => {
+            if(!Array.isArray(response.candidates)) {
+              throw new Error('Array of candidates is missing');
+            }
+
+            this.errorMessages.candidates = '';
+            this.candidates = response;
+
             if (page) {
               this.candidates_page = page;
             }
             return true;
           })
           // eslint-disable-next-line no-console
-          .catch(error => console.error(error));
+          .catch((error) => {
+            this.errorMessages.candidates = error.message;
+            console.error(error);
+          })
+          .finally(()=>{
+            this.loadingCandidates = false;
+          });
       },
       generateChart() {
         this.chart = Highcharts.chart('js-main-chart', {

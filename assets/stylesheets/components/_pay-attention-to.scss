@@ -1,12 +1,5 @@
-.pay-attention-to {
-  $fg-color: palette('label', 'warning');
-  $bg-color: palette('white');
-
+%pay-attention-to {
   text-align: right;
-
-  &[class] {
-    color: text-contrast($bg-color, $fg-color, $level: 'AA');
-  }
 
   &::before {
     display: inline-block;
@@ -15,14 +8,45 @@
     height: 1.5em;
 
     font-family: $alt-font-stack;
-    font-style: italic;
     font-weight: font-weight('bold');
-    color: $bg-color;
     text-align: center;
 
-    content: 'i';
+  }
+}
 
-    background-color: $fg-color;
+.pay-attention-to__warning {
+  @extend %pay-attention-to;
+
+  $fg-color: palette('label', 'warning');
+  $bg-color: palette('white');
+
+  &[class] {
+    color: text-contrast($bg-color, $fg-color, $level: 'AA');
+  }
+
+  &::before {
     border-radius: 100%;
+    font-style: italic;
+    color: $bg-color;
+    background-color: $fg-color;
+    content: 'i';
+  }
+}
+
+.pay-attention-to__danger {
+  @extend %pay-attention-to;
+
+  $fg-color: palette('label', 'danger');
+  $bg-color: palette('white');
+
+  &[class] {
+    color: text-contrast($bg-color, $fg-color, $level: 'AA');
+  }
+
+  &::before {
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+    color: $bg-color;
+    background-color: $fg-color;
+    content: '!';
   }
 }

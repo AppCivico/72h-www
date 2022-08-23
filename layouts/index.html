@@ -21,7 +21,7 @@
                   {{ "{{ mainData ?  formatDateTime(mainData.last_run_at) : '' }}" }}
                 </p>
 
-                <p class="pay-attention-to">
+                <p class="pay-attention-to__warning">
                   Uma mesma candidatura pode receber fundos de diversas fontes.
                 </p>
 
@@ -407,7 +407,7 @@
                   {{ partial "filterText" }}
                 </div>
                 <transition-expand>
-                  <div v-if="!loadingCandidates" class="candidates__container">
+                  <div :aria-busy="loadingCandidates" class="candidates__container">
                     <template v-if="candidates && candidates.candidates.length > 0">
                       <div
                         v-for="candidate in candidates.candidates"
@@ -447,6 +447,11 @@
                       <img src="assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
                       <p>{{ i18n "noResultsCandidates" }}</p>
                     </div>
+
+                    <div class="candidates__error-message pay-attention-to__danger" v-show="errorMessages.candidates">
+                      {{ "{{ errorMessages.candidates }}" }}
+                    </div>
+
                     <div class="pagination">
                       <button
                         v-if="candidates_page > 1"
