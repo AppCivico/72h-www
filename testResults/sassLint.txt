@@ -1,0 +1,60 @@
+
+55 sources checked
+ E:\_repositories\72h-www\assets\stylesheets\main.scss
+ E:\_repositories\72h-www\assets\stylesheets\abstracts\_constants.scss
+ E:\_repositories\72h-www\assets\stylesheets\abstracts\_font-stacks.scss
+ E:\_repositories\72h-www\assets\stylesheets\abstracts\_functions.scss
+ E:\_repositories\72h-www\assets\stylesheets\abstracts\_mixins.scss
+ E:\_repositories\72h-www\assets\stylesheets\abstracts\_variables.scss
+ E:\_repositories\72h-www\assets\stylesheets\base\_base.scss
+ E:\_repositories\72h-www\assets\stylesheets\base\_fonts.scss
+ E:\_repositories\72h-www\assets\stylesheets\base\_helpers.scss
+ E:\_repositories\72h-www\assets\stylesheets\base\_typography.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_footer.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_form.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_header.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_lists.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_main.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_outdated.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_page-title.scss
+ E:\_repositories\72h-www\assets\stylesheets\layout\_table.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_big-numbers.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_buttons.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_candidates.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_chart-form.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_chart.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_checkbox-and-radio.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_custom-research.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_filters.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_hamburguer-menu.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_hero-main.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_hero-secondary.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_hero-tertiary.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_hero-water.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_home-block.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_intro-charts.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_jumbotron.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_library-list.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_list-boxes.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_loading-indicator.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_main-chart.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_modal.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_no-results.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_page-navigation.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_pagination.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_parties.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_partners.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_posts.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_progress.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_share-modal.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_slider.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_social.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_tabs.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_tags.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_testimonials.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_timer.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_transition-expand.scss
+ E:\_repositories\72h-www\assets\stylesheets\components\_twitter.scss
+
+0 problems found
+

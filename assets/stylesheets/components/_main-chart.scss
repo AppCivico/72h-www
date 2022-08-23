@@ -2,8 +2,4 @@
   min-height: 25rem;
   margin-top: $gutter;
   margin-bottom: $gutter * 2;
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    margin-bottom: $gutter * 4;
-  }
 }

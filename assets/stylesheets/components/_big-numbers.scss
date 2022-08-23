@@ -6,7 +6,7 @@
   width: 100%;
   min-height: 12.5rem;
   margin-top: 2rem;
-  margin-bottom: $gutter * 3;
+  margin-bottom: $gutter;
 
   text-align: center;
 
@@ -67,8 +67,7 @@
 
   flex-direction: column;
 
-  padding-bottom: 2rem;
-  margin-bottom: 2rem;
+  margin-bottom: $gutter * 2;
 
   border-bottom: 1px solid palette('gray', 'light');
 
