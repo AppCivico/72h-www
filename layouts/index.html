@@ -15,7 +15,7 @@
             </header>
 
             <div class="big-numbers__wrapper">
-              <p class="big-number__update pay-attention-to__warning">
+              <p class="big-number__update pay-attention-to__warning" v-if="mainData && mainData.last_run_at">
                   {{ i18n "lastUpdatedAt" }}
                   {{ "{{ mainData ?  formatDateTime(mainData.last_run_at) : '' }}" }}
                 </p>
@@ -199,10 +199,10 @@
               </template>
             </div>
 
-              <p class="big-number__warning pay-attention-to__warning">
+              <p v-show="!this.loadingBigNumbers" class="big-number__warning pay-attention-to__warning">
                 {{ i18n "multipleFundsWarning" }}
               </p>
-              <p class="big-number__warning pay-attention-to__warning">
+              <p v-show="!this.loadingBigNumbers" class="big-number__warning pay-attention-to__warning">
                 {{ i18n "receivedFundsWarning" }}
               </p>
             </div>
