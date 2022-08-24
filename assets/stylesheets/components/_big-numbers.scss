@@ -131,11 +131,11 @@ $height-of-last: $gutter;
 }
 
 .big-number__not-so-big {
+  height: $height-of-last;
+
   font-size: ms(2);
   font-weight: font-weight('bold');
-
   line-height: $height-of-last;
-  height: $height-of-last;
 }
 
 .big-number__not-so-big small {
@@ -153,8 +153,8 @@ $height-of-last: $gutter;
 }
 
 .big-number__math-sign {
-  color: palette('main-colors', 'quaternary');
   font-weight: normal;
+  color: palette('main-colors', 'quaternary');
 }
 
 .big-number__dividend {
@@ -169,13 +169,14 @@ $height-of-last: $gutter;
 }
 
 .big-number__quotient {
-  font-size: ms(2);
-  font-weight: font-weight('bold');
   display: flex;
-  color: palette('gray', 'medium');
 
   align-items: baseline;
   justify-content: right;
+
+  font-size: ms(2);
+  font-weight: font-weight('bold');
+  color: palette('gray', 'medium');
 
   border-top: 1px solid palette('main-colors', 'tertiary');
 }
