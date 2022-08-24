@@ -1,3 +1,5 @@
+$height-of-last: $gutter;
+
 .big-numbers {
   position: relative;
 
@@ -21,45 +23,17 @@
 
     text-align: left;
   }
-}
 
-.big-numbers--intro {
-  @media screen and (min-width: breakpoint('desktop')) {
-    &::before,
-    &::after {
-      align-self: center;
-
-      width: calc(33% - 2rem);
-      // width: 4.5rem;
-      height: 0.25rem;
-
-      content: '';
-
-      background-color: palette('main-colors', 'quaternary');
-      border-radius: $gutter;
-    }
-
-    &::before {
-      order: 1;
-    }
-
-    &::after {
-      order: 3;
-    }
+  &::after {
+    content: '';
+    flex: auto;
+        order: 5;
   }
 }
 
-.big-numbers [class*='pay-attention-to'],
-.big-numbers .big-number__update {
-  width: 100%;
-
+.big-numbers__wrapper .big-number__warning,
+.big-numbers__wrapper .big-number__update {
   font-size: ms(-2);
-}
-
-.big-numbers [class*='pay-attention-to'] {
-  @media screen and (min-width: breakpoint('desktop')) {
-    order: 5;
-  }
 }
 
 .big-number__box {
@@ -67,7 +41,7 @@
 
   flex-direction: column;
 
-  margin-bottom: $gutter * 2;
+  margin-bottom: $gutter * 3;
 
   border-bottom: 1px solid palette('gray', 'light');
 
@@ -81,18 +55,6 @@
     order: 4;
 
     width: calc(33.3333% - 2rem);
-  }
-}
-
-.big-number__box--total {
-  @media screen and (min-width: breakpoint('desktop')) {
-    order: 2;
-
-    width: calc(33% - 2rem);
-
-    &[class] h1::before {
-      content: none;
-    }
   }
 }
 
@@ -168,11 +130,18 @@
 
   font-size: ms(6);
   font-weight: font-weight('bold');
+
+  &:last-child {
+    margin-bottom: $height-of-last;
+  }
 }
 
 .big-number__not-so-big {
   font-size: ms(2);
   font-weight: font-weight('bold');
+
+  line-height: $height-of-last;
+  height: $height-of-last;
 }
 
 .big-number__not-so-big small {
@@ -191,6 +160,7 @@
 
 .big-number__math-sign {
   color: palette('main-colors', 'quaternary');
+  font-weight: normal;
 }
 
 .big-number__dividend {
@@ -201,21 +171,25 @@
 }
 
 .big-number__divisor {
+  color: palette('gray', 'medium');
 }
 
 .big-number__quotient {
+  font-size: ms(2);
+  font-weight: font-weight('bold');
   display: flex;
+  color: palette('gray', 'medium');
 
   align-items: baseline;
   justify-content: right;
 
-  font-size: ms(-1);
-
-  border-top: 1px solid palette('main-colors', 'quaternary');
+  border-top: 1px solid palette('main-colors', 'tertiary');
 }
 
 .big-number__quotient output,
 .big-number__quotient small {
+  font-weight: font-weight('normal');
+  color: palette('gray', 'medium');
 }
 
 .big-number__quotient output {
@@ -243,8 +217,12 @@
 
   overflow: hidden;
 
-  font-size: 1em;
+  font-size: ms(-3);
   text-overflow: ellipsis;
+
+  &:last-child {
+    margin-left: 0.25em;
+  }
 }
 
 .big-number__box--icon h1 {

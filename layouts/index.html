@@ -14,18 +14,15 @@
               {{ .Content }}
             </header>
 
-            <div class="big-numbers big-numbers--intro" :aria-busy="this.loadingBigNumbers">
-              <template v-if="!this.loadingBigNumbers">
-                <p class="big-number__update">
+            <div class="big-numbers__wrapper">
+              <p class="big-number__update pay-attention-to__warning">
                   {{ i18n "lastUpdatedAt" }}
                   {{ "{{ mainData ?  formatDateTime(mainData.last_run_at) : '' }}" }}
                 </p>
 
-                <p class="pay-attention-to__warning">
-                  Uma mesma candidatura pode receber fundos de diversas fontes.
-                </p>
-
-                <div class="big-number__box big-number__box--total big-number__box--border big-number__box--border-quaternary">
+              <div class="big-numbers" :aria-busy="this.loadingBigNumbers">
+                <template v-if="!this.loadingBigNumbers">
+                  <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
                   <h1>{{ i18n "accumulatedValue" }}</h1>
                   <p>
                     {{ i18n "entriesQuantity" }}
@@ -173,6 +170,14 @@
                   <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
                 </div>
               </template>
+            </div>
+
+              <p class="big-number__warning pay-attention-to__warning">
+                {{ i18n "multipleFundsWarning" }}
+              </p>
+              <p class="big-number__warning pay-attention-to__warning">
+                {{ i18n "receivedFundsWarning" }}
+              </p>
             </div>
 
             <div class="intro-charts">
