@@ -1,5 +1,10 @@
 $height-of-last: $gutter;
 
+.big-numbers__wrapper {
+  margin-top: $gutter * 2;
+  margin-bottom: $gutter * 2;
+}
+
 .big-numbers {
   position: relative;
 
@@ -7,8 +12,7 @@ $height-of-last: $gutter;
 
   width: 100%;
   min-height: 12.5rem;
-  margin-top: 2rem;
-  margin-bottom: $gutter;
+  margin-bottom: 0;
 
   text-align: center;
 
@@ -28,6 +32,10 @@ $height-of-last: $gutter;
 .big-numbers__wrapper .big-number__warning,
 .big-numbers__wrapper .big-number__update {
   font-size: ms(-2);
+}
+
+.big-numbers__wrapper .big-number__warning {
+  margin-bottom: 0;
 }
 
 .big-number__box {
