@@ -23,12 +23,6 @@ $height-of-last: $gutter;
 
     text-align: left;
   }
-
-  &::after {
-    content: '';
-    flex: auto;
-        order: 5;
-  }
 }
 
 .big-numbers__wrapper .big-number__warning,
