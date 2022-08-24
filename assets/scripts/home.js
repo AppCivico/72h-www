@@ -515,8 +515,20 @@ if (window.location.href.indexOf('/') > -1) {
         return numeral(value).format('$0[.]00 a').replace('.', ',');
       },
       formatCurrencyNoAbbr,
-      formatNumeral(value) {
-        return numeral(value).format();
+      formatPercent(value) {
+        return value === 0
+          ? numeral(value).format()+'%'
+          : numeral(value).format('0.00').replace('.', ',')+'%';
+      },
+      formatNumeral(value, decimalPlaces = 0) {
+        let decimal = '';
+        for (let i = 0; i < decimalPlaces; i+=1) {
+          decimal += '0';
+        }
+
+        return decimalPlaces
+          ? numeral(value).format('0.' + decimal).replace('.', ',')
+          : numeral(value).format();
       },
       formatDateTime(value) {
         return dayjs(value).format('DD/MM/YYYY [às] HH[h]MM[min]');

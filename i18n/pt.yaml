@@ -66,6 +66,8 @@
   other: "candidatos"
 - id: candidatesListing
   translation: "Listagem das candidaturas"
+- id: candidatesTotal
+  translation: "Candidaturas no total"
 - id: candidatesWhoReceivedFunds
   translation: "Candidaturas prestadoras de contas"
 - id: checkFound
@@ -124,6 +126,8 @@
   translation: "Carregando dados..."
 - id: menu
   translation: Menu
+- id: multipleFundsWarning
+  translation: Uma mesma candidatura pode receber fundos de diversas fontes.
 - id: next
   translation: "Próximo >"
 - id: noResults
@@ -134,6 +138,8 @@
   translation: "Das candidaturas"
 - id: offices
   translation: "Cargos"
+- id: ofTotal
+  translation: "Do total"
 - id: oldInfo
   translation: "Os dados deste link não estão atualizados, esses dados são de:"
 - id: oldInfoUpdate
@@ -152,6 +158,8 @@
   translation: "Partido"
 - id: previous
   translation: "< Anterior"
+- id: receivedFundsWarning
+  translation: Nem todas as candidaturas prestam contas.
 - id: reelection
   translation: "Reeleição"
 - id: remainingDays
