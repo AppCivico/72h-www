@@ -17,7 +17,7 @@
 - id: accumulatedValueSpecial
   translation: "Valor acumulado de repasses do Fundo Especial de Financiamento de Campanhas (FEFC)"
 - id: all
-  translation: Todos
+  translation: "Todos"
 - id: allCities
   translation: "Todos os Municípios"
 - id: allDays
@@ -35,9 +35,9 @@
 - id: allStates
   translation: "Todos os Estados"
 - id: analysis
-  translation: Análise
+  translation: "Análise"
 - id: apply
-  translation: Aplicar
+  translation: "Aplicar"
 - id: averageByCandidate
   translation: "média por candidatura"
 - id: averageByCandidateFemale
@@ -69,7 +69,7 @@
 - id: candidatesTotal
   translation: "Candidaturas no total"
 - id: candidatesWhoReceivedFunds
-  translation: "Candidaturas prestadoras de contas"
+  translation: "Total de candidaturas recebedoras de fundos"
 - id: checkFound
   translation: "Acompanhe como os recursos financeiros estão sendo declarados  e distribuídos durante a campanha eleitoral."
 - id: cities
@@ -89,7 +89,7 @@
 - id: donate
   translation: "Doe"
 - id: entriesQuantity
-  translation: "Quantidade de Lançamentos:"
+  translation: "Quantidade de lançamentos:"
 - id: ethnicities
   translation: "Etnia"
 - id: ethnicity
@@ -113,7 +113,7 @@
 - id: isReelecting
   translation: Concorrendo a reeleição
 - id: isNotReelecting
-  translation: Sem mandato atual
+  translation: "Sem mandato atual"
 - id: last
   translation: "Últimos"
 - id: lastUpdatedAt
@@ -125,9 +125,9 @@
 - id: loadingData
   translation: "Carregando dados..."
 - id: menu
-  translation: Menu
+  translation: "Menu"
 - id: multipleFundsWarning
-  translation: Uma mesma candidatura pode receber fundos de diversas fontes.
+  translation: "Uma mesma candidatura pode receber fundos de diversas fontes."
 - id: next
   translation: "Próximo >"
 - id: noResults
@@ -159,7 +159,7 @@
 - id: previous
   translation: "< Anterior"
 - id: receivedFundsWarning
-  translation: Nem todas as candidaturas prestam contas.
+  translation: "Nem todas as candidaturas recebem fundos."
 - id: reelection
   translation: "Reeleição"
 - id: remainingDays
