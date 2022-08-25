@@ -7,8 +7,8 @@ import HighchartsExportData from 'highcharts/modules/export-data';
 import HighchartsExport from 'highcharts/modules/exporting';
 import MicroModal from 'micromodal';
 import numeral from 'numeral';
-import listBox from './components/listBox.js';
-import TransitionExpand from './components/TransitionExpand.js';
+import listBox from './components/listBox';
+import TransitionExpand from './components/TransitionExpand';
 import config from './config';
 import colorsPerTypeOfData from './utilities/colorsPerTypeOfData';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
@@ -95,23 +95,23 @@ if (window.location.href.indexOf('/') > -1) {
       isReelectionSelected: '',
 
       days: [
-        {label: 'ignorar', value: 'all'},
-        {label: 'últimos 7 dias', value: 7},
-        {label: 'últimos 15 dias', value: 15},
-        {label: 'últimos 30 dias', value: 30},
-        {label: 'últimos 60 dias', value: 60},
-        {label: 'últimos 90 dias', value: 90},
+        { label: 'ignorar', value: 'all' },
+        { label: 'últimos 7 dias', value: 7 },
+        { label: 'últimos 15 dias', value: 15 },
+        { label: 'últimos 30 dias', value: 30 },
+        { label: 'últimos 60 dias', value: 60 },
+        { label: 'últimos 90 dias', value: 90 },
       ],
       selectedDay: 'all',
 
-      previouslyUsedFiltersAsQueryString: '',
+      previousFiltersAsQueryString: '',
     },
     computed: {
       dataIsOutdated: {
-        get: function () {
+        get() {
           return this.mainData?.is_outdated;
         },
-        set: function (value) {
+        set(value) {
           this.mainData.is_outdated = value;
         },
       },
@@ -121,54 +121,55 @@ if (window.location.href.indexOf('/') > -1) {
       states() {
         return window.appFilters.regions?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
-      statesById({states}=this) {
-        return states.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      statesById({ states } = this) {
+        return states.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       cities() {
         return window.appFilters.cities
-          ?.filter(city => this.selectedState?.includes(String(city.region_id)))
-          .map((x) => { return { ...x, label: x.name, helper: this.statesById[x.region_id].acronym};})
+          ?.filter((city) => this.selectedState?.includes(String(city.region_id)))
+          .map((x) => ({ ...x, label: x.name, helper: this.statesById[x.region_id].acronym }))
           .sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
-      citiesById({cities}=this) {
-        return cities.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      citiesById({ cities } = this) {
+        return cities.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       offices() {
         return window.appFilters.offices?.sort((a, b) => a.id - b.id) || [];
       },
       officesById({ offices } = this) {
-        return offices.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+        return offices.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       parties() {
         return window.appFilters.parties?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       partiesById({ parties } = this) {
-        return parties.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+        return parties.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       fund_types() {
         return window.appFilters.fund_types?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
-      fundTypesById({fund_types}=this) {
-        return fund_types.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+      fundTypesById({ fund_types: fundTypes } = this) {
+        return fundTypes.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       reelection() {
-        return window.appFilters.reelection?.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name))) || [];
+        return window.appFilters
+          .reelection?.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name))) || [];
       },
       races() {
         return window.appFilters.races?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       racesById({ races } = this) {
-        return races.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+        return races.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       schooling() {
         return window.appFilters.schooling?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       schoolingById({ schooling } = this) {
-        return schooling.reduce((acc,cur)=>{return {...acc,[cur.id]: cur} },{});
+        return schooling.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart);
-        return datesArr.map(date => dayjs(`${date} 10:00`).format('DD [de] MMM'));
+        return datesArr.map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       chartTotal() {
         return this.totalArray.reduce((a, b) => a + b, 0);
@@ -197,8 +198,8 @@ if (window.location.href.indexOf('/') > -1) {
         return url;
       },
 
-      isFilterableChartOutdated({ previouslyUsedFiltersAsQueryString, filtersAsQueryString} = this ) {
-        return previouslyUsedFiltersAsQueryString !== filtersAsQueryString;
+      isFilterableChartOutdated({ previousFiltersAsQueryString, filtersAsQueryString } = this) {
+        return previousFiltersAsQueryString !== filtersAsQueryString;
       },
 
       filtersAsQueryString() {
@@ -206,27 +207,27 @@ if (window.location.href.indexOf('/') > -1) {
 
         if (this.selectedOffices?.length) {
           mountedURL += Array.isArray(this.selectedOffices)
-            ? '&' + this.selectedOffices.map(x => `office_id[]=${x}`).join('&')
+            ? `&${this.selectedOffices.map((x) => `office_id[]=${x}`).join('&')}`
             : `&office_id=${this.selectedOffices}`;
         }
         if (this.selectedParty?.length) {
           mountedURL += Array.isArray(this.selectedParty)
-            ? '&' + this.selectedParty.map(x => `party_id[]=${x}`).join('&')
+            ? `&${this.selectedParty.map((x) => `party_id[]=${x}`).join('&')}`
             : `&party_id=${this.selectedParty}`;
         }
         if (this.selectedFund?.length) {
           mountedURL += Array.isArray(this.selectedFund)
-            ? '&' + this.selectedFund.map(x => `fund_type_id[]=${x}`).join('&')
+            ? `&${this.selectedFund.map((x) => `fund_type_id[]=${x}`).join('&')}`
             : `&fund_type_id=${this.selectedFund}`;
         }
         if (this.selectedRace?.length) {
           mountedURL += Array.isArray(this.selectedRace)
-            ? '&' + this.selectedRace.map(x => `race_id[]=${x}`).join('&')
+            ? `&${this.selectedRace.map((x) => `race_id[]=${x}`).join('&')}`
             : `&race_id=${this.selectedRace}`;
         }
         if (this.selectedSchooling?.length) {
           mountedURL += Array.isArray(this.selectedSchooling)
-            ? '&' + this.selectedSchooling.map(x => `schooling_id[]=${x}`).join('&')
+            ? `&${this.selectedSchooling.map((x) => `schooling_id[]=${x}`).join('&')}`
             : `&schooling_id=${this.selectedSchooling}`;
         }
         if (this.isReelectionSelected) {
@@ -234,23 +235,23 @@ if (window.location.href.indexOf('/') > -1) {
         }
         if (this.selectedState?.length) {
           mountedURL += Array.isArray(this.selectedState)
-            ? '&' + this.selectedState.map(x => `region_id[]=${x}`).join('&')
+            ? `&${this.selectedState.map((x) => `region_id[]=${x}`).join('&')}`
             : `&region_id=${this.selectedState}`;
 
-            // to prevent a submission of a city by mistake, we require a state
-            // to be selected as well
-            if (this.selectedCity?.length) {
-              mountedURL += Array.isArray(this.selectedCity)
-                ? '&' + this.selectedCity.map(x => `city_id[]=${x}`).join('&')
-                : `&city_id=${this.selectedCity}`;
-            }
+          // to prevent a submission of a city by mistake, we require a state
+          // to be selected as well
+          if (this.selectedCity?.length) {
+            mountedURL += Array.isArray(this.selectedCity)
+              ? `&${this.selectedCity.map((x) => `city_id[]=${x}`).join('&')}`
+              : `&city_id=${this.selectedCity}`;
+          }
         }
         if (this.useEpoch) {
           mountedURL += `&epoch=${this.epoch}`;
         }
 
         return mountedURL;
-      }
+      },
     },
     watch: {
       async mainData() {
@@ -258,12 +259,12 @@ if (window.location.href.indexOf('/') > -1) {
         await this.generateChart();
         await this.generateIntroCharts();
       },
-      selectedState(newValue) {
+      selectedState() {
         // when a state is unselected, we need to remove its cities from selection
         // as well. However, we keep cities in case of empty states to save the
         // user from select everything again on an bad state selection
         if (this.selectedCity.length) {
-          this.selectedCity = this.selectedCity.filter(x => this.citiesById[x]);
+          this.selectedCity = this.selectedCity.filter((x) => this.citiesById[x]);
         }
       },
     },
@@ -297,40 +298,46 @@ if (window.location.href.indexOf('/') > -1) {
         }
       },
       populateParams() {
-        const regionId = params.get('region_id')?.split(',').map(x => Number(x));
-        const cityId = params.get('city_id')?.split(',').map(x => Number(x));
-        const partyId = params.get('party_id')?.split(',').map(x => Number(x));
-        const officeId = params.get('office_id')?.split(',').map(x => Number(x));
-        const fundTypeId = params.get('fund_type_id')?.split(',').map(x => Number(x));
-        const raceId = params.get('race_id')?.split(',').map(x => Number(x));
-        const schoolingId = params.get('schooling_id')?.split(',').map(x => Number(x));
+        const regionId = params.get('region_id')?.split(',').map((x) => Number(x));
+        const cityId = params.get('city_id')?.split(',').map((x) => Number(x));
+        const partyId = params.get('party_id')?.split(',').map((x) => Number(x));
+        const officeId = params.get('office_id')?.split(',').map((x) => Number(x));
+        const fundTypeId = params.get('fund_type_id')?.split(',').map((x) => Number(x));
+        const raceId = params.get('race_id')?.split(',').map((x) => Number(x));
+        const schoolingId = params.get('schooling_id')?.split(',').map((x) => Number(x));
         const reelection = params.get('reelection');
         const days = params.get('days');
         const epoch = Number(params.get('epoch') || 0);
 
         if (regionId?.length && window.appFilters.regions) {
-          this.selectedState = window.appFilters.regions.filter(region => regionId.includes(region.id));
+          this.selectedState = window.appFilters.regions
+            .filter((region) => regionId.includes(region.id));
         }
         if (cityId?.length && window.appFilters.cities) {
-          this.selectedCity = window.appFilters.cities.filter(city => cityId.includes(city.id));
+          this.selectedCity = window.appFilters.cities
+            .filter((city) => cityId.includes(city.id));
         }
         if (officeId?.length && window.appFilters.offices) {
-          this.selectedOffices = window.appFilters.offices.filter(office => officeId.includes(office.id));
+          this.selectedOffices = window.appFilters.offices
+            .filter((office) => officeId.includes(office.id));
         }
         if (partyId?.length && window.appFilters.parties) {
-          this.selectedParty = window.appFilters.parties.filter(party => partyId.includes(party.id));
+          this.selectedParty = window.appFilters.parties
+            .filter((party) => partyId.includes(party.id));
         }
         if (fundTypeId?.length && window.appFilters.fund_types) {
-          this.selectedFund = window.appFilters.fund_types.filter(fund => fundTypeId.includes(fund.id));
+          this.selectedFund = window.appFilters.fund_types
+            .filter((fund) => fundTypeId.includes(fund.id));
         }
         if (raceId?.length && window.appFilters.races) {
-          this.selectedRace = window.appFilters.races.filter(race => raceId.includes(race.id));
+          this.selectedRace = window.appFilters.races.filter((race) => raceId.includes(race.id));
         }
         if (schoolingId?.length && window.appFilters.schooling) {
-          this.selectedSchooling = window.appFilters.schooling.filter(schooling => schoolingId.includes(schooling.id));
+          this.selectedSchooling = window.appFilters.schooling
+            .filter((schooling) => schoolingId.includes(schooling.id));
         }
         if (reelection) {
-          this.isReelectionSelected = isReelectionSelected != 0 ? 1 : 0;
+          this.isReelectionSelected = reelection !== '0' ? 1 : 0;
         }
         if (days) {
           this.selectedDay = days;
@@ -341,9 +348,9 @@ if (window.location.href.indexOf('/') > -1) {
       },
       updateLocaleText() {
         if (this.selectedState?.length && !this.selectedCity?.length) {
-          this.selectedLocaleText = this.selectedState.map(x => x.name).join(', ');
+          this.selectedLocaleText = this.selectedState.map((x) => x.name).join(', ');
         } else if (this.selectedState?.length && this.selectedCity?.length) {
-          this.selectedLocaleText = `${this.selectedCity.map(x => x.name).join(', ')}/${this.selectedState.map((x) => x.acronym).join(', ')}`;
+          this.selectedLocaleText = `${this.selectedCity.map((x) => x.name).join(', ')}/${this.selectedState.map((x) => x.acronym).join(', ')}`;
         } else {
           this.selectedLocaleText = 'Brasil';
         }
@@ -352,33 +359,30 @@ if (window.location.href.indexOf('/') > -1) {
         const {
           filterText, selectedState, selectedCity, selectedParty, selectedFund,
           selectedRace, selectedDay, statesById, citiesById, partiesById, selectedOffices,
-          fundTypesById, officesById, racesById, schoolingById, isReelectionSelected, selectedSchooling
+          fundTypesById, officesById, racesById, schoolingById, isReelectionSelected,
+          selectedSchooling,
         } = this;
 
-        filterText.selectedState = selectedState?.map(x => statesById[x].name).join(', ');
+        filterText.selectedState = selectedState?.map((x) => statesById[x].name).join(', ');
 
         if (Object.keys(citiesById).length) {
           filterText.selectedCity = selectedState.length > 1
-            ? selectedCity?.map(x => citiesById[x].name + ' (' + citiesById[x].helper + ')').join(', ')
-          : selectedCity?.map(x => citiesById[x].name).join(', ');
-        } else {
-          if (!!filterText.selectedCity) {
-            delete filterText.selectedCity;
-          }
+            ? selectedCity?.map((x) => `${citiesById[x].name} (${citiesById[x].helper})`).join(', ')
+            : selectedCity?.map((x) => citiesById[x].name).join(', ');
+        } else if (filterText.selectedCity) {
+          delete filterText.selectedCity;
         }
 
-        filterText.selectedOffices = selectedOffices?.map(x => officesById[x].name).join(', ');
-        filterText.selectedParty = selectedParty?.map(x => partiesById[x].name).join(', ');
-        filterText.selectedFund = selectedFund?.map(x => fundTypesById[x].name).join(', ');
-        filterText.selectedRace = selectedRace?.map(x => racesById[x].name).join(', ');
-        filterText.selectedSchooling = selectedSchooling?.map(x => schoolingById[x].name).join(', ');
+        filterText.selectedOffices = selectedOffices?.map((x) => officesById[x].name).join(', ');
+        filterText.selectedParty = selectedParty?.map((x) => partiesById[x].name).join(', ');
+        filterText.selectedFund = selectedFund?.map((x) => fundTypesById[x].name).join(', ');
+        filterText.selectedRace = selectedRace?.map((x) => racesById[x].name).join(', ');
+        filterText.selectedSchooling = selectedSchooling?.map((x) => schoolingById[x].name).join(', ');
 
         if (isReelectionSelected) {
-          filterText.isReelectionSelected === isReelectionSelected;
-        } else {
-          if (!!filterText.isReelectionSelected) {
-            delete filterText.isReelectionSelected;
-          }
+          filterText.isReelectionSelected = isReelectionSelected;
+        } else if (filterText.isReelectionSelected) {
+          delete filterText.isReelectionSelected;
         }
 
         filterText.selectedDay = selectedDay;
@@ -461,13 +465,13 @@ if (window.location.href.indexOf('/') > -1) {
 
         newItem.total = 0;
 
-        if (['party', 'state'].indexOf(item.type) > -1 ) {
+        if (['party', 'state'].indexOf(item.type) > -1) {
           newItem.data.sort((a, b) => b.y - a.y);
         } else {
           newItem.data.sort((a, b) => a.name.localeCompare(b.name));
         }
 
-        for (let i = 0; i < newItem.data.length; i+= 1) {
+        for (let i = 0; i < newItem.data.length; i += 1) {
           newItem.data[i].color = colorsPerTypeOfData[item.type]?.[i];
           newItem.xAxis.categories.push(newItem.data[i].name);
           newItem.data[i].name = null;
@@ -517,17 +521,17 @@ if (window.location.href.indexOf('/') > -1) {
       formatCurrencyNoAbbr,
       formatPercent(value) {
         return value === 0
-          ? numeral(value).format()+'%'
-          : numeral(value).format('0.00').replace('.', ',')+'%';
+          ? `${numeral(value).format()}%`
+          : `${numeral(value).format('0.00').replace('.', ',')}%`;
       },
       formatNumeral(value, decimalPlaces = 0) {
         let decimal = '';
-        for (let i = 0; i < decimalPlaces; i+=1) {
+        for (let i = 0; i < decimalPlaces; i += 1) {
           decimal += '0';
         }
 
         return decimalPlaces
-          ? numeral(value).format('0.' + decimal).replace('.', ',')
+          ? numeral(value).format(`0.${decimal}`).replace('.', ',')
           : numeral(value).format();
       },
       formatDateTime(value) {
@@ -561,14 +565,15 @@ if (window.location.href.indexOf('/') > -1) {
         fetch(url, {
           method: 'GET',
         })
-          .then(response => response.json())
+          .then((response) => response.json())
           .then((response) => {
             const pieCharts = ['ethnicity', 'gender'];
             this.mainData = response;
 
             if (Array.isArray(response?.accumulated?.pie_charts)) {
               this.introCharts = response.accumulated.pie_charts
-                .map((x) => pieCharts.indexOf(x.type) > -1 ? this.handlePieData(x) : this.handleColumnData(x));
+                // eslint-disable-next-line max-len
+                .map((x) => (pieCharts.indexOf(x.type) > -1 ? this.handlePieData(x) : this.handleColumnData(x)));
             }
 
             return true;
@@ -580,12 +585,12 @@ if (window.location.href.indexOf('/') > -1) {
               this.chart.hideLoading();
             }
 
-            this.previouslyUsedFiltersAsQueryString = this.filtersAsQueryString;
+            this.previousFiltersAsQueryString = this.filtersAsQueryString;
 
             return true;
           })
           // eslint-disable-next-line no-console
-          .catch(error => console.error(error));
+          .catch((error) => console.error(error));
       },
       getCandidates(page = false) {
         this.loadingCandidates = true;
@@ -602,7 +607,7 @@ if (window.location.href.indexOf('/') > -1) {
         }
 
         if (page === false) {
-          if(this.candidates?.candidates) {
+          if (this.candidates?.candidates) {
             this.candidates.candidates = [];
           }
         }
@@ -612,12 +617,12 @@ if (window.location.href.indexOf('/') > -1) {
         })
           .then((response) => {
             if (!response.ok) {
-              throw new Error('Network response was not OK. Status: ' + response.status);
+              throw new Error(`Network response was not OK. Status: ${response.status}`);
             }
-            return response.json()
+            return response.json();
           })
           .then((response) => {
-            if(!Array.isArray(response.candidates)) {
+            if (!Array.isArray(response.candidates)) {
               throw new Error('Array of candidates is missing');
             }
 
@@ -634,7 +639,7 @@ if (window.location.href.indexOf('/') > -1) {
             this.errorMessages.candidates = error.message;
             console.error(error);
           })
-          .finally(()=>{
+          .finally(() => {
             this.loadingCandidates = false;
           });
       },
@@ -706,7 +711,7 @@ if (window.location.href.indexOf('/') > -1) {
               enabled: false,
             },
             tooltip: {
-              pointFormatter: function () {
+              pointFormatter() {
                 return window.$vueHome.formatCurrencyNoAbbr(this.y);
               },
             },
@@ -727,11 +732,10 @@ if (window.location.href.indexOf('/') > -1) {
                 colors: chart.colors,
                 dataLabels: {
                   enabled: true,
-                  pointFormatter: function () {
-
+                  pointFormatter() {
                     return this.percentage
                       ? `${this.percentage.toFixed(2)}%`
-                      : `${Number(this.y / chart.total * 100).toFixed(2)}%`;
+                      : `${Number((this.y / chart.total) * 100).toFixed(2)}%`;
                   },
                 },
               },
@@ -739,7 +743,7 @@ if (window.location.href.indexOf('/') > -1) {
             series: [{
               name: window.appDictionary[chart.type],
               data: chart.data,
-              showInLegend: chart.chartType === 'pie'
+              showInLegend: chart.chartType === 'pie',
             }],
           });
         });
