@@ -49,14 +49,14 @@
   }
 }
 
-.big-numbers .pay-attention-to,
+.big-numbers [class*='pay-attention-to'],
 .big-numbers .big-number__update {
   width: 100%;
 
   font-size: ms(-2);
 }
 
-.big-numbers .pay-attention-to {
+.big-numbers [class*='pay-attention-to'] {
   @media screen and (min-width: breakpoint('desktop')) {
     order: 5;
   }
