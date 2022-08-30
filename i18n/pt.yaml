@@ -69,7 +69,7 @@
 - id: candidatesTotal
   translation: "Candidaturas no total"
 - id: candidatesWhoReceivedFunds
-  translation: "Total de candidaturas recebedoras de fundos"
+  translation: "Total de candidaturas únicas que declaram recebimento de recursos"
 - id: checkFound
   translation: "Acompanhe como os recursos financeiros estão sendo declarados  e distribuídos durante a campanha eleitoral."
 - id: cities
