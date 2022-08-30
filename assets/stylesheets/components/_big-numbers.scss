@@ -1,4 +1,4 @@
-$height-of-last: $gutter;
+$height-of-last: $gutter * 1.333333;
 
 .big-numbers__wrapper {
   margin-top: $gutter * 2;
@@ -14,7 +14,7 @@ $height-of-last: $gutter;
   min-height: 12.5rem;
   margin-bottom: 0;
 
-  text-align: center;
+  text-align: left;
 
   @media screen and (min-width: breakpoint('tablet')) {
     display: flex;
@@ -25,7 +25,6 @@ $height-of-last: $gutter;
   @media screen and (min-width: breakpoint('desktop')) {
     justify-content: space-between;
 
-    text-align: left;
   }
 }
 
@@ -128,13 +127,17 @@ $height-of-last: $gutter;
 }
 
 .big-number__number {
+  display: block;
+
   margin-top: auto;
+  overflow: hidden;
 
   font-size: ms(6);
   font-weight: font-weight('bold');
+  text-overflow: ellipsis;
 
   &:last-child {
-    margin-bottom: $height-of-last;
+    margin-bottom: $height-of-last + $gutter;
   }
 }
 
@@ -181,6 +184,8 @@ $height-of-last: $gutter;
 
   align-items: baseline;
   justify-content: right;
+
+  height: $height-of-last;
 
   font-size: ms(2);
   font-weight: font-weight('bold');
