@@ -67,7 +67,7 @@
 - id: candidatesListing
   translation: "Listagem das candidaturas"
 - id: candidatesTotal
-  translation: "Candidaturas no total"
+  translation: "Pedidos de candidatura"
 - id: candidatesWhoReceivedFunds
   translation: "Total de candidaturas únicas que declaram recebimento de recursos"
 - id: checkFound
