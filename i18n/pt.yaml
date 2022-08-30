@@ -105,7 +105,7 @@
 - id: gender
   translation: "Gênero"
 - id: homePieTitle
-  translation: "Total de valores repassados"
+  translation: "Total acumulado de valores repassados"
 - id: interval
   translation: "Período"
 - id: isReelection
