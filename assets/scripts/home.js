@@ -448,7 +448,7 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       handleData() {
-        const entries = Object.values(this.mainData.chart);
+        const entries = typeof this.mainData?.chart === 'object' ? Object.values(this.mainData?.chart) : [];
         this.totalArray = [];
         this.maleArray = [];
         this.femaleArray = [];
@@ -576,6 +576,12 @@ if (window.location.href.indexOf('/') > -1) {
         fetch(url, {
           method: 'GET',
         })
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error('Network response was not OK');
+            }
+            return response;
+          })
           .then((response) => response.json())
           .then((response) => {
             const pieCharts = ['ethnicity', 'gender'];
