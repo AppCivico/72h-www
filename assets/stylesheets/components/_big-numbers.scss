@@ -149,6 +149,7 @@ $height-of-last: $gutter * 1.333333;
   line-height: $height-of-last;
 }
 
+.big-number__number small,
 .big-number__not-so-big small {
   font-size: ms(-3);
   font-weight: font-weight('normal');

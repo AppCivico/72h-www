@@ -171,15 +171,26 @@ if (window.location.href.indexOf('/') > -1) {
         const datesArr = Object.keys(this.mainData.chart);
         return datesArr.map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
-      chartTotal() {
-        return this.totalArray.reduce((a, b) => a + b, 0);
+
+      amountFemale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
+        return !bigNumbers?.amount_female ? 0 : Number.parseFloat(bigNumbers?.amount_female) || 0;
       },
-      chartMale() {
-        return this.maleArray.reduce((a, b) => a + b, 0);
+      amountMale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
+        return !bigNumbers?.amount_male ? 0 : Number.parseFloat(bigNumbers?.amount_male) || 0;
       },
-      chartFemale() {
-        return this.femaleArray.reduce((a, b) => a + b, 0);
+      amountAll({ mainData: { big_numbers: bigNumbers } = {} } = this) {
+        return !bigNumbers?.total_amount ? 0 : Number.parseFloat(bigNumbers?.total_amount) || 0;
       },
+      countAll({ mainData: { big_numbers: bigNumbers } } = this) {
+        return !bigNumbers?.count_all ? 0 : Number.parseInt(bigNumbers?.count_all, 10) || 0;
+      },
+      countFemale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
+        return !bigNumbers?.count_female ? 0 : Number.parseInt(bigNumbers?.count_female, 10) || 0;
+      },
+      countMale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
+        return !bigNumbers?.count_male ? 0 : Number.parseInt(bigNumbers?.count_male, 10) || 0;
+      },
+
       formatChartSeries() {
         return [{
           name: 'Total',
