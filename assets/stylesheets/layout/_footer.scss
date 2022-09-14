@@ -6,7 +6,7 @@
   justify-content: center;
 
   padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: $gutter * 4;
   margin-top: 2rem;
 
   color: palette('white');
@@ -163,5 +163,45 @@
       palette('gradient', 'purple') 0%,
       palette('gradient', 'light') 46%,
       palette('gradient', 'purple') 100%);
+  }
+}
+
+.copy-warning {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: layer('default');
+
+  max-height: 25vh;
+  padding-top: $gutter;
+  padding-bottom: $gutter;
+  overflow: hidden;
+
+  background-color: palette('main-colors', 'primary');
+  opacity: 1;
+
+  transition-delay: 0s, 0s, 0s, 0s, 1s;
+  transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition-duration: 300ms;
+  transition-property: opacity, max-height, padding-top, padding-bottom, bottom;
+
+  [class*='pay-attention-to'] {
+    margin-bottom: 0;
+
+    color: palette('white');
+    text-align: center;
+  }
+
+  &[hidden] {
+    bottom: 50%;
+
+    display: block;
+
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+
+    opacity: 0;
   }
 }

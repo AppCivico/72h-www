@@ -82,6 +82,8 @@
   translation: "Fechar aviso"
 - id: copy
   translation: "Copiar!"
+- id: copyWarning
+  translation: "Use e compartilhe nossos indicadores, cite a fonte e incentive a educação política!"
 - id: days
   translation: "Dias"
 - id: developedBy
