@@ -10,21 +10,16 @@ $height-of-last: $gutter * 1.333333;
 
   flex-wrap: wrap;
 
+  justify-content: space-between;
+
   width: 100%;
   min-height: 12.5rem;
   margin-bottom: 0;
 
   text-align: left;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: map-get($line-lengths, 'min') * 2) {
     display: flex;
-
-    justify-content: center;
-  }
-
-  @media screen and (min-width: breakpoint('desktop')) {
-    justify-content: space-between;
-
   }
 }
 
@@ -46,13 +41,13 @@ $height-of-last: $gutter * 1.333333;
 
   border-bottom: 1px solid palette('gray', 'light');
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: map-get($line-lengths, 'min') * 2) {
     width: calc(50% - 2rem);
 
     border-bottom: 0;
   }
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: map-get($line-lengths, 'min') * 3) {
     order: 4;
 
     width: calc(33.3333% - 2rem);
@@ -171,13 +166,18 @@ $height-of-last: $gutter * 1.333333;
 
 .big-number__dividend {
   margin-top: auto;
+  overflow: hidden;
 
   font-size: ms(6);
   font-weight: font-weight('bold');
+  text-overflow: ellipsis;
 }
 
 .big-number__divisor {
+  overflow: hidden;
+
   color: palette('gray', 'medium');
+  text-overflow: ellipsis;
 }
 
 .big-number__quotient {
@@ -187,10 +187,12 @@ $height-of-last: $gutter * 1.333333;
   justify-content: right;
 
   height: $height-of-last;
+  overflow: hidden;
 
   font-size: ms(2);
   font-weight: font-weight('bold');
   color: palette('gray', 'medium');
+  text-overflow: ellipsis;
 
   border-top: 1px solid palette('main-colors', 'tertiary');
 }
