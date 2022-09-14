@@ -15,38 +15,39 @@
 }
 
 .pay-attention-to__warning {
-  @extend %pay-attention-to;
-
   $fg-color: palette('label', 'warning');
   $bg-color: palette('white');
 
-  &[class] {
-    color: text-contrast($bg-color, $fg-color, $level: 'AA');
-  }
+  @extend %pay-attention-to;
+
+  color: text-contrast($bg-color, $fg-color, $level: 'AA');
 
   &::before {
-    border-radius: 100%;
     font-style: italic;
     color: $bg-color;
-    background-color: $fg-color;
+
     content: 'i';
+
+    background-color: $fg-color;
+    border-radius: 100%;
   }
 }
 
 .pay-attention-to__danger {
-  @extend %pay-attention-to;
-
   $fg-color: palette('label', 'danger');
   $bg-color: palette('white');
 
-  &[class] {
-    color: text-contrast($bg-color, $fg-color, $level: 'AA');
-  }
+  @extend %pay-attention-to;
+
+  color: text-contrast($bg-color, $fg-color, $level: 'AA');
 
   &::before {
     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+
     color: $bg-color;
-    background-color: $fg-color;
+
     content: '!';
+
+    background-color: $fg-color;
   }
 }
