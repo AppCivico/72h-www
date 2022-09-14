@@ -367,21 +367,6 @@
                     <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountAll)"></span>
                     <br />
                     <span class="big-number__not-so-big">{{ "{{ formatNumeral(countAll) }}" }} <small>{{ i18n "candidate" 2 | lower }}</small></span>
-
-                    {{/*
-                      <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(amountAll)"></span>
-                      <br />
-                      <span class="big-number__divisor">
-                        <span class="big-number__math-sign">&divide;</span>
-                        {{ "{{ formatNumeral(countAll) }}" }} <small>{{ i18n "candidate" 2 | lower }}</small>
-                      </span>
-                      <br />
-                      <span class="big-number__quotient big-number__quotient--total">
-                        <span class="big-number__math-sign">&equals;</span>
-                        <output v-html="formatCurrencyNoAbbr(amountAll /
-                        countAll)"></output> <small>{{ i18n "byCandidate" 1 | lower }}</small>
-                      </span>
-                    */}}
                   </div>
 
                   <div class="big-number__box big-number__box--icon big-number__box--icon-female">
@@ -393,21 +378,6 @@
                     <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountFemale)"></span>
                     <br />
                     <span class="big-number__not-so-big">{{ "{{ formatNumeral(countFemale) }}" }} <small>{{ i18n "candidateFemale" 2 }}</small></span>
-
-                    {{/*
-                      <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(amountFemale)"></span>
-                      <br />
-                      <span class="big-number__divisor">
-                        <span class="big-number__math-sign">&divide;</span>
-                        {{ "{{ formatNumeral(countFemale) }}" }} <small>{{ i18n "candidateFemale" 2 }}</small>
-                      </span>
-                      <br />
-                      <span class="big-number__quotient big-number__quotient--female">
-                        <span class="big-number__math-sign">&equals;</span>
-                        <output v-html="formatCurrencyNoAbbr(amountFemale /
-                        countFemale)"></output> <small>{{ i18n "byCandidateFemale" 1 | lower }}</small>
-                      </span>
-                    */}}
                   </div>
 
                   <div class="big-number__box big-number__box--icon big-number__box--icon-male">
@@ -419,21 +389,6 @@
                     <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountMale)"></span>
                     <br />
                     <span class="big-number__not-so-big">{{ "{{ formatNumeral(countMale) }}" }} <small>{{ i18n "candidateMale" 2 | lower }}</small></span>
-
-                    {{/*
-                      <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(amountMale)"></span>
-                      <br />
-                      <span class="big-number__divisor">
-                        <span class="big-number__math-sign">&divide;</span>
-                        {{ "{{ formatNumeral(countMale) }}" }} <small>{{ i18n "candidateMale" 2 | lower }}</small>
-                      </span>
-                      <br />
-                      <span class="big-number__quotient big-number__quotient--male">
-                        <span class="big-number__math-sign">&equals;</span>
-                        <output v-html="formatCurrencyNoAbbr(amountMale /
-                        countMale)"></output> <small>{{ i18n "byCandidateMale" 1 | lower }}</small>
-                      </span>
-                    */}}
                   </div>
                 </div>
               </transition-expand>
