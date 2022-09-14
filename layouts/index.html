@@ -25,7 +25,7 @@
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-quaternary"
-                      v-if="mainData?.accumulated?.total_transfers"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "accumulatedValue" }}</h1>
                       <p>
@@ -42,7 +42,7 @@
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-tertiary"
-                      v-if="mainData?.accumulated?.total_candidates_who_received"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "candidatesWhoReceivedFunds" }}</h1>
                       <span class="big-number__dividend">
@@ -66,7 +66,7 @@
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-secondary"
-                      v-if="mainData?.accumulated?.transfers_party_fund"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "accumulatedValueParty" }}</h1>
                       <p>
@@ -93,7 +93,7 @@
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-secondary"
-                      v-if="mainData?.accumulated?.transfers_special_fund"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
                       <p>
@@ -117,10 +117,11 @@
                     </div>
                   </transition-expand>
 
+                  {{/*
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-secondary"
-                      v-if="mainData?.accumulated?.transfers_crowdfunding"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "accumulatedCrowdfunding" }}</h1>
                       <p>
@@ -143,11 +144,12 @@
                       <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
                     </div>
                   </transition-expand>
-
+                  */}}
+                  {{/*
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-secondary"
-                      v-if="mainData?.accumulated?.transfers_direct_donation"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "accumulatedDirectDonation" }}</h1>
                       <p>
@@ -170,11 +172,12 @@
                       <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
                     </div>
                   </transition-expand>
-
+                  */}}
+                  {{/*
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-secondary"
-                      v-if="mainData?.accumulated?.transfers_self_funding"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "accumulatedSelfFunding" }}</h1>
                       <p>
@@ -197,11 +200,12 @@
                       <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
                     </div>
                   </transition-expand>
+                  */}}
 
                   <transition-expand>
                     <div class="big-number__box big-number__box--border
                       big-number__box--border-secondary"
-                      v-if="mainData?.accumulated?.transfers_other_resources"
+                      v-if="!this.loadingBigNumbers"
                     >
                       <h1>{{ i18n "accumulatedOtherResources" }}</h1>
                       <p>
