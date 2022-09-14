@@ -54,7 +54,7 @@
                 </div>
 
                 <div class="big-number__box big-number__box--border big-number__box--border-secondary">
-                    <h1>{{ i18n "accumulatedValueParty" }}</h1>
+                  <h1>{{ i18n "accumulatedValueParty" }}</h1>
                   <p>
                     {{ i18n "entriesQuantity" }}
                       {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
@@ -205,6 +205,10 @@
               <p v-show="!this.loadingBigNumbers" class="big-number__warning pay-attention-to__warning">
                 {{ i18n "receivedFundsWarning" }}
               </p>
+              <p v-show="!this.loadingBigNumbers" class="big-number__warning pay-attention-to__warning">
+                {{ i18n "otherFundsWarning" | .RenderString }}
+              </p>
+
             </div>
 
             <div class="intro-charts">

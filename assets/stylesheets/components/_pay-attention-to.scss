@@ -1,5 +1,12 @@
 %pay-attention-to {
+  max-width: map-get($line-lengths, 'max');
+  margin-right: 0;
+  margin-left: auto;
+
   text-align: right;
+
+  orphans: 3;
+  widows: 3;
 
   &::before {
     display: inline-block;

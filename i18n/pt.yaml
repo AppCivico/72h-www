@@ -150,6 +150,8 @@
   translation: "no Twitter"
 - id: openFilters
   translation: "Maximizar filtros"
+- id: otherFundsWarning
+  translation: "Em **Outros recursos** estão incluídas as doações de pessoas físicas (doação direta, financiamento coletivo e autofinanciamento)"
 - id: parties
   translation: "Partidos"
 - id: partiesListing

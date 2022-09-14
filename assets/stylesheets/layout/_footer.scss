@@ -178,6 +178,8 @@
   padding-bottom: $gutter;
   overflow: hidden;
 
+  font-size: ms(-1);
+
   background-color: palette('main-colors', 'primary');
   opacity: 1;
 
@@ -187,7 +189,9 @@
   transition-property: opacity, max-height, padding-top, padding-bottom, bottom;
 
   [class*='pay-attention-to'] {
+    margin-right: auto;
     margin-bottom: 0;
+    margin-left: auto;
 
     color: palette('white');
     text-align: center;
