@@ -9,7 +9,7 @@
 - id: accumulatedOtherResources
   translation: "Valor acumulado de outros recursos"
 - id: accumulatedSelfFunding
-  translation: "Valor acumulado de auto-financiamento"
+  translation: "Valor acumulado de autofinanciamento"
 - id: accumulatedValue
   translation: "Valor Total Acumulado dos Repasses"
 - id: accumulatedValueParty
