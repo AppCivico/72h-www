@@ -146,7 +146,9 @@ if (window.location.href.indexOf('/') > -1) {
         return parties.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       fund_types() {
-        return window.appFilters.fund_types?.sort((a, b) => a.name.localeCompare(b.name)) || [];
+        return window.appFilters.fund_types?.sort((a, b) => a.name.localeCompare(b.name))
+          // temporally filter types to save the back-end developer from burnout
+          .filter((x) => x.id < 4 || x.id > 6) || [];
       },
       fundTypesById({ fund_types: fundTypes } = this) {
         return fundTypes.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
