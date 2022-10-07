@@ -91,6 +91,7 @@ if (window.location.href.indexOf('/') > -1) {
       selectedParty: [],
       selectedFund: [],
       selectedRace: [],
+      selectedElectionStatuses: [],
       selectedSchooling: [],
       isReelectionSelected: '',
 
@@ -169,6 +170,9 @@ if (window.location.href.indexOf('/') > -1) {
       schoolingById({ schooling } = this) {
         return schooling.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
+      electionStatuses() {
+        return window.appFilters.election_status || [];
+      },
       chartDates() {
         const datesArr = Object.keys(this.mainData.chart);
         return datesArr.map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
@@ -242,6 +246,11 @@ if (window.location.href.indexOf('/') > -1) {
           mountedURL += Array.isArray(this.selectedSchooling)
             ? `&${this.selectedSchooling.map((x) => `schooling_id[]=${x}`).join('&')}`
             : `&schooling_id=${this.selectedSchooling}`;
+        }
+        if (this.selectedElectionStatuses?.length) {
+          mountedURL += Array.isArray(this.selectedElectionStatuses)
+            ? `&${this.selectedElectionStatuses.map((x) => `election_status[]=${encodeURIComponent(x)}`).join('&')}`
+            : `&election_status=${encodeURIComponent(this.selectedElectionStatuses)}`;
         }
         if (this.isReelectionSelected) {
           mountedURL += `&reelection=${this.isReelectionSelected}`;
@@ -318,6 +327,7 @@ if (window.location.href.indexOf('/') > -1) {
         const fundTypeId = params.get('fund_type_id')?.split(',').map((x) => Number(x));
         const raceId = params.get('race_id')?.split(',').map((x) => Number(x));
         const schoolingId = params.get('schooling_id')?.split(',').map((x) => Number(x));
+        const electionStatuses = params.get('election_status')?.split(',').map((x) => decodeURIComponent(x));
         const reelection = params.get('reelection');
         const days = params.get('days');
         const epoch = Number(params.get('epoch') || 0);
@@ -349,6 +359,10 @@ if (window.location.href.indexOf('/') > -1) {
           this.selectedSchooling = window.appFilters.schooling
             .filter((schooling) => schoolingId.includes(schooling.id));
         }
+        if (electionStatuses?.length && window.appFilters.election_status) {
+          this.selectedSchooling = window.appFilters.election_status
+            .filter((status) => electionStatuses.includes(status));
+        }
         if (reelection) {
           this.isReelectionSelected = reelection !== '0' ? 1 : 0;
         }
@@ -374,6 +388,7 @@ if (window.location.href.indexOf('/') > -1) {
           selectedRace, selectedDay, statesById, citiesById, partiesById, selectedOffices,
           fundTypesById, officesById, racesById, schoolingById, isReelectionSelected,
           selectedSchooling,
+          selectedElectionStatuses,
         } = this;
 
         filterText.selectedState = selectedState?.map((x) => statesById[x].name).join(', ');
@@ -391,6 +406,7 @@ if (window.location.href.indexOf('/') > -1) {
         filterText.selectedFund = selectedFund?.map((x) => fundTypesById[x].name).join(', ');
         filterText.selectedRace = selectedRace?.map((x) => racesById[x].name).join(', ');
         filterText.selectedSchooling = selectedSchooling?.map((x) => schoolingById[x].name).join(', ');
+        filterText.selectedElectionStatuses = selectedElectionStatuses?.join(', ');
 
         if (isReelectionSelected) {
           filterText.isReelectionSelected = isReelectionSelected;

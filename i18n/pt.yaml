@@ -32,6 +32,8 @@
   translation: "Todos os partidos"
 - id: allSchooling
   translation: "Qualquer escolaridade"
+- id: allStatuses
+  translation: "Qualquer resultado"
 - id: allStates
   translation: "Todos os Estados"
 - id: analysis
@@ -90,6 +92,8 @@
   translation: "desenvolvido por AppCívico"
 - id: donate
   translation: "Doe"
+- id: electionStatuses
+  translation: "Resultado de eleição"
 - id: entriesQuantity
   translation: "Quantidade de lançamentos:"
 - id: ethnicities
