@@ -474,6 +474,14 @@
                           <p class="candidates__info">
                             {{ i18n "total" }} {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
                           </p>
+
+                          <p class="candidates__info" v-if="candidate.votes_first_round">
+                            {{ i18n "votesFirstRound" }}: {{ "{{ formatNumeral(candidate.votes_first_round) }}" }}
+                          </p>
+                          <p class="candidates__info" v-if="candidate.votes_second_round">
+                            {{ i18n "votesSecondRound" }}: {{ "{{ formatNumeral(candidate.votes_second_round) }}" }}
+                          </p>
+
                           <a
                             :href="candidate.divulgacand_url"
                             target="_blank"

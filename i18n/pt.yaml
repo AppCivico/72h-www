@@ -208,6 +208,10 @@
   translation: "Estes dados são com base no sistema oficial do TSE"
 - id: TSEDataFiltered
   translation: "Dados filtrados com base no sistema do TSE:"
+- id: votesFirstRound
+  translation: Votos em 1º turno
+- id: votesSecondRound
+  translation: Votos em 2º turno
 
 - id: facebook
   translation: "Facebook"
