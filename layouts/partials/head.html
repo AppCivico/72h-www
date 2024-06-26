@@ -7,7 +7,6 @@
 
   <meta charset="utf-8">
 
-  <link rel="dns-prefetch" href="https://polyfill.io/">
   <link rel="dns-prefetch" href="https://fonts.googleapis.com/">
 
   <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
@@ -90,7 +89,4 @@
 
 
   <title>{{ if not .IsHome }}{{ .Title }} &middot; {{ end }}{{ .Site.Title }}</title>
-
-  <!-- Polyfills must load sync, since they need to be active before other script runs -->
-  <script src="https://polyfill.io/v3/polyfill.min.js?features=fetch%2CURLSearchParams"></script>
 </head>
