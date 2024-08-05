@@ -1,10 +1,10 @@
 name: "72Horas"
 siteDescription: "A Plataforma 72 horas acompanha em tempo real e entrega de forma simples os repasses dos fundos. Filtro por estado, município, partido, gênero e etnia. Fique por dentro a respeito do uso do dinheiro público nas Eleições 2020."
-run: 2022
+run: 2024
 contactEmail: "plataforma.72horas@gmail.com"
 tagline: ""
 shareImages:
   default: "assets/images/sharing/default.jpg"
   twitter: "assets/images/sharing/twitter.jpg"
   facebook: "assets/images/sharing/facebook.jpg"
-filtersJson: "https://dev-h72-api.appcivico.com/v1/filters?election_id=2040602022"
+filtersJson: "https://dev-h72-api.appcivico.com/v1/filters?election_id=2040602024"
