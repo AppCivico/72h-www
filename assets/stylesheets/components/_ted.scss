@@ -1,0 +1,16 @@
+.ted {
+  margin-bottom: 2.5rem;
+}
+
+.ted > iframe {
+  display: block;
+
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+
+  @supports not (aspect-ratio: 1 / 1) {
+    height: auto;
+    aspect-ratio: 560 / 315;
+  }
+}
