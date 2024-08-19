@@ -518,7 +518,7 @@ if (window.location.href.indexOf('/') > -1) {
           newItem.colors = ['#4E79E6', '#537DE7', '#5780E7', '#5C84E8', '#6187E8', '#658BE9', '#6F92EA', '#7396EA', '#789AEB', '#7D9DEC', '#81A1EC', '#86A4ED', '#8BA8ED', '#8FACEE', '#94AFEE', '#99B3EF', '#86B2F2', '#8CB6F2', '#92BAF3', '#92BAF3', '#9BC0F3', '#9EC2F4', '#A7C7F4', '#AAC9F4', '#B3CFF5', '#BAD3F5', '#C0D7F6', '#C9DDF7', '#E1ECF8', '#E4EEF8', '#E7F0F9', '#EAF2F9', '#EDF4F9'];
         }
         if (item.type === 'gender') {
-          newItem.colors = ['#620ED9', '#22B1A7'];
+          newItem.colors = ['#22B1A7', '#620ED9'];
         }
         if (item.type === 'ethnicity') {
           newItem.colors = ['#1B78A4', '#3C8EB1', '#5EA3BF', '#7FB9CC', '#A0CED9', '#C2E3E7', '#E3F9F4'];
