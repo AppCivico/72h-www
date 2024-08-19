@@ -32,6 +32,10 @@ footer:
   name: "Eleição de 2020"
   url: "https://2020.72horas.org/"
   parent: "previousRuns"
+- identifier: "runs2022"
+  name: "Eleição de 2022"
+  url: "https://2022.72horas.org/"
+  parent: "previousRuns"
 - identifier: "previousRuns"
   name: "Eleições anteriores"
   weight: 5
