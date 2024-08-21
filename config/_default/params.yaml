@@ -7,4 +7,4 @@ shareImages:
   default: "assets/images/sharing/default.jpg"
   twitter: "assets/images/sharing/twitter.jpg"
   facebook: "assets/images/sharing/facebook.jpg"
-filtersJson: "https://dev-h72-api.appcivico.com/v1/filters?election_id=2040602024"
+filtersJson: "https://dev-h72-api.appcivico.com/v1/filters?election_id=2045202024"
