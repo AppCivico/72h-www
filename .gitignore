@@ -313,4 +313,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+.layouts/index.bcp.html
+
 # End of https://www.toptal.com/developers/gitignore/api/vim,node,hugo,sass,linux,macos,windows,sublimetext,visualstudiocode
