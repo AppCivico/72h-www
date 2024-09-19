@@ -23,7 +23,7 @@
 - id: allDays
   translation: "Todo o período"
 - id: allEthnicity
-  translation: "Todas as etnias"
+  translation: "Todas as cores/raças"
 - id: allFunds
   translation: "Todos os tipos"
 - id: allOffices
@@ -97,9 +97,9 @@
 - id: entriesQuantity
   translation: "Quantidade de lançamentos:"
 - id: ethnicities
-  translation: "Etnia"
+  translation: "Cor/Raça"
 - id: ethnicity
-  translation: "Etnia"
+  translation: "Cor/Raça"
 - id: filtersTitle
   translation: "Faça sua pesquisa"
 - id: follow
