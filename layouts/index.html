@@ -1,12 +1,607 @@
 {{ partial "head.html" . }}
- 
-<body>
-    <h1>Estamos em manutenção.</h1>
-</body>
-    <div class="container">
-        {{ partial "header.html" . }}
-        {{ partial "content.html" . }}
-        {{ partial "footer.html" . }}
-    </div>
 
+    <body>
+      <div id="vueHome" v-cloak>
+        {{ partial "header.html" . }}
+
+        <main>
+          <div class="container">
+            <header class="jumbotron">
+              <h1>{{ .Title }}</h1>
+                {{ with $.Site.Params.run }}
+                  <p role="doc-subtitle">{{ . }}</p>
+                {{ end }}
+              {{ .Content }}
+            </header>
+
+            <div class="big-numbers__wrapper">
+              <p class="big-number__update pay-attention-to__warning" v-if="mainData && mainData.last_run_at">
+                  {{ i18n "lastUpdatedAt" }}
+                  {{ "{{ mainData ?  formatDateTime(mainData.last_run_at) : '' }}" }}
+                </p>
+
+              <div class="big-numbers" :aria-busy="this.loadingBigNumbers">
+
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-quaternary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "accumulatedValue" }}</h1>
+                      <p>
+                        {{ i18n "entriesQuantity" }}
+                        {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
+                      </p>
+                      <span class="big-number__number"
+                        v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"
+                      ></span>
+                        <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-tertiary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "candidatesWhoReceivedFunds" }}</h1>
+                      <span class="big-number__dividend">
+                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
+                      </span>
+                      <br />
+                      <span class="big-number__divisor">
+                        <span class="big-number__math-sign">&divide;</span>
+                        {{ "{{ formatNumeral(mainData.election.candidate_count) }}" }}
+                        <small>{{ i18n "candidatesTotal" | lower }}</small>
+                      </span>
+                      <br />
+                      <span class="big-number__quotient">
+                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_who_received / mainData.election.candidate_count * 100) }}" }}
+                        <small>{{ i18n "ofCandidates" | lower }}</small>
+                    </span>
+                    <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-secondary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "accumulatedValueParty" }}</h1>
+                      <p>
+                        {{ i18n "entriesQuantity" }}
+                          {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
+                      </p>
+                      <span class="big-number__dividend"
+                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)"
+                      ></span>
+                      <br />
+                      <span class="big-number__divisor">
+                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_party_fund) }}" }}
+                        <small>{{ i18n "candidate" 2 | lower }}</small>
+                      </span>
+                      <br />
+                      <span class="big-number__quotient">
+                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_party_fund / mainData.election.candidate_count * 100) }}" }}
+                        <small>{{ i18n "ofCandidates" | lower }}</small>
+                      </span>
+                        <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-secondary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
+                      <p>
+                        {{ i18n "entriesQuantity" }}
+                          {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
+                      </p>
+                      <span class="big-number__dividend"
+                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund)"
+                      ></span>
+                      <br />
+                      <span class="big-number__divisor">
+                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_special_fund) }}" }}
+                        <small>{{ i18n "candidate" 2 | lower }}</small>
+                      </span>
+                      <br />
+                      <span class="big-number__quotient">
+                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_special_fund / mainData.election.candidate_count * 100) }}" }}
+                        <small>{{ i18n "ofCandidates" | lower }}</small>
+                      </span>
+                        <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+
+                  {{/*
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-secondary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "accumulatedCrowdfunding" }}</h1>
+                      <p>
+                        {{ i18n "entriesQuantity" }}
+                        {{ "{{ formatNumeral(mainData.accumulated.transfers_crowdfunding) }}" }}
+                      </p>
+                      <span class="big-number__dividend"
+                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_crowdfunding)"
+                      ></span>
+                      <br />
+                      <span class="big-number__divisor">
+                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_crowdfunding) }}" }}
+                        <small>{{ i18n "candidate" 2 | lower }}</small>
+                      </span>
+                      <br />
+                      <span class="big-number__quotient">
+                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_crowdfunding / mainData.election.candidate_count * 100) }}" }}
+                        <small>{{ i18n "ofCandidates" | lower }}</small>
+                      </span>
+                      <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+                  */}}
+                  {{/*
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-secondary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "accumulatedDirectDonation" }}</h1>
+                      <p>
+                        {{ i18n "entriesQuantity" }}
+                        {{ "{{ formatNumeral(mainData.accumulated.transfers_direct_donation) }}" }}
+                      </p>
+                      <span class="big-number__dividend"
+                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_direct_donation)"
+                      ></span>
+                      <br />
+                      <span class="big-number__divisor">
+                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_direct_donation) }}" }}
+                        <small>{{ i18n "candidate" 2 | lower }}</small>
+                      </span>
+                      <br />
+                      <span class="big-number__quotient">
+                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_direct_donation / mainData.election.candidate_count * 100) }}" }}
+                        <small>{{ i18n "ofCandidates" | lower }}</small>
+                      </span>
+                      <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+                  */}}
+                  {{/*
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-secondary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "accumulatedSelfFunding" }}</h1>
+                      <p>
+                        {{ i18n "entriesQuantity" }}
+                        {{ "{{ formatNumeral(mainData.accumulated.transfers_self_funding) }}" }}
+                      </p>
+                      <span class="big-number__dividend"
+                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_self_funding)"
+                      ></span>
+                      <br />
+                      <span class="big-number__divisor">
+                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_self_funding) }}" }}
+                        <small>{{ i18n "candidate" 2 | lower }}</small>
+                      </span>
+                      <br />
+                      <span class="big-number__quotient">
+                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_self_funding / mainData.election.candidate_count * 100) }}" }}
+                        <small>{{ i18n "ofCandidates" | lower }}</small>
+                      </span>
+                      <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+                  */}}
+
+                  <transition-expand>
+                    <div class="big-number__box big-number__box--border
+                      big-number__box--border-secondary"
+                      v-if="!this.loadingBigNumbers"
+                    >
+                      <h1>{{ i18n "accumulatedOtherResources" }}</h1>
+                      <p>
+                        {{ i18n "entriesQuantity" }}
+                        {{ "{{ formatNumeral(mainData.accumulated.transfers_other_resources) }}" }}
+                      </p>
+                      <span class="big-number__dividend"
+                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_other_resources)"
+                      ></span>
+                      <br />
+                      <span class="big-number__divisor">
+                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_other_resources) }}" }}
+                        <small>{{ i18n "candidate" 2 | lower }}</small>
+                      </span>
+                      <br />
+                      <span class="big-number__quotient">
+                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_other_resources / mainData.election.candidate_count * 100) }}" }}
+                        <small>{{ i18n "ofCandidates" | lower }}</small>
+                      </span>
+                      <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
+                    </div>
+                  </transition-expand>
+              </div>
+
+              <p v-show="!this.loadingBigNumbers" class="big-number__warning pay-attention-to__warning">
+                {{ i18n "multipleFundsWarning" }}
+              </p>
+              <p v-show="!this.loadingBigNumbers" class="big-number__warning pay-attention-to__warning">
+                {{ i18n "receivedFundsWarning" }}
+              </p>
+              <p v-show="!this.loadingBigNumbers" class="big-number__warning pay-attention-to__warning">
+                {{ i18n "otherFundsWarning" | .RenderString }}
+              </p>
+
+            </div>
+
+            <div class="intro-charts">
+              <h1 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h1>
+              <template v-for="chart in introCharts">
+                <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`">
+                  <div :id="`js-chart__${chart.type}`"></div>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <div class="filterable-area">
+            <div class="container">
+              <button
+                @click="sharingFrom = 'filters'"
+                data-micromodal-trigger="js-share-modal"
+                class="button button--icon button--icon-share">
+                {{ i18n "share" }}
+              </button>
+
+              <button class="filters__toggle" @click="toggleFilter">
+                <h1>{{ i18n "filtersTitle" }}</h1>
+                <span
+                  v-if="filterOpen"
+                  class="filters__dropdown">
+                  {{ i18n "closeFilters" }}
+                </span>
+                <span
+                  v-else="filterOpen"
+                  class="filters__dropdown">
+                  {{ i18n "openFilters" }}
+                </span>
+              </button>
+
+              <p>{{ i18n "checkFound" }}</p>
+
+              <div class="filters" id="filters" :hidden="!filterOpen">
+                <div class="filters__items">
+                  <form action="" @submit.prevent="updateData">
+                    <fieldset class="filters__item list-box__wrapper" v-if="states && states.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "states" }}</legend>
+                      <list-box
+                        id="states"
+                        name="states"
+                        v-model="selectedState"
+                        :value="selectedState"
+                        @change="selectedCity = null"
+                        label-for-empty="{{ i18n "allStates" }}"
+                        :options="states"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="cities && cities.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "cities" }}</legend>
+                      <list-box
+                        id="cities"
+                        name="cities"
+                        v-model="selectedCity"
+                        label-for-empty="{{ i18n "allCities" }}"
+                        :disabled="!selectedState.length"
+                        :options="cities"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="offices && offices.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "offices" }}</legend>
+                      <list-box
+                        id="offices"
+                        name="offices"
+                        v-model="selectedOffices"
+                        :options="offices"
+                        label-for-empty="{{ i18n "allOffices" }}"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="parties && parties.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "parties" }}</legend>
+                      <list-box
+                        id="parties"
+                        name="parties"
+                        v-model="selectedParty"
+                        :options="parties"
+                        label-for-empty="{{ i18n "allParties" }}"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="fund_types && fund_types.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "fundingTypes" }}</legend>
+                      <list-box
+                        id="funds"
+                        name="funds"
+                        v-model="selectedFund"
+                        label-for-empty="{{ i18n "allFunds" }}"
+                        :options="fund_types"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="races && races.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "ethnicities" }}</legend>
+                      <list-box
+                        id="ethnicity"
+                        name="ethnicity"
+                        v-model="selectedRace"
+                        label-for-empty="{{ i18n "allEthnicity" }}"
+                        :options="races"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="schooling && schooling.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "schooling" }}</legend>
+                      <list-box
+                        id="schooling"
+                        name="schooling"
+                        v-model="selectedSchooling"
+                        label-for-empty="{{ i18n "toIgnore" }}"
+                        :options="schooling"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="electionStatuses && electionStatuses.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "electionStatuses" }}</legend>
+                      <list-box
+                        id="electionStatuses"
+                        name="electionStatuses"
+                        v-model="selectedElectionStatuses"
+                        label-for-empty="{{ i18n "toIgnore" }}"
+                        :options="electionStatuses"
+                        multiple
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="reelection && reelection.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "isReelection" }}</legend>
+                      <list-box
+                        id="isReelection"
+                        name="isReelection"
+                        v-model="isReelectionSelected"
+                        label-for-empty="{{ i18n "toIgnore" }}"
+                        :options="reelection"
+                      ></list-box>
+                    </fieldset>
+                    <fieldset class="filters__item list-box__wrapper">
+                      <legend class="like-a__label list-box__label">{{ i18n "toLimitInterval" }}</legend>
+                      <list-box
+                        id="days"
+                        name="days"
+                        v-model="selectedDay"
+                        :options="days"
+                        required
+                      ></list-box>
+                    </fieldset>
+                    <button class="button button--primary">{{ i18n "apply" }}</button>
+                  </form>
+                </div>
+              </div>
+
+              <div id="js-main-chart" class="main-chart" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData"></div>
+
+              <transition-expand>
+                <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" v-if="!loadingChartData">
+                  <div class="big-number__box big-number__box--icon big-number__box--icon-total">
+                    <h1>{{ i18n "accumulatedValue" }}</h1>
+                    {{ partial "filterText" }}
+                    <p v-else>
+                      {{ i18n "TSEData" }}
+                    </p>
+                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountAll)"></span>
+                    <br />
+                    <span class="big-number__not-so-big">{{ "{{ formatNumeral(countAll) }}" }} <small>{{ i18n "candidate" 2 | lower }}</small></span>
+                  </div>
+
+                  <div class="big-number__box big-number__box--icon big-number__box--icon-female">
+                    <h1>{{ i18n "accumulatedFemale" }}</h1>
+                    {{ partial "filterText" }}
+                    <p v-else>
+                      {{ i18n "TSEData" }}
+                    </p>
+                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountFemale)"></span>
+                    <br />
+                    <span class="big-number__not-so-big">{{ "{{ formatNumeral(countFemale) }}" }} <small>{{ i18n "candidateFemale" 2 }}</small></span>
+                  </div>
+
+                  <div class="big-number__box big-number__box--icon big-number__box--icon-male">
+                    <h1>{{ i18n "accumulatedMale" }}</h1>
+                    {{ partial "filterText" }}
+                    <p v-else>
+                      {{ i18n "TSEData" }}
+                    </p>
+                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountMale)"></span>
+                    <br />
+                    <span class="big-number__not-so-big">{{ "{{ formatNumeral(countMale) }}" }} <small>{{ i18n "candidateMale" 2 | lower }}</small></span>
+                  </div>
+                </div>
+              </transition-expand>
+
+              <div class="candidates" id="js-candidate-box" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'">
+                <button
+                  @click="sharingFrom = 'js-candidate-box'"
+                  data-micromodal-trigger="js-share-modal"
+                  class="button button--icon button--icon-share">
+                  {{ i18n "share" }}
+                </button>
+                <h1>
+                  {{ i18n "candidatesListing" }}
+                </h1>
+                <div class="candidates__subtitle">
+                  {{ partial "filterText" }}
+                </div>
+                <transition-expand>
+                  <div :aria-busy="loadingCandidates" class="candidates__container">
+                    <template v-if="candidates && candidates.candidates.length > 0">
+                      <div
+                        v-for="candidate in candidates.candidates"
+                        class="candidates__candidate">
+                        <img
+                          class="candidates__image"
+                          :src="candidate.picture"
+                          @error="candidate.picture = 'assets/images/no-picture.svg'"
+                          :alt="candidate.name">
+                        <div class="candidates__text">
+                          <p class="candidates__name">
+                            {{ "{{ candidate.name }}" }}
+                            - {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
+                            - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
+                          </p>
+                          <p class="candidates__info">
+                            {{ "{{ candidate.total_transfers }}" }} {{ i18n "transfers" }}
+                          </p>
+                          <p class="candidates__info">
+                            {{ "{{ candidate.city.name }}, {{ candidate.city.region.name }}" }}
+                          </p>
+                          <p class="candidates__info">
+                            {{ i18n "total" }} {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
+                          </p>
+
+                          <p class="candidates__info" v-if="candidate.votes_first_round">
+                            {{ i18n "votesFirstRound" }}: {{ "{{ formatNumeral(candidate.votes_first_round) }}" }}
+                          </p>
+                          <p class="candidates__info" v-if="candidate.votes_second_round">
+                            {{ i18n "votesSecondRound" }}: {{ "{{ formatNumeral(candidate.votes_second_round) }}" }}
+                          </p>
+
+                          <a
+                            :href="candidate.divulgacand_url"
+                            target="_blank"
+                            class="button">
+                            {{ i18n "seeOnTSE" }}
+                          </a>
+                        </div>
+                      </div>
+                    </template>
+                    <div
+                      v-else
+                      class="no-results no-results--candidates">
+                      <img src="assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
+                      <p>{{ i18n "noResultsCandidates" }}</p>
+                    </div>
+
+                    <div class="candidates__error-message pay-attention-to__danger" v-show="errorMessages.candidates">
+                      {{ "{{ errorMessages.candidates }}" }}
+                    </div>
+
+                    <div class="pagination">
+                      <button
+                        v-if="candidates_page > 1"
+                        @click="getCandidates(candidates_page - 1)"
+                        class="button button--medium">
+                        {{ i18n "previous" }}
+                      </button>
+
+                      <button
+                        v-if="candidates && candidates.has_more"
+                        @click="getCandidates(candidates_page + 1)"
+                        class="button button--medium">
+                        {{ i18n "next" }}
+                      </button>
+                    </div>
+                  </div>
+                </transition-expand>
+              </div>
+            </div>
+          </div>
+          <div class="container">
+            <div class="ted">
+              <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/qKIDnS6Ve0o?si=5PD5Dr-Gjic3Zspf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="partners">
+              <h2>{{ i18n "partnersAndOrganizations" }}</h2>
+
+              {{ range where .Site.RegularPages ".Type" "partners" }}
+                <img src="{{ .Params.image }}" alt="{{ .Title }}">
+              {{ end }}
+            </div>
+          </div>
+
+          <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true">
+            <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+              <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+                <header class="modal__header">
+                  <h1>{{ i18n "shareWithEnthusiasm" }}</h1>
+                  <button class="modal__close" aria-label="{{ i18n "closeModal" }}" data-micromodal-close></button>
+                </header>
+                <main class="modal__content share-modal__content" id="share-modal-content">
+                  <a
+                    :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--facebook">
+                    {{ i18n "facebook" }}
+                  </a>
+                  <a
+                    :href="`http://twitter.com/share?url=${shareURL}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--twitter">
+                    {{ i18n "twitter" }}
+                  </a>
+                  <a
+                    :href="`https://wa.me/?text=${encodeURIComponent(shareURL)}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--whatsapp">
+                    {{ i18n "whatsapp" }}
+                  </a>
+                  <a
+                    :href="`https://telegram.me/share/url?url=${shareURL}`"
+                    target="_blank"
+                    class="share-modal__icon share-modal__icons--telegram">
+                    {{ i18n "telegram" }}
+                  </a>
+                  <div class="share-modal__input">
+                    <input
+                      :value="shareURL"
+                      id="js-share-url"
+                      type="text"
+                      class="share-modal__input-text"
+                      readonly>
+                    <button
+                      @click="copyShareURL"
+                      class="share-modal__input-button button">
+                      {{ i18n "copy" }}
+                    </button>
+                  </div>
+                  <span v-show="shareURLCopied"> {{ i18n "linkCopiedSuccessfully" }}</span>
+                </main>
+                <footer class="modal__footer share-modal__footer">
+                  <label for="share-date">
+                    <input
+                      v-model="useEpoch"
+                      type="checkbox"
+                      name="time"
+                      id="share-date">
+                      {{ i18n "shareDataFrom" }} <span v-if="mainData">{{ "{{ epochToHuman(mainData.epoch) }}" }}</span>
+                  </label>
+                </footer>
+              </div>
+            </div>
+          </div>
+
+        </main>
+      </div>
+
+      {{ partial "footer.html" . }}
+
+      {{ partial "scripts.html" . }}
+
+    </body>
 </html>
