@@ -6,6 +6,7 @@ exec:
     - '^npx$'
     - '^postcss$'
     - 'babel'
+    - 'git'
   osEnv:
     - '(?i)^(PATH|PATHEXT|APPDATA|TMP|TEMP|TERM)$'
 funcs:
