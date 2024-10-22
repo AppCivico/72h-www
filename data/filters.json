@@ -1,6 +1,14 @@
 {
     "filters": {
         "cities": [],
+        "election_status": [
+          "2º turno",
+          "Eleito",
+          "Eleito por média",
+          "Eleito por QP",
+          "Não eleito",
+          "Suplente"
+        ],
         "fund_types": [
             {
                 "id": 1,
