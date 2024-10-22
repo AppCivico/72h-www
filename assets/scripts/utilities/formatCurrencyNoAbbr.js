@@ -6,4 +6,4 @@ export default (value) => {
     maximumFractionDigits: 0,
   });
   return formatter.format(value);
-}
+};

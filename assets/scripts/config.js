@@ -8,7 +8,7 @@ export default {
   run: {
     2020: '2030402020',
     2022: '2040602022',
-    2024: '2045202024'
+    2024: '2045202024',
   },
   api: {
     domain: (productionDomains.indexOf(window.location.hostname) > -1

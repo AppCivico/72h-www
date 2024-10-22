@@ -1,6 +1,6 @@
 export default {
   name: 'ListBox',
-  template: "#list-box-markup",
+  template: '#list-box-markup',
   inheritAttrs: false,
   props: {
     options: {
@@ -40,9 +40,9 @@ export default {
         : [String(value)];
     },
     normalizedOptions({ options } = this) {
-      return options.map((x) => {
-        return typeof x === 'object' ? {
-          ...x, id: x.id || x.value, label: x.label || x.acronym || x.name, value: String(typeof x.value !== 'undefined' ? x.value : x.id) } : x}) || [];
+      return options.map((x) => (typeof x === 'object' ? {
+        ...x, id: x.id || x.value, label: x.label || x.acronym || x.name, value: String(typeof x.value !== 'undefined' ? x.value : x.id),
+      } : x)) || [];
     },
     normalizedType({ multiple, options } = this) {
       if (!multiple) {
@@ -63,8 +63,8 @@ export default {
         }
         i -= 1;
       }
-      return ''
-    }
+      return '';
+    },
   },
   methods: {
     emit(e) {
