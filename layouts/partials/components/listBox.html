@@ -9,10 +9,10 @@
   <option
     v-for="option in normalizedOptions"
     :key="option.id"
-    :value="option.value || option"
+    :value="option.value ?? option"
     :selected="currentValues.includes(String(option.value))"
   >
-    {{ "{{ option.label || option }}" }}
+    {{ "{{ option.label ?? option }}" }}
   </option>
 </select>
 <ul class="list-box" :class="{'list-box--empty': !normalizedOptions.length}"
@@ -47,11 +47,11 @@ tabindex="0" @focus="return false" v-else>
     }"
   >
     <input
-      :id="`option__${ name }--${ option.id || option }`"
-      :key="`option__${ option.id || option }`"
-      :value="option.value || option"
+      :id="`option__${ name }--${ option.id ?? option }`"
+      :key="`option__${ option.id ?? option }`"
+      :value="option.value ?? option"
       :checked="currentValues.includes(option.value)"
-      :true-value="option.value || option"
+      :true-value="option.value ?? option"
       :type="normalizedType"
       :name="name"
       v-bind="$attrs"
@@ -59,11 +59,11 @@ tabindex="0" @focus="return false" v-else>
       class="list-box__input"
     />
     <label
-      :for="`option__${ name }--${ option.id || option }`"
+      :for="`option__${ name }--${ option.id ?? option }`"
       class="list-box__option-label"
       :title="option.acronym && option.name ? option.name : null"
       >
-      {{ "{{ option.label || option }}" }}
+      {{ "{{ option.label ?? option }}" }}
 
       <small class="list-box__option-helper" v-if="option.helper">{{ "{{ option.helper }}" }}</small>
     </label>
