@@ -92,6 +92,7 @@ if (window.location.href.indexOf('/') > -1) {
       selectedFund: [],
       selectedRace: [],
       selectedElectionStatuses: [],
+      selectedRangeOfVotes: '',
       selectedSchooling: [],
       isReelectionSelected: '',
 
@@ -163,6 +164,10 @@ if (window.location.href.indexOf('/') > -1) {
       },
       racesById({ races } = this) {
         return races.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
+      },
+      rangeOfVotes() {
+        return window.appFilters
+          .votes?.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name))) || [];
       },
       schooling() {
         return window.appFilters.schooling?.sort((a, b) => a.name.localeCompare(b.name)) || [];
@@ -252,6 +257,9 @@ if (window.location.href.indexOf('/') > -1) {
             ? `&${this.selectedElectionStatuses.map((x) => `election_status[]=${encodeURIComponent(x)}`).join('&')}`
             : `&election_status=${encodeURIComponent(this.selectedElectionStatuses)}`;
         }
+        if (this.selectedRangeOfVotes !== '') {
+          mountedURL += `&votes=${this.selectedRangeOfVotes}`;
+        }
         if (this.isReelectionSelected) {
           mountedURL += `&reelection=${this.isReelectionSelected}`;
         }
@@ -329,6 +337,7 @@ if (window.location.href.indexOf('/') > -1) {
         const schoolingId = params.get('schooling_id')?.split(',').map((x) => Number(x));
         const electionStatuses = params.get('election_status')?.split(',').map((x) => decodeURIComponent(x));
         const reelection = params.get('reelection');
+        const rangeOfVotes = params.get('votes');
         const days = params.get('days');
         const epoch = Number(params.get('epoch') || 0);
 
@@ -363,6 +372,9 @@ if (window.location.href.indexOf('/') > -1) {
           this.selectedSchooling = window.appFilters.election_status
             .filter((status) => electionStatuses.includes(status));
         }
+        if (rangeOfVotes !== '' && !Number.isNaN(Number.parseInt(rangeOfVotes, 10))) {
+          this.selectedRangeOfVotes = rangeOfVotes;
+        }
         if (reelection) {
           this.isReelectionSelected = reelection !== '0' ? 1 : 0;
         }
@@ -389,6 +401,7 @@ if (window.location.href.indexOf('/') > -1) {
           fundTypesById, officesById, racesById, schoolingById, isReelectionSelected,
           selectedSchooling,
           selectedElectionStatuses,
+          selectedRangeOfVotes,
         } = this;
 
         filterText.selectedState = selectedState?.map((x) => statesById[x].name).join(', ');
@@ -412,6 +425,12 @@ if (window.location.href.indexOf('/') > -1) {
           filterText.isReelectionSelected = isReelectionSelected;
         } else if (filterText.isReelectionSelected) {
           delete filterText.isReelectionSelected;
+        }
+
+        if (selectedRangeOfVotes !== '') {
+          filterText.selectedRangeOfVotes = selectedRangeOfVotes;
+        } else if (filterText.selectedRangeOfVotes) {
+          delete filterText.selectedRangeOfVotes;
         }
 
         filterText.selectedDay = selectedDay;

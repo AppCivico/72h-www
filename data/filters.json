@@ -458,6 +458,28 @@
                 "id": 7,
                 "name": "Superior incompleto"
             }
+        ],
+        "votes": [
+          {
+            "label": "0 votos",
+            "value": 0
+          },
+          {
+            "label": "1 voto",
+            "value": 1
+          },
+          {
+            "label": "entre 2 e 50 votos",
+            "value": 50
+          },
+          {
+            "label": "entre 51 e 100  votos",
+            "value": 100
+          },
+          {
+            "label": "entre 101 e 300 votos",
+            "value": 300
+          }
         ]
     }
 }
