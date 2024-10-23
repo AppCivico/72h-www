@@ -37,6 +37,10 @@
       <template v-if="value">{{ "{{ value }}" }}</template>
       <template v-else>{{ i18n "allStatuses" }}</template>;
     </template>
+    <template v-if="key === 'selectedRangeOfVotes'">
+      <template v-if="value">{{ "{{ value }}" }}</template>
+      <template v-else>{{ i18n "allRangesOfVotes" }}</template>;
+    </template>
     <template v-if="key === 'selectedDay'">
       <template v-if='value === "all"'>
         {{ i18n "allDays" }}

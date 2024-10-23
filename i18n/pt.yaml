@@ -30,6 +30,8 @@
   translation: "Todos os cargos"
 - id: allParties
   translation: "Todos os partidos"
+- id: allRangesOfVotes
+  translation: "Ignorar"
 - id: allSchooling
   translation: "Qualquer escolaridade"
 - id: allStatuses
@@ -166,6 +168,8 @@
   translation: "Partido"
 - id: previous
   translation: "< Anterior"
+- id: rangeOfVotes
+  translation: "Número de votos"
 - id: receivedFundsWarning
   translation: "Nem todas as candidaturas recebem fundos."
 - id: reelection

@@ -371,6 +371,16 @@
                         multiple
                       ></list-box>
                     </fieldset>
+                    <fieldset class="filters__item list-box__wrapper" v-if="rangeOfVotes && rangeOfVotes.length">
+                      <legend class="like-a__label list-box__label">{{ i18n "rangeOfVotes" }}</legend>
+                      <list-box
+                        id="rangeOfVotes"
+                        name="rangeOfVotes"
+                        v-model="selectedRangeOfVotes"
+                        label-for-empty="{{ i18n "toIgnore" }}"
+                        :options="rangeOfVotes"
+                      />
+                    </fieldset>
                     <fieldset class="filters__item list-box__wrapper" v-if="reelection && reelection.length">
                       <legend class="like-a__label list-box__label">{{ i18n "isReelection" }}</legend>
                       <list-box
