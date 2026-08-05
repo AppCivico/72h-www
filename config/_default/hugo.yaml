@@ -1,17 +1,15 @@
 baseURL: "/"
 defaultContentLanguage: "pt"
-enableGitInfo: true
 enableMissingTranslationPlaceholders: true
 enableRobotsTXT: true
 disableHugoGeneratorInject: true
 buildFuture: true
 disableKinds:
   - "RSS"
-  - "taxonomyTerm"
-googleAnalytics: ""
-languageCode: "pt-br"
+  - "taxonomy"
+locale: "pt-br"
 title: "72Horas"
-metaDataFormat: "yaml"
 
-ignoreErrors:
-  - "error-remote-getjson"
+services:
+  googleAnalytics:
+    id: ""

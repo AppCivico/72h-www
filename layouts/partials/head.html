@@ -1,6 +1,6 @@
 <!doctype html>
-<html lang="{{ with .Site.Language.Params.locale }}{{ . }}{{ else }}{{ .Site.LanguageCode }}{{ end }}"
-  class="{{ if .IsHome }}home-page {{ end }}{{ $.Scratch.Get "rootClass" }}
+<html lang="{{ with .Site.Language.Params.locale }}{{ . }}{{ else }}{{ .Site.Language.Locale }}{{ end }}"
+  class="{{ if .IsHome }}home-page {{ end }}
   {{ .Params.rootClass }} {{ if eq (getenv "NODE_ENV") "development" }}grid{{ end }} no-js">
 <head>
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
@@ -11,7 +11,7 @@
 
   <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
 
-  {{ $style := resources.Get "stylesheets/main.scss" | resources.ToCSS | resources.PostCSS | resources.Minify | resources.Fingerprint "sha512" }}
+  {{ $style := resources.Get "stylesheets/main.scss" | css.Sass | css.PostCSS | resources.Minify | resources.Fingerprint "sha512" }}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
 
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
@@ -19,7 +19,7 @@
   {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.min.js" "vendor/vue.js") | resources.Fingerprint "sha512" }}
   <link rel="preload" type="text/javascript" as="script" href="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}">
 
-  {{ $secureJS := resources.Get "scripts/index.js" | resources.Babel | js.Build | resources.Minify | resources.Fingerprint "sha512" }}
+  {{ $secureJS := resources.Get "scripts/index.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
   <link rel="preload" type="text/javascript" as="script" href="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}">
 
   <script type="text/javascript">

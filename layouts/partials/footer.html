@@ -41,7 +41,7 @@
         <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
       </address>
 
-      {{ with $.Site.Data.socialMedia }}
+      {{ with hugo.Data.socialMedia }}
         <style>
           {{ range .list }}
             {{ if .svg }}
