@@ -65,7 +65,7 @@
     "caniuse-lite": "^1.0.30001806",
     "core-js": "^3.24.1",
     "dayjs": "^1.8.36",
-    "highcharts": "^10.2.0",
+    "highcharts": "^13.0.0",
     "micromodal": "^0.3.2",
     "numeral": "^2.0.6",
     "qs": "^6.15.3",

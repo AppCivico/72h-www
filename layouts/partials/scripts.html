@@ -20,6 +20,13 @@
 {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.global.prod.js" "vendor/vue.global.js") | resources.Fingerprint "sha512" }}
 <script src="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}"></script>
 
+{{ $highcharts := resources.Get "vendor/highcharts/highcharts.js" | resources.Fingerprint "sha512" }}
+<script src="{{ $highcharts.RelPermalink }}" integrity="{{ $highcharts.Data.Integrity }}"></script>
+{{ $highchartsExporting := resources.Get "vendor/highcharts/modules/exporting.js" | resources.Fingerprint "sha512" }}
+<script src="{{ $highchartsExporting.RelPermalink }}" integrity="{{ $highchartsExporting.Data.Integrity }}"></script>
+{{ $highchartsExportData := resources.Get "vendor/highcharts/modules/export-data.js" | resources.Fingerprint "sha512" }}
+<script src="{{ $highchartsExportData.RelPermalink }}" integrity="{{ $highchartsExportData.Data.Integrity }}"></script>
+
 {{ $secureJS := resources.Get "scripts/index.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
 
 <script type="text/javascript" src="{{ $secureJS.RelPermalink }}" integrity="{{ $secureJS.Data.Integrity }}"></script>
@@ -51,9 +58,3 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=2624997807810316&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Facebook Pixel Code -->
-
-<!-- <script src="https://code.highcharts.com/highcharts.js"></script> -->
-<!-- <script src="https://code.highcharts.com/modules/series&#45;label.js"></script> -->
-<!-- <script src="https://code.highcharts.com/modules/exporting.js"></script> -->
-<!-- <script src="https://code.highcharts.com/modules/export&#45;data.js"></script> -->
-<!-- <script src="https://code.highcharts.com/modules/accessibility.js"></script> -->

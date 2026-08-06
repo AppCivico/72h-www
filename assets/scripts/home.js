@@ -1,10 +1,7 @@
-/* global Vue */
+/* global Vue, Highcharts */
 import dayjs from 'dayjs';
 import 'dayjs/locale/pt-br';
 import duration from 'dayjs/plugin/duration';
-import Highcharts from 'highcharts';
-import HighchartsExportData from 'highcharts/modules/export-data';
-import HighchartsExport from 'highcharts/modules/exporting';
 import MicroModal from 'micromodal';
 import numeral from 'numeral';
 import listBox from './components/listBox';
@@ -12,9 +9,6 @@ import TransitionExpand from './components/TransitionExpand';
 import config from './config';
 import colorsPerTypeOfData from './utilities/colorsPerTypeOfData';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
-
-HighchartsExport(Highcharts);
-HighchartsExportData(Highcharts);
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
@@ -447,6 +441,9 @@ if (window.location.href.indexOf('/') > -1) {
       setChartOptions() {
         Highcharts.setOptions({
           colors: ['#DC3236', '#620ED9', '#22B1A7', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
+          palette: {
+            colorScheme: 'light',
+          },
           chart: {
             style: {
               fontFamily: 'Montserrat',
