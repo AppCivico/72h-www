@@ -27,17 +27,18 @@ export default {
       type: String,
       default: 'single_choice',
     },
-    value: {
+    modelValue: {
       type: [Array, Number, String],
       default: () => [],
       validator: (value) => !(!Array.isArray(value) && typeof value === 'object'),
     },
   },
+  emits: ['update:modelValue'],
   computed: {
-    currentValues({ value = '' } = this) {
-      return value && Array.isArray(value)
-        ? value.map((x) => String(x))
-        : [String(value)];
+    currentValues({ modelValue = '' } = this) {
+      return modelValue && Array.isArray(modelValue)
+        ? modelValue.map((x) => String(x))
+        : [String(modelValue)];
     },
     normalizedOptions({ options } = this) {
       return options.map((x) => (typeof x === 'object' ? {
@@ -82,9 +83,9 @@ export default {
           this.$refs.empty.checked = true;
         }
 
-        this.$emit('input', newValues);
+        this.$emit('update:modelValue', newValues);
       } else {
-        this.$emit('input', value);
+        this.$emit('update:modelValue', value);
       }
     },
   },

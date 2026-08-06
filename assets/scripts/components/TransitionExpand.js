@@ -1,74 +1,66 @@
+/* global Vue */
+
 /**
  * @author Markus Oberlehner
  * @see https://markus.oberlehner.net/blog/transition-to-height-auto-with-vue/
  */
 
-export default {
-  name: 'TransitionExpand',
+function TransitionExpand(props, { slots }) {
+  return Vue.h(Vue.Transition, {
+    name: 'expand',
 
-  functional: true,
+    onAfterEnter(element) {
+      // eslint-disable-next-line no-param-reassign
+      element.style.height = 'auto';
+    },
 
-  render(createElement, context) {
-    const data = {
-      props: {
-        name: 'expand',
-      },
+    onEnter(element) {
+      const { width } = getComputedStyle(element);
 
-      on: {
-        afterEnter(element) {
-          // eslint-disable-next-line no-param-reassign
-          element.style.height = 'auto';
-        },
+      /* eslint-disable no-param-reassign */
+      element.style.width = width;
+      element.style.position = 'absolute';
+      element.style.visibility = 'hidden';
+      element.style.height = 'auto';
+      /* eslint-enable */
 
-        enter(element) {
-          const { width } = getComputedStyle(element);
+      const { height } = getComputedStyle(element);
 
-          /* eslint-disable no-param-reassign */
-          element.style.width = width;
-          element.style.position = 'absolute';
-          element.style.visibility = 'hidden';
-          element.style.height = 'auto';
-          /* eslint-enable */
+      /* eslint-disable no-param-reassign */
+      element.style.width = null;
+      element.style.position = null;
+      element.style.visibility = null;
+      element.style.height = 0;
+      /* eslint-enable */
 
-          const { height } = getComputedStyle(element);
+      // Force repaint to make sure the
+      // animation is triggered correctly.
+      // eslint-disable-next-line no-unused-expressions
+      getComputedStyle(element).height;
 
-          /* eslint-disable no-param-reassign */
-          element.style.width = null;
-          element.style.position = null;
-          element.style.visibility = null;
-          element.style.height = 0;
-          /* eslint-enable */
+      setTimeout(() => {
+        // eslint-disable-next-line no-param-reassign
+        element.style.height = height;
+      });
+    },
 
-          // Force repaint to make sure the
-          // animation is triggered correctly.
-          // eslint-disable-next-line no-unused-expressions
-          getComputedStyle(element).height;
+    onLeave(element) {
+      const { height } = getComputedStyle(element);
 
-          setTimeout(() => {
-            // eslint-disable-next-line no-param-reassign
-            element.style.height = height;
-          });
-        },
+      // eslint-disable-next-line no-param-reassign
+      element.style.height = height;
 
-        leave(element) {
-          const { height } = getComputedStyle(element);
+      // Force repaint to make sure the
+      // animation is triggered correctly.
+      // eslint-disable-next-line no-unused-expressions
+      getComputedStyle(element).height;
 
-          // eslint-disable-next-line no-param-reassign
-          element.style.height = height;
+      setTimeout(() => {
+        // eslint-disable-next-line no-param-reassign
+        element.style.height = 0;
+      });
+    },
+  }, slots.default);
+}
 
-          // Force repaint to make sure the
-          // animation is triggered correctly.
-          // eslint-disable-next-line no-unused-expressions
-          getComputedStyle(element).height;
-
-          setTimeout(() => {
-            // eslint-disable-next-line no-param-reassign
-            element.style.height = 0;
-          });
-        },
-      },
-    };
-
-    return createElement('transition', data, context.children);
-  },
-};
+export default TransitionExpand;

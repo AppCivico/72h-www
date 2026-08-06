@@ -42,71 +42,72 @@ const uri = window.location.search.substring(1);
 const params = new URLSearchParams(uri);
 
 if (window.location.href.indexOf('/') > -1) {
-  window.$vueHome = new Vue({
-    el: '#vueHome',
+  window.$vueHome = Vue.createApp({
     components: {
       'list-box': listBox,
       'transition-expand': TransitionExpand,
     },
-    data: {
-      loadingBigNumbers: true,
-      loadingCandidates: true,
-      loadingChartData: true,
+    data() {
+      return {
+        loadingBigNumbers: true,
+        loadingCandidates: true,
+        loadingChartData: true,
 
-      errorMessages: {
-        candidates: '',
-      },
+        errorMessages: {
+          candidates: '',
+        },
 
-      shareURLCopied: false,
-      sharingFrom: '',
+        shareURLCopied: false,
+        sharingFrom: '',
 
-      filterText: {},
-      selectedLocaleText: 'Brasil',
+        filterText: {},
+        selectedLocaleText: 'Brasil',
 
-      homeLoading: true,
-      filterOpen: true,
+        homeLoading: true,
+        filterOpen: true,
 
-      chart: null,
-      totalArray: [],
-      femaleArray: [],
-      maleArray: [],
+        chart: null,
+        totalArray: [],
+        femaleArray: [],
+        maleArray: [],
 
-      mainData: null,
-      epochFromParam: null,
-      useEpoch: false,
-      introCharts: [],
-      pieColors: [
-        '#dc5b64',
-        '#4e79e6',
-        '#3399b6',
-        '#edc437',
-      ],
+        mainData: null,
+        epochFromParam: null,
+        useEpoch: false,
+        introCharts: [],
+        pieColors: [
+          '#dc5b64',
+          '#4e79e6',
+          '#3399b6',
+          '#edc437',
+        ],
 
-      candidates: null,
-      candidates_page: 1,
+        candidates: null,
+        candidates_page: 1,
 
-      selectedState: [],
-      selectedCity: [],
-      selectedOffices: [],
-      selectedParty: [],
-      selectedFund: [],
-      selectedRace: [],
-      selectedElectionStatuses: [],
-      selectedRangeOfVotes: '',
-      selectedSchooling: [],
-      isReelectionSelected: '',
+        selectedState: [],
+        selectedCity: [],
+        selectedOffices: [],
+        selectedParty: [],
+        selectedFund: [],
+        selectedRace: [],
+        selectedElectionStatuses: [],
+        selectedRangeOfVotes: '',
+        selectedSchooling: [],
+        isReelectionSelected: '',
 
-      days: [
-        { label: 'ignorar', value: 'all' },
-        { label: 'últimos 7 dias', value: 7 },
-        { label: 'últimos 15 dias', value: 15 },
-        { label: 'últimos 30 dias', value: 30 },
-        { label: 'últimos 60 dias', value: 60 },
-        { label: 'últimos 90 dias', value: 90 },
-      ],
-      selectedDay: 'all',
+        days: [
+          { label: 'ignorar', value: 'all' },
+          { label: 'últimos 7 dias', value: 7 },
+          { label: 'últimos 15 dias', value: 15 },
+          { label: 'últimos 30 dias', value: 30 },
+          { label: 'últimos 60 dias', value: 60 },
+          { label: 'últimos 90 dias', value: 90 },
+        ],
+        selectedDay: 'all',
 
-      previousFiltersAsQueryString: '',
+        previousFiltersAsQueryString: '',
+      };
     },
     computed: {
       dataIsOutdated: {
@@ -803,5 +804,5 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
     },
-  });
+  }).mount('#vueHome');
 }
