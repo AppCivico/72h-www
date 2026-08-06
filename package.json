@@ -6,8 +6,7 @@
   "scripts": {
     "audit-deps": "rimraf -f package-lock.json && synp --source-file yarn.lock && npm audit & rimraf -f package-lock.json",
     "prebuild": "npm-run-all --parallel clean",
-    "build": "cross-env NODE_ENV=production",
-    "postbuild": "hugo --ignoreCache --cleanDestinationDir --logLevel info",
+    "build": "cross-env NODE_ENV=production hugo --ignoreCache --cleanDestinationDir --logLevel info",
     "clean": "npm-run-all --parallel clean:*",
     "clean:dist": "rimraf ./public/**/*.*",
     "clean:testResults": "rimraf ./testResults/**/*.xml",
