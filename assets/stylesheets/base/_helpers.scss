@@ -1,3 +1,6 @@
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
 // -----------------------------------------------------------------------------
 // This file contains CSS helper classes.
 // -----------------------------------------------------------------------------
@@ -9,8 +12,8 @@
 }
 
 %loading-bg {
-  background-color: palette('loading', 'foreground');
-  background-image: image('loading.svg');
+  background-color: functions.palette('loading', 'foreground');
+  background-image: functions.image('loading.svg');
   background-repeat: no-repeat;
   background-position: 50% 50%;
 }
@@ -26,15 +29,15 @@
     right: 0;
     bottom: 0;
     left: 0;
-    z-index: layer('modal');
+    z-index: functions.layer('modal');
 
     width: 100%;
     height: 100%;
 
     content: '';
 
-    background-color: palette('loading');
-    background-image: image('loading.gif');
+    background-color: functions.palette('loading');
+    background-image: functions.image('loading.gif');
     background-position: top center;
   }
 }
@@ -122,7 +125,7 @@ textarea {
     // top: 0;
     right: 0;
     bottom: 0;
-    z-index: layer('modal');
+    z-index: functions.layer('modal');
 
     font-size: 1rem;
 
@@ -136,46 +139,46 @@ textarea {
 
     content: '';
 
-    background-image: grid-image(2);
+    background-image: functions.grid-image(2);
     background-position: center top;
 
-    @media screen and (min-width: breakpoint('phablet')) {
-      background-image: grid-image(3);
+    @media screen and (min-width: functions.breakpoint('phablet')) {
+      background-image: functions.grid-image(3);
     }
 
-    @media screen and (min-width: breakpoint('tablet')) {
-      background-image: grid-image(4);
+    @media screen and (min-width: functions.breakpoint('tablet')) {
+      background-image: functions.grid-image(4);
     }
 
-    @media screen and (min-width: breakpoint('desktop')) {
-      background-image: grid-image(5);
+    @media screen and (min-width: functions.breakpoint('desktop')) {
+      background-image: functions.grid-image(5);
     }
 
-    @media screen and (min-width: breakpoint('wide')) {
-      background-image: grid-image(6);
-      background-size: $max-width 100%;
+    @media screen and (min-width: functions.breakpoint('wide')) {
+      background-image: functions.grid-image(6);
+      background-size: variables.$max-width 100%;
     }
   }
 
   &:root::before {
-    padding: $gutter;
+    padding: variables.$gutter;
 
-    background-color: palette('debug');
+    background-color: functions.palette('debug');
     opacity: 0.75;
 
-    @media screen and (min-width: breakpoint('phablet')) {
+    @media screen and (min-width: functions.breakpoint('phablet')) {
       content: 'breakpoint: phablet';
     }
 
-    @media screen and (min-width: breakpoint('tablet')) {
+    @media screen and (min-width: functions.breakpoint('tablet')) {
       content: 'breakpoint: tablet';
     }
 
-    @media screen and (min-width: breakpoint('desktop')) {
+    @media screen and (min-width: functions.breakpoint('desktop')) {
       content: 'breakpoint: desktop';
     }
 
-    @media screen and (min-width: breakpoint('wide')) {
+    @media screen and (min-width: functions.breakpoint('wide')) {
       content: 'breakpoint: wide';
     }
   }

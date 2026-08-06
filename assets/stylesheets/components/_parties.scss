@@ -1,3 +1,6 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+
 .parties {
   display: flex;
 
@@ -7,7 +10,7 @@
 
   line-height: 1.2;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: calc(50% - 2rem);
     margin-left: auto;
   }
@@ -18,7 +21,7 @@
   margin-top: 0;
   margin-bottom: 1.5rem;
 
-  font-size: ms(3);
+  font-size: sugar.ms(3);
   line-height: 1.2;
   text-transform: uppercase;
 }
@@ -30,7 +33,7 @@
   margin-bottom: 2rem;
   margin-left: auto;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: 100%;
   }
 }
@@ -48,19 +51,19 @@
 
   flex-direction: column;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: 100%;
   }
 }
 
 .parties__name {
-  font-weight: font-weight('bold');
+  font-weight: functions.font-weight('bold');
 }
 
 .parties__info {
   width: 100%;
   margin-bottom: 0;
 
-  font-size: ms(2);
-  font-weight: font-weight('bold');
+  font-size: sugar.ms(2);
+  font-weight: functions.font-weight('bold');
 }

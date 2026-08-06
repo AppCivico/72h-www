@@ -1,7 +1,10 @@
-.timer {
-  z-index: layer('up');
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
 
-  @media screen and (min-width: breakpoint('desktop')) {
+.timer {
+  z-index: functions.layer('up');
+
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     position: absolute;
     top: 0.5rem;
     left: 3rem;
@@ -9,7 +12,7 @@
     max-width: 75rem;
   }
 
-  @media screen and (min-width: breakpoint('wide')) {
+  @media screen and (min-width: functions.breakpoint('wide')) {
     left: calc(50% - 37.5rem);
   }
 }
@@ -19,13 +22,13 @@
   margin-right: auto;
   margin-left: auto;
 
-  color: palette('gray', 'medium');
+  color: functions.palette('gray', 'medium');
   text-align: center;
 }
 
 .timer strong {
-  font-size: ms(-2);
-  font-weight: font-weight('text');
+  font-size: sugar.ms(-2);
+  font-weight: functions.font-weight('text');
 }
 
 .timer__numbers {
@@ -46,16 +49,16 @@
 
   width: 2.5rem;
 
-  font-size: ms(3);
-  font-weight: font-weight('bold');
+  font-size: sugar.ms(3);
+  font-weight: functions.font-weight('bold');
   text-align: center;
 }
 
 .timer span i {
   width: 100%;
 
-  font-size: ms(-6);
+  font-size: sugar.ms(-6);
   font-style: normal;
-  font-weight: font-weight('normal');
-  color: palette('gray', 'medium');
+  font-weight: functions.font-weight('normal');
+  color: functions.palette('gray', 'medium');
 }

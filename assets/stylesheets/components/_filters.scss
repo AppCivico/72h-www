@@ -1,7 +1,11 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
 .filters {
   width: 100%;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     margin-bottom: 4rem;
   }
 }
@@ -22,7 +26,7 @@
   background-color: transparent;
   border: 0;
 
-  @media screen and (min-width: breakpoint('phablet')) {
+  @media screen and (min-width: functions.breakpoint('phablet')) {
     flex-wrap: nowrap;
   }
 
@@ -33,7 +37,7 @@
 
     content: '';
 
-    background-image: image('icons/filter.svg');
+    background-image: functions.image('icons/filter.svg');
   }
 }
 
@@ -42,7 +46,7 @@
   padding: 0;
   margin: 0;
 
-  font-size: ms(3);
+  font-size: sugar.ms(3);
   text-transform: uppercase;
 }
 
@@ -53,9 +57,9 @@
 
   min-width: fit-content;
 
-  color: palette('gray', 'medium');
+  color: functions.palette('gray', 'medium');
 
-  @media screen and (min-width: breakpoint('phablet')) {
+  @media screen and (min-width: functions.breakpoint('phablet')) {
     margin-left: auto;
   }
 
@@ -66,7 +70,7 @@
 
     content: '';
 
-    background-image: image('icons/chevron-down.svg');
+    background-image: functions.image('icons/chevron-down.svg');
   }
 }
 
@@ -79,12 +83,12 @@
     max-height: 0;
     overflow: hidden;
 
-    @media screen and (min-width: breakpoint('wide')) {
+    @media screen and (min-width: functions.breakpoint('wide')) {
       max-width: 0;
     }
   }
 
-  @media screen and (min-width: breakpoint('wide')) {
+  @media screen and (min-width: functions.breakpoint('wide')) {
     display: block;
 
     max-height: none;
@@ -98,7 +102,7 @@
 
   width: 100%;
 
-  @media screen and (min-width: breakpoint('wide')) {
+  @media screen and (min-width: functions.breakpoint('wide')) {
     display: block;
   }
 }
@@ -112,49 +116,49 @@
   padding-right: 0.5rem;
   padding-left: 0.5rem;
   margin-right: 0.5rem;
-  margin-bottom: $gutter;
+  margin-bottom: variables.$gutter;
   margin-left: 0.5rem;
 
-  font-family: $text-font-stack;
+  font-family: variables.$text-font-stack;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     width: calc(50% - 1rem);
   }
 
-  @media screen and (min-width: breakpoint('desktop')) {
-    width: calc(33% - #{$gutter * 2});
+  @media screen and (min-width: functions.breakpoint('desktop')) {
+    width: calc(33% - #{variables.$gutter * 2});
     padding-right: 0.1rem;
     padding-left: 0.1rem;
     margin-right: 0.1rem;
     margin-left: 0.1rem;
   }
 
-  @media screen and (min-width: breakpoint('wide')) {
+  @media screen and (min-width: functions.breakpoint('wide')) {
     width: auto;
     min-width: 0;
     max-width: 100%;
     padding-left: 0;
     margin-right: 0.5rem;
-    margin-bottom: $gutter * 2;
+    margin-bottom: variables.$gutter * 2;
   }
 }
 
 .filters__items select,
 .filters__items .list-box {
   background-color: transparent;
-  border-color: palette('main-colors', 'secondary');
+  border-color: functions.palette('main-colors', 'secondary');
   border-style: solid;
   border-width: 0 0 1px;
 }
 
 .filters__items select[disabled],
 .filters__items .list-box--empty {
-  border-color: palette('gray', 'base');
+  border-color: functions.palette('gray', 'base');
 }
 
 .filters p {
-  font-size: ms(-2);
-  color: palette('gray', 'medium');
+  font-size: sugar.ms(-2);
+  color: functions.palette('gray', 'medium');
 }
 
 .filters .button {
@@ -163,20 +167,20 @@
 
   width: 100%;
   padding: 0.5rem 1rem;
-  margin-bottom: $gutter;
+  margin-bottom: variables.$gutter;
 
-  font-size: ms(0);
+  font-size: sugar.ms(0);
   text-align: center;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     max-width: 17rem;
     margin-right: auto;
     margin-left: auto;
   }
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: auto;
 
-    font-size: ms(-1);
+    font-size: sugar.ms(-1);
   }
 }

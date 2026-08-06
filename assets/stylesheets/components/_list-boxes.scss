@@ -1,5 +1,9 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
 .list-box__wrapper {
-  height: $gutter * 2;
+  height: variables.$gutter * 2;
   overflow: visible;
 }
 
@@ -11,7 +15,7 @@
   position: relative;
 
   max-width: 100%;
-  max-height: $gutter;
+  max-height: variables.$gutter;
   padding: 0;
   margin-top: 0;
   margin-bottom: 0;
@@ -30,32 +34,32 @@
   &:hover,
   &:focus,
   &:focus-within {
-    z-index: layer('dropdown');
+    z-index: functions.layer('dropdown');
 
-    max-height: $gutter * 30;
-    padding: $gutter * 0.5;
+    max-height: variables.$gutter * 30;
+    padding: variables.$gutter * 0.5;
     overflow: auto;
     overflow-x: clip;
     overflow-y: auto;
 
-    color: palette('text', 'dark');
+    color: functions.palette('text', 'dark');
 
-    background-color: palette('white');
+    background-color: functions.palette('white');
     border-width: 1px;
     border-radius: 5px;
-    box-shadow: 0 3px 3px palette('shadow', 'buttons');
+    box-shadow: 0 3px 3px functions.palette('shadow', 'buttons');
 
     /// @see https://easings.net/#easeOutBack
     transition-timing-function: cubic-bezier(0.34, 1.56, 0.64, 1);
 
-    @media screen and (min-width: breakpoint('desktop')) {
+    @media screen and (min-width: functions.breakpoint('desktop')) {
     }
 
-    @media screen and (min-width: breakpoint('wide')) {
+    @media screen and (min-width: functions.breakpoint('wide')) {
     }
 
     &:hover {
-      z-index: #{layer('dropdown') + 1};
+      z-index: #{functions.layer('dropdown') + 1};
     }
   }
 
@@ -107,7 +111,7 @@
 
   flex-grow: 1;
 
-  min-height: $leading * 1em;
+  min-height: variables.$leading * 1em;
   padding: 0;
   overflow: hidden;
 
@@ -124,7 +128,7 @@
     &::after {
       float: right;
 
-      color: palette('gray', 'medium');
+      color: functions.palette('gray', 'medium');
 
       content: ', ';
     }
@@ -142,7 +146,7 @@
   .list-box:focus-within & {
     display: block;
 
-    font-size: ms(0);
+    font-size: sugar.ms(0);
 
     &::after {
       content: none;
@@ -151,7 +155,7 @@
 }
 
 .list-box__option-helper {
-  font-size: ms(-2);
+  font-size: sugar.ms(-2);
 
   opacity: 0.65;
 

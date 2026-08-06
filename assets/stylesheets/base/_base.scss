@@ -1,3 +1,9 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+@use "helpers";
+
 // -----------------------------------------------------------------------------
 // This file contains very basic styles.
 // -----------------------------------------------------------------------------
@@ -26,10 +32,10 @@
 /* User interaction (https://www.w3.org/TR/html5/editing.html)
 ========================================================================== */
 ::selection {
-  color: palette('selection', 'foreground');
+  color: functions.palette('selection', 'foreground');
   text-shadow: none;
 
-  background-color: palette('selection', 'background');
+  background-color: functions.palette('selection', 'background');
 }
 
 /**
@@ -56,7 +62,7 @@
   @extend %loading-el;
 
   &::after {
-    background-color: palette('white');
+    background-color: functions.palette('white');
   }
 }
 
@@ -110,7 +116,7 @@ html {
   font-size: 100.01%; /* 1 */
   tab-size: 4;
 
-  background: palette('white');
+  background: functions.palette('white');
 
   text-size-adjust: 100%; /* 4 */
 }
@@ -129,7 +135,7 @@ body {
   min-height: 100%;
   margin: 0;
 
-  color: palette('black');
+  color: functions.palette('black');
 
   > * {
     flex-shrink: 0; /* 1 */
@@ -244,10 +250,10 @@ hr {
 
   clear: both;
 
-  color: palette('gray');
+  color: functions.palette('gray');
 
   border: 0;
-  border-top: 1px solid palette('gray');
+  border-top: 1px solid functions.palette('gray');
 }
 
 /* MEDIA ELEMENTS
@@ -334,7 +340,7 @@ video > source {
 .ie:not(.ie6-8),
 object > img {
   position: relative;
-  z-index: layer('below');
+  z-index: functions.layer('below');
 
   font-size: 1em;
 
@@ -353,7 +359,7 @@ object > img {
   &::before {
     display: block;
 
-    margin-bottom: $leading * 1em;
+    margin-bottom: variables.$leading * 1em;
 
     content: '\f127' ' Broken Image of ' attr(alt);
   }
@@ -362,7 +368,7 @@ object > img {
     display: block;
 
     font-size: small;
-    color: palette('gray');
+    color: functions.palette('gray');
 
     content: '(url: ' attr(src) ')';
   }
@@ -384,7 +390,7 @@ img {
 }
 
 [usemap] {
-  color: palette('anchor');
+  color: functions.palette('anchor');
 }
 
 map {
@@ -415,7 +421,7 @@ a {
   font-size: 100%;
   vertical-align: baseline;
 
-  @include on-event {
+  @include mixins.on-event {
     text-decoration: underline;
   }
 
@@ -423,11 +429,11 @@ a {
     text-decoration: inherit;
 
     cursor: pointer;
-    -webkit-tap-highlight-color: palette('tap-highlight');
+    -webkit-tap-highlight-color: functions.palette('tap-highlight');
   }
 
   &:visited {
-    @include on-event {
+    @include mixins.on-event {
       text-decoration: underline;
     }
   }
@@ -468,12 +474,12 @@ address {
 /* Coode blocks
 ---------------------------------------------------------------------------- */
 pre {
-  padding: $leading * 0.5rem $gutter * 0.5;
-  margin: 0 0 $leading * 1rem;
+  padding: variables.$leading * 0.5rem variables.$gutter * 0.5;
+  margin: 0 0 variables.$leading * 1rem;
   overflow: auto;
 
-  font-size: ms(-1);
-  color: palette('text', 'light');
+  font-size: sugar.ms(-1);
+  color: functions.palette('text', 'light');
 
-  background-color: palette('text', 'dark');
+  background-color: functions.palette('text', 'dark');
 }

@@ -1,3 +1,6 @@
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
 .twitter {
   display: flex;
 
@@ -7,7 +10,7 @@
   margin-bottom: 2.5rem;
   margin-left: auto;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: 68%;
   }
 }
@@ -15,5 +18,5 @@
 .twitter-timeline.twitter-timeline-rendered {
 
   width: 100%;
-  margin-bottom: $gutter;
+  margin-bottom: variables.$gutter;
 }

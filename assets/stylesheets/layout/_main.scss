@@ -1,5 +1,9 @@
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
+
 .container {
-  @include container;
+  @include mixins.container;
 }
 
 .container--small {
@@ -9,30 +13,30 @@
 }
 
 .filterable-area {
-  @include clearfix;
+  @include mixins.clearfix;
 
   position: relative;
-  z-index: layer('default');
+  z-index: functions.layer('default');
 
-  padding-top: $gutter * 2;
-  margin-bottom: $gutter * 2;
+  padding-top: variables.$gutter * 2;
+  margin-bottom: variables.$gutter * 2;
 
-  background-color: palette('gray', 'x-light');
-  box-shadow: 0 8px 21px -3px palette('shadow', 'light'), 0 -3px 21px -3px palette('shadow', 'light');
+  background-color: functions.palette('gray', 'x-light');
+  box-shadow: 0 8px 21px -3px functions.palette('shadow', 'light'), 0 -3px 21px -3px functions.palette('shadow', 'light');
 
   .container {
     display: block;
   }
 
   .filters {
-    @media screen and (min-width: breakpoint('wide')) {
+    @media screen and (min-width: functions.breakpoint('wide')) {
       position: sticky;
-      top: $gutter;
-      z-index: layer('default');
+      top: variables.$gutter;
+      z-index: functions.layer('default');
 
       float: left;
       width: 20%;
-      padding-right: $gutter;
+      padding-right: variables.$gutter;
 
       ~ * {
         width: 80%;
@@ -49,7 +53,7 @@
   }
 
   .filters__items form {
-    background-color: palette('gray', 'x-light');
+    background-color: functions.palette('gray', 'x-light');
   }
 
   .outdated {

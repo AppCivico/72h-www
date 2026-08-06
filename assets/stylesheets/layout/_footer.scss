@@ -1,3 +1,7 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
 .footer {
   position: relative;
 
@@ -6,17 +10,17 @@
   justify-content: center;
 
   padding-top: 1.5rem;
-  padding-bottom: $gutter * 4;
+  padding-bottom: variables.$gutter * 4;
   margin-top: 2rem;
 
-  color: palette('white');
+  color: functions.palette('white');
   text-align: center;
 
-  background-color: palette('main-colors', 'primary');
-  border-top: 6px solid palette('main-colors', 'secondary');
+  background-color: functions.palette('main-colors', 'primary');
+  border-top: 6px solid functions.palette('main-colors', 'secondary');
 
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     padding-top: 2rem;
   }
 
@@ -32,20 +36,20 @@
 
     content: '';
 
-    background-color: palette('main-colors', 'tertiary');
+    background-color: functions.palette('main-colors', 'tertiary');
   }
 
   &::after {
     top: -1.125rem;
 
-    background-color: palette('main-colors', 'quaternary');
+    background-color: functions.palette('main-colors', 'quaternary');
   }
 }
 
 .footer .container {
   flex-direction: row;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     justify-content: space-around;
   }
 }
@@ -53,7 +57,7 @@
 .footer__col {
   width: 100%;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: calc(33% - 2rem);
   }
 }
@@ -66,17 +70,17 @@
   margin-left: auto;
 
   background-color: transparent;
-  background-image: image('logo-footer.svg');
+  background-image: functions.image('logo-footer.svg');
   background-size: contain;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: 8.125rem;
     height: 8.125rem;
   }
 }
 
 .footer p {
-  font-size: ms(-1);
+  font-size: sugar.ms(-1);
 }
 
 
@@ -95,7 +99,7 @@
   text-align: center;
   list-style-type: none;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     padding-left: 4rem;
 
     text-align: left;
@@ -103,7 +107,7 @@
 }
 
 .footer__menu ul {
-  padding-left: $gutter;
+  padding-left: variables.$gutter;
 }
 
 .footer__menu li {
@@ -113,9 +117,9 @@
 }
 
 .footer__menu a {
-  font-size: ms(-1);
-  font-weight: font-weight('bold');
-  color: palette('white');
+  font-size: sugar.ms(-1);
+  font-weight: functions.font-weight('bold');
+  color: functions.palette('white');
   text-transform: uppercase;
 }
 
@@ -126,24 +130,24 @@
   margin-bottom: 1.5rem;
   margin-left: auto;
 
-  font-size: ms(-1);
+  font-size: sugar.ms(-1);
   font-style: normal;
 }
 
 .footer address a {
-  font-size: ms(0);
+  font-size: sugar.ms(0);
   font-style: normal;
-  font-weight: font-weight('bold');
-  color: palette('white');
+  font-weight: functions.font-weight('bold');
+  color: functions.palette('white');
 }
 
 .footer__developed-by {
   width: 100%;
 
-  font-size: ms(-3);
+  font-size: sugar.ms(-3);
   text-transform: uppercase;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     margin-top: 1rem;
   }
 
@@ -160,9 +164,9 @@
 
     background-image: linear-gradient(
       90deg,
-      palette('gradient', 'purple') 0%,
-      palette('gradient', 'light') 46%,
-      palette('gradient', 'purple') 100%);
+      functions.palette('gradient', 'purple') 0%,
+      functions.palette('gradient', 'light') 46%,
+      functions.palette('gradient', 'purple') 100%);
   }
 }
 
@@ -171,16 +175,16 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: layer('default');
+  z-index: functions.layer('default');
 
   max-height: 25vh;
-  padding-top: $gutter;
-  padding-bottom: $gutter;
+  padding-top: variables.$gutter;
+  padding-bottom: variables.$gutter;
   overflow: hidden;
 
-  font-size: ms(-1);
+  font-size: sugar.ms(-1);
 
-  background-color: palette('main-colors', 'primary');
+  background-color: functions.palette('main-colors', 'primary');
   opacity: 1;
 
   transition-delay: 0s, 0s, 0s, 0s, 1s;
@@ -193,7 +197,7 @@
     margin-bottom: 0;
     margin-left: auto;
 
-    color: palette('white');
+    color: functions.palette('white');
     text-align: center;
   }
 

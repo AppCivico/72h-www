@@ -1,4 +1,6 @@
-@use '../abstracts' as my;
+@use "../abstracts/functions";
+@use "../abstracts/mixins";
+@use "../abstracts/variables";
 
 /* checkboxes and radio buttons
 ---------------------------------------------------------------------------- */
@@ -48,13 +50,13 @@ li label {
 [type='radio'] {
   box-sizing: border-box; /* 1 */
 
-  width: $gutter * 0.5;
-  height: $gutter * 0.5; /* 3 */
+  width: variables.$gutter * 0.5;
+  height: variables.$gutter * 0.5; /* 3 */
   padding: 0; /* 2 */
   overflow: hidden;
 
-  line-height: $gutter * 0.5; /* 3 */
-  color: palette('main-colors', 'quaternary');
+  line-height: variables.$gutter * 0.5; /* 3 */
+  color: functions.palette('main-colors', 'quaternary');
   text-align: center;
   vertical-align: middle;
 
@@ -62,18 +64,18 @@ li label {
 
   border-color: currentcolor;
   border-style: solid;
-  border-width: $stroke;
+  border-width: variables.$stroke;
   appearance: none;
 
   &:hover {
   }
 
   &:focus {
-    @include focused;
+    @include mixins.focused;
   }
 
   &:checked {
-    color: palette('main-colors', 'primary');
+    color: functions.palette('main-colors', 'primary');
 
     background-color: currentcolor;
   }
@@ -90,7 +92,7 @@ li label {
 }
 
 [type='checkbox'] {
-  border-radius: $rounded-corner;
+  border-radius: variables.$rounded-corner;
 
   &:checked {
   }
@@ -99,7 +101,7 @@ li label {
 li:hover {
   > input,
   > label {
-    color: palette('black');
+    color: functions.palette('black');
   }
 }
 
@@ -109,7 +111,7 @@ li :checked + label {
 
 [disabled] + label,
 :disabled + label {
-  color: palette('disabled', 'foreground');
+  color: functions.palette('disabled', 'foreground');
 
   cursor: default;
 }

@@ -1,3 +1,6 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+
 .intro-charts {
   display: flex;
 
@@ -6,7 +9,7 @@
   width: 100%;
   margin-bottom: 2rem;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     flex-direction: row;
     flex-wrap: wrap;
   }
@@ -17,11 +20,11 @@
   margin-top: 0;
   margin-bottom: 1rem;
 
-  font-size: ms(3);
+  font-size: sugar.ms(3);
   line-height: 1.2;
   text-transform: uppercase;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     margin-bottom: 2rem;
   }
 }
@@ -32,7 +35,7 @@
   padding-right: 1rem;
   padding-bottom: 1rem;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: 50%;
   }
 }

@@ -1,3 +1,6 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+
 .share-modal {
   // text-align: center;
 }
@@ -33,23 +36,23 @@
 }
 
 .share-modal__icons--facebook {
-  background-color: palette('social', 'facebook');
-  background-image: image('icons/facebook.svg');
+  background-color: functions.palette('social', 'facebook');
+  background-image: functions.image('icons/facebook.svg');
 }
 
 .share-modal__icons--twitter {
-  background-color: palette('social', 'twitter');
-  background-image: image('icons/twitter.svg');
+  background-color: functions.palette('social', 'twitter');
+  background-image: functions.image('icons/twitter.svg');
 }
 
 .share-modal__icons--whatsapp {
-  background-color: palette('social', 'whatsapp');
-  background-image: image('icons/whatsapp.svg');
+  background-color: functions.palette('social', 'whatsapp');
+  background-image: functions.image('icons/whatsapp.svg');
 }
 
 .share-modal__icons--telegram {
-  background-color: palette('social', 'telegram');
-  background-image: image('icons/telegram.svg');
+  background-color: functions.palette('social', 'telegram');
+  background-image: functions.image('icons/telegram.svg');
 }
 
 .share-modal__input[type='text'] {
@@ -75,11 +78,11 @@
   padding: 0.2rem 0.3rem;
   margin-right: 0.5rem;
 
-  font-size: ms(1);
+  font-size: sugar.ms(1);
 }
 
 .modal__footer {
-  font-size: ms(-1);
+  font-size: sugar.ms(-1);
 }
 
 .modal__footer input[type='checkbox'] {

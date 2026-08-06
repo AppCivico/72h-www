@@ -1,3 +1,6 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+
 progress {
   width: 100%;
   height: 0.5rem;
@@ -9,30 +12,30 @@ progress {
 progress::-webkit-progress-bar {
   width: 100%;
 
-  background-color: palette('gray', 'light');
+  background-color: functions.palette('gray', 'light');
   border-radius: 7px;
 }
 
 progress::-webkit-progress-value {
-  background-color: palette('main-colors', 'quaternary');
+  background-color: functions.palette('main-colors', 'quaternary');
   border-radius: 7px;
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 progress.progress__secondary::-webkit-progress-value {
-  background-color: palette('main-colors', 'secondary');
+  background-color: functions.palette('main-colors', 'secondary');
   border-radius: 7px;
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 progress.progress__tertiary::-webkit-progress-value {
-  background-color: palette('main-colors', 'tertiary');
+  background-color: functions.palette('main-colors', 'tertiary');
   border-radius: 7px;
 }
 
 /* stylelint-disable-next-line selector-no-qualifying-type */
 progress.progress__quartenary::-webkit-progress-value {
-  background-color: palette('main-colors', 'quaternary');
+  background-color: functions.palette('main-colors', 'quaternary');
   border-radius: 7px;
 }
 
@@ -41,6 +44,6 @@ progress.progress__quartenary::-webkit-progress-value {
 
   margin-top: 0.5rem;
 
-  font-size: ms(-3);
-  color: palette('gray', 'medium');
+  font-size: sugar.ms(-3);
+  color: functions.palette('gray', 'medium');
 }

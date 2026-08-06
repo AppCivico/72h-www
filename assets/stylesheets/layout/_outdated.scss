@@ -1,7 +1,11 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/font-stacks";
+@use "../abstracts/functions";
+
 .outdated {
   position: sticky;
   top: 0;
-  z-index: layer('default');
+  z-index: functions.layer('default');
 
   display: flex;
 
@@ -10,9 +14,9 @@
   margin-bottom: 1.5rem;
   overflow: hidden;
 
-  font-size: ms(-1);
+  font-size: sugar.ms(-1);
 
-  background-color: palette('main-colors', 'tertiary');
+  background-color: functions.palette('main-colors', 'tertiary');
 
   transition: max-height 0.3s, padding 0.3s;
 
@@ -37,9 +41,9 @@
 .outdated .button {
   padding: 0;
 
-  font-family: $monteserrat-font-stack;
-  font-size: ms(0);
-  font-weight: font-weight('text');
+  font-family: font-stacks.$monteserrat-font-stack;
+  font-size: sugar.ms(0);
+  font-weight: functions.font-weight('text');
   color: inherit;
   text-decoration: underline;
   text-transform: none;
@@ -61,7 +65,7 @@
   border: 0;
 
   &::before {
-    font-size: ms(2);
+    font-size: sugar.ms(2);
 
     content: '\2715';
   }

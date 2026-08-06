@@ -1,3 +1,9 @@
+@use "sass:map";
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/font-stacks";
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
 /**
  * 1. Add text decoration inheritance in all browsers (opinionated).
  * 2. Add vertical alignment inheritance in all browsers (opinionated).
@@ -14,11 +20,11 @@
  * Basic typography style for copy text
  */
 body {
-  font-family: $monteserrat-font-stack;
-  font-size: $body-font-size;
-  font-weight: font-weight('text');
-  line-height: $leading;
-  color: palette('text', 'dark');
+  font-family: font-stacks.$monteserrat-font-stack;
+  font-size: variables.$body-font-size;
+  font-weight: functions.font-weight('text');
+  line-height: variables.$leading;
+  color: functions.palette('text', 'dark');
   vertical-align: baseline;
 }
 
@@ -40,8 +46,8 @@ caption,
 details > summary {
   width: 100%;
 
-  font-family: $monteserrat-font-stack;
-  font-weight: font-weight('heading');
+  font-family: font-stacks.$monteserrat-font-stack;
+  font-weight: functions.font-weight('heading');
   font-feature-settings: 'case' 1, 'cpsp' 1, 'cswh' 1, 'liga' 1, 'locl' 1, 'lnum' 1, 'pnum' 1, 'titl' 1, 'zero' 1;
 
   break-after: avoid;
@@ -67,7 +73,7 @@ dt a {
 }
 
 h1 {
-  font-size: ms(2);
+  font-size: sugar.ms(2);
   text-transform: uppercase;
 }
 
@@ -78,7 +84,7 @@ p {
   -webkit-font-feature-settings: 'onum' 1, 'pnum' 1, 'zero' 1;
   font-feature-settings: 'onum' 1, 'pnum' 1, 'zero' 1;*/
   margin-top: 0;
-  margin-bottom: $leading * 1em;
+  margin-bottom: variables.$leading * 1em;
 }
 
 .border-title {
@@ -88,7 +94,7 @@ p {
   margin-top: 0;
   margin-bottom: 1rem;
 
-  font-size: ms(3);
+  font-size: sugar.ms(3);
   line-height: 1.2;
   text-transform: uppercase;
 
@@ -104,46 +110,46 @@ p {
     border-radius: 10px;
   }
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     margin-bottom: 2rem;
   }
 }
 
 .border-title--primary {
   &::before {
-    background-color: palette('main-colors', 'primary');
+    background-color: functions.palette('main-colors', 'primary');
   }
 }
 
 .border-title--secondary {
   &::before {
-    background-color: palette('main-colors', 'secondary');
+    background-color: functions.palette('main-colors', 'secondary');
   }
 }
 
 .border-title--tertiary {
   &::before {
-    background-color: palette('main-colors', 'tertiary');
+    background-color: functions.palette('main-colors', 'tertiary');
   }
 }
 
 .border-title--quaternary {
   &::before {
-    background-color: palette('main-colors', 'quaternary');
+    background-color: functions.palette('main-colors', 'quaternary');
   }
 }
 
 .big-text {
-  font-size: ms(1);
-  font-weight: font-weight('bold');
-  color: palette('purple');
+  font-size: sugar.ms(1);
+  font-weight: functions.font-weight('bold');
+  color: functions.palette('purple');
 }
 
 .simple-link:link,
 .simple-link:visited {
-  font-size: ms(2);
+  font-size: sugar.ms(2);
   font-weight: bold;
-  color: palette('orange');
+  color: functions.palette('orange');
   text-decoration: underline;
 }
 
@@ -165,25 +171,25 @@ p {
 
 .icon-link__pt-text {
   &::before {
-    background-image: image('pt-text.svg');
+    background-image: functions.image('pt-text.svg');
   }
 }
 
 .icon-link__en-text {
   &::before {
-    background-image: image('en-text.svg');
+    background-image: functions.image('en-text.svg');
   }
 }
 
 .icon-link__library-main-text {
   &::before {
-    background-image: image('library-main.svg');
+    background-image: functions.image('library-main.svg');
   }
 }
 
 .icon-link__library-secondary-text {
   &::before {
-    background-image: image('library-secondary.svg');
+    background-image: functions.image('library-secondary.svg');
   }
 }
 
@@ -191,7 +197,7 @@ p {
  * @see: http://demosthenes.info/blog/946/Controlling-Widows--Orphans
  */
 article p {
-  max-width: map-get($line-lengths, 'max');
+  max-width: map.get(variables.$line-lengths, 'max');
 
   orphans: 3;
   widows: 3;
@@ -276,7 +282,7 @@ strong {
 /* stylelint-disable-next-line no-duplicate-selectors */
 b,
 strong {
-  font-weight: font-weight('bold'); /* 2 */
+  font-weight: functions.font-weight('bold'); /* 2 */
 }
 
 em,
@@ -290,9 +296,9 @@ i[lang] {
  * Address styling not present in IE 8/9.
  */
 mark {
-  color: palette('mark', 'foreground');
+  color: functions.palette('mark', 'foreground');
 
-  background: palette('mark', 'background');
+  background: functions.palette('mark', 'background');
 }
 
 meter {
@@ -350,7 +356,7 @@ kbd,
 pre,
 samp,
 var {
-  font-family: $code-font-stack, monospace, monospace; /* 2 */
+  font-family: variables.$code-font-stack, monospace, monospace; /* 2 */
   font-size: 1em; /* 1 */
 }
 
@@ -468,11 +474,11 @@ del {
 ///
 
 blockquote {
-  font-size: ms(3);
-  color: palette('black');
+  font-size: sugar.ms(3);
+  color: functions.palette('black');
   text-align: center;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     padding-top: 2em;
     padding-right: 3em;
     padding-bottom: 2em;
@@ -493,11 +499,11 @@ blockquote > p {
 q,
 blockquote {
   font-style: italic;
-  color: palette('quotes');
+  color: functions.palette('quotes');
 }
 
 cite {
-  font-size: ms(-2);
+  font-size: sugar.ms(-2);
 }
 
 blockquote footer {

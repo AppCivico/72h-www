@@ -1,5 +1,7 @@
+@use "../abstracts/variables";
+
 .main-chart {
   min-height: 25rem;
-  margin-top: $gutter;
-  margin-bottom: $gutter * 2;
+  margin-top: variables.$gutter;
+  margin-bottom: variables.$gutter * 2;
 }

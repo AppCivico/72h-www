@@ -1,8 +1,13 @@
-$height-of-last: $gutter * 1.333333;
+@use "sass:map";
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+@use "../abstracts/variables";
+
+$height-of-last: variables.$gutter * 1.333333;
 
 .big-numbers__wrapper {
-  margin-top: $gutter * 2;
-  margin-bottom: $gutter * 2;
+  margin-top: variables.$gutter * 2;
+  margin-bottom: variables.$gutter * 2;
 }
 
 .big-numbers {
@@ -18,14 +23,14 @@ $height-of-last: $gutter * 1.333333;
 
   text-align: left;
 
-  @media screen and (min-width: map-get($line-lengths, 'min') * 2) {
+  @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 2) {
     display: flex;
   }
 }
 
 .big-numbers__wrapper .big-number__warning,
 .big-numbers__wrapper .big-number__update {
-  font-size: ms(-2);
+  font-size: sugar.ms(-2);
 }
 
 .big-numbers__wrapper .big-number__warning {
@@ -37,17 +42,17 @@ $height-of-last: $gutter * 1.333333;
 
   flex-direction: column;
 
-  margin-bottom: $gutter * 3;
+  margin-bottom: variables.$gutter * 3;
 
-  border-bottom: 1px solid palette('gray', 'light');
+  border-bottom: 1px solid functions.palette('gray', 'light');
 
-  @media screen and (min-width: map-get($line-lengths, 'min') * 2) {
+  @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 2) {
     width: calc(50% - 2rem);
 
     border-bottom: 0;
   }
 
-  @media screen and (min-width: map-get($line-lengths, 'min') * 3) {
+  @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 3) {
     order: 4;
 
     width: calc(33.3333% - 2rem);
@@ -88,33 +93,33 @@ $height-of-last: $gutter * 1.333333;
 
 .big-number__box--border-secondary h1 {
   &::before {
-    background-color: palette('main-colors', 'secondary');
+    background-color: functions.palette('main-colors', 'secondary');
   }
 }
 
 .big-number__box--border-tertiary h1 {
   &::before {
-    background-color: palette('main-colors', 'tertiary');
+    background-color: functions.palette('main-colors', 'tertiary');
   }
 }
 
 .big-number__box--border-quaternary h1 {
   &::before {
-    background-color: palette('main-colors', 'quaternary');
+    background-color: functions.palette('main-colors', 'quaternary');
   }
 }
 
 .big-numbers h1 {
   margin-top: 0;
 
-  font-size: ms(2);
+  font-size: sugar.ms(2);
   line-height: 1.2;
   text-transform: uppercase;
 }
 
 .big-numbers p {
-  font-size: ms(-1);
-  color: palette('gray', 'medium');
+  font-size: sugar.ms(-1);
+  color: functions.palette('gray', 'medium');
 }
 
 .big-number small {
@@ -127,56 +132,56 @@ $height-of-last: $gutter * 1.333333;
   margin-top: auto;
   overflow: hidden;
 
-  font-size: ms(6);
-  font-weight: font-weight('bold');
+  font-size: sugar.ms(6);
+  font-weight: functions.font-weight('bold');
   text-overflow: ellipsis;
 
   &:last-child {
-    margin-bottom: $height-of-last + $gutter;
+    margin-bottom: $height-of-last + variables.$gutter;
   }
 }
 
 .big-number__not-so-big {
   height: $height-of-last;
 
-  font-size: ms(2);
-  font-weight: font-weight('bold');
+  font-size: sugar.ms(2);
+  font-weight: functions.font-weight('bold');
   line-height: $height-of-last;
 }
 
 .big-number__number small,
 .big-number__not-so-big small {
-  font-size: ms(-3);
-  font-weight: font-weight('normal');
-  color: palette('gray', 'medium');
+  font-size: sugar.ms(-3);
+  font-weight: functions.font-weight('normal');
+  color: functions.palette('gray', 'medium');
 }
 
 .big-number__number span {
-  font-size: ms(-8);
+  font-size: sugar.ms(-8);
   font-style: normal;
-  font-weight: font-weight('normal');
-  color: palette('gray', 'medium');
+  font-weight: functions.font-weight('normal');
+  color: functions.palette('gray', 'medium');
   text-transform: uppercase;
 }
 
 .big-number__math-sign {
   font-weight: normal;
-  color: palette('main-colors', 'quaternary');
+  color: functions.palette('main-colors', 'quaternary');
 }
 
 .big-number__dividend {
   margin-top: auto;
   overflow: hidden;
 
-  font-size: ms(6);
-  font-weight: font-weight('bold');
+  font-size: sugar.ms(6);
+  font-weight: functions.font-weight('bold');
   text-overflow: ellipsis;
 }
 
 .big-number__divisor {
   overflow: hidden;
 
-  color: palette('gray', 'medium');
+  color: functions.palette('gray', 'medium');
   text-overflow: ellipsis;
 }
 
@@ -189,18 +194,18 @@ $height-of-last: $gutter * 1.333333;
   height: $height-of-last;
   overflow: hidden;
 
-  font-size: ms(2);
-  font-weight: font-weight('bold');
-  color: palette('gray', 'medium');
+  font-size: sugar.ms(2);
+  font-weight: functions.font-weight('bold');
+  color: functions.palette('gray', 'medium');
   text-overflow: ellipsis;
 
-  border-top: 1px solid palette('main-colors', 'tertiary');
+  border-top: 1px solid functions.palette('main-colors', 'tertiary');
 }
 
 .big-number__quotient output,
 .big-number__quotient small {
-  font-weight: font-weight('normal');
-  color: palette('gray', 'medium');
+  font-weight: functions.font-weight('normal');
+  color: functions.palette('gray', 'medium');
 }
 
 .big-number__quotient output {
@@ -211,8 +216,8 @@ $height-of-last: $gutter * 1.333333;
   padding: 0;
   margin-right: 0.25em;
 
-  font-size: ms(2);
-  font-weight: font-weight('bold');
+  font-size: sugar.ms(2);
+  font-weight: functions.font-weight('bold');
 }
 
 .big-number__quotient .big-number__math-sign + output {
@@ -228,7 +233,7 @@ $height-of-last: $gutter * 1.333333;
 
   overflow: hidden;
 
-  font-size: ms(-3);
+  font-size: sugar.ms(-3);
   text-overflow: ellipsis;
 
   &:last-child {
@@ -258,18 +263,18 @@ $height-of-last: $gutter * 1.333333;
   &::before {
     width: 1.55rem;
 
-    background-image: image('logo.svg');
+    background-image: functions.image('logo.svg');
   }
 }
 
 .big-number__box--icon-female h1 {
   &::before {
-    background-image: image('icons/female.svg');
+    background-image: functions.image('icons/female.svg');
   }
 }
 
 .big-number__box--icon-male h1 {
   &::before {
-    background-image: image('icons/male.svg');
+    background-image: functions.image('icons/male.svg');
   }
 }

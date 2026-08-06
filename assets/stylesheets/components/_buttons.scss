@@ -1,25 +1,29 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/font-stacks";
+@use "../abstracts/functions";
+
 .button {
   display: inline-flex;
 
   padding: 0.2rem 1.2rem;
 
-  font-family: $monteserrat-font-stack;
-  font-size: ms(-2);
-  font-weight: font-weight('bold');
-  color: palette('white');
+  font-family: font-stacks.$monteserrat-font-stack;
+  font-size: sugar.ms(-2);
+  font-weight: functions.font-weight('bold');
+  color: functions.palette('white');
   text-align: center;
   text-decoration: none;
   text-transform: uppercase;
 
   cursor: pointer;
 
-  background: palette('main-colors', 'secondary');
+  background: functions.palette('main-colors', 'secondary');
   border: 0;
   border-radius: 6px;
 }
 
 .button--primary {
-  background: palette('main-colors', 'primary');
+  background: functions.palette('main-colors', 'primary');
 }
 
 .button--big {
@@ -29,11 +33,11 @@
   width: 100%;
   padding: 0.5rem 1rem;
 
-  font-size: ms(0);
+  font-size: sugar.ms(0);
 
-  background: palette('main-colors', 'primary');
+  background: functions.palette('main-colors', 'primary');
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     max-width: 27rem;
     margin-right: auto;
     margin-left: auto;
@@ -47,11 +51,11 @@
   max-width: 18rem;
   padding: 0.5rem 1rem;
 
-  font-size: ms(0);
+  font-size: sugar.ms(0);
 
-  background: palette('main-colors', 'primary');
+  background: functions.palette('main-colors', 'primary');
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     margin-right: auto;
     margin-left: auto;
   }
@@ -64,10 +68,10 @@
   margin-bottom: 1rem;
   margin-left: auto;
 
-  color: palette('main-colors', 'secondary');
+  color: functions.palette('main-colors', 'secondary');
 
   background-color: transparent;
-  border: 1px solid palette('main-colors', 'secondary');
+  border: 1px solid functions.palette('main-colors', 'secondary');
 
   &::before {
     width: 1rem;
@@ -82,12 +86,12 @@
 
 .button--icon-share {
   &::before {
-    background-image: image('icons/share.svg');
+    background-image: functions.image('icons/share.svg');
   }
 }
 
 .button--icon-money {
   &::before {
-    background-image: image('icons/money.svg');
+    background-image: functions.image('icons/money.svg');
   }
 }

@@ -1,3 +1,5 @@
+@use "../abstracts/functions";
+
 .social {
   display: flex;
 
@@ -14,7 +16,7 @@
 
   filter: contrast(0.5);
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     justify-content: flex-end;
   }
 }
@@ -50,5 +52,5 @@
 .social a svg {
   width: 60%;
 
-  fill: palette('white');
+  fill: functions.palette('white');
 }

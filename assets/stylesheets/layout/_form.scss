@@ -1,3 +1,6 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+
 form {
 }
 
@@ -17,9 +20,9 @@ legend {
 form label {
   display: block;
 
-  font-size: ms(-1);
+  font-size: sugar.ms(-1);
   font-weight: inherit;
-  color: palette('gray', 'medium');
+  color: functions.palette('gray', 'medium');
   text-transform: lowercase;
 }
 
@@ -34,17 +37,17 @@ form textarea {
   width: 100%;
   margin-bottom: 2rem;
 
-  font-size: ms(1);
-  color: palette('black', 'lighter');
+  font-size: sugar.ms(1);
+  color: functions.palette('black', 'lighter');
 
   cursor: text;
 
   background: transparent;
   border: 0;
-  border-bottom: 1px solid palette('black', 'opacity');
+  border-bottom: 1px solid functions.palette('black', 'opacity');
 
-  @media screen and (min-width: breakpoint('desktop')) {
-    font-size: ms(3);
+  @media screen and (min-width: functions.breakpoint('desktop')) {
+    font-size: sugar.ms(3);
   }
 }
 
@@ -56,22 +59,22 @@ form .error-message {
   margin-top: -2rem;
   margin-bottom: 2rem;
 
-  font-size: ms(-1);
-  color: palette('label', 'danger');
+  font-size: sugar.ms(-1);
+  color: functions.palette('label', 'danger');
 }
 
 .response-message {
   padding: 0.51rem;
 
-  color: palette('white');
+  color: functions.palette('white');
 
   border-radius: 7px;
 }
 
 .response-message--success {
-  background-color: palette('label', 'success');
+  background-color: functions.palette('label', 'success');
 }
 
 .response-message--error {
-  background-color: palette('label', 'danger');
+  background-color: functions.palette('label', 'danger');
 }

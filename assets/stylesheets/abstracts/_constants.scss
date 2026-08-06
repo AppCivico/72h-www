@@ -65,7 +65,7 @@ $placeholder-bg: linear-gradient(to top left, transparent 0%, transparent calc(5
 // This lookup table is needed since there is no `pow` in SASS.
 //
 // @see for https://medium.com/dev-channel/using-sass-to-automatically-pick-text-colors-4ba7645d2796
-$_mdc-linear-channel-values: 0
+$mdc-linear-channel-values: 0
   0.0003035269835488375
   0.000607053967097675
   0.0009105809506465125

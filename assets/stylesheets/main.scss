@@ -1,31 +1,31 @@
 @charset 'UTF-8';
 
 // 2. Vendors
-@import '../../node_modules/modularscale-sass/stylesheets/modularscale';
+@use 'modularscale-sass/stylesheets/modularscale';
 // '../../node_modules/tiny-slider/src/tiny-slider';
 // '../../node_modules/nouislider/distribute/nouislider';
 // '../../node_modules/susy/sass/plugins/svg-grid',
 // '../../node_modules/include-media/dist/include-media';
 
 // 1. Configuration and helpers
-@import 'abstracts/constants',
-  'abstracts/font-stacks',
-  'abstracts/functions',
-  'abstracts/variables',
-  'abstracts/mixins';
+@use 'abstracts/constants';
+@use 'abstracts/font-stacks';
+@use 'abstracts/functions';
+@use 'abstracts/variables';
+@use 'abstracts/mixins';
 
 // 3. Base stuff
-@import 'base/base',
-  'base/fonts',
-  'base/typography',
-  'base/helpers';
+@use 'base/base';
+@use 'base/fonts';
+@use 'base/typography';
+@use 'base/helpers';
 
 // 4. Layout-related sections
-@import 'layout/main',
-  'layout/header',
-  'layout/outdated',
-  'layout/footer',
-  'layout/form';
+@use 'layout/main';
+@use 'layout/header';
+@use 'layout/outdated';
+@use 'layout/footer';
+@use 'layout/form';
 // 'layout/page-title',
 // 'layout/lists',
 // 'layout/table';
@@ -33,29 +33,29 @@
 // 'layout/h-feed';
 
 // 5. Components
-@import 'components/checkbox-and-radio',
-  'components/hamburguer-menu',
-  'components/big-numbers',
-  'components/timer',
-  'components/progress',
-  'components/filters',
-  'components/candidates',
-  'components/parties',
-  'components/partners',
-  'components/buttons',
-  'components/social',
-  'components/twitter',
-  'components/ted',
-  'components/modal',
-  'components/share-modal',
-  'components/main-chart',
-  'components/no-results',
-  'components/pagination',
-  'components/jumbotron',
-  'components/list-boxes',
-  'components/transition-expand',
-  'components/pay-attention-to',
-  'components/intro-charts';
+@use 'components/checkbox-and-radio';
+@use 'components/hamburguer-menu';
+@use 'components/big-numbers';
+@use 'components/timer';
+@use 'components/progress';
+@use 'components/filters';
+@use 'components/candidates';
+@use 'components/parties';
+@use 'components/partners';
+@use 'components/buttons';
+@use 'components/social';
+@use 'components/twitter';
+@use 'components/ted';
+@use 'components/modal';
+@use 'components/share-modal';
+@use 'components/main-chart';
+@use 'components/no-results';
+@use 'components/pagination';
+@use 'components/jumbotron';
+@use 'components/list-boxes';
+@use 'components/transition-expand';
+@use 'components/pay-attention-to';
+@use 'components/intro-charts';
 // 'components/library-list',
 // 'components/chart-form',
 // 'components/chart',

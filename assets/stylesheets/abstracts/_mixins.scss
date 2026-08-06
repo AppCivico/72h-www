@@ -1,3 +1,13 @@
+@use "sass:color";
+@use "sass:list";
+@use "sass:map";
+@use "sass:math";
+@use "sass:meta";
+@use "sass:string";
+@use "font-stacks";
+@use "functions";
+@use "variables";
+
 /// Define the element as a container
 /// @author Hugo Giraudel
 @mixin container {
@@ -9,13 +19,13 @@
   padding-right: 1.5rem;
   padding-left: 1.5rem;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     max-width: 75rem;
     padding-right: 3rem;
     padding-left: 3rem;
   }
 
-  @media screen and (min-width: breakpoint('wide')) {
+  @media screen and (min-width: functions.breakpoint('wide')) {
     width: 100%;
     padding-top: 0;
     padding-right: 0;
@@ -63,7 +73,7 @@
 @mixin alt-ampersand {
   .amp {
     @include _italic-overflow;
-    font-family: $ampersand-font-stack;
+    font-family: font-stacks.$ampersand-font-stack;
     font-size: 2em;
     line-height: 0.25;
     vertical-align: middle;
@@ -96,7 +106,7 @@
   .alt {
     @include _italic-overflow;
 
-    font-family: $alt-font-stack;
+    font-family: font-stacks.$alt-font-stack;
 
     @content;
   }
@@ -192,10 +202,10 @@
 @mixin inline-block-item($align: 'top', $font-size:  1rem) {
   display: inline-block;
 
-  font-family: $text-font-stack;
+  font-family: variables.$text-font-stack;
   font-size: $font-size;
   letter-spacing: normal;
-  vertical-align: unquote($align);
+  vertical-align: string.unquote($align);
 
   zoom: 1;
 
@@ -565,50 +575,50 @@ $no-viewport: false !default;
 /// @param {List} $values - Default values
 /// @param {List} $fallbacks - Non required fallback values
 @mixin fallback($property, $values, $fallbacks: null) {
-  $fallback-values: if($fallbacks == null, (), $fallbacks);
+  $fallback-values: if(sass($fallbacks == null): (); else: $fallbacks);
   $fallback-units: ();
 
   @each $value in $values {
-    @if type-of($value) == number {
-      @if str-index(unit($value), 'v') != null {
+    @if meta.type-of($value) == number {
+      @if string.index(math.unit($value), 'v') != null {
         @if $fallbacks == null {
           @error 'fallback values, the 3rd parameter, are required for viewport units';
         } @else {
-          $fallback-units: join($fallback-units, 'viewport');
+          $fallback-units: list.join($fallback-units, 'viewport');
         }
       } @else {
-        $fallback-units: join($fallback-units, unit($value));
+        $fallback-units: list.join($fallback-units, math.unit($value));
       }
     } @else if $fallbacks == null {
       @error 'fallback values, the 3rd parameter, are required for everything except `rem` numbers';
-    } @else if str-index($value, 'calc') {
-      $fallback-units: join($fallback-units, 'calc');
-    } @else if str-index($value, 'gradient') {
-      $fallback-units: join($fallback-units, 'gradient');
+    } @else if string.index($value, 'calc') {
+      $fallback-units: list.join($fallback-units, 'calc');
+    } @else if string.index($value, 'gradient') {
+      $fallback-units: list.join($fallback-units, 'gradient');
     }
 
     @if $fallbacks == null {
-      @if type-of($value) == number and unit($value) == 'rem' {
-        $fallback-values: join($fallback-values, $value / 1rem * 16px);
+      @if meta.type-of($value) == number and math.unit($value) == 'rem' {
+        $fallback-values: list.join($fallback-values, $value / 1rem * 16px);
       } @else {
-        $fallback-values: join($fallback-values, $value);
+        $fallback-values: list.join($fallback-values, $value);
       }
     }
   }
 
-  @if (index($fallback-units, 'alpha') != null and $no-alpha != false) or
-    (index($fallback-units, 'calc') != null and $no-calc != false) or
-    (index($fallback-units, 'gradient') != null and $no-gradient != false) or
-    (index($fallback-units, 'rem') != null and $no-rem != false) or
-    (index($fallback-units, 'viewport') != null and $no-viewport != false) {
+  @if (list.index($fallback-units, 'alpha') != null and $no-alpha != false) or
+    (list.index($fallback-units, 'calc') != null and $no-calc != false) or
+    (list.index($fallback-units, 'gradient') != null and $no-gradient != false) or
+    (list.index($fallback-units, 'rem') != null and $no-rem != false) or
+    (list.index($fallback-units, 'viewport') != null and $no-viewport != false) {
     #{$property}: #{$fallback-values};
   }
 
-  @if (index($fallback-units, 'alpha') != null and $no-alpha != true) or
-    (index($fallback-units, 'calc') != null and $no-calc != true) or
-    (index($fallback-units, 'gradient') != null and $no-gradient != true) or
-    (index($fallback-units, 'rem') != null and $no-rem != true) or
-    (index($fallback-units, 'viewport') != null and $no-viewport != true) {
+  @if (list.index($fallback-units, 'alpha') != null and $no-alpha != true) or
+    (list.index($fallback-units, 'calc') != null and $no-calc != true) or
+    (list.index($fallback-units, 'gradient') != null and $no-gradient != true) or
+    (list.index($fallback-units, 'rem') != null and $no-rem != true) or
+    (list.index($fallback-units, 'viewport') != null and $no-viewport != true) {
     #{$property}: #{$values};
   }
 }
@@ -631,9 +641,9 @@ $no-viewport: false !default;
 @mixin viewport-unit($property, $value) {
   #{$property}: $value;
 
-  $unit: unit($value);
+  $unit: math.unit($value);
 
-  @if (index((vw, vh, vmin, vmax), $unit) != null) {
+  @if (list.index((vw, vh, vmin, vmax), $unit) != null) {
     $devices: (
       (768px, 1024px), // iPad (all versions)
       (320px, 480px), // iPhone 4
@@ -641,8 +651,8 @@ $no-viewport: false !default;
     );
 
     @each $device in $devices {
-      $device-width: nth($device, 1);
-      $device-height: nth($device, 2);
+      $device-width: list.nth($device, 1);
+      $device-height: list.nth($device, 2);
       $device-query: 'only screen and (-webkit-min-device-pixel-ratio: 1)';
       $device-query: '#{$device-query} and (device-width: #{$device-width})';
       $device-query: '#{$device-query} and (device-height: #{$device-height})';
@@ -652,15 +662,15 @@ $no-viewport: false !default;
 
       @if ($unit == vmin or $unit == vmax) {
         @media #{$device-query} {
-          #{$property}: if($unit == vmin, $percent-width, $percent-height);
+          #{$property}: if(sass($unit == vmin): $percent-width; else: $percent-height);
         }
       } @else {
         @media #{$device-query} and (orientation: portrait) {
-          #{$property}: if($unit == vw, $percent-width, $percent-height);
+          #{$property}: if(sass($unit == vw): $percent-width; else: $percent-height);
         }
 
         @media #{$device-query} and (orientation: landscape) {
-          #{$property}: if($unit == vw, $percent-height, $percent-width);
+          #{$property}: if(sass($unit == vw): $percent-height; else: $percent-width);
         }
       }
     }
@@ -685,10 +695,10 @@ $no-viewport: false !default;
   );
 
   @each $direction in $directions {
-    $direction: to-lower-case($direction);
+    $direction: string.to-lower-case($direction);
 
-    @if map-has-key($direction-map, $direction) {
-      $opposite-directions: append($opposite-directions, unquote(map-get($direction-map, $direction)));
+    @if map.has-key($direction-map, $direction) {
+      $opposite-directions: list.append($opposite-directions, string.unquote(map.get($direction-map, $direction)));
     } @else {
       @warn 'No opposite direction can be found for `#{$direction}`. Direction omitted.';
     }
@@ -711,7 +721,7 @@ $no-viewport: false !default;
   width: 0;
   height: 0;
 
-  @if not index(top right bottom left, $direction) {
+  @if not list.index(top right bottom left, $direction) {
     @error 'Direction must be either `top`, `right`, `bottom` or `left`.';
   }
 
@@ -733,7 +743,7 @@ $no-viewport: false !default;
   $level: 1;
 
   @each $key, $value in $map {
-    @if type-of($value) == 'map' {
+    @if meta.type-of($value) == 'map' {
       $level: max(depth($value) + 1, $level);
     }
   }
@@ -747,17 +757,17 @@ $no-viewport: false !default;
     @debug-map {
       // these properties are for debug only. They do not exist
       /* stylelint-disable-next-line property-no-unknown */
-      __toString__: inspect($map);
+      __toString__: meta.inspect($map);
       /* stylelint-disable-next-line property-no-unknown */
-      __length__: length($map);
+      __length__: list.length($map);
       /* stylelint-disable-next-line property-no-unknown */
       __depth__: depth($map);
       /* stylelint-disable-next-line property-no-unknown */
-      __keys__: map-keys($map);
+      __keys__: map.keys($map);
 
       __properties__ {
         @each $key, $value in $map {
-          #{'(' + type-of($value) + ') ' + $key}: inspect($value);
+          #{'(' + meta.type-of($value) + ') ' + $key}: meta.inspect($value);
         }
       }
     }
@@ -795,26 +805,26 @@ $no-viewport: false !default;
 /// }
 ///
 @mixin aspect-ratio ($ratio) {
-  @if type-of($ratio) != list {
-    @error '`aspect-ratio` function expecting a list for `$ratio`; `#{type-of($ratio)}` given.';
-  } @else if length($ratio) == 3 and nth($ratio, 2) != 'x' {
-    @error 'when using 3 values length list, `aspect-ratio` function expects the second to be `x`; #{nth($ratio, 2)} given.';
-  } @else if length($ratio) < 2 and length($ratio) > 3 {
-    @error '`aspect-ratio` function expecting a list with 2 or 3 items for `$ratio`; `#{length($ratio)}` given.';
+  @if meta.type-of($ratio) != list {
+    @error '`aspect-ratio` function expecting a list for `$ratio`; `#{meta.type-of($ratio)}` given.';
+  } @else if list.length($ratio) == 3 and list.nth($ratio, 2) != 'x' {
+    @error 'when using 3 values length list, `aspect-ratio` function expects the second to be `x`; #{list.nth($ratio, 2)} given.';
+  } @else if list.length($ratio) < 2 and list.length($ratio) > 3 {
+    @error '`aspect-ratio` function expecting a list with 2 or 3 items for `$ratio`; `#{list.length($ratio)}` given.';
   }
 
-  $w: nth($ratio, 1);
-  $h: if(length($ratio) == 3, nth($ratio, 3), nth($ratio, 2));
+  $w: list.nth($ratio, 1);
+  $h: if(sass(list.length($ratio) == 3): list.nth($ratio, 3); else: list.nth($ratio, 2));
 
-  @if type-of($w) != 'number' {
+  @if meta.type-of($w) != 'number' {
     @error 'the value sent to `width` isn\'t a `number`.';
-  } @else if not unitless($w) {
+  } @else if not math.is-unitless($w) {
     @error 'the value sent to `width` **must** be unitless.';
   }
 
-  @if type-of($h) != 'number' {
+  @if meta.type-of($h) != 'number' {
     @error 'the value sent to `height` isn\'t a `number`.';
-  } @else if not unitless($h) {
+  } @else if not math.is-unitless($h) {
     @error 'the value sent to `height` **must** be unitless.';
   }
 
@@ -841,23 +851,23 @@ $no-viewport: false !default;
 /// @link http://codepen.io/timbrown/full/akXvRw/
 @mixin fluid-line-height (
   $font-size: null,
-  $min-line-height: map-get($leadings, 'min'),
-  $max-line-height: map-get($leadings, 'max'),
-  $line-length-lower-gate: map-get($line-lengths, 'min'),
-  $line-length-upper-gate: map-get($line-lengths, 'max')
+  $min-line-height: map.get(variables.$leadings, 'min'),
+  $max-line-height: map.get(variables.$leadings, 'max'),
+  $line-length-lower-gate: map.get(variables.$line-lengths, 'min'),
+  $line-length-upper-gate: map.get(variables.$line-lengths, 'max')
 ) {
   @if $font-size == null {
     @error 'the `font-size` of the element **must** be provided to calculate the media query limits.';
-  } @else if unit($font-size) == '%' {
+  } @else if math.unit($font-size) == '%' {
     $font-size: $font-size / 100%;
-  } @else if unit($font-size) == 'em' {
+  } @else if math.unit($font-size) == 'em' {
     $font-size: $font-size / 1em;
-  } @else if unit($font-size) == 'rem' {
+  } @else if math.unit($font-size) == 'rem' {
     $font-size: $font-size / 1rem;
-  } @else if unitless($font-size) {
+  } @else if math.is-unitless($font-size) {
     @error 'the unit of the parameter sent should be `%`, `em`, `rem`. Unitless value given.';
   } @else {
-    @error 'the unit of the parameter sent should be `%`, `em`, `rem`. `#{unit($font-size)}` given.';
+    @error 'the unit of the parameter sent should be `%`, `em`, `rem`. `#{math.unit($font-size)}` given.';
   }
 
   line-height: $min-line-height;
@@ -879,6 +889,6 @@ $no-viewport: false !default;
 }
 
 @mixin focused {
-  outline: 1px dotted scale-color(palette('main-colors', 'primary'), $alpha: -15%);
+  outline: 1px dotted color.scale(functions.palette('main-colors', 'primary'), $alpha: -15%);
   outline-offset: 0.25rem;
 }

@@ -1,3 +1,6 @@
+@use "modularscale-sass/stylesheets/modularscale/sugar";
+@use "../abstracts/functions";
+
 .candidates {
   display: flex;
 
@@ -8,7 +11,7 @@
   width: 100%;
   margin-bottom: 2rem;
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     flex-direction: row;
     flex-wrap: wrap;
 
@@ -28,7 +31,7 @@
 
   width: 100%;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     flex-direction: row;
     flex-wrap: wrap;
 
@@ -42,12 +45,12 @@
   margin-top: 0;
   margin-bottom: 1rem;
 
-  font-size: ms(3);
+  font-size: sugar.ms(3);
   line-height: 1.2;
   // text-align: center;
   text-transform: uppercase;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     margin-bottom: 2rem;
   }
 }
@@ -57,8 +60,8 @@
 }
 
 .candidates__subtitle p {
-  font-size: ms(-1);
-  color: palette('gray', 'medium');
+  font-size: sugar.ms(-1);
+  color: functions.palette('gray', 'medium');
 }
 
 .candidates__candidate {
@@ -67,11 +70,11 @@
   width: 100%;
   margin-bottom: 2rem;
 
-  @media screen and (min-width: breakpoint('tablet')) {
+  @media screen and (min-width: functions.breakpoint('tablet')) {
     width: 50%;
   }
 
-  @media screen and (min-width: breakpoint('desktop')) {
+  @media screen and (min-width: functions.breakpoint('desktop')) {
     width: calc(33.3333333% - 1rem);
     margin-right: 0.5rem;
     margin-left: 0.5rem;
@@ -83,22 +86,22 @@
   height: 4rem;
   margin-right: 1rem;
 
-  background-color: palette('gray', 'light');
-  box-shadow: 5px 8px 21px -3px palette('shadow', 'light');
+  background-color: functions.palette('gray', 'light');
+  box-shadow: 5px 8px 21px -3px functions.palette('shadow', 'light');
 }
 
 .candidates__name {
   margin-bottom: 0;
 
-  font-weight: font-weight('bold');
+  font-weight: functions.font-weight('bold');
 }
 
 .candidates__info {
   width: 100%;
   margin-bottom: 0;
 
-  font-size: ms(-2);
-  color: palette('gray', 'medium');
+  font-size: sugar.ms(-2);
+  color: functions.palette('gray', 'medium');
 }
 
 .candidates__text .button {

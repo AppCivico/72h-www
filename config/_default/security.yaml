@@ -2,6 +2,7 @@ enableInlineShortcodes: false
 exec:
   allow:
     - "^dart-sass-embedded$"
+    - "^dart-sass$"
     - "^go$"
     - "^node$"
     - "^npx$"
