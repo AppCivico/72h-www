@@ -467,7 +467,8 @@
                           class="candidates__image"
                           :src="candidate.picture"
                           @error="candidate.picture = 'assets/images/no-picture.svg'"
-                          :alt="candidate.name">
+                          :alt="candidate.name"
+                          loading="lazy">
                         <div class="candidates__text">
                           <p class="candidates__name">
                             {{ "{{ candidate.name }}" }}
@@ -539,7 +540,7 @@
               <h2>{{ i18n "partnersAndOrganizations" }}</h2>
 
               {{ range where .Site.RegularPages ".Type" "partners" }}
-                <img src="{{ .Params.image }}" alt="{{ .Title }}">
+                <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
               {{ end }}
             </div>
           </div>
