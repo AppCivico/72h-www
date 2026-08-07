@@ -603,7 +603,7 @@ if (window.location.href.indexOf('/') > -1) {
           this.chart.showLoading();
         }
 
-        let url = `${config.api.domain}index?election_id=${config.run[2024]}&days=${this.selectedDay}${this.filtersAsQueryString}`;
+        let url = `${config.api.domain}index?year=${config.mostRecentYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
         if (this.epochFromParam) {
           url += `&epoch=${this.epochFromParam}`;
@@ -648,7 +648,7 @@ if (window.location.href.indexOf('/') > -1) {
       getCandidates(page = false) {
         this.loadingCandidates = true;
 
-        let url = `${config.api.domain}candidates?election_id=${config.run[2024]}&results=9&days=${this.selectedDay}${this.filtersAsQueryString}`;
+        let url = `${config.api.domain}candidates?year=${config.mostRecentYear}&results=9&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
         if (this.epochFromParam) {
           url += `&epoch=${this.epochFromParam}`;
