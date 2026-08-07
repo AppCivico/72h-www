@@ -46,6 +46,13 @@ if (window.location.href.indexOf('/') > -1) {
         loadingBigNumbers: true,
         loadingCandidates: true,
         loadingChartData: true,
+        loadingIntroCharts: true,
+
+        dataAbortController: null,
+        candidatesAbortController: null,
+        filtersAbortController: null,
+
+        filters: window.appFilters,
 
         errorMessages: {
           candidates: '',
@@ -100,6 +107,9 @@ if (window.location.href.indexOf('/') > -1) {
         ],
         selectedDay: 'all',
 
+        years: config.years,
+        selectedYear: config.initialLoadingYear,
+
         previousFiltersAsQueryString: '',
       };
     },
@@ -116,13 +126,13 @@ if (window.location.href.indexOf('/') > -1) {
         return this.mainData?.epoch;
       },
       states() {
-        return window.appFilters.regions?.sort((a, b) => a.name.localeCompare(b.name)) || [];
+        return this.filters.regions?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       statesById({ states } = this) {
         return states.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       cities() {
-        return window.appFilters.cities
+        return this.filters.cities
           ?.filter((city) => this.selectedState?.includes(String(city.region_id)))
           .map((x) => ({ ...x, label: x.name, helper: this.statesById[x.region_id].acronym }))
           .sort((a, b) => a.name.localeCompare(b.name)) || [];
@@ -131,19 +141,19 @@ if (window.location.href.indexOf('/') > -1) {
         return cities.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       offices() {
-        return window.appFilters.offices?.sort((a, b) => a.id - b.id) || [];
+        return this.filters.offices?.sort((a, b) => a.id - b.id) || [];
       },
       officesById({ offices } = this) {
         return offices.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       parties() {
-        return window.appFilters.parties?.sort((a, b) => a.name.localeCompare(b.name)) || [];
+        return this.filters.parties?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       partiesById({ parties } = this) {
         return parties.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       fund_types() {
-        return window.appFilters.fund_types?.sort((a, b) => a.name.localeCompare(b.name))
+        return this.filters.fund_types?.sort((a, b) => a.name.localeCompare(b.name))
           // temporally filter types to save the back-end developer from burnout
           .filter((x) => x.id < 4 || x.id > 6) || [];
       },
@@ -151,27 +161,27 @@ if (window.location.href.indexOf('/') > -1) {
         return fundTypes.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       reelection() {
-        return window.appFilters
+        return this.filters
           .reelection?.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name))) || [];
       },
       races() {
-        return window.appFilters.races?.sort((a, b) => a.name.localeCompare(b.name)) || [];
+        return this.filters.races?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       racesById({ races } = this) {
         return races.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       rangeOfVotes() {
-        return window.appFilters
+        return this.filters
           .votes?.sort((a, b) => (a.label || a.name).localeCompare((b.label || b.name))) || [];
       },
       schooling() {
-        return window.appFilters.schooling?.sort((a, b) => a.name.localeCompare(b.name)) || [];
+        return this.filters.schooling?.sort((a, b) => a.name.localeCompare(b.name)) || [];
       },
       schoolingById({ schooling } = this) {
         return schooling.reduce((acc, cur) => ({ ...acc, [cur.id]: cur }), {});
       },
       electionStatuses() {
-        return window.appFilters.election_status || [];
+        return this.filters.election_status || [];
       },
       chartDates() {
         const datesArr = Object.keys(this.mainData?.chart || {});
@@ -293,10 +303,10 @@ if (window.location.href.indexOf('/') > -1) {
         }
       },
     },
-    mounted() {
+    async mounted() {
       const cleanUri = `${window.location.protocol}//${window.location.host + window.location.pathname}`;
 
-      this.populateParams();
+      await this.populateParams();
       this.getData();
       this.getCandidates();
       this.setChartOptions();
@@ -322,7 +332,13 @@ if (window.location.href.indexOf('/') > -1) {
           el.scrollIntoView({ block: 'nearest', inline: 'start' });
         }
       },
-      populateParams() {
+      async populateParams() {
+        const yearParam = Number(params.get('year'));
+        if (yearParam && this.years.includes(yearParam) && yearParam !== this.selectedYear) {
+          this.selectedYear = yearParam;
+          await this.fetchFiltersForYear(yearParam);
+        }
+
         const regionId = params.get('region_id')?.split(',').map((x) => Number(x));
         const cityId = params.get('city_id')?.split(',').map((x) => Number(x));
         const partyId = params.get('party_id')?.split(',').map((x) => Number(x));
@@ -336,35 +352,35 @@ if (window.location.href.indexOf('/') > -1) {
         const days = params.get('days');
         const epoch = Number(params.get('epoch') || 0);
 
-        if (regionId?.length && window.appFilters.regions) {
-          this.selectedState = window.appFilters.regions
+        if (regionId?.length && this.filters.regions) {
+          this.selectedState = this.filters.regions
             .filter((region) => regionId.includes(region.id));
         }
-        if (cityId?.length && window.appFilters.cities) {
-          this.selectedCity = window.appFilters.cities
+        if (cityId?.length && this.filters.cities) {
+          this.selectedCity = this.filters.cities
             .filter((city) => cityId.includes(city.id));
         }
-        if (officeId?.length && window.appFilters.offices) {
-          this.selectedOffices = window.appFilters.offices
+        if (officeId?.length && this.filters.offices) {
+          this.selectedOffices = this.filters.offices
             .filter((office) => officeId.includes(office.id));
         }
-        if (partyId?.length && window.appFilters.parties) {
-          this.selectedParty = window.appFilters.parties
+        if (partyId?.length && this.filters.parties) {
+          this.selectedParty = this.filters.parties
             .filter((party) => partyId.includes(party.id));
         }
-        if (fundTypeId?.length && window.appFilters.fund_types) {
-          this.selectedFund = window.appFilters.fund_types
+        if (fundTypeId?.length && this.filters.fund_types) {
+          this.selectedFund = this.filters.fund_types
             .filter((fund) => fundTypeId.includes(fund.id));
         }
-        if (raceId?.length && window.appFilters.races) {
-          this.selectedRace = window.appFilters.races.filter((race) => raceId.includes(race.id));
+        if (raceId?.length && this.filters.races) {
+          this.selectedRace = this.filters.races.filter((race) => raceId.includes(race.id));
         }
-        if (schoolingId?.length && window.appFilters.schooling) {
-          this.selectedSchooling = window.appFilters.schooling
+        if (schoolingId?.length && this.filters.schooling) {
+          this.selectedSchooling = this.filters.schooling
             .filter((schooling) => schoolingId.includes(schooling.id));
         }
-        if (electionStatuses?.length && window.appFilters.election_status) {
-          this.selectedSchooling = window.appFilters.election_status
+        if (electionStatuses?.length && this.filters.election_status) {
+          this.selectedSchooling = this.filters.election_status
             .filter((status) => electionStatuses.includes(status));
         }
         if (rangeOfVotes !== '' && !Number.isNaN(Number.parseInt(rangeOfVotes, 10))) {
@@ -587,6 +603,51 @@ if (window.location.href.indexOf('/') > -1) {
       toggleFilter() {
         this.filterOpen = !this.filterOpen;
       },
+      async fetchFiltersForYear(year) {
+        this.filtersAbortController?.abort();
+        this.filtersAbortController = new AbortController();
+        const { signal } = this.filtersAbortController;
+
+        try {
+          const response = await fetch(`${config.api.domain}filters?year=${year}`, { signal });
+          const json = await response.json();
+          this.filters = json.filters;
+        } catch (error) {
+          if (error.name === 'AbortError') {
+            return;
+          }
+          // eslint-disable-next-line no-console
+          console.error(error);
+        }
+      },
+      changeYear(year) {
+        this.selectedYear = year;
+
+        this.loadingBigNumbers = true;
+        this.loadingChartData = true;
+        this.loadingIntroCharts = true;
+        this.loadingCandidates = true;
+
+        const url = new URL(window.location);
+        url.searchParams.set('year', year);
+        window.history.pushState({}, '', url);
+
+        this.selectedState = [];
+        this.selectedCity = [];
+        this.selectedOffices = [];
+        this.selectedParty = [];
+        this.selectedFund = [];
+        this.selectedRace = [];
+        this.selectedElectionStatuses = [];
+        this.selectedRangeOfVotes = '';
+        this.selectedSchooling = [];
+        this.isReelectionSelected = '';
+
+        // `/filters` doesn't gate `/index`/`/candidates`: filtersAsQueryString only
+        // reads the selectedX fields above (already reset), never `this.filters`.
+        this.fetchFiltersForYear(year);
+        this.updateData();
+      },
       updateData() {
         this.candidates_page = 1;
 
@@ -594,16 +655,25 @@ if (window.location.href.indexOf('/') > -1) {
         this.getCandidates();
         this.updateLocaleText();
         this.updateFilterText();
+      },
+      applyFilters() {
+        this.updateData();
         document.querySelector('#js-main-chart').scrollIntoView();
       },
       getData() {
+        this.loadingBigNumbers = true;
         this.loadingChartData = true;
+        this.loadingIntroCharts = true;
 
         if (this.chart) {
           this.chart.showLoading();
         }
 
-        let url = `${config.api.domain}index?year=${config.mostRecentYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
+        this.dataAbortController?.abort();
+        this.dataAbortController = new AbortController();
+        const { signal } = this.dataAbortController;
+
+        let url = `${config.api.domain}index?year=${this.selectedYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
         if (this.epochFromParam) {
           url += `&epoch=${this.epochFromParam}`;
@@ -611,6 +681,7 @@ if (window.location.href.indexOf('/') > -1) {
 
         fetch(url, {
           method: 'GET',
+          signal,
         })
           .then((response) => {
             if (!response.ok) {
@@ -634,6 +705,7 @@ if (window.location.href.indexOf('/') > -1) {
           .then(() => {
             this.loadingBigNumbers = false;
             this.loadingChartData = false;
+            this.loadingIntroCharts = false;
             if (this.chart) {
               this.chart.hideLoading();
             }
@@ -642,13 +714,18 @@ if (window.location.href.indexOf('/') > -1) {
 
             return true;
           })
-          // eslint-disable-next-line no-console
-          .catch((error) => console.error(error));
+          .catch((error) => {
+            if (error.name === 'AbortError') {
+              return;
+            }
+            // eslint-disable-next-line no-console
+            console.error(error);
+          });
       },
       getCandidates(page = false) {
         this.loadingCandidates = true;
 
-        let url = `${config.api.domain}candidates?year=${config.mostRecentYear}&results=9&days=${this.selectedDay}${this.filtersAsQueryString}`;
+        let url = `${config.api.domain}candidates?year=${this.selectedYear}&results=9&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
         if (this.epochFromParam) {
           url += `&epoch=${this.epochFromParam}`;
@@ -665,8 +742,13 @@ if (window.location.href.indexOf('/') > -1) {
           }
         }
 
+        this.candidatesAbortController?.abort();
+        this.candidatesAbortController = new AbortController();
+        const { signal } = this.candidatesAbortController;
+
         fetch(url, {
           method: 'GET',
+          signal,
         })
           .then((response) => {
             if (!response.ok) {
@@ -687,9 +769,12 @@ if (window.location.href.indexOf('/') > -1) {
             }
             return true;
           })
-          // eslint-disable-next-line no-console
           .catch((error) => {
+            if (error.name === 'AbortError') {
+              return;
+            }
             this.errorMessages.candidates = error.message;
+            // eslint-disable-next-line no-console
             console.error(error);
           })
           .finally(() => {

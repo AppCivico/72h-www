@@ -1,6 +1,7 @@
-@use "modularscale-sass/stylesheets/modularscale/sugar";
-@use "../abstracts/functions";
-@use "../abstracts/variables";
+@use 'modularscale-sass/stylesheets/modularscale/sugar';
+@use '../abstracts/functions';
+@use '../abstracts/mixins';
+@use '../abstracts/variables';
 
 .jumbotron {
   width: 100%;
@@ -23,7 +24,9 @@
   letter-spacing: -0.05ex;
 }
 
-.jumbotron [role='doc-subtitle'] {
+.jumbotron__year-selector {
+  display: inline-block;
+
   margin-bottom: variables.$gutter;
 
   font-size: sugar.ms(10);
@@ -31,6 +34,16 @@
   line-height: 1;
   color: functions.palette('main-colors', 'primary');
   white-space: nowrap;
+
+  select {
+    font: inherit;
+    color: inherit;
+
+    background-color: transparent;
+    border-color: functions.palette('main-colors', 'secondary');
+    border-style: solid;
+    border-width: 0 0 1px;
+  }
 
   &::before,
   &::after {
@@ -52,6 +65,10 @@
     border: 0.15rem solid functions.palette('main-colors', 'tertiary');
     border-radius: 10px;
   }
+}
+
+.jumbotron__year-selector-label {
+  @include mixins.visually-hidden;
 }
 
 .jumbotron [class*='pay-attention-to'] {

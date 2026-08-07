@@ -9,7 +9,15 @@
             <header class="jumbotron">
               <h1>{{ .Title }}</h1>
                 {{ with $.Site.Params.run }}
-                  <p role="doc-subtitle">{{ . }}</p>
+                  <label class="jumbotron__year-selector">
+                    <span class="jumbotron__year-selector-label">{{ i18n "yearSelector" }}</span>
+                    <select
+                      v-model.number="selectedYear"
+                      @change="changeYear(selectedYear)"
+                    >
+                      <option v-for="y in years" :key="y" :value="y">{{ "{{ y }}" }}</option>
+                    </select>
+                  </label>
                 {{ end }}
               {{ .Content }}
             </header>
@@ -241,11 +249,10 @@
               </p>
 
             </div>
-
-            <div class="intro-charts">
+            <div class="intro-charts" :aria-busy="loadingIntroCharts">
               <h1 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h1>
-              <template v-for="chart in introCharts">
-                <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`">
+              <template v-if="!loadingIntroCharts">
+                <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
                   <div :id="`js-chart__${chart.type}`"></div>
                 </div>
               </template>
@@ -279,7 +286,7 @@
 
               <div class="filters" id="filters" :hidden="!filterOpen">
                 <div class="filters__items">
-                  <form action="" @submit.prevent="updateData">
+                  <form action="" @submit.prevent="applyFilters">
                     <fieldset class="filters__item list-box__wrapper" v-if="states && states.length">
                       <legend class="like-a__label list-box__label">{{ i18n "states" }}</legend>
                       <list-box

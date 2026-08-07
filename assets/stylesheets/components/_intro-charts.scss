@@ -2,11 +2,14 @@
 @use "../abstracts/functions";
 
 .intro-charts {
+  position: relative;
+
   display: flex;
 
   flex-direction: column;
 
   width: 100%;
+  min-height: 20rem;
   margin-bottom: 2rem;
 
   @media screen and (min-width: functions.breakpoint('desktop')) {

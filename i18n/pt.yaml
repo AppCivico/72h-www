@@ -232,3 +232,6 @@
   translation: "Min"
 - id: secondsAbbr
   translation: "Seg"
+
+- id: yearSelector
+  translation: "Ano da eleição"
