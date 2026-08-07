@@ -3,6 +3,7 @@ exec:
   allow:
     - "^dart-sass-embedded$"
     - "^dart-sass$"
+    - "^sass$"
     - "^go$"
     - "^node$"
     - "^npx$"
