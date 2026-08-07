@@ -174,7 +174,7 @@ if (window.location.href.indexOf('/') > -1) {
         return window.appFilters.election_status || [];
       },
       chartDates() {
-        const datesArr = Object.keys(this.mainData.chart);
+        const datesArr = Object.keys(this.mainData?.chart || {});
         return datesArr.map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
 
@@ -503,6 +503,7 @@ if (window.location.href.indexOf('/') > -1) {
       handleColumnData(item) {
         const newItem = item;
 
+        newItem.data = Array.isArray(newItem.data) ? newItem.data : [];
         newItem.chartType = 'column';
 
         newItem.xAxis = {
@@ -736,6 +737,10 @@ if (window.location.href.indexOf('/') > -1) {
       },
       generateIntroCharts() {
         this.introCharts.forEach((chart) => {
+          if (!Array.isArray(chart.data) || !chart.data.length) {
+            return;
+          }
+
           Highcharts.chart(`js-chart__${chart.type}`, {
             chart: {
               plotBackgroundColor: null,

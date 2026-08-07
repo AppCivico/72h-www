@@ -30,10 +30,10 @@
                       <h1>{{ i18n "accumulatedValue" }}</h1>
                       <p>
                         {{ i18n "entriesQuantity" }}
-                        {{ "{{ formatNumeral(mainData.accumulated.total_transfers) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_transfers) }}" }}
                       </p>
                       <span class="big-number__number"
-                        v-html="formatCurrencyNoAbbr(mainData.accumulated.total_value)"
+                        v-html="formatCurrencyNoAbbr(mainData?.accumulated?.total_value)"
                       ></span>
                         <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
                     </div>
@@ -46,17 +46,17 @@
                     >
                       <h1>{{ i18n "candidatesWhoReceivedFunds" }}</h1>
                       <span class="big-number__dividend">
-                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_who_received) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_who_received) }}" }}
                       </span>
                       <br />
                       <span class="big-number__divisor">
                         <span class="big-number__math-sign">&divide;</span>
-                        {{ "{{ formatNumeral(mainData.election.candidate_count) }}" }}
+                        {{ "{{ formatNumeral(mainData?.election?.candidate_count) }}" }}
                         <small>{{ i18n "candidatesTotal" | lower }}</small>
                       </span>
                       <br />
                       <span class="big-number__quotient">
-                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_who_received / mainData.election.candidate_count * 100) }}" }}
+                        {{ "{{ formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100) }}" }}
                         <small>{{ i18n "ofCandidates" | lower }}</small>
                     </span>
                     <!-- <progress class="progress__quartenary" max="100" value="10">10%</progress> -->
@@ -71,19 +71,19 @@
                       <h1>{{ i18n "accumulatedValueParty" }}</h1>
                       <p>
                         {{ i18n "entriesQuantity" }}
-                          {{ "{{ formatNumeral(mainData.accumulated.transfers_party_fund) }}" }}
+                          {{ "{{ formatNumeral(mainData?.accumulated?.transfers_party_fund) }}" }}
                       </p>
                       <span class="big-number__dividend"
-                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_party_fund)"
+                        v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_party_fund)"
                       ></span>
                       <br />
                       <span class="big-number__divisor">
-                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_party_fund) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_party_fund) }}" }}
                         <small>{{ i18n "candidate" 2 | lower }}</small>
                       </span>
                       <br />
                       <span class="big-number__quotient">
-                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_party_fund / mainData.election.candidate_count * 100) }}" }}
+                        {{ "{{ formatPercent(mainData?.accumulated?.total_candidates_party_fund / mainData?.election?.candidate_count * 100) }}" }}
                         <small>{{ i18n "ofCandidates" | lower }}</small>
                       </span>
                         <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
@@ -98,19 +98,19 @@
                       <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
                       <p>
                         {{ i18n "entriesQuantity" }}
-                          {{ "{{ formatNumeral(mainData.accumulated.transfers_special_fund) }}" }}
+                          {{ "{{ formatNumeral(mainData?.accumulated?.transfers_special_fund) }}" }}
                       </p>
                       <span class="big-number__dividend"
-                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_special_fund)"
+                        v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_special_fund)"
                       ></span>
                       <br />
                       <span class="big-number__divisor">
-                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_special_fund) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_special_fund) }}" }}
                         <small>{{ i18n "candidate" 2 | lower }}</small>
                       </span>
                       <br />
                       <span class="big-number__quotient">
-                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_special_fund / mainData.election.candidate_count * 100) }}" }}
+                        {{ "{{ formatPercent(mainData?.accumulated?.total_candidates_special_fund / mainData?.election?.candidate_count * 100) }}" }}
                         <small>{{ i18n "ofCandidates" | lower }}</small>
                       </span>
                         <!-- <progress class="progress__tertiary" max="100" value="10">10%</progress> -->
@@ -126,19 +126,19 @@
                       <h1>{{ i18n "accumulatedCrowdfunding" }}</h1>
                       <p>
                         {{ i18n "entriesQuantity" }}
-                        {{ "{{ formatNumeral(mainData.accumulated.transfers_crowdfunding) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.transfers_crowdfunding) }}" }}
                       </p>
                       <span class="big-number__dividend"
-                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_crowdfunding)"
+                        v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_crowdfunding)"
                       ></span>
                       <br />
                       <span class="big-number__divisor">
-                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_crowdfunding) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_crowdfunding) }}" }}
                         <small>{{ i18n "candidate" 2 | lower }}</small>
                       </span>
                       <br />
                       <span class="big-number__quotient">
-                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_crowdfunding / mainData.election.candidate_count * 100) }}" }}
+                        {{ "{{ formatPercent(mainData?.accumulated?.total_candidates_crowdfunding / mainData?.election?.candidate_count * 100) }}" }}
                         <small>{{ i18n "ofCandidates" | lower }}</small>
                       </span>
                       <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
@@ -154,19 +154,19 @@
                       <h1>{{ i18n "accumulatedDirectDonation" }}</h1>
                       <p>
                         {{ i18n "entriesQuantity" }}
-                        {{ "{{ formatNumeral(mainData.accumulated.transfers_direct_donation) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.transfers_direct_donation) }}" }}
                       </p>
                       <span class="big-number__dividend"
-                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_direct_donation)"
+                        v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_direct_donation)"
                       ></span>
                       <br />
                       <span class="big-number__divisor">
-                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_direct_donation) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_direct_donation) }}" }}
                         <small>{{ i18n "candidate" 2 | lower }}</small>
                       </span>
                       <br />
                       <span class="big-number__quotient">
-                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_direct_donation / mainData.election.candidate_count * 100) }}" }}
+                        {{ "{{ formatPercent(mainData?.accumulated?.total_candidates_direct_donation / mainData?.election?.candidate_count * 100) }}" }}
                         <small>{{ i18n "ofCandidates" | lower }}</small>
                       </span>
                       <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
@@ -182,19 +182,19 @@
                       <h1>{{ i18n "accumulatedSelfFunding" }}</h1>
                       <p>
                         {{ i18n "entriesQuantity" }}
-                        {{ "{{ formatNumeral(mainData.accumulated.transfers_self_funding) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.transfers_self_funding) }}" }}
                       </p>
                       <span class="big-number__dividend"
-                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_self_funding)"
+                        v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_self_funding)"
                       ></span>
                       <br />
                       <span class="big-number__divisor">
-                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_self_funding) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_self_funding) }}" }}
                         <small>{{ i18n "candidate" 2 | lower }}</small>
                       </span>
                       <br />
                       <span class="big-number__quotient">
-                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_self_funding / mainData.election.candidate_count * 100) }}" }}
+                        {{ "{{ formatPercent(mainData?.accumulated?.total_candidates_self_funding / mainData?.election?.candidate_count * 100) }}" }}
                         <small>{{ i18n "ofCandidates" | lower }}</small>
                       </span>
                       <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
@@ -210,19 +210,19 @@
                       <h1>{{ i18n "accumulatedOtherResources" }}</h1>
                       <p>
                         {{ i18n "entriesQuantity" }}
-                        {{ "{{ formatNumeral(mainData.accumulated.transfers_other_resources) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.transfers_other_resources) }}" }}
                       </p>
                       <span class="big-number__dividend"
-                        v-html="formatCurrencyNoAbbr(mainData.accumulated.value_other_resources)"
+                        v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_other_resources)"
                       ></span>
                       <br />
                       <span class="big-number__divisor">
-                        {{ "{{ formatNumeral(mainData.accumulated.total_candidates_other_resources) }}" }}
+                        {{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_other_resources) }}" }}
                         <small>{{ i18n "candidate" 2 | lower }}</small>
                       </span>
                       <br />
                       <span class="big-number__quotient">
-                        {{ "{{ formatPercent(mainData.accumulated.total_candidates_other_resources / mainData.election.candidate_count * 100) }}" }}
+                        {{ "{{ formatPercent(mainData?.accumulated?.total_candidates_other_resources / mainData?.election?.candidate_count * 100) }}" }}
                         <small>{{ i18n "ofCandidates" | lower }}</small>
                       </span>
                       <!-- <progress class="progress__secondary" class="progress__tertiary" max="100" value="10">10%</progress> -->
