@@ -175,7 +175,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: functions.layer('default');
+  z-index: functions.layer('modal');
 
   max-height: 25vh;
   padding-top: variables.$gutter;
