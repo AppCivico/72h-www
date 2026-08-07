@@ -5,5 +5,6 @@ export default (value) => {
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   });
-  return formatter.format(Number.isFinite(value) ? value : 0);
+  const numericValue = Number(value);
+  return formatter.format(Number.isFinite(numericValue) ? numericValue : 0);
 };
