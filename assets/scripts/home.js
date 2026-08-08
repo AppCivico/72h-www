@@ -220,9 +220,10 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL() {
-        let url = `${window.location.href}?days=${this.selectedDay}${this.filtersAsQueryString}`;
-        url += `#${this.sharingFrom}`;
-        return url;
+        const url = new URL(window.location.href);
+        url.search = `?year=${this.selectedYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
+        url.hash = this.sharingFrom;
+        return url.toString();
       },
 
       isFilterableChartOutdated({ previousFiltersAsQueryString, filtersAsQueryString } = this) {
