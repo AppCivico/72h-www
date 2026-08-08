@@ -27,6 +27,10 @@
 .jumbotron__year-selector {
   display: inline-block;
 
+  align-items: center;
+  justify-content: center;
+
+  max-width: 100%;
   margin-bottom: variables.$gutter;
 
   font-size: sugar.ms(10);
@@ -34,6 +38,10 @@
   line-height: 1;
   color: functions.palette('main-colors', 'primary');
   white-space: nowrap;
+
+  @supports (display: flex) {
+    display: flex;
+  }
 
   select {
     font: inherit;
@@ -49,6 +57,10 @@
   &::after {
     box-sizing: content-box;
     display: inline-block;
+
+    flex-basis: 0.5rem;
+    flex-grow: 1;
+    flex-shrink: 0;
 
     width: 4.5rem;
     max-width: 15%;
