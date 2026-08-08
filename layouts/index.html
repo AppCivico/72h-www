@@ -10,7 +10,7 @@
               <h1>{{ .Title }}</h1>
                 {{ with $.Site.Params.run }}
                   <label class="jumbotron__year-selector">
-                    <span class="jumbotron__year-selector-label">{{ i18n "yearSelector" }}</span>
+                    <span class="jumbotron__year-selector-inner-label">{{ i18n "yearSelector" }}</span>
                     <select
                       v-model.number="selectedYear"
                       @change="changeYear(selectedYear)"
