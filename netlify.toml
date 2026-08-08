@@ -5,6 +5,7 @@
 [build.environment]
   HUGO_VERSION = "0.164.0"
   DART_SASS_VERSION = "1.101.0"
+  NODE_VERSION = "24.18.0"
 
 [context.dev.environment]
   HUGO_ENVIRONMENT = "staging"
