@@ -52,7 +52,7 @@ if (window.location.href.indexOf('/') > -1) {
         candidatesAbortController: null,
         filtersAbortController: null,
 
-        filters: window.appFilters,
+        filters: {},
 
         errorMessages: {
           candidates: '',
@@ -337,8 +337,8 @@ if (window.location.href.indexOf('/') > -1) {
         const yearParam = Number(params.get('year'));
         if (yearParam && this.years.includes(yearParam) && yearParam !== this.selectedYear) {
           this.selectedYear = yearParam;
-          await this.fetchFiltersForYear(yearParam);
         }
+        await this.fetchFiltersForYear(this.selectedYear);
 
         const regionId = params.get('region_id')?.split(',').map((x) => Number(x));
         const cityId = params.get('city_id')?.split(',').map((x) => Number(x));
@@ -610,7 +610,7 @@ if (window.location.href.indexOf('/') > -1) {
         const { signal } = this.filtersAbortController;
 
         try {
-          const response = await fetch(`${config.api.domain}filters?year=${year}`, { signal });
+          const response = await fetch(`/filters/${year}.json`, { signal });
           const json = await response.json();
           this.filters = json.filters;
         } catch (error) {

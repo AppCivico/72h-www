@@ -2,11 +2,63 @@
   {{ partial "components/listBox.html" }}
 </script>
 
-<script>
-  {{ $filters := resources.GetRemote $.Site.Params.filtersJson | transform.Unmarshal | default hugo.Data.filters }}
+{{- /* Fetched once per build (not per client), for every election year, and
+     published as static JSON — so the client (including the very first
+     load) reads same-origin files via fetch() instead of either calling
+     the external API directly or having the payload inlined into the
+     HTML.
 
-  window.appFilters = {{ $filters.filters }};
-</script>
+     Three tiers if a given year's own fetch fails:
+       1. Another year of the same election type — municipal (2020, 2024,
+          2028...) or general (2018, 2022, 2026...), computed via
+          `year mod 4` — that DID succeed in THIS build. Always freshest,
+          self-heals once the API issue is fixed, nothing to keep committed.
+       2. A committed snapshot at data/filters/{municipal,general}.json,
+          used only if tier 1 has nothing (i.e. every year of that type
+          failed in this build). May not exist for every type — see
+          plano-de-execucao.md for why a "general" snapshot isn't committed
+          yet.
+       3. Fail the build loudly (errorf) rather than publish nothing/wrong
+          data. */ -}}
+{{- $remoteByYear := dict -}}
+{{- $successByType := dict -}}
+{{- range $.Site.Params.years -}}
+  {{- $year := . -}}
+  {{- $url := printf "%sfilters?year=%d" $.Site.Params.apiDomain $year -}}
+  {{- $result := try (resources.GetRemote $url) -}}
+  {{- $remoteByYear = merge $remoteByYear (dict (printf "%d" $year) $result) -}}
+  {{- if and (not $result.Err) $result.Value -}}
+    {{- $type := mod $year 4 -}}
+    {{- $successByType = merge $successByType (dict (printf "%d" $type) $result.Value) -}}
+  {{- end -}}
+{{- end -}}
+
+{{- range $.Site.Params.years -}}
+  {{- $year := . -}}
+  {{- $result := index $remoteByYear (printf "%d" $year) -}}
+  {{- $source := $result.Value -}}
+  {{- if or $result.Err (not $source) -}}
+    {{- $type := mod $year 4 -}}
+    {{- $typeName := cond (eq $type 0) "municipal" "general" -}}
+    {{- $fallback := index $successByType (printf "%d" $type) -}}
+    {{- if $fallback -}}
+      {{- warnf "filters?year=%d failed (err=%v, empty response otherwise) — publishing another %s-election year's data instead" $year $result.Err $typeName -}}
+      {{- $source = $fallback -}}
+    {{- else -}}
+      {{- $staticFallback := index hugo.Data.filters $typeName -}}
+      {{- if $staticFallback -}}
+        {{- warnf "filters?year=%d failed (err=%v, empty response otherwise) and no same-type election year succeeded in this build — falling back to the committed data/filters/%s.json snapshot" $year $result.Err $typeName -}}
+        {{- $source = resources.FromString (printf "static-fallback-%s.json" $typeName) (jsonify $staticFallback) -}}
+      {{- else -}}
+        {{- errorf "filters?year=%d failed (err=%v, empty response otherwise), no same-type election year succeeded in this build, and no committed data/filters/%s.json fallback exists" $year $result.Err $typeName -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- if $source -}}
+    {{- $published := $source | resources.Copy (printf "filters/%d.json" $year) -}}
+    {{- $published.Publish -}}
+  {{- end -}}
+{{- end -}}
 
 <script>
   window.appDictionary = {

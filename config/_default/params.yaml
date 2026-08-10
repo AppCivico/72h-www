@@ -7,4 +7,5 @@ shareImages:
   default: "assets/images/sharing/default.jpg"
   twitter: "assets/images/sharing/twitter.jpg"
   facebook: "assets/images/sharing/facebook.jpg"
-filtersJson: "https://h72-api.appcivico.com/v1/filters?year=2024"
+apiDomain: "https://h72-api.appcivico.com/v1/"
+years: [2026, 2024, 2022, 2020]
