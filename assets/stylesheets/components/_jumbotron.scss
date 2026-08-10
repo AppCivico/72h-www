@@ -30,8 +30,11 @@
   align-items: center;
   justify-content: center;
 
+  width: fit-content;
   max-width: 100%;
+  margin-right: auto;
   margin-bottom: variables.$gutter;
+  margin-left: auto;
 
   font-size: sugar.ms(10);
   font-weight: functions.font-weight('bold');
@@ -65,8 +68,6 @@
     width: 4.5rem;
     max-width: 15%;
     height: 0.5rem;
-    margin-right: 0.25em;
-    margin-left: 0.25em;
 
     color: functions.palette('main-colors', 'quaternary');
     vertical-align: middle;
@@ -76,6 +77,14 @@
     background-color: currentcolor;
     border: 0.15rem solid functions.palette('main-colors', 'tertiary');
     border-radius: 10px;
+  }
+
+  &::before {
+    margin-right: 0.25em;
+  }
+
+  &::after {
+    margin-left: 0.25em;
   }
 }
 
