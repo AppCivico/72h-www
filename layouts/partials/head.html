@@ -3,6 +3,14 @@
   class="{{ if .IsHome }}home-page {{ end }}
   {{ .Params.rootClass }} {{ if eq (getenv "NODE_ENV") "development" }}grid{{ end }} no-js">
 <head>
+  {{/* "/" serves the current election directly rather than redirecting,
+       so canonical/og:url need to point at the "real", year-scoped URL to
+       avoid duplicate-content between "/" and "/{ano}/". */}}
+  {{ $canonicalURL := .Permalink }}
+  {{ if .IsHome }}
+    {{ $canonicalURL = printf "%d/" $.Site.Params.run | absURL }}
+  {{ end }}
+
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
 
   <meta charset="utf-8">
@@ -39,7 +47,7 @@
 	<!-- END FAVICON -->
 
 
-  <link rel="canonical" href="{{ .Permalink }}" />
+  <link rel="canonical" href="{{ $canonicalURL }}" />
 
 	{{ with $.Site.Params.shareImages.default }}
 	<meta name="image" content="{{ . | absURL }}">
@@ -64,7 +72,7 @@
 	<!-- max of 200 characters for Twitter & Facebook -->
 	{{ end }}
 
-	<meta name="twitter:url" property="og:url" content="{{ .Permalink }}">
+	<meta name="twitter:url" property="og:url" content="{{ $canonicalURL }}">
 
 	<!-- Twitter -->
 	{{ with $.Site.Params.twitterUsername }}

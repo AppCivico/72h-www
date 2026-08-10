@@ -35,6 +35,16 @@ numeral.locale('pt-br');
 const uri = window.location.search.substring(1);
 const params = new URLSearchParams(uri);
 
+// Year lives in the URL's first path segment (/2022/), not the query
+// string — filters remain query-string-based (see plano-de-execucao.md
+// item 14). "/" alone has no year segment, so the app's own default
+// (config.initialLoadingYear) applies.
+function yearFromPath() {
+  const segment = window.location.pathname.split('/').filter(Boolean)[0];
+  const year = Number(segment);
+  return segment && Number.isInteger(year) ? year : null;
+}
+
 if (window.location.href.indexOf('/') > -1) {
   window.$vueHome = Vue.createApp({
     components: {
@@ -221,7 +231,8 @@ if (window.location.href.indexOf('/') > -1) {
       },
       shareURL() {
         const url = new URL(window.location.href);
-        url.search = `?year=${this.selectedYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
+        url.pathname = `/${this.selectedYear}/`;
+        url.search = `?days=${this.selectedDay}${this.filtersAsQueryString}`;
         url.hash = this.sharingFrom;
         return url.toString();
       },
@@ -334,7 +345,7 @@ if (window.location.href.indexOf('/') > -1) {
         }
       },
       async populateParams() {
-        const yearParam = Number(params.get('year'));
+        const yearParam = yearFromPath();
         if (yearParam && this.years.includes(yearParam) && yearParam !== this.selectedYear) {
           this.selectedYear = yearParam;
         }
@@ -630,7 +641,8 @@ if (window.location.href.indexOf('/') > -1) {
         this.loadingCandidates = true;
 
         const url = new URL(window.location);
-        url.searchParams.set('year', year);
+        url.pathname = `/${year}/`;
+        url.search = '';
         window.history.pushState({}, '', url);
 
         this.selectedState = [];
@@ -710,6 +722,10 @@ if (window.location.href.indexOf('/') > -1) {
             if (this.chart) {
               this.chart.hideLoading();
             }
+            // Vue's own big numbers are live now — the build-time static
+            // snapshot (visible before JS loaded, for crawlers/first
+            // paint) has done its job.
+            document.getElementById('ssr-big-numbers')?.remove();
 
             this.previousFiltersAsQueryString = this.filtersAsQueryString;
 

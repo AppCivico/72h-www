@@ -1,0 +1,6 @@
+{{/* Mirrors assets/scripts/utilities/formatCurrencyNoAbbr.js: pt-BR
+     thousands grouping, no decimals, "R$ " prefix.
+     Call: {{ partial "formatCurrencyBR.html" $value }} */}}
+{{ $n := partial "formatNumeralBR.html" . }}
+{{ $result := printf "R$ %s" $n }}
+{{ return $result }}

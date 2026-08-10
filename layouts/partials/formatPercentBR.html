@@ -1,0 +1,16 @@
+{{/* Mirrors assets/scripts/home.js's formatPercent(value): 2-decimal
+     pt-BR percentage, "0%" special-cased. Takes numerator/denominator
+     (not a pre-divided value) so division-by-zero can be guarded safely.
+     Call: {{ partial "formatPercentBR.html" (dict "numerator" a "denominator" b) }} */}}
+{{ $num := .numerator | default 0 }}
+{{ $den := .denominator | default 0 }}
+{{ $result := "0%" }}
+{{ if $den }}
+  {{ $pct := mul (div $num $den) 100 }}
+  {{ if $pct }}
+    {{ $formatted := lang.FormatNumberCustom 2 $pct }}
+    {{ $withComma := replace $formatted "." "," }}
+    {{ $result = printf "%s%%" $withComma }}
+  {{ end }}
+{{ end }}
+{{ return $result }}

@@ -1,0 +1,4 @@
+{{/* Mirrors assets/scripts/home.js's formatNumeral(value): pt-BR thousands
+     grouping, no decimals. Call: {{ partial "formatNumeralBR.html" $value }} */}}
+{{ $n := lang.FormatNumberCustom 0 (. | default 0) }}
+{{ return (replace $n "," ".") }}
