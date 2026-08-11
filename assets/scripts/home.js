@@ -59,7 +59,7 @@ function buildFilteredYearURL(year, day, filtersQueryString) {
 }
 
 if (window.location.href.indexOf('/') > -1) {
-  window.$vueHome = Vue.createApp({
+  const vueApp = Vue.createApp({
     components: {
       'list-box': listBox,
       'transition-expand': TransitionExpand,
@@ -970,5 +970,27 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
     },
-  }).mount('#vueHome');
+  });
+
+  // Vue's compiler flags v-text/v-html on an element that also has
+  // content in the template — "will override element children" — as an
+  // ERROR (not a warning) as of Vue 3.5.x, logged but not thrown by this
+  // runtime-compile bridge (node_modules/vue/dist/vue.global.js's
+  // compileToFunction: unhandled codes still fall through to onError
+  // below, matching Vue's own default "log, don't crash" behavior — see
+  // https://github.com/vuejs/core/issues/14048). That's the whole point
+  // of the static+directive pattern used throughout bigNumbers.html/
+  // app.html (real server-rendered value for crawlers/first paint,
+  // replaced reactively once Vue mounts — plano-de-execucao.md item 14/
+  // refino do v-text), not a mistake — silence just those two codes
+  // (55 = v-html, 57 = v-text, both "with children").
+  vueApp.config.compilerOptions.onError = (err) => {
+    if (err.code === 55 || err.code === 57) {
+      return;
+    }
+    // eslint-disable-next-line no-console
+    console.warn(`Template compilation error: ${err.message}`);
+  };
+
+  window.$vueHome = vueApp.mount('#vueHome');
 }
