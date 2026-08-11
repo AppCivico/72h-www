@@ -722,10 +722,6 @@ if (window.location.href.indexOf('/') > -1) {
             if (this.chart) {
               this.chart.hideLoading();
             }
-            // Vue's own big numbers are live now — the build-time static
-            // snapshot (visible before JS loaded, for crawlers/first
-            // paint) has done its job.
-            document.getElementById('ssr-big-numbers')?.remove();
 
             this.previousFiltersAsQueryString = this.filtersAsQueryString;
 

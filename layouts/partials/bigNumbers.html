@@ -1,88 +1,68 @@
 {{/* Shared markup for the top "big numbers" summary — written once, used
-     two ways (see plano-de-execucao.md item 14):
-       - static=true: real values computed at build time (formatXxxBR.html
-         partials), for the pre-hydration snapshot outside #vueHome.
-       - static=false: the original Vue mustache bindings, unchanged — this
-         is what Vue compiles/mounts as before.
-     Only the individual value slots branch; the structure/classes/i18n
-     labels are written a single time.
-     Call: {{ partial "bigNumbers.html" (dict "static" bool "data" $data "page" $page) }} */}}
-{{ $static := .static }}
+     by both crawlers/no-JS and Vue (see plano-de-execucao.md item 14).
+     Each value slot renders its real, build-time-computed value (via the
+     formatXxxBR.html partials) as normal element content, AND carries a
+     v-text/v-html directive with the matching Vue expression. Vue's
+     compiler treats v-text/v-html as attributes, independent of whatever
+     text is already inside the element — so the static value is what
+     crawlers/first paint see, and Vue overwrites it reactively once
+     mounted. No branching needed.
+     Call: {{ partial "bigNumbers.html" (dict "data" $data "page" $page) }} */}}
 {{ $data := .data }}
 {{ $page := .page }}
-{{ $acc := $data.accumulated }}
-{{ $election := $data.election }}
+{{ $acc := $data.accumulated | default dict }}
+{{ $election := $data.election | default dict }}
 
-<div class="big-numbers"{{ if not $static }} :aria-busy="this.loadingBigNumbers"{{ end }}>
+<div class="big-numbers" :aria-busy="this.loadingBigNumbers">
 
     <transition-expand>
       <div class="big-number__box big-number__box--border
-        big-number__box--border-quaternary"
-        {{ if not $static }}v-if="!this.loadingBigNumbers"{{ end }}
-      >
+        big-number__box--border-quaternary">
         <h1>{{ i18n "accumulatedValue" }}</h1>
         <p>
           {{ i18n "entriesQuantity" }}
-          {{ if $static }}{{ partial "formatNumeralBR.html" $acc.total_transfers }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.total_transfers) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.accumulated?.total_transfers)">{{ partial "formatNumeralBR.html" $acc.total_transfers }}</span>
         </p>
-        {{ if $static }}
-        <span class="big-number__number">{{ partial "formatCurrencyBR.html" $acc.total_value }}</span>
-        {{ else }}
-        <span class="big-number__number"
-          v-html="formatCurrencyNoAbbr(mainData?.accumulated?.total_value)"
-        ></span>
-        {{ end }}
+        <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.total_value)">{{ partial "formatCurrencyBR.html" $acc.total_value }}</span>
       </div>
     </transition-expand>
 
     <transition-expand>
       <div class="big-number__box big-number__box--border
-        big-number__box--border-tertiary"
-        {{ if not $static }}v-if="!this.loadingBigNumbers"{{ end }}
-      >
+        big-number__box--border-tertiary">
         <h1>{{ i18n "candidatesWhoReceivedFunds" }}</h1>
-        <span class="big-number__dividend">
-          {{ if $static }}{{ partial "formatNumeralBR.html" $acc.total_candidates_who_received }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_who_received) }}" }}{{ end }}
-        </span>
+        <span class="big-number__dividend" v-text="formatNumeral(mainData?.accumulated?.total_candidates_who_received)">{{ partial "formatNumeralBR.html" $acc.total_candidates_who_received }}</span>
         <br />
         <span class="big-number__divisor">
           <span class="big-number__math-sign">&divide;</span>
-          {{ if $static }}{{ partial "formatNumeralBR.html" $election.candidate_count }}{{ else }}{{ "{{ formatNumeral(mainData?.election?.candidate_count) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $election.candidate_count }}</span>
           <small>{{ i18n "candidatesTotal" | lower }}</small>
         </span>
         <br />
         <span class="big-number__quotient">
-          {{ if $static }}{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_who_received "denominator" $election.candidate_count) }}{{ else }}{{ "{{ formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100) }}" }}{{ end }}
+          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_who_received "denominator" $election.candidate_count) }}</span>
           <small>{{ i18n "ofCandidates" | lower }}</small>
-      </span>
+        </span>
       </div>
     </transition-expand>
 
     <transition-expand>
       <div class="big-number__box big-number__box--border
-        big-number__box--border-secondary"
-        {{ if not $static }}v-if="!this.loadingBigNumbers"{{ end }}
-      >
+        big-number__box--border-secondary">
         <h1>{{ i18n "accumulatedValueParty" }}</h1>
         <p>
           {{ i18n "entriesQuantity" }}
-            {{ if $static }}{{ partial "formatNumeralBR.html" $acc.transfers_party_fund }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.transfers_party_fund) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.accumulated?.transfers_party_fund)">{{ partial "formatNumeralBR.html" $acc.transfers_party_fund }}</span>
         </p>
-        {{ if $static }}
-        <span class="big-number__dividend">{{ partial "formatCurrencyBR.html" $acc.value_party_fund }}</span>
-        {{ else }}
-        <span class="big-number__dividend"
-          v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_party_fund)"
-        ></span>
-        {{ end }}
+        <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_party_fund)">{{ partial "formatCurrencyBR.html" $acc.value_party_fund }}</span>
         <br />
         <span class="big-number__divisor">
-          {{ if $static }}{{ partial "formatNumeralBR.html" $acc.total_candidates_party_fund }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_party_fund) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.accumulated?.total_candidates_party_fund)">{{ partial "formatNumeralBR.html" $acc.total_candidates_party_fund }}</span>
           <small>{{ i18n "candidate" 2 | lower }}</small>
         </span>
         <br />
         <span class="big-number__quotient">
-          {{ if $static }}{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_party_fund "denominator" $election.candidate_count) }}{{ else }}{{ "{{ formatPercent(mainData?.accumulated?.total_candidates_party_fund / mainData?.election?.candidate_count * 100) }}" }}{{ end }}
+          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_party_fund / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_party_fund "denominator" $election.candidate_count) }}</span>
           <small>{{ i18n "ofCandidates" | lower }}</small>
         </span>
       </div>
@@ -90,29 +70,21 @@
 
     <transition-expand>
       <div class="big-number__box big-number__box--border
-        big-number__box--border-secondary"
-        {{ if not $static }}v-if="!this.loadingBigNumbers"{{ end }}
-      >
+        big-number__box--border-secondary">
         <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
         <p>
           {{ i18n "entriesQuantity" }}
-            {{ if $static }}{{ partial "formatNumeralBR.html" $acc.transfers_special_fund }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.transfers_special_fund) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.accumulated?.transfers_special_fund)">{{ partial "formatNumeralBR.html" $acc.transfers_special_fund }}</span>
         </p>
-        {{ if $static }}
-        <span class="big-number__dividend">{{ partial "formatCurrencyBR.html" $acc.value_special_fund }}</span>
-        {{ else }}
-        <span class="big-number__dividend"
-          v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_special_fund)"
-        ></span>
-        {{ end }}
+        <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_special_fund)">{{ partial "formatCurrencyBR.html" $acc.value_special_fund }}</span>
         <br />
         <span class="big-number__divisor">
-          {{ if $static }}{{ partial "formatNumeralBR.html" $acc.total_candidates_special_fund }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_special_fund) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.accumulated?.total_candidates_special_fund)">{{ partial "formatNumeralBR.html" $acc.total_candidates_special_fund }}</span>
           <small>{{ i18n "candidate" 2 | lower }}</small>
         </span>
         <br />
         <span class="big-number__quotient">
-          {{ if $static }}{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_special_fund "denominator" $election.candidate_count) }}{{ else }}{{ "{{ formatPercent(mainData?.accumulated?.total_candidates_special_fund / mainData?.election?.candidate_count * 100) }}" }}{{ end }}
+          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_special_fund / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_special_fund "denominator" $election.candidate_count) }}</span>
           <small>{{ i18n "ofCandidates" | lower }}</small>
         </span>
       </div>
@@ -120,41 +92,33 @@
 
     <transition-expand>
       <div class="big-number__box big-number__box--border
-        big-number__box--border-secondary"
-        {{ if not $static }}v-if="!this.loadingBigNumbers"{{ end }}
-      >
+        big-number__box--border-secondary">
         <h1>{{ i18n "accumulatedOtherResources" }}</h1>
         <p>
           {{ i18n "entriesQuantity" }}
-          {{ if $static }}{{ partial "formatNumeralBR.html" $acc.transfers_other_resources }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.transfers_other_resources) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.accumulated?.transfers_other_resources)">{{ partial "formatNumeralBR.html" $acc.transfers_other_resources }}</span>
         </p>
-        {{ if $static }}
-        <span class="big-number__dividend">{{ partial "formatCurrencyBR.html" $acc.value_other_resources }}</span>
-        {{ else }}
-        <span class="big-number__dividend"
-          v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_other_resources)"
-        ></span>
-        {{ end }}
+        <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_other_resources)">{{ partial "formatCurrencyBR.html" $acc.value_other_resources }}</span>
         <br />
         <span class="big-number__divisor">
-          {{ if $static }}{{ partial "formatNumeralBR.html" $acc.total_candidates_other_resources }}{{ else }}{{ "{{ formatNumeral(mainData?.accumulated?.total_candidates_other_resources) }}" }}{{ end }}
+          <span v-text="formatNumeral(mainData?.accumulated?.total_candidates_other_resources)">{{ partial "formatNumeralBR.html" $acc.total_candidates_other_resources }}</span>
           <small>{{ i18n "candidate" 2 | lower }}</small>
         </span>
         <br />
         <span class="big-number__quotient">
-          {{ if $static }}{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_other_resources "denominator" $election.candidate_count) }}{{ else }}{{ "{{ formatPercent(mainData?.accumulated?.total_candidates_other_resources / mainData?.election?.candidate_count * 100) }}" }}{{ end }}
+          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_other_resources / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_other_resources "denominator" $election.candidate_count) }}</span>
           <small>{{ i18n "ofCandidates" | lower }}</small>
         </span>
       </div>
     </transition-expand>
 </div>
 
-<p{{ if not $static }} v-show="!this.loadingBigNumbers"{{ end }} class="big-number__warning pay-attention-to__warning">
+<p class="big-number__warning pay-attention-to__warning">
   {{ i18n "multipleFundsWarning" }}
 </p>
-<p{{ if not $static }} v-show="!this.loadingBigNumbers"{{ end }} class="big-number__warning pay-attention-to__warning">
+<p class="big-number__warning pay-attention-to__warning">
   {{ i18n "receivedFundsWarning" }}
 </p>
-<p{{ if not $static }} v-show="!this.loadingBigNumbers"{{ end }} class="big-number__warning pay-attention-to__warning">
+<p class="big-number__warning pay-attention-to__warning">
   {{ i18n "otherFundsWarning" | $page.RenderString }}
 </p>

@@ -1,28 +1,19 @@
-{{- /* Build-time snapshot of this page's own year, used only to render a
-       static, real-content preview of the big numbers that's visible
-       before Vue mounts (crawlers, no-JS, first paint) — see
-       plano-de-execucao.md item 14. On failure, $ssrOK stays false and no
-       static snapshot is rendered; Vue's own client-side fetch (unchanged)
-       is what actually drives the page either way. */ -}}
+{{- /* Build-time snapshot of this page's own year, feeding bigNumbers.html's
+       real static values (crawlers, no-JS, first paint) — see
+       plano-de-execucao.md item 14. On failure $ssrData stays an empty
+       dict, bigNumbers.html renders zeroes, and Vue's own client-side
+       fetch (unchanged) still drives the page either way. */ -}}
 {{- $ssrYear := default $.Site.Params.run .Params.year -}}
-{{- $ssrOK := false -}}
 {{- $ssrData := dict -}}
 {{- $ssrURL := printf "%sindex?year=%d&days=all" $.Site.Params.apiDomain $ssrYear -}}
 {{- $ssrResult := try (resources.GetRemote $ssrURL) -}}
 {{- if and (not $ssrResult.Err) $ssrResult.Value -}}
   {{- $ssrData = transform.Unmarshal $ssrResult.Value -}}
-  {{- $ssrOK = true -}}
 {{- else -}}
-  {{- warnf "SSR snapshot for /v1/index?year=%d failed (err=%v) — page will render without the pre-hydration big numbers" $ssrYear $ssrResult.Err -}}
+  {{- warnf "SSR snapshot for /v1/index?year=%d failed (err=%v) — page will render without real pre-hydration big numbers" $ssrYear $ssrResult.Err -}}
 {{- end -}}
     <body>
-      {{ if $ssrOK }}
-      <div id="ssr-big-numbers" class="big-numbers__wrapper" data-ssr-year="{{ $ssrYear }}">
-        {{ partial "bigNumbers.html" (dict "static" true "data" $ssrData "page" .) }}
-      </div>
-      {{ end }}
-
-      <div id="vueHome" v-cloak>
+      <div id="vueHome">
         {{ partial "header.html" . }}
 
         <main>
@@ -30,7 +21,7 @@
             <header class="jumbotron">
               <h1>{{ .Title }}</h1>
                 {{ with $.Site.Params.run }}
-                  <label class="jumbotron__year-selector">
+                  <label class="jumbotron__year-selector" v-cloak>
                     <span class="jumbotron__year-selector-inner-label">{{ i18n "yearSelector" }}</span>
                     <select
                       v-model.number="selectedYear"
@@ -44,12 +35,12 @@
             </header>
 
             <div class="big-numbers__wrapper">
-              <p class="big-number__update pay-attention-to__warning" v-if="mainData && mainData.last_run_at">
+              <p class="big-number__update pay-attention-to__warning" v-cloak v-if="mainData && mainData.last_run_at">
                   {{ i18n "lastUpdatedAt" }}
                   {{ "{{ mainData ?  formatDateTime(mainData.last_run_at) : '' }}" }}
                 </p>
 
-              {{ partial "bigNumbers.html" (dict "static" false "page" .) }}
+              {{ partial "bigNumbers.html" (dict "data" $ssrData "page" .) }}
 
             </div>
             <div class="intro-charts" :aria-busy="loadingIntroCharts">
@@ -62,7 +53,7 @@
             </div>
           </div>
 
-          <div class="filterable-area">
+          <div class="filterable-area" v-cloak>
             <div class="container">
               <button
                 @click="sharingFrom = 'filters'"
@@ -355,7 +346,7 @@
             </div>
           </div>
 
-          <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true">
+          <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true" v-cloak>
             <div class="modal__overlay" tabindex="-1" data-micromodal-close>
               <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
                 <header class="modal__header">
