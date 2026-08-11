@@ -189,7 +189,7 @@
 - id: share
   translation: "Compartilhar"
 - id: shareFilteredData
-  translation: "Compartilhar dados filtrados"
+  translation: "Compartilhar pesquisa"
 - id: shareDataFrom
   translation: "Compartilhar dados de"
 - id: shareWithEnthusiasm
