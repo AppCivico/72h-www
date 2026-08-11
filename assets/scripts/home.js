@@ -45,6 +45,19 @@ function yearFromPath() {
   return segment && Number.isInteger(year) ? year : null;
 }
 
+// Single place that builds a URL carrying the full app state (year + days +
+// filters) — used both for the share modal and for keeping the address bar
+// in sync (item 10). Always writes the year explicitly into the pathname
+// instead of reusing window.location's current one, so sharing/syncing from
+// "/" (no year segment, config.initialLoadingYear applies) still produces a
+// URL with the year in it.
+function buildFilteredYearURL(year, day, filtersQueryString) {
+  const url = new URL(window.location);
+  url.pathname = `/${year}/`;
+  url.search = `?days=${day}${filtersQueryString}`;
+  return url;
+}
+
 if (window.location.href.indexOf('/') > -1) {
   window.$vueHome = Vue.createApp({
     components: {
@@ -230,10 +243,11 @@ if (window.location.href.indexOf('/') > -1) {
         }];
       },
       shareURL() {
-        const url = new URL(window.location.href);
-        url.pathname = `/${this.selectedYear}/`;
-        url.search = `?days=${this.selectedDay}${this.filtersAsQueryString}`;
-        url.hash = this.sharingFrom;
+        const {
+          selectedYear, selectedDay, filtersAsQueryString, sharingFrom,
+        } = this;
+        const url = buildFilteredYearURL(selectedYear, selectedDay, filtersAsQueryString);
+        url.hash = sharingFrom;
         return url.toString();
       },
 
@@ -640,11 +654,6 @@ if (window.location.href.indexOf('/') > -1) {
         this.loadingIntroCharts = true;
         this.loadingCandidates = true;
 
-        const url = new URL(window.location);
-        url.pathname = `/${year}/`;
-        url.search = '';
-        window.history.pushState({}, '', url);
-
         this.selectedState = [];
         this.selectedCity = [];
         this.selectedOffices = [];
@@ -656,10 +665,25 @@ if (window.location.href.indexOf('/') > -1) {
         this.selectedSchooling = [];
         this.isReelectionSelected = '';
 
+        // filters were just reset above, so this writes a clean "/{year}/?days=..."
+        // (no filters yet) — same helper applyFilters() uses once the user
+        // picks new ones.
+        this.syncURL();
+
         // `/filters` doesn't gate `/index`/`/candidates`: filtersAsQueryString only
         // reads the selectedX fields above (already reset), never `this.filters`.
         this.fetchFiltersForYear(year);
         this.updateData();
+      },
+      // Keeps the address bar in sync with year + days + filters (item 10) —
+      // one pushState per meaningful change (year switch or "Aplicar" click),
+      // not per checkbox, so the back button stays usable.
+      syncURL() {
+        const {
+          selectedYear, selectedDay, filtersAsQueryString,
+        } = this;
+        const url = buildFilteredYearURL(selectedYear, selectedDay, filtersAsQueryString);
+        window.history.pushState({}, '', url);
       },
       updateData() {
         this.candidates_page = 1;
@@ -670,6 +694,7 @@ if (window.location.href.indexOf('/') > -1) {
         this.updateFilterText();
       },
       applyFilters() {
+        this.syncURL();
         this.updateData();
         document.querySelector('#js-main-chart').scrollIntoView();
       },

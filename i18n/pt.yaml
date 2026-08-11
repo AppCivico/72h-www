@@ -188,6 +188,8 @@
   translation: "Selecione o estado"
 - id: share
   translation: "Compartilhar"
+- id: shareFilteredData
+  translation: "Compartilhar dados filtrados"
 - id: shareDataFrom
   translation: "Compartilhar dados de"
 - id: shareWithEnthusiasm
