@@ -288,12 +288,34 @@
                             {{ i18n "votesSecondRound" }}: {{ "{{ formatNumeral(candidate.votes_second_round) }}" }}
                           </p>
 
-                          <a
-                            :href="candidate.divulgacand_url"
-                            target="_blank"
-                            class="button">
-                            {{ i18n "seeOnTSE" }}
-                          </a>
+                          <div
+                            v-if="candidate.historyLoaded && candidate.history && candidate.history.length"
+                            class="candidates__history"
+                            :id="`js-candidate-history__${candidate.id}`">
+                          </div>
+
+                          <p
+                            v-if="candidate.historyLoaded && (!candidate.history || !candidate.history.length)"
+                            class="candidates__info">
+                            {{ i18n "noElectionHistory" }}
+                          </p>
+
+                          <div class="candidates__actions">
+                            <button
+                              v-if="candidate.has_other_elections && !candidate.historyLoaded"
+                              @click="loadCandidateHistory(candidate)"
+                              :aria-busy="candidate.historyLoading"
+                              class="button">
+                              {{ i18n "loadElectionHistory" }}
+                            </button>
+
+                            <a
+                              :href="candidate.divulgacand_url"
+                              target="_blank"
+                              class="button">
+                              {{ i18n "seeOnTSE" }}
+                            </a>
+                          </div>
                         </div>
                       </div>
                     </template>

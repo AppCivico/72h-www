@@ -130,6 +130,8 @@
   translation: "Últimos {{ .days }} dias"
 - id: linkCopiedSuccessfully
   translation: "Link copiado!"
+- id: loadElectionHistory
+  translation: "Carregar outras eleições"
 - id: loadingData
   translation: "Carregando dados..."
 - id: menu
@@ -142,6 +144,8 @@
   translation: "Sem resultados"
 - id: noResultsCandidates
   translation: "Não há repasses para candidaturas com este perfil de busca"
+- id: noElectionHistory
+  translation: "Sem histórico de eleições anteriores disponível"
 - id: noResultsCharts
   translation: "Não há dados suficientes para exibir os gráficos"
 - id: ofCandidates

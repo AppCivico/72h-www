@@ -855,6 +855,117 @@ if (window.location.href.indexOf('/') > -1) {
             this.loadingCandidates = false;
           });
       },
+      // Lazy per-candidate fetch (item 12) — only called on click, never
+      // for the whole listing at once. State lives on the candidate object
+      // itself (historyLoading/historyLoaded/history/historyError); Vue 3's
+      // proxy-based reactivity picks up properties added after the fact,
+      // no Vue.set() needed.
+      loadCandidateHistory(candidate) {
+        const target = candidate;
+
+        if (target.historyLoading || target.historyLoaded) {
+          return;
+        }
+
+        target.historyLoading = true;
+        target.historyError = '';
+
+        fetch(`${config.api.domain}candidates/${target.id}/history`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Network response was not OK. Status: ${response.status}`);
+            }
+            return response.json();
+          })
+          .then((response) => {
+            // A 200 with elections: [] means this person hasn't been
+            // matched across elections yet — not an error (frontend-guide-
+            // cross-election.md). Render "no history", not a failure.
+            target.history = Array.isArray(response.elections) ? response.elections : [];
+            target.historyLoaded = true;
+          })
+          .catch((error) => {
+            target.historyError = error.message;
+            // eslint-disable-next-line no-console
+            console.error(error);
+          })
+          .finally(() => {
+            target.historyLoading = false;
+            this.$nextTick(() => this.renderCandidateHistoryChart(target));
+          });
+      },
+      // A person can hold two candidacies in the same election (e.g.
+      // Deputado Federal + Senador) — elections has one entry per
+      // candidacy, not per election. Group by year and sum so the chart
+      // shows one bar per year, consistent with other_elections_count
+      // (which counts elections, not candidacies).
+      renderCandidateHistoryChart(candidate) {
+        if (!candidate.history || !candidate.history.length) {
+          return;
+        }
+
+        const totalByYear = {};
+        const officesByYear = {};
+        const allOffices = new Set();
+        candidate.history.forEach((entry) => {
+          totalByYear[entry.year] = (totalByYear[entry.year] || 0) + Number(entry.total_value);
+          if (entry.position?.name) {
+            officesByYear[entry.year] = officesByYear[entry.year] || new Set();
+            officesByYear[entry.year].add(entry.position.name);
+            allOffices.add(entry.position.name);
+          }
+        });
+
+        const years = Object.keys(totalByYear).sort();
+        const values = years.map((year) => totalByYear[year]);
+
+        // Only label each bar with its office when it actually varies across
+        // the candidate's history (e.g. Prefeito in 2020, Senador in 2022) —
+        // if they always ran for the same office, the year alone is enough.
+        // A single year can list more than one office if it holds two
+        // candidacies (e.g. Deputado Federal + Senador in the same election).
+        const officeVaries = allOffices.size > 1;
+        const categories = years.map((year) => {
+          if (!officeVaries || !officesByYear[year]?.size) {
+            return year;
+          }
+          return `${year} (${[...officesByYear[year]].join(', ')})`;
+        });
+
+        Highcharts.chart(`js-candidate-history__${candidate.id}`, {
+          chart: {
+            type: 'column',
+            backgroundColor: 'transparent',
+          },
+          title: {
+            text: null,
+          },
+          credits: {
+            enabled: false,
+          },
+          legend: {
+            enabled: false,
+          },
+          xAxis: {
+            categories,
+          },
+          yAxis: {
+            title: {
+              text: 'valor (R$)',
+            },
+          },
+          tooltip: {
+            pointFormatter() {
+              return window.$vueHome.formatCurrencyNoAbbr(this.y);
+            },
+          },
+          series: [{
+            name: 'Total',
+            data: values,
+            color: '#620ED9',
+          }],
+        });
+      },
       generateChart() {
         if (this.chart) {
           this.chart.destroy();

@@ -104,6 +104,19 @@
   color: functions.palette('gray', 'medium');
 }
 
-.candidates__text .button {
+.candidates__history {
+  width: 100%;
+  min-height: 12rem;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.candidates__actions {
+  display: flex;
+
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 0.5rem;
   margin-top: 0.5rem;
 }
