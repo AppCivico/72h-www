@@ -7,7 +7,7 @@ const years = [
 
 export default {
   years,
-  initialLoadingYear: 2024,
+  initialLoadingYear: 2026,
   api: {
     domain: 'https://h72-api.appcivico.com/v1/',
   },
