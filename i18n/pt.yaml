@@ -142,6 +142,8 @@
   translation: "Sem resultados"
 - id: noResultsCandidates
   translation: "Não há repasses para candidaturas com este perfil de busca"
+- id: noResultsCharts
+  translation: "Não há dados suficientes para exibir os gráficos"
 - id: ofCandidates
   translation: "Das candidaturas"
 - id: offices

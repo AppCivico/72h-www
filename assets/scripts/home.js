@@ -94,6 +94,7 @@ if (window.location.href.indexOf('/') > -1) {
         totalArray: [],
         femaleArray: [],
         maleArray: [],
+        chartDates: [],
 
         mainData: null,
         epochFromParam: null,
@@ -206,9 +207,12 @@ if (window.location.href.indexOf('/') > -1) {
       electionStatuses() {
         return this.filters.election_status || [];
       },
-      chartDates() {
-        const datesArr = Object.keys(this.mainData?.chart || {});
-        return datesArr.map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
+      // generateIntroCharts() already skips any individual chart whose
+      // .data is empty — this is true only when EVERY intro chart has
+      // nothing to show, so the whole section can fall back to a
+      // no-results message instead of a grid of blank containers.
+      hasIntroCharts() {
+        return this.introCharts.some((chart) => Array.isArray(chart.data) && chart.data.length > 0);
       },
 
       amountFemale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
@@ -525,22 +529,51 @@ if (window.location.href.indexOf('/') > -1) {
         });
       },
       handleData() {
-        const entries = typeof this.mainData?.chart === 'object' ? Object.values(this.mainData?.chart) : [];
-        this.totalArray = [];
-        this.maleArray = [];
-        this.femaleArray = [];
+        const entries = typeof this.mainData?.chart === 'object' ? Object.entries(this.mainData.chart) : [];
         // this.epoch = this.mainData.epoch;
 
-        entries.forEach((entry) => {
-          const total = entry.F + entry.M;
+        const totalArray = [];
+        const maleArray = [];
+        const femaleArray = [];
+        const dates = [];
+
+        entries.forEach(([date, entry]) => {
           const male = entry.M;
           const female = entry.F;
 
-          this.totalArray.push(total);
-          this.maleArray.push(male);
-          this.femaleArray.push(female);
-          return true;
+          totalArray.push(male + female);
+          maleArray.push(male);
+          femaleArray.push(female);
+          dates.push(date);
         });
+
+        // The series is an accumulated total (not a daily delta), so the
+        // first days of the period are usually near-zero until spending
+        // ramps up — trim that leading flat stretch so the chart starts
+        // where there's actually something to show. All four arrays are
+        // trimmed together, by the same index, so they stay aligned
+        // (plano-de-execucao.md item 11).
+        // Real bug found: trimming at the first value strictly > 0 doesn't
+        // work — real data has tiny non-zero entries (a single R$500
+        // donation) from day one, against an eventual peak in the tens of
+        // millions, so the line still reads as flat for months. Trim
+        // against a threshold relative to the period's own peak instead —
+        // 1% of the max was checked against three real years (2020, 2022,
+        // 2024) and lands right where the visible ramp-up actually starts
+        // in all three, not just past a technical zero.
+        const maxTotal = Math.max(...totalArray, 0);
+        const threshold = maxTotal * 0.01;
+        const firstMeaningful = totalArray.findIndex((value) => value > threshold);
+        // maxTotal === 0 means every value is zero (e.g. an election with
+        // no data yet) — empties all four arrays, and the chart renders
+        // with no series instead of a flat zero line.
+        const start = firstMeaningful === -1 ? totalArray.length : firstMeaningful;
+
+        this.totalArray = totalArray.slice(start);
+        this.maleArray = maleArray.slice(start);
+        this.femaleArray = femaleArray.slice(start);
+        this.chartDates = dates.slice(start)
+          .map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       handleColumnData(item) {
         const newItem = item;
@@ -820,6 +853,11 @@ if (window.location.href.indexOf('/') > -1) {
           });
       },
       generateChart() {
+        if (this.chart) {
+          this.chart.destroy();
+          this.chart = null;
+        }
+
         this.chart = Highcharts.chart('js-main-chart', {
           chart: {
             type: 'line',

@@ -45,11 +45,15 @@
             </div>
             <div class="intro-charts" :aria-busy="loadingIntroCharts">
               <h1 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h1>
-              <template v-if="!loadingIntroCharts">
+              <template v-if="!loadingIntroCharts && hasIntroCharts">
                 <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
                   <div :id="`js-chart__${chart.type}`"></div>
                 </div>
               </template>
+              <div v-else-if="!loadingIntroCharts" class="no-results">
+                <img src="/assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
+                <p>{{ i18n "noResultsCharts" }}</p>
+              </div>
             </div>
           </div>
 
