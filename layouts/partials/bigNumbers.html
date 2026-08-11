@@ -46,71 +46,29 @@
       </div>
     </transition-expand>
 
-    <transition-expand>
-      <div class="big-number__box big-number__box--border
-        big-number__box--border-secondary">
-        <h1>{{ i18n "accumulatedValueParty" }}</h1>
-        <p>
-          {{ i18n "entriesQuantity" }}
-          <span v-text="formatNumeral(mainData?.accumulated?.transfers_party_fund)">{{ partial "formatNumeralBR.html" $acc.transfers_party_fund }}</span>
-        </p>
-        <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_party_fund)">{{ partial "formatCurrencyBR.html" $acc.value_party_fund }}</span>
-        <br />
-        <span class="big-number__divisor">
-          <span v-text="formatNumeral(mainData?.accumulated?.total_candidates_party_fund)">{{ partial "formatNumeralBR.html" $acc.total_candidates_party_fund }}</span>
-          <small>{{ i18n "candidate" 2 | lower }}</small>
-        </span>
-        <br />
-        <span class="big-number__quotient">
-          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_party_fund / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_party_fund "denominator" $election.candidate_count) }}</span>
-          <small>{{ i18n "ofCandidates" | lower }}</small>
-        </span>
-      </div>
-    </transition-expand>
+    {{ partial "bigNumberFundBox.html" (dict
+      "title" "accumulatedValueParty"
+      "transfersField" "transfers_party_fund"
+      "valueField" "value_party_fund"
+      "candidatesField" "total_candidates_party_fund"
+      "acc" $acc
+      "election" $election) }}
 
-    <transition-expand>
-      <div class="big-number__box big-number__box--border
-        big-number__box--border-secondary">
-        <h1>{{ i18n "accumulatedValueSpecial" }}</h1>
-        <p>
-          {{ i18n "entriesQuantity" }}
-          <span v-text="formatNumeral(mainData?.accumulated?.transfers_special_fund)">{{ partial "formatNumeralBR.html" $acc.transfers_special_fund }}</span>
-        </p>
-        <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_special_fund)">{{ partial "formatCurrencyBR.html" $acc.value_special_fund }}</span>
-        <br />
-        <span class="big-number__divisor">
-          <span v-text="formatNumeral(mainData?.accumulated?.total_candidates_special_fund)">{{ partial "formatNumeralBR.html" $acc.total_candidates_special_fund }}</span>
-          <small>{{ i18n "candidate" 2 | lower }}</small>
-        </span>
-        <br />
-        <span class="big-number__quotient">
-          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_special_fund / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_special_fund "denominator" $election.candidate_count) }}</span>
-          <small>{{ i18n "ofCandidates" | lower }}</small>
-        </span>
-      </div>
-    </transition-expand>
+    {{ partial "bigNumberFundBox.html" (dict
+      "title" "accumulatedValueSpecial"
+      "transfersField" "transfers_special_fund"
+      "valueField" "value_special_fund"
+      "candidatesField" "total_candidates_special_fund"
+      "acc" $acc
+      "election" $election) }}
 
-    <transition-expand>
-      <div class="big-number__box big-number__box--border
-        big-number__box--border-secondary">
-        <h1>{{ i18n "accumulatedOtherResources" }}</h1>
-        <p>
-          {{ i18n "entriesQuantity" }}
-          <span v-text="formatNumeral(mainData?.accumulated?.transfers_other_resources)">{{ partial "formatNumeralBR.html" $acc.transfers_other_resources }}</span>
-        </p>
-        <span class="big-number__dividend" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.value_other_resources)">{{ partial "formatCurrencyBR.html" $acc.value_other_resources }}</span>
-        <br />
-        <span class="big-number__divisor">
-          <span v-text="formatNumeral(mainData?.accumulated?.total_candidates_other_resources)">{{ partial "formatNumeralBR.html" $acc.total_candidates_other_resources }}</span>
-          <small>{{ i18n "candidate" 2 | lower }}</small>
-        </span>
-        <br />
-        <span class="big-number__quotient">
-          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_other_resources / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_other_resources "denominator" $election.candidate_count) }}</span>
-          <small>{{ i18n "ofCandidates" | lower }}</small>
-        </span>
-      </div>
-    </transition-expand>
+    {{ partial "bigNumberFundBox.html" (dict
+      "title" "accumulatedOtherResources"
+      "transfersField" "transfers_other_resources"
+      "valueField" "value_other_resources"
+      "candidatesField" "total_candidates_other_resources"
+      "acc" $acc
+      "election" $election) }}
 </div>
 
 <p class="big-number__warning pay-attention-to__warning">

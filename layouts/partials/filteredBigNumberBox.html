@@ -1,0 +1,28 @@
+{{/* One filtered big-number box (total/female/male, .filterable-area) —
+     used 3x, byte-for-byte identical except the icon modifier, which Vue
+     computed it reads and the "candidate" i18n label. Purely Vue-driven
+     (filtered data has no build-time equivalent, unlike bigNumbers.html),
+     so there's no static value to render — same raw-mustache pattern the
+     3 call sites already used.
+     Call: {{ partial "filteredBigNumberBox.html" (dict
+       "title" i18nKey
+       "icon" "total|female|male"
+       "amountVar" "amountAll"
+       "countVar" "countAll"
+       "candidateLabel" i18nKey
+       "lowerLabel" bool) }} */}}
+{{ $amountVar := .amountVar }}
+{{ $countVar := .countVar }}
+{{ $candidateLabelText := i18n .candidateLabel 2 }}
+{{ if .lowerLabel }}{{ $candidateLabelText = lower $candidateLabelText }}{{ end }}
+
+<div class="big-number__box big-number__box--icon big-number__box--icon-{{ .icon }}">
+  <h1>{{ i18n .title }}</h1>
+  {{ partial "filterText" }}
+  <p v-else>
+    {{ i18n "TSEData" }}
+  </p>
+  <span class="big-number__number" v-html="{{ printf "formatCurrencyNoAbbr(%s)" $amountVar }}"></span>
+  <br />
+  <span class="big-number__not-so-big">{{ printf "{{ formatNumeral(%s) }}" $countVar }} <small>{{ $candidateLabelText }}</small></span>
+</div>

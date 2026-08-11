@@ -214,38 +214,29 @@
 
               <transition-expand>
                 <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" v-if="!loadingChartData">
-                  <div class="big-number__box big-number__box--icon big-number__box--icon-total">
-                    <h1>{{ i18n "accumulatedValue" }}</h1>
-                    {{ partial "filterText" }}
-                    <p v-else>
-                      {{ i18n "TSEData" }}
-                    </p>
-                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountAll)"></span>
-                    <br />
-                    <span class="big-number__not-so-big">{{ "{{ formatNumeral(countAll) }}" }} <small>{{ i18n "candidate" 2 | lower }}</small></span>
-                  </div>
+                  {{ partial "filteredBigNumberBox.html" (dict
+                    "title" "accumulatedValue"
+                    "icon" "total"
+                    "amountVar" "amountAll"
+                    "countVar" "countAll"
+                    "candidateLabel" "candidate"
+                    "lowerLabel" true) }}
 
-                  <div class="big-number__box big-number__box--icon big-number__box--icon-female">
-                    <h1>{{ i18n "accumulatedFemale" }}</h1>
-                    {{ partial "filterText" }}
-                    <p v-else>
-                      {{ i18n "TSEData" }}
-                    </p>
-                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountFemale)"></span>
-                    <br />
-                    <span class="big-number__not-so-big">{{ "{{ formatNumeral(countFemale) }}" }} <small>{{ i18n "candidateFemale" 2 }}</small></span>
-                  </div>
+                  {{ partial "filteredBigNumberBox.html" (dict
+                    "title" "accumulatedFemale"
+                    "icon" "female"
+                    "amountVar" "amountFemale"
+                    "countVar" "countFemale"
+                    "candidateLabel" "candidateFemale"
+                    "lowerLabel" false) }}
 
-                  <div class="big-number__box big-number__box--icon big-number__box--icon-male">
-                    <h1>{{ i18n "accumulatedMale" }}</h1>
-                    {{ partial "filterText" }}
-                    <p v-else>
-                      {{ i18n "TSEData" }}
-                    </p>
-                    <span class="big-number__number" v-html="formatCurrencyNoAbbr(amountMale)"></span>
-                    <br />
-                    <span class="big-number__not-so-big">{{ "{{ formatNumeral(countMale) }}" }} <small>{{ i18n "candidateMale" 2 | lower }}</small></span>
-                  </div>
+                  {{ partial "filteredBigNumberBox.html" (dict
+                    "title" "accumulatedMale"
+                    "icon" "male"
+                    "amountVar" "amountMale"
+                    "countVar" "countMale"
+                    "candidateLabel" "candidateMale"
+                    "lowerLabel" true) }}
                 </div>
               </transition-expand>
 

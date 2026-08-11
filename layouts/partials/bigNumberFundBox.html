@@ -1,0 +1,40 @@
+{{/* One "fund" big-number box: entries count, currency total, candidates
+     reached / total candidates and a percentage. Used 3x in bigNumbers.html
+     (accumulatedValueParty, accumulatedValueSpecial, accumulatedOtherResources)
+     — the three were byte-for-byte identical except which fields of
+     $data.accumulated they read. Renders the same static+v-text/v-html
+     pattern as bigNumbers.html itself (see its own header comment).
+     Call: {{ partial "bigNumberFundBox.html" (dict
+       "title" i18nKey
+       "transfersField" "transfers_x_fund"
+       "valueField" "value_x_fund"
+       "candidatesField" "total_candidates_x_fund"
+       "acc" $acc
+       "election" $election) }} */}}
+{{ $acc := .acc }}
+{{ $election := .election }}
+{{ $transfersField := .transfersField }}
+{{ $valueField := .valueField }}
+{{ $candidatesField := .candidatesField }}
+
+<transition-expand>
+  <div class="big-number__box big-number__box--border
+    big-number__box--border-secondary">
+    <h1>{{ i18n .title }}</h1>
+    <p>
+      {{ i18n "entriesQuantity" }}
+      <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $transfersField }}">{{ partial "formatNumeralBR.html" (index $acc $transfersField) }}</span>
+    </p>
+    <span class="big-number__dividend" v-html="{{ printf "formatCurrencyNoAbbr(mainData?.accumulated?.%s)" $valueField }}">{{ partial "formatCurrencyBR.html" (index $acc $valueField) }}</span>
+    <br />
+    <span class="big-number__divisor">
+      <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $candidatesField }}">{{ partial "formatNumeralBR.html" (index $acc $candidatesField) }}</span>
+      <small>{{ i18n "candidate" 2 | lower }}</small>
+    </span>
+    <br />
+    <span class="big-number__quotient">
+      <span v-text="{{ printf "formatPercent(mainData?.accumulated?.%s / mainData?.election?.candidate_count * 100)" $candidatesField }}">{{ partial "formatPercentBR.html" (dict "numerator" (index $acc $candidatesField) "denominator" $election.candidate_count) }}</span>
+      <small>{{ i18n "ofCandidates" | lower }}</small>
+    </span>
+  </div>
+</transition-expand>
