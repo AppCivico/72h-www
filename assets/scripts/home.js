@@ -765,11 +765,14 @@ if (window.location.href.indexOf('/') > -1) {
             const pieCharts = ['ethnicity', 'gender'];
             this.mainData = response;
 
-            if (Array.isArray(response?.accumulated?.pie_charts)) {
-              this.introCharts = response.accumulated.pie_charts
-                // eslint-disable-next-line max-len
-                .map((x) => (pieCharts.indexOf(x.type) > -1 ? this.handlePieData(x) : this.handleColumnData(x)));
-            }
+            // Always reassign (not just when there's something to show) —
+            // a year/filter combo with no pie_charts (e.g. an election
+            // with no data yet) must clear introCharts, or the previous
+            // year's charts stay stuck on screen.
+            this.introCharts = Array.isArray(response?.accumulated?.pie_charts)
+              // eslint-disable-next-line max-len
+              ? response.accumulated.pie_charts.map((x) => (pieCharts.indexOf(x.type) > -1 ? this.handlePieData(x) : this.handleColumnData(x)))
+              : [];
 
             return true;
           })
