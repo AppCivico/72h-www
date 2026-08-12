@@ -9,28 +9,15 @@ import TransitionExpand from './components/TransitionExpand';
 import config from './config';
 import colorsPerTypeOfData from './utilities/colorsPerTypeOfData';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
+import formatNumeral from './utilities/formatNumeral';
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
 
-numeral.register('locale', 'pt-br', {
-  delimiters: {
-    thousands: '.',
-    decimal: '.',
-  },
-  abbreviations: {
-    thousand: '<span>Mil</span>',
-    million: '<span>Milhões</span>',
-    billion: '<span>Bilhões<span>',
-    trillion: '<span>Trilhões</span>',
-  },
-  ordinal: () => 'º',
-  currency: {
-    symbol: 'R$',
-  },
-});
-
-numeral.locale('pt-br');
+// pt-br numeral locale is registered as a side effect of importing
+// formatNumeral above (shared with candidato.js) — numeral is a global
+// singleton, so it's already active here too by the time formatPercent
+// (below) calls numeral() directly.
 
 const uri = window.location.search.substring(1);
 const params = new URLSearchParams(uri);
@@ -646,16 +633,7 @@ if (window.location.href.indexOf('/') > -1) {
           ? `${numeral(value).format()}%`
           : `${numeral(value).format('0.00').replace('.', ',')}%`;
       },
-      formatNumeral(value, decimalPlaces = 0) {
-        let decimal = '';
-        for (let i = 0; i < decimalPlaces; i += 1) {
-          decimal += '0';
-        }
-
-        return decimalPlaces
-          ? numeral(value).format(`0.${decimal}`).replace('.', ',')
-          : numeral(value).format();
-      },
+      formatNumeral,
       formatDateTime(value) {
         return dayjs(value).format('DD/MM/YYYY [às] HH[h]MM[min]');
       },
