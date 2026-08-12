@@ -116,6 +116,9 @@ window.$vueCandidato = Vue.createApp({
     // history, so a candidate who always ran for the same office doesn't
     // get it repeated on every bar.
     renderHistoryChart() {
+      const container = document.getElementById('js-candidato-history-chart');
+      if (!container) return;
+
       const totalByYear = {};
       const officesByYear = {};
       const allOffices = new Set();
