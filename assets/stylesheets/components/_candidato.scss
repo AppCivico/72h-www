@@ -77,17 +77,35 @@
   margin-top: 2rem;
 }
 
-.candidato__history-list {
-  padding: 0;
-  margin: 0 0 1.5rem;
+.candidato__history-table {
+  width: 100%;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
 
-  list-style: none;
-}
-
-.candidato__history-list li {
-  padding: 0.5rem 0;
+  border-collapse: collapse;
 
   font-size: sugar.ms(-1);
+}
+
+.candidato__history-table thead {
+  background-color: functions.palette('gray', 'light');
+}
+
+.candidato__history-table th {
+  padding: 0.75rem;
+
+  font-weight: functions.font-weight('bold');
+  text-align: left;
+
+  border-bottom: 2px solid functions.palette('gray', 'medium');
+}
+
+.candidato__history-table td {
+  padding: 0.75rem;
 
   border-bottom: 1px solid functions.palette('gray', 'light');
+}
+
+.candidato__history-table tbody tr:hover {
+  background-color: functions.palette('gray', 'light');
 }

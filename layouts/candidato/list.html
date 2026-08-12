@@ -66,22 +66,30 @@
         <div class="candidato__history" v-if="elections.length > 1">
           <h2 class="border-title border-title--primary">{{ i18n "candidateElectionHistory" }}</h2>
 
-          <ul class="candidato__history-list">
-            <li v-for="election in elections" :key="election.candidate_id">
-              <strong>{{ "{{ election.year }}" }}</strong>
-              — {{ "{{ election.position.name }}" }} · {{ "{{ election.city ? election.city.name : '' }}" }}
-              · {{ "{{ election.party.acronym }}" }}
-              — {{ "{{ election.election_status }}" }}
-              — <span v-html="formatCurrencyNoAbbr(election.total_value)"></span>
-              <a
-                v-if="election.candidate_id !== candidateId"
-                :href="candidateUrl(election)">
-                {{ i18n "seeElectionPage" }} →
-              </a>
-            </li>
-          </ul>
-
           <div id="js-candidato-history-chart"></div>
+
+          <table class="candidato__history-table">
+            <thead>
+              <tr>
+                <th>{{ i18n "yearSelector" }}</th>
+                <th>{{ i18n "offices" }}</th>
+                <th>{{ i18n "state" }}</th>
+                <th>{{ i18n "party" }}</th>
+                <th>{{ i18n "electionStatuses" }}</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="election in elections" :key="election.candidate_id">
+                <td>{{ "{{ election.year }}" }}</td>
+                <td>{{ "{{ election.position.name }}" }}</td>
+                <td>{{ "{{ election.city ? election.city.name : '' }}" }}</td>
+                <td>{{ "{{ election.party.acronym }}" }}</td>
+                <td>{{ "{{ election.election_status }}" }}</td>
+                <td v-html="formatCurrencyNoAbbr(election.total_value)"></td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </template>
     </div>
