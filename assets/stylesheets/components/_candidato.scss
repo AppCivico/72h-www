@@ -1,0 +1,93 @@
+@use "../vendor/modularscale-sass/sugar";
+@use "../abstracts/functions";
+
+.candidato__loading,
+.candidato__not-found {
+  padding: 3rem 0;
+
+  text-align: center;
+}
+
+.candidato__breadcrumb {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+
+  font-size: sugar.ms(-2);
+  color: functions.palette('gray', 'medium');
+}
+
+.candidato__elections {
+  display: flex;
+
+  flex-wrap: wrap;
+  align-items: center;
+
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.candidato__elections-label {
+  font-size: sugar.ms(-2);
+  color: functions.palette('gray', 'medium');
+}
+
+.candidato__pill {
+  padding: 0.2rem 0.8rem;
+
+  font-size: sugar.ms(-2);
+  font-weight: functions.font-weight('bold');
+  color: functions.palette('main-colors', 'secondary');
+  text-decoration: none;
+
+  border: 1px solid functions.palette('main-colors', 'secondary');
+  border-radius: 999px;
+}
+
+.candidato__pill--active {
+  color: functions.palette('white');
+
+  background-color: functions.palette('main-colors', 'secondary');
+}
+
+.candidato__card {
+  display: flex;
+
+  gap: 1rem;
+  align-items: flex-start;
+
+  margin-bottom: 1.5rem;
+}
+
+.candidato__picture {
+  width: 4.5rem;
+  height: 6rem;
+
+  object-fit: cover;
+
+  background-color: functions.palette('gray', 'light');
+  box-shadow: 5px 8px 21px -3px functions.palette('shadow', 'light');
+}
+
+.candidato__status {
+  font-size: sugar.ms(-2);
+  color: functions.palette('gray', 'medium');
+}
+
+.candidato__history {
+  margin-top: 2rem;
+}
+
+.candidato__history-list {
+  padding: 0;
+  margin: 0 0 1.5rem;
+
+  list-style: none;
+}
+
+.candidato__history-list li {
+  padding: 0.5rem 0;
+
+  font-size: sugar.ms(-1);
+
+  border-bottom: 1px solid functions.palette('gray', 'light');
+}

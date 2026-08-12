@@ -9,3 +9,12 @@
 
 [context.dev.environment]
   HUGO_ENVIRONMENT = "staging"
+
+# 853k+ unique candidates -- Hugo can't pre-generate a page per id, so
+# /candidato/{id}/ all resolve to the same static shell page, and the
+# candidate id is read client-side from window.location.pathname
+# (assets/scripts/candidato.js fetches /v1/candidates/{id}/history).
+[[redirects]]
+  from = "/candidato/*"
+  to = "/candidato/index.html"
+  status = 200

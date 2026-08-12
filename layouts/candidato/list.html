@@ -1,0 +1,106 @@
+{{ partial "head.html" . }}
+<body>
+  {{ partial "siteNav.html" . }}
+
+  <main class="container container--small">
+    <div id="vueCandidato" v-cloak>
+      <p v-if="loading" class="candidato__loading">{{ i18n "loadingData" }}</p>
+
+      <div v-if="!loading && error" class="candidato__not-found">
+        <p class="pay-attention-to__danger">{{ "{{ error }}" }}</p>
+        <p>{{ i18n "candidateNotFoundHelp" }}</p>
+        <a href="/" class="button">{{ i18n "backToHome" }}</a>
+      </div>
+
+      <template v-if="!loading && !error && current">
+        <nav class="candidato__breadcrumb">
+          <span>{{ "{{ current.election_name }}" }}</span> ·
+          <span>{{ "{{ current.city.region.name }}" }}</span> ·
+          <span>{{ "{{ current.position.name }}" }}</span> ·
+          <span>{{ "{{ current.name }}" }}</span>
+        </nav>
+
+        <div class="candidato__elections" v-if="elections.length > 1">
+          <span class="candidato__elections-label">{{ i18n "candidateOtherElections" }}</span>
+          <a
+            v-for="election in elections"
+            :key="election.candidate_id"
+            :href="candidateUrl(election)"
+            class="candidato__pill"
+            :class="{ 'candidato__pill--active': election.candidate_id === candidateId }">
+            {{ "{{ election.year }} · {{ election.position.name }}" }}
+          </a>
+        </div>
+
+        <div class="candidato__card">
+          <img
+            class="candidato__picture"
+            :src="picture"
+            @error="picture = '/assets/images/no-picture.svg'"
+            :alt="current.name"
+            loading="lazy">
+          <div class="candidato__card-text">
+            <h1>{{ "{{ current.name }}" }}</h1>
+            <p>
+              {{ "{{ current.party.acronym ? current.party.acronym : current.party.name }}" }}
+              — {{ i18n "runsFor" }} {{ "{{ current.position.name }}" }}
+              {{ "{{ current.city ? `por ${current.city.name}` : '' }}" }}
+            </p>
+            <p class="candidato__status">{{ "{{ current.election_status }}" }}</p>
+            <a v-if="tseUrl" :href="tseUrl" target="_blank" class="button">
+              {{ i18n "seeOnTSE" }}
+            </a>
+          </div>
+        </div>
+
+        <div class="big-numbers">
+          <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
+            <h1>{{ i18n "total" }}</h1>
+            <p>
+              {{ "{{ formatNumeral(current.total_transfers) }}" }} {{ i18n "transfers" }}
+            </p>
+            <span class="big-number__number" v-html="formatCurrencyNoAbbr(current.total_value)"></span>
+          </div>
+        </div>
+
+        <div class="candidato__history" v-if="elections.length > 1">
+          <h2 class="border-title border-title--primary">{{ i18n "candidateElectionHistory" }}</h2>
+
+          <ul class="candidato__history-list">
+            <li v-for="election in elections" :key="election.candidate_id">
+              <strong>{{ "{{ election.year }}" }}</strong>
+              — {{ "{{ election.position.name }}" }} · {{ "{{ election.city ? election.city.name : '' }}" }}
+              · {{ "{{ election.party.acronym }}" }}
+              — {{ "{{ election.election_status }}" }}
+              — <span v-html="formatCurrencyNoAbbr(election.total_value)"></span>
+              <a
+                v-if="election.candidate_id !== candidateId"
+                :href="candidateUrl(election)">
+                {{ i18n "seeElectionPage" }} →
+              </a>
+            </li>
+          </ul>
+
+          <div id="js-candidato-history-chart"></div>
+        </div>
+      </template>
+    </div>
+  </main>
+
+  {{ partial "footer.html" . }}
+
+  {{/* This page doesn't include scripts.html (the home page's heavy
+       bundle: build-time filters fetch, Highcharts modules, Analytics,
+       Pixel) — it needs its own Vue + Highcharts, kept to just the base
+       library, no exporting/export-data modules the chart here doesn't
+       use. */}}
+  {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.global.prod.js" "vendor/vue.global.js") | resources.Fingerprint "sha512" }}
+  <script src="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}"></script>
+
+  {{ $highcharts := resources.Get "vendor/highcharts/highcharts.js" | resources.Fingerprint "sha512" }}
+  <script src="{{ $highcharts.RelPermalink }}" integrity="{{ $highcharts.Data.Integrity }}"></script>
+
+  {{ $candidatoJS := resources.Get "scripts/candidato.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
+  <script type="text/javascript" src="{{ $candidatoJS.RelPermalink }}" integrity="{{ $candidatoJS.Data.Integrity }}"></script>
+</body>
+</html>

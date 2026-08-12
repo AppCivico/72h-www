@@ -42,6 +42,8 @@
   translation: "Análise"
 - id: apply
   translation: "Aplicar"
+- id: backToHome
+  translation: "Voltar para a página inicial"
 - id: averageByCandidate
   translation: "média por candidatura"
 - id: averageByCandidateFemale
@@ -68,6 +70,12 @@
 - id: candidateMale
   one: "candidato"
   other: "candidatos"
+- id: candidateElectionHistory
+  translation: "Histórico em eleições anteriores"
+- id: candidateNotFoundHelp
+  translation: "Verifique se o endereço está correto ou volte para a página inicial."
+- id: candidateOtherElections
+  translation: "Eleições desta candidatura:"
 - id: candidatesListing
   translation: "Listagem das candidaturas"
 - id: candidatesTotal
@@ -188,6 +196,8 @@
   translation: "Escolaridade"
 - id: seeMore
   translation: "Ver mais"
+- id: seeElectionPage
+  translation: "Ver esta candidatura"
 - id: seeOnTSE
   translation: "Ver no TSE"
 - id: selectState
