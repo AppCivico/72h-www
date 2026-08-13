@@ -149,14 +149,14 @@
               <tr>
                 <th>{{ i18n "transferDate" }}</th>
                 <th>{{ i18n "transferPayer" }}</th>
-                <th>Total</th>
+                <th class="table-cell--numeric">Total</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="transfer in transfers" :key="transfer.id">
                 <td>{{ "{{ formatDateBR(transfer.date) }}" }}</td>
                 <td>{{ "{{ transfer.name }}" }}</td>
-                <td v-html="formatCurrencyNoAbbr(transfer.value)"></td>
+                <td class="table-cell--numeric" v-html="formatCurrencyNoAbbr(transfer.value)"></td>
               </tr>
             </tbody>
           </table>
@@ -183,7 +183,7 @@
                 <th>{{ i18n "state" }}</th>
                 <th>{{ i18n "party" }}</th>
                 <th>{{ i18n "electionStatuses" }}</th>
-                <th>Total</th>
+                <th class="table-cell--numeric">Total</th>
               </tr>
             </thead>
             <tbody>
@@ -193,7 +193,7 @@
                 <td>{{ "{{ election.city ? election.city.name : '' }}" }}</td>
                 <td>{{ "{{ election.party.acronym }}" }}</td>
                 <td>{{ "{{ election.election_status }}" }}</td>
-                <td v-html="formatCurrencyNoAbbr(election.total_value)"></td>
+                <td class="table-cell--numeric" v-html="formatCurrencyNoAbbr(election.total_value)"></td>
               </tr>
             </tbody>
           </table>

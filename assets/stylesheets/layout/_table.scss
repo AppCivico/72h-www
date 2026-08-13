@@ -23,6 +23,7 @@ table {
 
   font-family: inherit;
   font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'pnum' 0, 'tnum' 1, 'onum' 0, 'lnum' 1, 'dlig' 0;
+  font-variant-numeric: tabular-nums;
 
   empty-cells: show;
   border-collapse: collapse;
@@ -46,6 +47,11 @@ tr {
       margin-bottom: 0;
     }
   }
+}
+
+.table-cell--numeric {
+  font-feature-settings: 'tnum';
+  text-align: right;
 }
 
 th {
@@ -90,7 +96,6 @@ tbody th {
 tbody .destak {
   color: palette('red');
 }
-
 
 tbody td {
   // text-align: right;
