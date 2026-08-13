@@ -191,6 +191,12 @@
 }
 
 .candidato__compare-label {
+  display: flex;
+
+  gap: 0.25em;
+
+  align-items: baseline;
+
   width: 100%;
   margin-bottom: 0.3rem;
 
