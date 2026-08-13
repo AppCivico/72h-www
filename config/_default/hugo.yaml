@@ -5,7 +5,7 @@ enableRobotsTXT: true
 disableHugoGeneratorInject: true
 buildFuture: true
 disableKinds:
-  - "RSS"
+  - "rss"
   - "taxonomy"
 locale: "pt-br"
 title: "72Horas"
