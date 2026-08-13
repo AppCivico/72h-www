@@ -89,7 +89,7 @@
 - id: candidateTransfersExtract
   translation: "Extrato de repasses"
 - id: candidateVsMedianOffice
-  translation: "Vs. mediana do cargo na UF"
+  translation: "Mediana do cargo na UF"
 - id: comparisonOfficeNational
   translation: "Mediana do cargo no Brasil"
 - id: comparisonOfficeUF
@@ -184,8 +184,8 @@
   translation: "Não há dados suficientes para exibir os gráficos"
 - id: ofCandidates
   translation: "Das candidaturas"
-- id: offices
-  translation: "Cargos"
+- id: office
+  translation: "Cargo"
 - id: ofTotal
   translation: "Do total"
 - id: oldInfo
