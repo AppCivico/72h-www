@@ -33,6 +33,15 @@ function candidateIdFromPath() {
   return match ? Number(match[1]) : null;
 }
 
+// "YYYY-MM-DD" -> "DD/MM/YYYY". Transfer dates are date-only, no time
+// component — a small string split avoids pulling in dayjs (unlike
+// home.js, this bundle stays lean) for something this simple.
+function formatDateBR(isoDate) {
+  if (!isoDate) return '';
+  const [year, month, day] = isoDate.split('-');
+  return `${day}/${month}/${year}`;
+}
+
 window.$vueCandidato = Vue.createApp({
   data() {
     return {
@@ -40,6 +49,12 @@ window.$vueCandidato = Vue.createApp({
       loading: true,
       error: '',
       elections: [],
+      core: null,
+      comparison: null,
+      transfers: [],
+      transfersPage: 1,
+      transfersHasMore: false,
+      transfersLoading: false,
       picture: '/assets/images/no-picture.svg',
     };
   },
@@ -47,14 +62,55 @@ window.$vueCandidato = Vue.createApp({
     current({ elections, candidateId } = this) {
       return elections.find((election) => election.candidate_id === candidateId) || null;
     },
-    // /candidates/{id}/history doesn't return divulgacand_url (unlike
-    // /v1/candidates) — built from the URL shape documented in
-    // frontend-guide-cross-election.md's /v1/candidates example.
-    tseUrl({ current } = this) {
-      if (!current || !current.city) {
-        return '';
-      }
-      return `http://divulgacandcontas.tse.jus.br/divulga/#/candidato/${current.year}/${current.election_id}/${current.city.id}/${current.candidate_id}`;
+    // by_fund_type has 6 fine-grained categories (same ones used
+    // site-wide, see i18n accumulatedCrowdfunding/accumulatedDirectDonation/
+    // etc.) — the candidate page only needs the 3-bucket split from the
+    // prototype: special_fund is FEFC, party_fund is Fundo Partidário, and
+    // "Outros" is everything else summed (matches otherFundsWarning's own
+    // definition: doação direta + financiamento coletivo + autofinanciamento,
+    // here also including any other_resources bucket).
+    fundBreakdown({ core } = this) {
+      if (!core?.by_fund_type) return null;
+      const f = core.by_fund_type;
+      const fefc = Number(f.special_fund?.value || 0);
+      const partidario = Number(f.party_fund?.value || 0);
+      const outros = ['crowdfunding', 'direct_donation', 'self_funding', 'other_resources']
+        .reduce((sum, key) => sum + Number(f[key]?.value || 0), 0);
+      const total = fefc + partidario + outros;
+      if (total <= 0) return null;
+      const pct = (value) => (value / total) * 100;
+      return {
+        total,
+        fefc: { value: fefc, percent: pct(fefc) },
+        partidario: { value: partidario, percent: pct(partidario) },
+        outros: { value: outros, percent: pct(outros) },
+      };
+    },
+    // Bars are all scaled against the same max (candidate's own value vs
+    // the 3 medians), so "mine" and "groups" are computed together here
+    // rather than as separate computeds that would each need to know the
+    // others' values.
+    comparisonChart({ comparison, current } = this) {
+      if (!comparison) return null;
+      const myValue = Number(comparison.my_value ?? current?.total_value ?? 0);
+      const groups = [
+        { key: 'party_uf', data: comparison.party_uf },
+        { key: 'position_uf', data: comparison.position_uf },
+        { key: 'position_national', data: comparison.position_national },
+      ]
+        .filter((group) => group.data)
+        .map((group) => ({
+          key: group.key,
+          median: Number(group.data.median),
+          count: group.data.count,
+          rank: group.data.rank,
+        }));
+      const maxValue = Math.max(myValue, ...groups.map((group) => group.median), 1);
+      const withWidth = (value) => (value / maxValue) * 100;
+      return {
+        mine: { value: myValue, widthPercent: withWidth(myValue) },
+        groups: groups.map((group) => ({ ...group, widthPercent: withWidth(group.median) })),
+      };
     },
   },
   async mounted() {
@@ -65,17 +121,16 @@ window.$vueCandidato = Vue.createApp({
     }
 
     try {
-      const response = await fetch(`${config.api.domain}candidates/${this.candidateId}/history`);
-      if (!response.ok) {
-        const message = response.status === 404
+      const historyResponse = await fetch(`${config.api.domain}candidates/${this.candidateId}/history`);
+      if (!historyResponse.ok) {
+        const message = historyResponse.status === 404
           ? 'Candidatura não encontrada.'
-          : `Network response was not OK. Status: ${response.status}`;
+          : `Network response was not OK. Status: ${historyResponse.status}`;
         throw new Error(message);
       }
 
-      const data = await response.json();
-      this.elections = Array.isArray(data.elections) ? data.elections : [];
-      this.picture = data.candidate?.picture || this.picture;
+      const historyData = await historyResponse.json();
+      this.elections = Array.isArray(historyData.elections) ? historyData.elections : [];
 
       if (this.current) {
         document.title = `${this.current.name} · ${this.current.position.name} · 72Horas`;
@@ -97,6 +152,17 @@ window.$vueCandidato = Vue.createApp({
         await this.$nextTick();
         this.renderHistoryChart();
       }
+
+      // core/comparison/transfers are enhancements on top of the required
+      // /history call above — if one of them fails, log it and let the
+      // rest of the page render anyway (v-if guards on core/comparison
+      // hide the sections that depend on them), rather than blanking the
+      // whole page over a single flaky endpoint.
+      await Promise.all([
+        this.loadCore(),
+        this.loadComparison(),
+        this.loadTransfers(),
+      ]);
     } catch (err) {
       this.error = err.message;
       // eslint-disable-next-line no-console
@@ -108,7 +174,61 @@ window.$vueCandidato = Vue.createApp({
   methods: {
     formatCurrencyNoAbbr,
     formatNumeral,
+    formatDateBR,
     candidateUrl,
+    async loadCore() {
+      try {
+        const response = await fetch(`${config.api.domain}candidates/${this.candidateId}`);
+        if (!response.ok) {
+          throw new Error(`core fetch failed: ${response.status}`);
+        }
+        this.core = await response.json();
+        this.picture = this.core.picture || this.picture;
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      }
+    },
+    async loadComparison() {
+      try {
+        const response = await fetch(`${config.api.domain}candidates/${this.candidateId}/comparison`);
+        if (!response.ok) {
+          throw new Error(`comparison fetch failed: ${response.status}`);
+        }
+        this.comparison = await response.json();
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      }
+    },
+    // Confirmed by direct testing against the real API: pagination is via
+    // ?page=N (offset/skip params are silently ignored), default page
+    // size 20. Some candidates have hundreds of thousands of transfers
+    // (Bolsonaro: 387k) — fetch is one page at a time, on demand, never
+    // all pages at once.
+    async loadTransfers(page = 1) {
+      if (this.transfersLoading) return;
+      this.transfersLoading = true;
+      try {
+        const response = await fetch(`${config.api.domain}candidates/${this.candidateId}/transfers?page=${page}`);
+        if (!response.ok) {
+          throw new Error(`transfers fetch failed: ${response.status}`);
+        }
+        const data = await response.json();
+        const items = Array.isArray(data.transfers) ? data.transfers : [];
+        this.transfers = page === 1 ? items : this.transfers.concat(items);
+        this.transfersHasMore = !!data.has_more;
+        this.transfersPage = page;
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      } finally {
+        this.transfersLoading = false;
+      }
+    },
+    loadMoreTransfers() {
+      this.loadTransfers(this.transfersPage + 1);
+    },
     // Same grouping as loadCandidateHistory()'s chart on the homepage
     // candidate cards (home.js): a person can hold two candidacies in the
     // same election (Deputado Federal + Senador), so group by year and

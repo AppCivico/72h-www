@@ -70,12 +70,32 @@
 - id: candidateMale
   one: "candidato"
   other: "candidatos"
+- id: candidateBiggestTransfer
+  translation: "Maior repasse único"
+- id: candidateComparison
+  translation: "Como se compara"
 - id: candidateElectionHistory
   translation: "Histórico em eleições anteriores"
+- id: candidateFundSources
+  translation: "De onde vem o dinheiro"
+- id: candidateLoadMoreTransfers
+  translation: "Carregar mais transferências"
 - id: candidateNotFoundHelp
   translation: "Verifique se o endereço está correto ou volte para a página inicial."
 - id: candidateOtherElections
   translation: "Eleições desta candidatura:"
+- id: candidatePartyRank
+  translation: "Posição no partido"
+- id: candidateTransfersExtract
+  translation: "Extrato de repasses"
+- id: candidateVsMedianOffice
+  translation: "Vs. mediana do cargo na UF"
+- id: comparisonOfficeNational
+  translation: "Mediana do cargo no Brasil"
+- id: comparisonOfficeUF
+  translation: "Mediana do cargo no estado"
+- id: comparisonPartyUF
+  translation: "Mediana do partido no estado"
 - id: candidatesListing
   translation: "Listagem das candidaturas"
 - id: candidatesTotal
@@ -112,6 +132,12 @@
   translation: "Cor/Raça"
 - id: filtersTitle
   translation: "Faça sua pesquisa"
+- id: fundTypeFEFC
+  translation: "FEFC"
+- id: fundTypeOther
+  translation: "Outros recursos"
+- id: fundTypeParty
+  translation: "Fundo Partidário"
 - id: follow
   translation: "Seguir"
 - id: footerDescription
@@ -202,6 +228,8 @@
   translation: "Ver no TSE"
 - id: selectState
   translation: "Selecione o estado"
+- id: since
+  translation: "desde"
 - id: share
   translation: "Compartilhar"
 - id: shareFilteredData
@@ -224,6 +252,10 @@
   translation: "selecionar"
 - id: total
   translation: "Total:"
+- id: transferDate
+  translation: "Data"
+- id: transferPayer
+  translation: "Quem repassou"
 - id: transfers
   translation: "transferências"
 - id: TSEData

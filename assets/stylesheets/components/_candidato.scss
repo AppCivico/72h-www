@@ -109,3 +109,158 @@
 .candidato__history-table tbody tr:hover {
   background-color: functions.palette('gray', 'light');
 }
+
+.candidato__fund-sources,
+.candidato__comparison,
+.candidato__transfers {
+  margin-top: 2rem;
+}
+
+.candidato__fund-bar {
+  display: flex;
+
+  overflow: hidden;
+
+  height: 1.5rem;
+  margin-top: 1rem;
+
+  border-radius: 6px;
+}
+
+.candidato__fund-segment {
+  height: 100%;
+}
+
+.candidato__fund-segment--fefc {
+  background-color: functions.palette('main-colors', 'primary');
+}
+
+.candidato__fund-segment--party {
+  background-color: functions.palette('main-colors', 'secondary');
+}
+
+.candidato__fund-segment--other {
+  background-color: functions.palette('main-colors', 'tertiary');
+}
+
+.candidato__fund-legend {
+  padding: 0;
+  margin: 1rem 0 0;
+
+  list-style: none;
+}
+
+.candidato__fund-legend li {
+  margin-bottom: 0.5rem;
+
+  font-size: sugar.ms(-1);
+}
+
+.candidato__fund-dot {
+  display: inline-block;
+
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-right: 0.4rem;
+
+  border-radius: 50%;
+}
+
+.candidato__fund-dot--fefc {
+  background-color: functions.palette('main-colors', 'primary');
+}
+
+.candidato__fund-dot--party {
+  background-color: functions.palette('main-colors', 'secondary');
+}
+
+.candidato__fund-dot--other {
+  background-color: functions.palette('main-colors', 'tertiary');
+}
+
+.candidato__compare-bar {
+  display: flex;
+
+  flex-wrap: wrap;
+  align-items: center;
+
+  margin-top: 1rem;
+}
+
+.candidato__compare-label {
+  width: 100%;
+  margin-bottom: 0.3rem;
+
+  font-size: sugar.ms(-1);
+}
+
+.candidato__compare-label small {
+  color: functions.palette('gray', 'medium');
+}
+
+.candidato__compare-track {
+  flex: 1;
+
+  overflow: hidden;
+
+  height: 1rem;
+  margin-right: 0.75rem;
+
+  background-color: functions.palette('gray', 'light');
+  border-radius: 6px;
+}
+
+.candidato__compare-fill {
+  display: block;
+
+  height: 100%;
+
+  background-color: functions.palette('main-colors', 'primary');
+}
+
+.candidato__compare-fill--reference {
+  background-color: functions.palette('gray', 'base');
+}
+
+.candidato__compare-value {
+  font-size: sugar.ms(-1);
+  font-weight: functions.font-weight('bold');
+  white-space: nowrap;
+}
+
+.candidato__compare-bar--mine .candidato__compare-label {
+  font-weight: functions.font-weight('bold');
+}
+
+.candidato__transfers-table {
+  width: 100%;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+
+  border-collapse: collapse;
+
+  font-size: sugar.ms(-1);
+}
+
+.candidato__transfers-table thead {
+  background-color: functions.palette('gray', 'light');
+}
+
+.candidato__transfers-table th {
+  padding: 0.75rem;
+
+  font-weight: functions.font-weight('bold');
+  text-align: left;
+
+  border-bottom: 2px solid functions.palette('gray', 'medium');
+}
+
+.candidato__transfers-table td {
+  padding: 0.75rem;
+
+  border-bottom: 1px solid functions.palette('gray', 'light');
+}
+
+.candidato__transfers-table tbody tr:hover {
+  background-color: functions.palette('gray', 'light');
+}
