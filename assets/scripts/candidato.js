@@ -27,10 +27,22 @@ function candidateUrl(election) {
 // end of the last path segment regardless of what's in front of it, so
 // both a bare old-style /candidato/250001615891/ and a slugged
 // /candidato/marcio-franca-250001615891/ parse the same way.
+//
+// Falls back to ?id= when the path has none -- the Netlify rewrite that
+// makes the path form work at all isn't available on a bare `hugo
+// server`, so this is what makes /candidato/?id=250001615891 a real,
+// working local-dev URL without needing Netlify or a console script.
+// Once real data loads, mounted()'s replaceState still rewrites the
+// address bar to the canonical slug+id path either way.
 function candidateIdFromPath() {
   const segment = window.location.pathname.split('/').filter(Boolean)[1] || '';
   const match = segment.match(/(\d+)$/);
-  return match ? Number(match[1]) : null;
+  if (match) {
+    return Number(match[1]);
+  }
+
+  const queryId = new URLSearchParams(window.location.search).get('id');
+  return queryId && /^\d+$/.test(queryId) ? Number(queryId) : null;
 }
 
 // "YYYY-MM-DD" -> "DD/MM/YYYY". Transfer dates are date-only, no time
@@ -142,8 +154,16 @@ window.$vueCandidato = Vue.createApp({
         // (keep the URL bar honest about current state). replaceState,
         // not pushState — this isn't a new navigation, just correcting
         // the one that got us here.
+        //
+        // Skipped on localhost: the slug path only resolves through
+        // Netlify's catch-all rewrite (netlify.toml), which a bare `hugo
+        // server` doesn't apply. Rewriting to it there would leave the
+        // address bar on a URL that 404s the moment hot-reload (or a
+        // manual refresh) re-requests it -- staying on ?id= keeps local
+        // dev actually reloadable.
+        const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
         const canonicalPath = candidateUrl(this.current);
-        if (window.location.pathname !== canonicalPath) {
+        if (!isLocalhost && window.location.pathname !== canonicalPath) {
           window.history.replaceState({}, document.title, canonicalPath);
         }
       }
