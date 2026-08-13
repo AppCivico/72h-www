@@ -1,5 +1,5 @@
-@use "../vendor/modularscale-sass/sugar";
-@use "../abstracts/functions";
+@use '../vendor/modularscale-sass/sugar';
+@use '../abstracts/functions';
 
 .candidato__loading,
 .candidato__not-found {
@@ -20,9 +20,11 @@
   display: flex;
 
   flex-wrap: wrap;
-  align-items: center;
 
   gap: 0.5rem;
+
+  align-items: center;
+
   margin-bottom: 1.5rem;
 }
 
@@ -53,6 +55,7 @@
   display: flex;
 
   gap: 1rem;
+
   align-items: flex-start;
 
   margin-bottom: 1.5rem;
@@ -82,9 +85,9 @@
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 
-  border-collapse: collapse;
-
   font-size: sugar.ms(-1);
+
+  border-collapse: collapse;
 }
 
 .candidato__history-table thead {
@@ -119,10 +122,9 @@
 .candidato__fund-bar {
   display: flex;
 
-  overflow: hidden;
-
   height: 1.5rem;
   margin-top: 1rem;
+  overflow: hidden;
 
   border-radius: 6px;
 }
@@ -182,6 +184,7 @@
   display: flex;
 
   flex-wrap: wrap;
+
   align-items: center;
 
   margin-top: 1rem;
@@ -201,10 +204,9 @@
 .candidato__compare-track {
   flex: 1;
 
-  overflow: hidden;
-
   height: 1rem;
   margin-right: 0.75rem;
+  overflow: hidden;
 
   background-color: functions.palette('gray', 'light');
   border-radius: 6px;
@@ -237,9 +239,9 @@
   margin-top: 1.5rem;
   margin-bottom: 1rem;
 
-  border-collapse: collapse;
-
   font-size: sugar.ms(-1);
+
+  border-collapse: collapse;
 }
 
 .candidato__transfers-table thead {
