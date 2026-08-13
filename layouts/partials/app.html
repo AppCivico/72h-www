@@ -278,7 +278,7 @@
                             {{ "{{ candidate.city.name }}, {{ candidate.city.region.name }}" }}
                           </p>
                           <p class="candidates__info">
-                            {{ i18n "total" }} {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
+                            {{ i18n "total" }}: {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
                           </p>
 
                           <p class="candidates__info" v-if="candidate.votes_first_round">

@@ -34,14 +34,11 @@
         <span class="big-number__dividend" v-text="formatNumeral(mainData?.accumulated?.total_candidates_who_received)">{{ partial "formatNumeralBR.html" $acc.total_candidates_who_received }}</span>
         <br />
         <span class="big-number__divisor">
-          <span class="big-number__math-sign">&divide;</span>
-          <span v-text="formatNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $election.candidate_count }}</span>
-          <small>{{ i18n "candidatesTotal" | lower }}</small>
+          <span class="big-number__math-sign">&divide;</span>&nbsp;<span v-text="formatNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $election.candidate_count }}</span> <small>{{ i18n "candidatesTotal" | lower }}</small>
         </span>
         <br />
         <span class="big-number__quotient">
-          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_who_received "denominator" $election.candidate_count) }}</span>
-          <small>{{ i18n "ofCandidates" | lower }}</small>
+          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_who_received "denominator" $election.candidate_count) }}</span> <small>{{ i18n "ofCandidates" | lower }}</small>
         </span>
       </div>
     </transition-expand>

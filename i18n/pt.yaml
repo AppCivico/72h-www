@@ -251,7 +251,7 @@
 - id: toSelect
   translation: "selecionar"
 - id: total
-  translation: "Total:"
+  translation: "Total"
 - id: transferDate
   translation: "Data"
 - id: transferPayer
@@ -261,11 +261,11 @@
 - id: TSEData
   translation: "Estes dados são com base no sistema oficial do TSE"
 - id: TSEDataFiltered
-  translation: "Dados filtrados com base no sistema do TSE:"
+  translation: "Dados filtrados com base no sistema do TSE"
 - id: votesFirstRound
-  translation: Votos em 1º turno
+  translation: "Votos em 1º turno"
 - id: votesSecondRound
-  translation: Votos em 2º turno
+  translation: "Votos em 2º turno"
 
 - id: facebook
   translation: "Facebook"

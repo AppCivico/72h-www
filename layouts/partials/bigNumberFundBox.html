@@ -28,8 +28,7 @@
     <span class="big-number__dividend" v-html="{{ printf "formatCurrencyNoAbbr(mainData?.accumulated?.%s)" $valueField }}">{{ partial "formatCurrencyBR.html" (index $acc $valueField) }}</span>
     <br />
     <span class="big-number__divisor">
-      <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $candidatesField }}">{{ partial "formatNumeralBR.html" (index $acc $candidatesField) }}</span>
-      <small>{{ i18n "candidate" 2 | lower }}</small>
+      <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $candidatesField }}">{{ partial "formatNumeralBR.html" (index $acc $candidatesField) }}</span> <small>{{ i18n "candidate" 2 | lower }}</small>
     </span>
     <br />
     <span class="big-number__quotient">
