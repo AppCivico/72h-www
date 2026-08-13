@@ -1,3 +1,9 @@
+@use '../abstracts/font-stacks';
+@use '../abstracts/functions';
+@use '../abstracts/mixins';
+@use '../abstracts/variables';
+@use '../vendor/modularscale-sass/sugar';
+
 table,
 thead,
 tbody,
@@ -18,10 +24,11 @@ table {
   width: 100%;
   margin-top: 0;
   margin-right: 0;
-  margin-bottom: #{$leading * 1em};
+  margin-bottom: #{variables.$leading * 1em};
   margin-left: 0;
 
   font-family: inherit;
+  font-size: sugar.ms(-1);
   font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1, 'pnum' 0, 'tnum' 1, 'onum' 0, 'lnum' 1, 'dlig' 0;
   font-variant-numeric: tabular-nums;
 
@@ -34,34 +41,61 @@ caption {
 
 thead,
 tfoot {
-  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
     display: none;
   }
 }
 
-tr {
-  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
-    @include fallback('margin', 0 0 1.5rem);
+thead {
+  background-color: functions.palette('gray', 'light');
+}
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+tr {
+  &:hover {
+    background-color: functions.palette('gray', 'light');
+  }
+
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
+    flex-basis: calc(50% - #{variables.$gutter});
+    flex-grow: 1;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+
+    min-width: min-content;
   }
 }
 
 .table-cell--numeric {
+  justify-content: space-between;
+
   font-feature-settings: 'tnum';
   text-align: right;
+
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
+    justify-content: space-between;
+  }
+}
+
+th,
+td {
+  padding: variables.$leading * 0.5em;
 }
 
 th {
-  font-weight: bold;
+  font-weight: functions.font-weight('bold');
+  text-align: left;
+
+  border-bottom: 2px solid functions.palette('gray', 'medium');
 }
 
 td {
   font-family: inherit;
 
-  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+  border-bottom: 1px solid functions.palette('gray', 'light');
+
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
+    display: flex;
+
     &:empty {
       display: none;
     }
@@ -84,9 +118,15 @@ thead > tr:nth-last-of-type(odd) > td {
 }
 
 tbody {
-  font-family: $roboto-font-stack;
-  font-weight: bold;
-  color: palette('black', 'lighter');
+  color: functions.palette('black', 'lighter');
+
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: variables.$gutter;
+  }
 }
 
 tbody th {
@@ -94,24 +134,27 @@ tbody th {
 }
 
 tbody .destak {
-  color: palette('red');
+  // No 'red' key exists in the current abstracts/_variables.scss palette
+  // map (only 'debug', main-colors quaternary, etc.) -- this class isn't
+  // referenced by any template today, so falling back to the plain color
+  // rather than picking a palette entry that would change its (currently
+  // unused) meaning.
+  color: rgb(255, 0, 0);
 }
 
 tbody td {
-  // text-align: right;
-
   font-variant-numeric: lining-nums oldstyle-nums;
 
-  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
     text-align: left;
 
-    &[aria-label] {
+    &[data-label] {
       &::before {
         display: inline;
 
-        font-weight: font-weight('bold');
+        font-weight: functions.font-weight('bold');
 
-        content: attr(aria-label)':\A0';
+        content: attr(data-label)':\A0';
       }
     }
   }
@@ -123,7 +166,7 @@ td img {
 
 tbody tr:nth-of-type(odd) > th,
 tbody tr:nth-of-type(odd) > td {
-  @media screen and (max-width: #{map-get($breakpoints, 'toggle-table-layout') - 0.01}) {
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
     background-color: transparent;
   }
 }

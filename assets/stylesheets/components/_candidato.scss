@@ -80,39 +80,6 @@
   margin-top: 2rem;
 }
 
-.candidato__history-table {
-  width: 100%;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
-
-  font-size: sugar.ms(-1);
-
-  border-collapse: collapse;
-}
-
-.candidato__history-table thead {
-  background-color: functions.palette('gray', 'light');
-}
-
-.candidato__history-table th {
-  padding: 0.75rem;
-
-  font-weight: functions.font-weight('bold');
-  text-align: left;
-
-  border-bottom: 2px solid functions.palette('gray', 'medium');
-}
-
-.candidato__history-table td {
-  padding: 0.75rem;
-
-  border-bottom: 1px solid functions.palette('gray', 'light');
-}
-
-.candidato__history-table tbody tr:hover {
-  background-color: functions.palette('gray', 'light');
-}
-
 .candidato__fund-sources,
 .candidato__comparison,
 .candidato__transfers {
@@ -238,37 +205,4 @@
 
 .candidato__compare-bar--mine .candidato__compare-label {
   font-weight: functions.font-weight('bold');
-}
-
-.candidato__transfers-table {
-  width: 100%;
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-
-  font-size: sugar.ms(-1);
-
-  border-collapse: collapse;
-}
-
-.candidato__transfers-table thead {
-  background-color: functions.palette('gray', 'light');
-}
-
-.candidato__transfers-table th {
-  padding: 0.75rem;
-
-  font-weight: functions.font-weight('bold');
-  text-align: left;
-
-  border-bottom: 2px solid functions.palette('gray', 'medium');
-}
-
-.candidato__transfers-table td {
-  padding: 0.75rem;
-
-  border-bottom: 1px solid functions.palette('gray', 'light');
-}
-
-.candidato__transfers-table tbody tr:hover {
-  background-color: functions.palette('gray', 'light');
 }

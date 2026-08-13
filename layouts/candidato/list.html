@@ -149,14 +149,18 @@
               <tr>
                 <th>{{ i18n "transferDate" }}</th>
                 <th>{{ i18n "transferPayer" }}</th>
-                <th class="table-cell--numeric">Total</th>
+                <th class="table-cell--numeric">{{ i18n "total" }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="transfer in transfers" :key="transfer.id">
-                <td>{{ "{{ formatDateBR(transfer.date) }}" }}</td>
-                <td>{{ "{{ transfer.name }}" }}</td>
-                <td class="table-cell--numeric" v-html="formatCurrencyNoAbbr(transfer.value)"></td>
+                <td data-label='{{ i18n "transferDate" }}'>
+                  {{ "{{ formatDateBR(transfer.date) }}" }}
+                </td>
+                <td data-label='{{ i18n "transferPayer" }}'>
+                  {{ "{{ transfer.name }}" }}
+                </td>
+                <td data-label='{{ i18n "total" }}' class="table-cell--numeric" v-html="formatCurrencyNoAbbr(transfer.value)"></td>
               </tr>
             </tbody>
           </table>
@@ -183,17 +187,28 @@
                 <th>{{ i18n "state" }}</th>
                 <th>{{ i18n "party" }}</th>
                 <th>{{ i18n "electionStatuses" }}</th>
-                <th class="table-cell--numeric">Total</th>
+                <th class="table-cell--numeric">{{ i18n "total" }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="election in elections" :key="election.candidate_id">
-                <td>{{ "{{ election.year }}" }}</td>
-                <td>{{ "{{ election.position.name }}" }}</td>
-                <td>{{ "{{ election.city ? election.city.name : '' }}" }}</td>
-                <td>{{ "{{ election.party.acronym }}" }}</td>
-                <td>{{ "{{ election.election_status }}" }}</td>
-                <td class="table-cell--numeric" v-html="formatCurrencyNoAbbr(election.total_value)"></td>
+                <td data-label='{{ i18n "yearSelector" }}'>
+                  {{ "{{ election.year }}" }}
+                </td>
+                <td data-label='{{ i18n "office" }}'>
+                  {{ "{{ election.position.name }}" }}
+                </td>
+                <td data-label='{{ i18n "state" }}'>
+                  {{ "{{ election.city ? election.city.name : '' }}" }}
+                </td>
+                <td data-label='{{ i18n "party" }}'>
+                  {{ "{{ election.party.acronym }}" }}
+                </td>
+                <td data-label='{{ i18n "electionStatuses" }}'>
+                  {{ "{{ election.election_status }}" }}
+                </td>
+                <td data-label='{{ i18n "total" }}'
+                class="table-cell--numeric" v-html="formatCurrencyNoAbbr(election.total_value)"></td>
               </tr>
             </tbody>
           </table>
