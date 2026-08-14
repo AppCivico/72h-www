@@ -3,19 +3,11 @@ header:
   name: "Sobre os dados"
   url: "/sobre-os-dados/"
   weight: 1
-- identifier: "report"
-  name: "Relatório"
-  url: "https://issuu.com/72horas.org/docs/relatorio_72horas.org__eleic_a_o2020"
-  weight: 2
 - identifier: "donate"
   name: "Quem somos"
   url: "/quem-somos/"
   weight: 3
 footer:
-- identifier: "report"
-  name: "Relatório"
-  url: "https://issuu.com/72horas.org/docs/relatorio_72horas.org__eleic_a_o2020"
-  weight: 1
 - identifier: "aboutData"
   name: "Sobre os dados"
   url: "/sobre-os-dados/"
