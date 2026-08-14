@@ -3,7 +3,7 @@ import config from './config';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 
-// Slug is cosmetic only — readability/SEO, not the lookup key (candidate
+// Slug is cosmetic only — readability/SEO, not the lookup key (person
 // names aren't unique). Strips accents via NFD normalization + stripping
 // combining marks, e.g. "MÁRCIO FRANÇA" -> "marcio-franca".
 function slugify(text) {
@@ -15,26 +15,28 @@ function slugify(text) {
     .replace(/^-+|-+$/g, '');
 }
 
-function candidateUrl(election) {
-  return `/candidato/${slugify(election.name)}-${election.candidate_id}/`;
+// person_id is stable across every election a person ever runs in —
+// unlike candidate_id (TSE's SQ_CANDIDATO), which is reissued each
+// election and can't be used to follow the same person across years.
+// One URL now covers a person's whole history instead of needing a
+// different URL per candidacy.
+function personUrl(person) {
+  return `/candidato/${slugify(person.name)}-${person.id}/`;
 }
 
-// candidate_id is per-candidacy (a different TSE id each election, per
-// frontend-guide-cross-election.md) — /candidato/{slug}-{id}/ all resolve
-// to the same static shell (netlify.toml catch-all), since Hugo can't
-// pre-generate one page per candidate at this scale (800k+). Only the
-// trailing number is the real lookup key — "-{id}" is extracted from the
-// end of the last path segment regardless of what's in front of it, so
-// both a bare old-style /candidato/250001615891/ and a slugged
-// /candidato/marcio-franca-250001615891/ parse the same way.
+// /candidato/{slug}-{id}/ all resolve to the same static shell
+// (netlify.toml catch-all), since Hugo can't pre-generate one page per
+// person at this scale (800k+ candidacies). Only the trailing number is
+// the real lookup key — extracted from the end of the last path segment
+// regardless of what's in front of it.
 //
 // Falls back to ?id= when the path has none -- the Netlify rewrite that
 // makes the path form work at all isn't available on a bare `hugo
-// server`, so this is what makes /candidato/?id=250001615891 a real,
-// working local-dev URL without needing Netlify or a console script.
-// Once real data loads, mounted()'s replaceState still rewrites the
-// address bar to the canonical slug+id path either way.
-function candidateIdFromPath() {
+// server`, so this is what makes /candidato/?id=260327 a real, working
+// local-dev URL without needing Netlify or a console script. Once real
+// data loads, mounted()'s replaceState still rewrites the address bar to
+// the canonical slug+id path either way.
+function personIdFromPath() {
   const segment = window.location.pathname.split('/').filter(Boolean)[1] || '';
   const match = segment.match(/(\d+)$/);
   if (match) {
@@ -43,6 +45,31 @@ function candidateIdFromPath() {
 
   const queryId = new URLSearchParams(window.location.search).get('id');
   return queryId && /^\d+$/.test(queryId) ? Number(queryId) : null;
+}
+
+// The name portion of the URL's slug, if any — e.g. "marcio-franca" from
+// /candidato/marcio-franca-260327/. Empty string for bare-id URLs
+// (/candidato/260327/) or the ?id= query fallback, which are
+// intentionally still valid (local dev, old-style links) and have no
+// name to check against.
+function slugNameFromPath() {
+  const segment = window.location.pathname.split('/').filter(Boolean)[1] || '';
+  const match = segment.match(/^(.*)-\d+$/);
+  return match ? match[1] : '';
+}
+
+// Which candidacy to open on load, if the URL says so — e.g. a link
+// shared while looking at someone's 2022 run specifically, rather than
+// their most recent one (the default). Absent/invalid falls through to
+// the default, same as not being there at all.
+//
+// The value is still a candidate_id, not a year — a person can hold two
+// candidacies within the same election (e.g. Deputado Federal + Senador
+// in the same general election), so year alone wouldn't always pick one
+// unambiguously. candidate_id always does.
+function candidateIdFromQuery() {
+  const value = new URLSearchParams(window.location.search).get('na_eleicao');
+  return value && /^\d+$/.test(value) ? Number(value) : null;
 }
 
 // "YYYY-MM-DD" -> "DD/MM/YYYY". Transfer dates are date-only, no time
@@ -57,10 +84,16 @@ function formatDateBR(isoDate) {
 window.$vueCandidato = Vue.createApp({
   data() {
     return {
-      candidateId: candidateIdFromPath(),
+      personId: personIdFromPath(),
       loading: true,
       error: '',
+      person: null,
       elections: [],
+      // Which of the person's candidacies is currently shown. Switching
+      // this is a client-side selection, not a navigation — the URL is
+      // scoped to the person (person_id) now, not to any one candidacy,
+      // so there's no separate URL per election to link to anymore.
+      selectedCandidateId: null,
       core: null,
       coreLoading: true,
       comparison: null,
@@ -71,17 +104,18 @@ window.$vueCandidato = Vue.createApp({
       // Starts false, not true: loadTransfers() guards against overlapping
       // calls with `if (this.transfersLoading) return;` at its very start
       // (needed so double-clicking "load more" can't fire two overlapping
-      // fetches) — if this started true, that guard would trip on the very
-      // first call too and the initial fetch would never run. It flips to
-      // true synchronously inside loadTransfers() itself (before any
-      // await), so the aria-busy state still shows almost immediately.
+      // fetches) — if this started true, that guard would trip on the
+      // very first call too and the initial fetch would never run. It
+      // flips to true synchronously inside loadTransfers() itself
+      // (before any await), so the aria-busy state still shows almost
+      // immediately.
       transfersLoading: false,
       picture: '/assets/images/no-picture.svg',
     };
   },
   computed: {
-    current({ elections, candidateId } = this) {
-      return elections.find((election) => election.candidate_id === candidateId) || null;
+    current({ elections, selectedCandidateId } = this) {
+      return elections.find((election) => election.candidate_id === selectedCandidateId) || null;
     },
     // by_fund_type has 6 fine-grained categories (same ones used
     // site-wide, see i18n accumulatedCrowdfunding/accumulatedDirectDonation/
@@ -135,47 +169,65 @@ window.$vueCandidato = Vue.createApp({
     },
   },
   async mounted() {
-    if (!this.candidateId) {
+    if (!this.personId) {
       this.loading = false;
       this.error = 'Candidatura não encontrada.';
       return;
     }
 
     try {
-      const historyResponse = await fetch(`${config.api.domain}candidates/${this.candidateId}/history`);
-      if (!historyResponse.ok) {
-        const message = historyResponse.status === 404
+      const response = await fetch(`${config.api.domain}people/${this.personId}`);
+      if (!response.ok) {
+        const message = response.status === 404
           ? 'Candidatura não encontrada.'
-          : `Network response was not OK. Status: ${historyResponse.status}`;
+          : `Network response was not OK. Status: ${response.status}`;
         throw new Error(message);
       }
 
-      const historyData = await historyResponse.json();
-      this.elections = Array.isArray(historyData.elections) ? historyData.elections : [];
+      const data = await response.json();
+      this.elections = Array.isArray(data.elections) ? data.elections : [];
+      this.person = data.person || null;
 
-      if (this.current) {
-        document.title = `${this.current.name} · ${this.current.position.name} · 72Horas`;
+      if (!this.elections.length || !this.person) {
+        throw new Error('Candidatura não encontrada.');
+      }
 
-        // Landed via a bare id, a stale slug (name changed between
-        // elections), or a mismatched one someone hand-typed — replace
-        // the address bar with the real canonical slug+id, same pattern
-        // already used for changeYear()/shareURL() on the home page
-        // (keep the URL bar honest about current state). replaceState,
-        // not pushState — this isn't a new navigation, just correcting
-        // the one that got us here.
-        //
-        // Skipped on localhost: the slug path only resolves through
-        // Netlify's catch-all rewrite (netlify.toml), which a bare `hugo
-        // server` doesn't apply. Rewriting to it there would leave the
-        // address bar on a URL that 404s the moment hot-reload (or a
-        // manual refresh) re-requests it -- staying on ?id= keeps local
-        // dev actually reloadable.
-        const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
-        const canonicalPath = candidateUrl(this.current);
-        if (!isLocalhost && window.location.pathname !== canonicalPath) {
-          window.history.replaceState({}, document.title, canonicalPath);
+      // Reject a slug whose name doesn't belong to this person_id at
+      // all — e.g. someone hand-editing the URL to attach an unrelated
+      // name to a real id. Checked against every ballot name this person
+      // has run under, across all their elections (confirmed against the
+      // real API: person.name is always one of these already, since it's
+      // derived from one of the linked candidacies, so it doesn't need
+      // to be checked separately) — not just the currently selected
+      // one, so a stale-but-real old slug still passes. A slug with no
+      // name at all (bare /candidato/{id}/, or the ?id= query fallback)
+      // has nothing to check and is left alone — those are intentionally
+      // still valid.
+      const slugName = slugNameFromPath();
+      if (slugName) {
+        const validNames = new Set(this.elections.map((election) => election.name));
+        const validSlugNames = [...validNames].map((name) => slugify(name));
+        if (!validSlugNames.includes(slugName)) {
+          throw new Error('Candidatura não encontrada.');
         }
       }
+
+      // Default to the most recent candidacy — elections[] comes back
+      // newest-first (confirmed against the real API: a person running
+      // again in 2026 has that year at elections[0], older years after).
+      // A ?na_eleicao= in the URL (a link shared while looking at a
+      // specific one) overrides that default, as long as it's actually
+      // one of this person's candidacies.
+      const defaultCandidateId = this.elections[0].candidate_id;
+      const requestedCandidateId = candidateIdFromQuery();
+      const requestedElection = this.elections
+        .find((election) => election.candidate_id === requestedCandidateId);
+      this.selectedCandidateId = requestedElection
+        ? requestedElection.candidate_id
+        : defaultCandidateId;
+      this.picture = this.person.picture || this.picture;
+      document.title = `${this.person.name} · ${this.current.position.name} · 72Horas`;
+      this.syncAddressBar();
     } catch (err) {
       this.error = err.message;
       // eslint-disable-next-line no-console
@@ -184,21 +236,17 @@ window.$vueCandidato = Vue.createApp({
       return;
     }
 
-    // Required data (the /history call above) is in — reveal the page
-    // now rather than waiting on the 3 enhancement fetches below too.
-    // Each of those loads independently and shows its own aria-busy
-    // state while in flight (same pattern the homepage already uses,
-    // e.g. :aria-busy="loadingIntroCharts"), instead of blocking the
-    // whole page behind a shared Promise.all.
+    // Required data (the /people call above) is in — reveal the page now
+    // rather than waiting on the 3 per-candidacy enhancement fetches
+    // below too. Each of those loads independently and shows its own
+    // aria-busy state while in flight (same pattern the homepage already
+    // uses, e.g. :aria-busy="loadingIntroCharts"), instead of blocking
+    // the whole page behind a shared Promise.all.
     //
-    // This also fixes a real bug: renderHistoryChart() needs
+    // This also matters for renderHistoryChart(): it needs
     // #js-candidato-history-chart to already exist in the DOM, which
     // only happens once `loading` flips false and the v-if wrapper
-    // around it renders. Calling it while still gated behind the old
-    // Promise.all meant the container didn't exist yet — the (still
-    // necessary, for other edge cases) guard in renderHistoryChart()
-    // just silently no-opped instead of throwing, so the chart never
-    // appeared and nothing logged.
+    // around it renders.
     this.loading = false;
 
     if (this.elections.length > 1) {
@@ -206,46 +254,133 @@ window.$vueCandidato = Vue.createApp({
       this.renderHistoryChart();
     }
 
-    // Fire-and-forget — each tracks its own loading flag and updates the
-    // page reactively as it resolves, on its own schedule.
-    this.loadCore();
-    this.loadComparison();
-    this.loadTransfers();
+    this.loadCandidacyDetails();
   },
   methods: {
     formatCurrencyNoAbbr,
     formatNumeral,
     formatDateBR,
-    candidateUrl,
+    personUrl,
+    // The real, working URL for viewing a specific candidacy — used both
+    // for the pills' :href (so they're genuine links: middle/ctrl-click
+    // opens a new tab, right-click offers "copy link", hover shows the
+    // target, screen readers get real link semantics — none of which a
+    // <button> gives you) and by syncAddressBar() to keep the address
+    // bar matching the current selection. Omits ?na_eleicao= entirely
+    // for the default (most recent) candidacy, keeping that common
+    // case's URL clean.
+    //
+    // The slug path itself is only corrected on production — it only
+    // resolves through Netlify's catch-all rewrite (netlify.toml), which
+    // a bare `hugo server` doesn't apply; rewriting it there would leave
+    // pills pointing at a URL that 404s the moment they're followed, so
+    // localhost keeps whatever path got here, e.g. /candidato/?id=.
+    urlForCandidateId(candidateId) {
+      const defaultCandidateId = this.elections[0]?.candidate_id;
+      const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+      const url = new URL(window.location.href);
+      if (!isLocalhost) {
+        url.pathname = personUrl(this.person);
+      }
+      if (candidateId === defaultCandidateId) {
+        url.searchParams.delete('na_eleicao');
+      } else {
+        url.searchParams.set('na_eleicao', candidateId);
+      }
+      return url.pathname + url.search;
+    },
+    // Plain click switches candidacies in place, without a page reload —
+    // preventDefault() stops the pill's real href from navigating.
+    // Anything else (a modifier key held, or a non-primary mouse button,
+    // i.e. middle-click) is left alone so the browser can do its normal
+    // thing — open a new tab, etc. — against that real href.
+    onElectionLinkClick(event, election) {
+      if (event.defaultPrevented || event.button !== 0
+        || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+        return;
+      }
+      event.preventDefault();
+      this.selectElection(election);
+    },
+    // Switching which of the person's candidacies is displayed — purely
+    // client-side (no page reload) for a plain click, though the pill is
+    // a real link underneath. Resets and re-fetches the 3 per-candidacy
+    // sections for the newly selected one.
+    selectElection(election) {
+      if (election.candidate_id === this.selectedCandidateId) return;
+      this.selectedCandidateId = election.candidate_id;
+      document.title = `${this.person.name} · ${election.position.name} · 72Horas`;
+      this.syncAddressBar();
+      this.core = null;
+      this.comparison = null;
+      this.transfers = [];
+      this.transfersPage = 1;
+      this.transfersHasMore = false;
+      this.loadCandidacyDetails();
+    },
+    // Keeps the address bar honest about current state after a
+    // selectElection() switch — same pattern already used for
+    // changeYear()/shareURL() on the home page. replaceState, not
+    // pushState: switching candidacies isn't a new navigation a user
+    // would expect Back to step through, just a correction/reflection of
+    // what's currently shown.
+    syncAddressBar() {
+      if (!this.elections.length) return;
+      const targetHref = this.urlForCandidateId(this.selectedCandidateId);
+      const currentHref = window.location.pathname + window.location.search;
+      if (targetHref !== currentHref) {
+        window.history.replaceState({}, document.title, targetHref);
+      }
+    },
+    loadCandidacyDetails() {
+      // Fire-and-forget — each tracks its own loading flag and updates
+      // the page reactively as it resolves, on its own schedule.
+      this.loadCore();
+      this.loadComparison();
+      this.loadTransfers();
+    },
     async loadCore() {
+      const candidateId = this.selectedCandidateId;
       this.coreLoading = true;
       try {
-        const response = await fetch(`${config.api.domain}candidates/${this.candidateId}`);
+        const response = await fetch(`${config.api.domain}candidates/${candidateId}`);
         if (!response.ok) {
           throw new Error(`core fetch failed: ${response.status}`);
         }
-        this.core = await response.json();
-        this.picture = this.core.picture || this.picture;
+        const data = await response.json();
+        // The user can switch candidacies again before this resolves —
+        // don't let a stale response for a no-longer-selected candidacy
+        // overwrite whatever's current by then.
+        if (candidateId !== this.selectedCandidateId) return;
+        this.core = data;
+        this.picture = data.picture || this.picture;
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(err);
       } finally {
-        this.coreLoading = false;
+        if (candidateId === this.selectedCandidateId) {
+          this.coreLoading = false;
+        }
       }
     },
     async loadComparison() {
+      const candidateId = this.selectedCandidateId;
       this.comparisonLoading = true;
       try {
-        const response = await fetch(`${config.api.domain}candidates/${this.candidateId}/comparison`);
+        const response = await fetch(`${config.api.domain}candidates/${candidateId}/comparison`);
         if (!response.ok) {
           throw new Error(`comparison fetch failed: ${response.status}`);
         }
-        this.comparison = await response.json();
+        const data = await response.json();
+        if (candidateId !== this.selectedCandidateId) return;
+        this.comparison = data;
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(err);
       } finally {
-        this.comparisonLoading = false;
+        if (candidateId === this.selectedCandidateId) {
+          this.comparisonLoading = false;
+        }
       }
     },
     // Confirmed by direct testing against the real API: pagination is via
@@ -255,13 +390,15 @@ window.$vueCandidato = Vue.createApp({
     // all pages at once.
     async loadTransfers(page = 1) {
       if (this.transfersLoading) return;
+      const candidateId = this.selectedCandidateId;
       this.transfersLoading = true;
       try {
-        const response = await fetch(`${config.api.domain}candidates/${this.candidateId}/transfers?page=${page}`);
+        const response = await fetch(`${config.api.domain}candidates/${candidateId}/transfers?page=${page}`);
         if (!response.ok) {
           throw new Error(`transfers fetch failed: ${response.status}`);
         }
         const data = await response.json();
+        if (candidateId !== this.selectedCandidateId) return;
         const items = Array.isArray(data.transfers) ? data.transfers : [];
         this.transfers = page === 1 ? items : this.transfers.concat(items);
         this.transfersHasMore = !!data.has_more;
@@ -270,7 +407,9 @@ window.$vueCandidato = Vue.createApp({
         // eslint-disable-next-line no-console
         console.error(err);
       } finally {
-        this.transfersLoading = false;
+        if (candidateId === this.selectedCandidateId) {
+          this.transfersLoading = false;
+        }
       }
     },
     loadMoreTransfers() {
@@ -281,7 +420,9 @@ window.$vueCandidato = Vue.createApp({
     // same election (Deputado Federal + Senador), so group by year and
     // sum; label each bar with the office only when it varies across the
     // history, so a candidate who always ran for the same office doesn't
-    // get it repeated on every bar.
+    // get it repeated on every bar. Unaffected by selectElection() — this
+    // always covers the person's whole history, not just the selected
+    // candidacy.
     renderHistoryChart() {
       const container = document.getElementById('js-candidato-history-chart');
       if (!container) return;

@@ -85,7 +85,7 @@
 - id: candidateNotFoundHelp
   translation: "Verifique se o endereço está correto ou volte para a página inicial."
 - id: candidateOtherElections
-  translation: "Eleições desta candidatura:"
+  translation: "Candidaturas desta pessoa:"
 - id: candidatePartyRank
   translation: "Posição no partido"
 - id: candidateTransfersExtract

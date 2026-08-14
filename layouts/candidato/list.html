@@ -25,9 +25,10 @@
           <a
             v-for="election in elections"
             :key="election.candidate_id"
-            :href="candidateUrl(election)"
+            :href="urlForCandidateId(election.candidate_id)"
+            @click="onElectionLinkClick($event, election)"
             class="candidato__pill"
-            :class="{ 'candidato__pill--active': election.candidate_id === candidateId }">
+            :class="{ 'candidato__pill--active': election.candidate_id === selectedCandidateId }">
             {{ "{{ election.year }} · {{ election.position.name }}" }}
           </a>
         </div>
