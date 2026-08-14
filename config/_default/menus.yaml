@@ -1,13 +1,21 @@
 header:
+- identifier: "home"
+  name: "Página inicial"
+  url: "/"
+  weight: 1
 - identifier: "aboutData"
   name: "Sobre os dados"
   url: "/sobre-os-dados/"
-  weight: 1
-- identifier: "donate"
+  weight: 2
+- identifier: "whoWeAre"
   name: "Quem somos"
   url: "/quem-somos/"
   weight: 3
 footer:
+- identifier: "home"
+  name: "Página inicial"
+  url: "/"
+  weight: 1
 - identifier: "aboutData"
   name: "Sobre os dados"
   url: "/sobre-os-dados/"
@@ -16,18 +24,7 @@ footer:
   name: "Imprensa"
   url: "/imprensa/"
   weight: 3
-- identifier: "donate"
+- identifier: "whoWeAre"
   name: "Quem somos"
   url: "/quem-somos/"
   weight: 4
-- identifier: "runs2020"
-  name: "Eleição de 2020"
-  url: "https://2020.72horas.org/"
-  parent: "previousRuns"
-- identifier: "runs2022"
-  name: "Eleição de 2022"
-  url: "https://2022.72horas.org/"
-  parent: "previousRuns"
-- identifier: "previousRuns"
-  name: "Eleições anteriores"
-  weight: 5
