@@ -1,7 +1,7 @@
-@use "sass:map";
-@use "../abstracts/font-stacks";
-@use "../abstracts/functions";
-@use "../abstracts/variables";
+@use 'sass:map';
+@use '../abstracts/font-stacks';
+@use '../abstracts/functions';
+@use '../abstracts/variables';
 
 %pay-attention-to {
   max-width: map.get(variables.$line-lengths, 'max');
@@ -54,6 +54,7 @@
   color: functions.text-contrast($bg-color, $fg-color, $level: 'AA');
 
   &::before {
+    margin-right: 0.25em;
     clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
 
     color: $bg-color;
