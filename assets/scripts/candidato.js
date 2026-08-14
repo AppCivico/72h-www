@@ -4,6 +4,15 @@ import config from './config';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 import personUrl, { slugify } from './utilities/personUrl';
+import watchMainMenu from './menuToggle';
+
+// The hamburger button + menu (.js-menu-toggle/.js-menu-area) live in
+// siteNav.html, shared by every page, but wiring them up is normally left
+// to whichever entry script the page loads (index.js for the home page,
+// content-page.js for generic content pages) — this page doesn't load
+// either (see the scripts.html comment near the bottom), so without this
+// call the button renders but does nothing.
+watchMainMenu();
 
 // /candidato/{slug}-{id}/ all resolve to the same static shell
 // (netlify.toml catch-all), since Hugo can't pre-generate one page per
