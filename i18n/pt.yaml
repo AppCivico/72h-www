@@ -38,6 +38,8 @@
   translation: "Qualquer resultado"
 - id: allStates
   translation: "Todos os Estados"
+- id: amount
+  translation: "Montante"
 - id: analysis
   translation: "Análise"
 - id: apply

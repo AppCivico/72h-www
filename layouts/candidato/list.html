@@ -205,7 +205,7 @@
                 <th>{{ i18n "state" }}</th>
                 <th>{{ i18n "party" }}</th>
                 <th>{{ i18n "electionStatuses" }}</th>
-                <th class="table-cell--numeric">{{ i18n "total" }}</th>
+                <th class="table-cell--numeric">{{ i18n "amount" }}</th>
               </tr>
             </thead>
             <tbody>
@@ -225,7 +225,7 @@
                 <td data-label='{{ i18n "electionStatuses" }}'>
                   {{ "{{ election.election_status }}" }}
                 </td>
-                <td data-label='{{ i18n "total" }}'
+                <td data-label='{{ i18n "amount" }}'
                 class="table-cell--numeric" v-html="formatCurrencyNoAbbr(election.total_value)"></td>
               </tr>
             </tbody>
