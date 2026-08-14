@@ -2,6 +2,18 @@
 @use '../abstracts/functions';
 @use '../abstracts/variables';
 
+// .container's shared mixin sets flex-direction: column + flex-wrap: wrap
+// with no fixed height. With a single, very tall child (this whole page),
+// that combination stretches the child to its content's max-content width
+// instead of shrinking it to fit the container — the child's own natural
+// width (driven by the transfers table's min-content) wins over the
+// viewport, so the page can grow past its intended max-width but never
+// actually narrows below it. flex-wrap: nowrap sidesteps the bug without
+// touching the shared mixin other pages rely on.
+.candidato__main {
+  flex-wrap: nowrap;
+}
+
 .candidato__loading,
 .candidato__not-found {
   padding: 3rem 0;

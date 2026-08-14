@@ -449,7 +449,7 @@ window.$vueCandidato = Vue.createApp({
         return `${year} (${[...officesByYear[year]].join(', ')})`;
       });
 
-      Highcharts.chart('js-candidato-history-chart', {
+      this.historyChart = Highcharts.chart('js-candidato-history-chart', {
         chart: {
           type: 'column',
           backgroundColor: 'transparent',
@@ -482,6 +482,29 @@ window.$vueCandidato = Vue.createApp({
           color: '#620ED9',
         }],
       });
+
+      // Highcharts already reflows on window resize by default, but that
+      // misses width changes caused by the container itself, e.g. the
+      // fund-sources/comparison/transfers sections above it revealing
+      // content as their own fetches resolve, which can shift this
+      // chart's width without the window ever resizing. Watching the
+      // container directly catches both cases through one listener.
+      //
+      // reflow() is deferred to the next frame rather than called
+      // synchronously in the observer callback — reflow can itself alter
+      // the container's box (e.g. redrawn axis labels changing height),
+      // and doing that inside the notification that triggered it is what
+      // causes browsers to flag a resize loop and silently stop
+      // delivering further notifications to this observer.
+      if (!this.historyChartResizeObserver) {
+        this.historyChartResizeObserver = new ResizeObserver(() => {
+          window.requestAnimationFrame(() => {
+            this.historyChart?.reflow();
+          });
+        });
+      }
+      this.historyChartResizeObserver.disconnect();
+      this.historyChartResizeObserver.observe(container);
     },
   },
 }).mount('#vueCandidato');
