@@ -1,5 +1,5 @@
-@use "../abstracts/functions";
-@use "../abstracts/mixins";
+@use '../abstracts/functions';
+@use '../abstracts/mixins';
 
 $logo-size: 3.812rem;
 $logo-top: 0.5rem;
@@ -58,12 +58,19 @@ $logo-left-desktop: calc(50% - 3.46rem);
   // background-color: palette('white');
 }
 
+.main-header__logo-heading {
+  margin: 0;
+}
+
 .main-header__logo {
   @include mixins.image-replacement;
+
   position: absolute;
   top: $logo-top;
   left: $logo-left;
   z-index: functions.layer('up');
+
+  display: block;
 
   width: $logo-size;
   height: $logo-size;
