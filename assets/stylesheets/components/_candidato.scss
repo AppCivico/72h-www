@@ -1,5 +1,6 @@
 @use '../vendor/modularscale-sass/sugar';
 @use '../abstracts/functions';
+@use '../abstracts/variables';
 
 .candidato__loading,
 .candidato__not-found {
@@ -83,7 +84,8 @@
 .candidato__fund-sources,
 .candidato__comparison,
 .candidato__transfers {
-  margin-top: 2rem;
+  margin-top: variables.$gutter;
+  margin-bottom: variables.$gutter * 3;
 }
 
 .candidato__fund-bar {

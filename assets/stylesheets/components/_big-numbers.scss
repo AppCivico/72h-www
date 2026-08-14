@@ -91,6 +91,12 @@ $height-of-last: variables.$gutter * 1.333333;
   }
 }
 
+.big-number__box--border-primary h1 {
+  &::before {
+    background-color: functions.palette('main-colors', 'primary');
+  }
+}
+
 .big-number__box--border-secondary h1 {
   &::before {
     background-color: functions.palette('main-colors', 'secondary');
