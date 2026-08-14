@@ -187,7 +187,8 @@
 - id: ofCandidates
   translation: "Das candidaturas"
 - id: office
-  translation: "Cargo"
+  one: "Cargo"
+  other: "Cargos"
 - id: ofTotal
   translation: "Do total"
 - id: oldInfo
