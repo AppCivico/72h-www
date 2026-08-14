@@ -149,25 +149,40 @@
   background-color: functions.palette('main-colors', 'tertiary');
 }
 
+// Track + value share one grid across ALL bars (mine + every reference
+// group), not just within a single bar — that's what lets the "value"
+// column size itself to the widest number across the whole comparison
+// (e.g. "R$ 107.845.683") and keeps every row's right edge aligned,
+// which plain flexbox can't guarantee across separate sibling rows: each
+// .candidato__compare-bar's own flex:1 track only balances against ITS
+// OWN value text, not its neighbors'.
+.candidato__compare-grid {
+  display: grid;
+
+  grid-template-columns: 1fr auto;
+
+  row-gap: 0.3rem;
+  column-gap: 0.75rem;
+}
+
+// display: contents unwraps this element from the box tree so its own
+// children (label/track/value) become direct items of
+// .candidato__compare-grid instead of being sized as one flex/grid item
+// each — required for the shared-column-sizing above to reach them.
 .candidato__compare-bar {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  align-items: center;
-
-  margin-top: 1rem;
+  display: contents;
 }
 
 .candidato__compare-label {
   display: flex;
 
+  grid-column: 1 / -1;
+
   gap: 0.25em;
 
   align-items: baseline;
 
-  width: 100%;
-  margin-bottom: 0.3rem;
+  margin-top: 1rem;
 
   font-size: sugar.ms(-1);
 }
@@ -177,10 +192,9 @@
 }
 
 .candidato__compare-track {
-  flex: 1;
+  grid-column: 1;
 
   height: 1rem;
-  margin-right: 0.75rem;
   overflow: hidden;
 
   background-color: functions.palette('gray', 'light');
@@ -200,8 +214,13 @@
 }
 
 .candidato__compare-value {
+  grid-column: 2;
+
+  align-self: center;
+
   font-size: sugar.ms(-1);
   font-weight: functions.font-weight('bold');
+  text-align: right;
   white-space: nowrap;
 }
 

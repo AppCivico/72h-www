@@ -131,25 +131,27 @@
           <h2 class="border-title border-title--secondary">{{ i18n "candidateComparison" }}</h2>
 
           <template v-if="comparisonChart">
-            <div class="candidato__compare-bar candidato__compare-bar--mine">
-              <span class="candidato__compare-label">{{ "{{ current.name }}" }}</span>
-              <span class="candidato__compare-track">
-                <span class="candidato__compare-fill" :style="{ width: comparisonChart.mine.widthPercent + '%' }"></span>
-              </span>
-              <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(comparisonChart.mine.value)"></span>
-            </div>
+            <div class="candidato__compare-grid">
+              <div class="candidato__compare-bar candidato__compare-bar--mine">
+                <span class="candidato__compare-label">{{ "{{ current.name }}" }}</span>
+                <span class="candidato__compare-track">
+                  <span class="candidato__compare-fill" :style="{ width: comparisonChart.mine.widthPercent + '%' }"></span>
+                </span>
+                <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(comparisonChart.mine.value)"></span>
+              </div>
 
-            <div class="candidato__compare-bar" v-for="group in comparisonChart.groups" :key="group.key">
-              <span class="candidato__compare-label">
-                <template v-if="group.key === 'party_uf'">{{ i18n "comparisonPartyUF" }}</template>
-                <template v-else-if="group.key === 'position_uf'">{{ i18n "comparisonOfficeUF" }}</template>
-                <template v-else>{{ i18n "comparisonOfficeNational" }}</template>
-                <small>({{ "{{ formatNumeral(group.count) }}" }} {{ i18n "candidate" 2 }})</small>
-              </span>
-              <span class="candidato__compare-track candidato__compare-track--reference">
-                <span class="candidato__compare-fill candidato__compare-fill--reference" :style="{ width: group.widthPercent + '%' }"></span>
-              </span>
-              <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(group.median)"></span>
+              <div class="candidato__compare-bar" v-for="group in comparisonChart.groups" :key="group.key">
+                <span class="candidato__compare-label">
+                  <template v-if="group.key === 'party_uf'">{{ i18n "comparisonPartyUF" }}</template>
+                  <template v-else-if="group.key === 'position_uf'">{{ i18n "comparisonOfficeUF" }}</template>
+                  <template v-else>{{ i18n "comparisonOfficeNational" }}</template>
+                  <small>({{ "{{ formatNumeral(group.count) }}" }} {{ i18n "candidate" 2 }})</small>
+                </span>
+                <span class="candidato__compare-track candidato__compare-track--reference">
+                  <span class="candidato__compare-fill candidato__compare-fill--reference" :style="{ width: group.widthPercent + '%' }"></span>
+                </span>
+                <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(group.median)"></span>
+              </div>
             </div>
           </template>
         </div>
