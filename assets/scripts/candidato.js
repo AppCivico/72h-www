@@ -1,4 +1,5 @@
 /* global Vue, Highcharts */
+import MicroModal from 'micromodal';
 import config from './config';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
@@ -91,6 +92,7 @@ window.$vueCandidato = Vue.createApp({
       // immediately.
       transfersLoading: false,
       picture: '/assets/images/no-picture.svg',
+      shareURLCopied: false,
     };
   },
   computed: {
@@ -146,6 +148,16 @@ window.$vueCandidato = Vue.createApp({
         mine: { value: myValue, widthPercent: withWidth(myValue) },
         groups: groups.map((group) => ({ ...group, widthPercent: withWidth(group.median) })),
       };
+    },
+    // Same value the address bar itself gets synced to (urlForCandidateId,
+    // via syncAddressBar) — reused here so sharing always points at
+    // whichever candidacy is currently selected, not just the person's
+    // default one. Turned absolute (vs. the relative path/query the
+    // address bar uses) because social share links (Facebook/Twitter/
+    // WhatsApp/Telegram) need a real, fetchable URL, not a path fragment.
+    shareURL({ selectedCandidateId } = this) {
+      if (!selectedCandidateId) return '';
+      return window.location.origin + this.urlForCandidateId(selectedCandidateId);
     },
   },
   async mounted() {
@@ -229,8 +241,15 @@ window.$vueCandidato = Vue.createApp({
     // around it renders.
     this.loading = false;
 
+    // The share button only enters the DOM once the `v-if` above this
+    // point re-renders (loading flipped false) — MicroModal.init() scans
+    // for `[data-micromodal-trigger]` elements at call time, so it has to
+    // run after that render, not during mounted()'s first tick, or it
+    // binds to nothing and the button silently does nothing on click.
+    await this.$nextTick();
+    MicroModal.init();
+
     if (this.elections.length > 1) {
-      await this.$nextTick();
       this.renderHistoryChart();
     }
 
@@ -394,6 +413,12 @@ window.$vueCandidato = Vue.createApp({
     },
     loadMoreTransfers() {
       this.loadTransfers(this.transfersPage + 1);
+    },
+    // Same pattern as the home page's copyShareURL (home.js).
+    copyShareURL() {
+      document.querySelector('#js-share-url').select();
+      document.execCommand('copy');
+      this.shareURLCopied = true;
     },
     // Same grouping as loadCandidateHistory()'s chart on the homepage
     // candidate cards (home.js): a person can hold two candidacies in the

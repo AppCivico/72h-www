@@ -1,0 +1,44 @@
+<header class="modal__header">
+  <h1>{{ i18n "shareWithEnthusiasm" }}</h1>
+  <button class="modal__close" aria-label="{{ i18n "closeModal" }}" data-micromodal-close></button>
+</header>
+<main class="modal__content share-modal__content" id="share-modal-content">
+  <a
+    :href="`https://www.facebook.com/sharer/sharer.php?u=${shareURL}`"
+    target="_blank"
+    class="share-modal__icon share-modal__icons--facebook">
+    {{ i18n "facebook" }}
+  </a>
+  <a
+    :href="`http://twitter.com/share?url=${shareURL}`"
+    target="_blank"
+    class="share-modal__icon share-modal__icons--twitter">
+    {{ i18n "twitter" }}
+  </a>
+  <a
+    :href="`https://wa.me/?text=${encodeURIComponent(shareURL)}`"
+    target="_blank"
+    class="share-modal__icon share-modal__icons--whatsapp">
+    {{ i18n "whatsapp" }}
+  </a>
+  <a
+    :href="`https://telegram.me/share/url?url=${shareURL}`"
+    target="_blank"
+    class="share-modal__icon share-modal__icons--telegram">
+    {{ i18n "telegram" }}
+  </a>
+  <div class="share-modal__input">
+    <input
+      :value="shareURL"
+      id="js-share-url"
+      type="text"
+      class="share-modal__input-text"
+      readonly>
+    <button
+      @click="copyShareURL"
+      class="share-modal__input-button button">
+      {{ i18n "copy" }}
+    </button>
+  </div>
+  <span v-show="shareURLCopied"> {{ i18n "linkCopiedSuccessfully" }}</span>
+</main>

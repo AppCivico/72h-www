@@ -48,9 +48,16 @@
               {{ "{{ current.city ? `por ${current.city.name}` : '' }}" }}
             </p>
             <p class="candidato__status">{{ "{{ current.election_status }}" }}</p>
-            <a v-if="core && core.divulgacand_url" :href="core.divulgacand_url" target="_blank" class="button">
-              {{ i18n "seeOnTSE" }}
-            </a>
+            <div class="candidato__actions">
+              <button
+                data-micromodal-trigger="js-share-modal"
+                class="button">
+                {{ i18n "share" }}
+              </button>
+              <a v-if="core && core.divulgacand_url" :href="core.divulgacand_url" target="_blank" class="button">
+                {{ i18n "seeOnTSE" }}
+              </a>
+            </div>
           </div>
         </div>
 
@@ -235,6 +242,14 @@
           </table>
         </div>
       </template>
+
+      <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true">
+        <div class="modal__overlay" tabindex="-1" data-micromodal-close>
+          <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+            {{ partial "shareModal.html" . }}
+          </div>
+        </div>
+      </div>
     </div>
   </main>
 
