@@ -226,7 +226,7 @@
 - id: seeMore
   translation: "Ver mais"
 - id: seeElectionPage
-  translation: "Ver esta candidatura"
+  translation: "Detalhar"
 - id: seeOnTSE
   translation: "Ver no TSE"
 - id: selectState

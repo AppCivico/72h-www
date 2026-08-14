@@ -10,6 +10,7 @@ import config from './config';
 import colorsPerTypeOfData from './utilities/colorsPerTypeOfData';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
+import personUrl from './utilities/personUrl';
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
@@ -628,6 +629,7 @@ if (window.location.href.indexOf('/') > -1) {
         return numeral(value).format('$0[.]00 a').replace('.', ',');
       },
       formatCurrencyNoAbbr,
+      personUrl,
       formatPercent(value) {
         return value === 0
           ? `${numeral(value).format()}%`

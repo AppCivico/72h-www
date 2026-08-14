@@ -310,6 +310,12 @@
                             </button>
 
                             <a
+                              :href="`${personUrl({ id: candidate.person_id, name: candidate.name })}?na_eleicao=${candidate.id}`"
+                              class="button">
+                              {{ i18n "seeElectionPage" }}
+                            </a>
+
+                            <a
                               :href="candidate.divulgacand_url"
                               target="_blank"
                               class="button">
