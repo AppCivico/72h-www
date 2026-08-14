@@ -63,115 +63,133 @@
             <span class="big-number__number" v-html="formatCurrencyNoAbbr(current.total_value)"></span>
           </div>
 
-          <div class="big-number__box big-number__box--border big-number__box--border-secondary" v-if="comparison && comparison.position_uf">
+          <div
+            class="big-number__box big-number__box--border big-number__box--border-secondary"
+            v-if="comparisonLoading || (comparison && comparison.position_uf)"
+            :aria-busy="comparisonLoading">
             <h1>{{ i18n "candidateVsMedianOffice" }}</h1>
             <p>
-              {{ "{{ formatNumeral(comparison.position_uf.count) }}" }} {{ i18n "candidate" 2 }}
+              {{ "{{ formatNumeral(comparison?.position_uf?.count) }}" }} {{ i18n "candidate" 2 }}
             </p>
-            <span class="big-number__number" v-html="formatCurrencyNoAbbr(comparison.position_uf.median)"></span>
+            <span class="big-number__number" v-html="formatCurrencyNoAbbr(comparison?.position_uf?.median)"></span>
           </div>
 
-          <div class="big-number__box big-number__box--border big-number__box--border-primary" v-if="comparison && comparison.party_uf">
+          <div
+            class="big-number__box big-number__box--border big-number__box--border-primary"
+            v-if="comparisonLoading || (comparison && comparison.party_uf)"
+            :aria-busy="comparisonLoading">
             <h1>{{ i18n "candidatePartyRank" }}</h1>
             <p>
-              {{ "{{ formatNumeral(comparison.party_uf.count) }}" }} {{ i18n "candidate" 2 }}
+              {{ "{{ formatNumeral(comparison?.party_uf?.count) }}" }} {{ i18n "candidate" 2 }}
             </p>
-            <span class="big-number__number">{{ "{{ comparison.party_uf.rank }}º" }}</span>
+            <span class="big-number__number">{{ "{{ comparison?.party_uf?.rank }}º" }}</span>
           </div>
 
-          <div class="big-number__box big-number__box--border big-number__box--border-quaternary" v-if="core && core.biggest_transfer">
+          <div
+            class="big-number__box big-number__box--border big-number__box--border-quaternary"
+            v-if="coreLoading || (core && core.biggest_transfer)"
+            :aria-busy="coreLoading">
             <h1>{{ i18n "candidateBiggestTransfer" }}</h1>
             <p>
-              {{ "{{ core.biggest_transfer.payer }}" }} · {{ "{{ formatDateBR(core.biggest_transfer.date) }}" }}
+              {{ "{{ core?.biggest_transfer?.payer }}" }} · {{ "{{ formatDateBR(core?.biggest_transfer?.date) }}" }}
             </p>
-            <span class="big-number__number" v-html="formatCurrencyNoAbbr(core.biggest_transfer.value)"></span>
+            <span class="big-number__number" v-html="formatCurrencyNoAbbr(core?.biggest_transfer?.value)"></span>
           </div>
         </div>
 
-        <div class="candidato__fund-sources" v-if="fundBreakdown">
+        <div class="candidato__fund-sources" v-if="coreLoading || fundBreakdown" :aria-busy="coreLoading">
           <h2 class="border-title border-title--primary">{{ i18n "candidateFundSources" }}</h2>
 
-          <div class="candidato__fund-bar">
-            <span class="candidato__fund-segment candidato__fund-segment--fefc" :style="{ width: fundBreakdown.fefc.percent + '%' }"></span>
-            <span class="candidato__fund-segment candidato__fund-segment--party" :style="{ width: fundBreakdown.partidario.percent + '%' }"></span>
-            <span class="candidato__fund-segment candidato__fund-segment--other" :style="{ width: fundBreakdown.outros.percent + '%' }"></span>
-          </div>
+          <template v-if="fundBreakdown">
+            <div class="candidato__fund-bar">
+              <span class="candidato__fund-segment candidato__fund-segment--fefc" :style="{ width: fundBreakdown.fefc.percent + '%' }"></span>
+              <span class="candidato__fund-segment candidato__fund-segment--party" :style="{ width: fundBreakdown.partidario.percent + '%' }"></span>
+              <span class="candidato__fund-segment candidato__fund-segment--other" :style="{ width: fundBreakdown.outros.percent + '%' }"></span>
+            </div>
 
-          <ul class="candidato__fund-legend">
-            <li>
-              <span class="candidato__fund-dot candidato__fund-dot--fefc"></span>
-              {{ i18n "fundTypeFEFC" }} — <span v-html="formatCurrencyNoAbbr(fundBreakdown.fefc.value)"></span>
-              ({{ "{{ formatNumeral(fundBreakdown.fefc.percent, 1) }}%" }})
-            </li>
-            <li>
-              <span class="candidato__fund-dot candidato__fund-dot--party"></span>
-              {{ i18n "fundTypeParty" }} — <span v-html="formatCurrencyNoAbbr(fundBreakdown.partidario.value)"></span>
-              ({{ "{{ formatNumeral(fundBreakdown.partidario.percent, 1) }}%" }})
-            </li>
-            <li>
-              <span class="candidato__fund-dot candidato__fund-dot--other"></span>
-              {{ i18n "fundTypeOther" }} — <span v-html="formatCurrencyNoAbbr(fundBreakdown.outros.value)"></span>
-              ({{ "{{ formatNumeral(fundBreakdown.outros.percent, 1) }}%" }})
-            </li>
-          </ul>
+            <ul class="candidato__fund-legend">
+              <li>
+                <span class="candidato__fund-dot candidato__fund-dot--fefc"></span>
+                {{ i18n "fundTypeFEFC" }} — <span v-html="formatCurrencyNoAbbr(fundBreakdown.fefc.value)"></span>
+                ({{ "{{ formatNumeral(fundBreakdown.fefc.percent, 1) }}%" }})
+              </li>
+              <li>
+                <span class="candidato__fund-dot candidato__fund-dot--party"></span>
+                {{ i18n "fundTypeParty" }} — <span v-html="formatCurrencyNoAbbr(fundBreakdown.partidario.value)"></span>
+                ({{ "{{ formatNumeral(fundBreakdown.partidario.percent, 1) }}%" }})
+              </li>
+              <li>
+                <span class="candidato__fund-dot candidato__fund-dot--other"></span>
+                {{ i18n "fundTypeOther" }} — <span v-html="formatCurrencyNoAbbr(fundBreakdown.outros.value)"></span>
+                ({{ "{{ formatNumeral(fundBreakdown.outros.percent, 1) }}%" }})
+              </li>
+            </ul>
+          </template>
         </div>
 
-        <div class="candidato__comparison" v-if="comparisonChart">
-          <h2 class="border-title border-title--primary">{{ i18n "candidateComparison" }}</h2>
+        <div class="candidato__comparison" v-if="comparisonLoading || comparisonChart" :aria-busy="comparisonLoading">
+          <h2 class="border-title border-title--secondary">{{ i18n "candidateComparison" }}</h2>
 
-          <div class="candidato__compare-bar candidato__compare-bar--mine">
-            <span class="candidato__compare-label">{{ "{{ current.name }}" }}</span>
-            <span class="candidato__compare-track">
-              <span class="candidato__compare-fill" :style="{ width: comparisonChart.mine.widthPercent + '%' }"></span>
-            </span>
-            <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(comparisonChart.mine.value)"></span>
-          </div>
+          <template v-if="comparisonChart">
+            <div class="candidato__compare-bar candidato__compare-bar--mine">
+              <span class="candidato__compare-label">{{ "{{ current.name }}" }}</span>
+              <span class="candidato__compare-track">
+                <span class="candidato__compare-fill" :style="{ width: comparisonChart.mine.widthPercent + '%' }"></span>
+              </span>
+              <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(comparisonChart.mine.value)"></span>
+            </div>
 
-          <div class="candidato__compare-bar" v-for="group in comparisonChart.groups" :key="group.key">
-            <span class="candidato__compare-label">
-              <template v-if="group.key === 'party_uf'">{{ i18n "comparisonPartyUF" }}</template>
-              <template v-else-if="group.key === 'position_uf'">{{ i18n "comparisonOfficeUF" }}</template>
-              <template v-else>{{ i18n "comparisonOfficeNational" }}</template>
-              <small>({{ "{{ formatNumeral(group.count) }}" }} {{ i18n "candidate" 2 }})</small>
-            </span>
-            <span class="candidato__compare-track candidato__compare-track--reference">
-              <span class="candidato__compare-fill candidato__compare-fill--reference" :style="{ width: group.widthPercent + '%' }"></span>
-            </span>
-            <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(group.median)"></span>
-          </div>
+            <div class="candidato__compare-bar" v-for="group in comparisonChart.groups" :key="group.key">
+              <span class="candidato__compare-label">
+                <template v-if="group.key === 'party_uf'">{{ i18n "comparisonPartyUF" }}</template>
+                <template v-else-if="group.key === 'position_uf'">{{ i18n "comparisonOfficeUF" }}</template>
+                <template v-else>{{ i18n "comparisonOfficeNational" }}</template>
+                <small>({{ "{{ formatNumeral(group.count) }}" }} {{ i18n "candidate" 2 }})</small>
+              </span>
+              <span class="candidato__compare-track candidato__compare-track--reference">
+                <span class="candidato__compare-fill candidato__compare-fill--reference" :style="{ width: group.widthPercent + '%' }"></span>
+              </span>
+              <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(group.median)"></span>
+            </div>
+          </template>
         </div>
 
-        <div class="candidato__transfers" v-if="transfers.length">
-          <h2 class="border-title border-title--primary">{{ i18n "candidateTransfersExtract" }}</h2>
+        <div
+          class="candidato__transfers"
+          v-if="(transfersLoading && !transfers.length) || transfers.length"
+          :aria-busy="transfersLoading && !transfers.length">
+          <h2 class="border-title border-title--quaternary">{{ i18n "candidateTransfersExtract" }}</h2>
 
-          <table class="candidato__transfers-table">
-            <thead>
-              <tr>
-                <th>{{ i18n "transferDate" }}</th>
-                <th>{{ i18n "transferPayer" }}</th>
-                <th class="table-cell--numeric">{{ i18n "total" }}</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="transfer in transfers" :key="transfer.id">
-                <td data-label='{{ i18n "transferDate" }}'>
-                  {{ "{{ formatDateBR(transfer.date) }}" }}
-                </td>
-                <td data-label='{{ i18n "transferPayer" }}'>
-                  {{ "{{ transfer.name }}" }}
-                </td>
-                <td data-label='{{ i18n "total" }}' class="table-cell--numeric" v-html="formatCurrencyNoAbbr(transfer.value)"></td>
-              </tr>
-            </tbody>
-          </table>
+          <template v-if="transfers.length">
+            <table class="candidato__transfers-table">
+              <thead>
+                <tr>
+                  <th>{{ i18n "transferDate" }}</th>
+                  <th>{{ i18n "transferPayer" }}</th>
+                  <th class="table-cell--numeric">{{ i18n "amount" }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="transfer in transfers" :key="transfer.id">
+                  <td data-label='{{ i18n "transferDate" }}'>
+                    {{ "{{ formatDateBR(transfer.date) }}" }}
+                  </td>
+                  <td data-label='{{ i18n "transferPayer" }}'>
+                    {{ "{{ transfer.name }}" }}
+                  </td>
+                  <td data-label='{{ i18n "amount" }}' class="table-cell--numeric" v-html="formatCurrencyNoAbbr(transfer.value)"></td>
+                </tr>
+              </tbody>
+            </table>
 
-          <button
-            v-if="transfersHasMore"
-            @click="loadMoreTransfers"
-            :aria-busy="transfersLoading"
-            class="button">
-            {{ i18n "candidateLoadMoreTransfers" }} ({{ "{{ formatNumeral(transfers.length) }}" }})
-          </button>
+            <button
+              v-if="transfersHasMore"
+              @click="loadMoreTransfers"
+              :aria-busy="transfersLoading"
+              class="button">
+              {{ i18n "candidateLoadMoreTransfers" }} ({{ "{{ formatNumeral(transfers.length) }}" }})
+            </button>
+          </template>
         </div>
 
         <div class="candidato__history" v-if="elections.length > 1">

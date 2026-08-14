@@ -62,10 +62,19 @@ window.$vueCandidato = Vue.createApp({
       error: '',
       elections: [],
       core: null,
+      coreLoading: true,
       comparison: null,
+      comparisonLoading: true,
       transfers: [],
       transfersPage: 1,
       transfersHasMore: false,
+      // Starts false, not true: loadTransfers() guards against overlapping
+      // calls with `if (this.transfersLoading) return;` at its very start
+      // (needed so double-clicking "load more" can't fire two overlapping
+      // fetches) — if this started true, that guard would trip on the very
+      // first call too and the initial fetch would never run. It flips to
+      // true synchronously inside loadTransfers() itself (before any
+      // await), so the aria-busy state still shows almost immediately.
       transfersLoading: false,
       picture: '/assets/images/no-picture.svg',
     };
@@ -167,29 +176,41 @@ window.$vueCandidato = Vue.createApp({
           window.history.replaceState({}, document.title, canonicalPath);
         }
       }
-
-      if (this.elections.length > 1) {
-        await this.$nextTick();
-        this.renderHistoryChart();
-      }
-
-      // core/comparison/transfers are enhancements on top of the required
-      // /history call above — if one of them fails, log it and let the
-      // rest of the page render anyway (v-if guards on core/comparison
-      // hide the sections that depend on them), rather than blanking the
-      // whole page over a single flaky endpoint.
-      await Promise.all([
-        this.loadCore(),
-        this.loadComparison(),
-        this.loadTransfers(),
-      ]);
     } catch (err) {
       this.error = err.message;
       // eslint-disable-next-line no-console
       console.error(err);
-    } finally {
       this.loading = false;
+      return;
     }
+
+    // Required data (the /history call above) is in — reveal the page
+    // now rather than waiting on the 3 enhancement fetches below too.
+    // Each of those loads independently and shows its own aria-busy
+    // state while in flight (same pattern the homepage already uses,
+    // e.g. :aria-busy="loadingIntroCharts"), instead of blocking the
+    // whole page behind a shared Promise.all.
+    //
+    // This also fixes a real bug: renderHistoryChart() needs
+    // #js-candidato-history-chart to already exist in the DOM, which
+    // only happens once `loading` flips false and the v-if wrapper
+    // around it renders. Calling it while still gated behind the old
+    // Promise.all meant the container didn't exist yet — the (still
+    // necessary, for other edge cases) guard in renderHistoryChart()
+    // just silently no-opped instead of throwing, so the chart never
+    // appeared and nothing logged.
+    this.loading = false;
+
+    if (this.elections.length > 1) {
+      await this.$nextTick();
+      this.renderHistoryChart();
+    }
+
+    // Fire-and-forget — each tracks its own loading flag and updates the
+    // page reactively as it resolves, on its own schedule.
+    this.loadCore();
+    this.loadComparison();
+    this.loadTransfers();
   },
   methods: {
     formatCurrencyNoAbbr,
@@ -197,6 +218,7 @@ window.$vueCandidato = Vue.createApp({
     formatDateBR,
     candidateUrl,
     async loadCore() {
+      this.coreLoading = true;
       try {
         const response = await fetch(`${config.api.domain}candidates/${this.candidateId}`);
         if (!response.ok) {
@@ -207,9 +229,12 @@ window.$vueCandidato = Vue.createApp({
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(err);
+      } finally {
+        this.coreLoading = false;
       }
     },
     async loadComparison() {
+      this.comparisonLoading = true;
       try {
         const response = await fetch(`${config.api.domain}candidates/${this.candidateId}/comparison`);
         if (!response.ok) {
@@ -219,6 +244,8 @@ window.$vueCandidato = Vue.createApp({
       } catch (err) {
         // eslint-disable-next-line no-console
         console.error(err);
+      } finally {
+        this.comparisonLoading = false;
       }
     },
     // Confirmed by direct testing against the real API: pagination is via
