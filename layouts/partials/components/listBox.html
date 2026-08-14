@@ -1,8 +1,8 @@
 <select
   v-if="normalizedType === 'select'"
+  v-bind="$attrs"
   :key="`select__${ name } `"
   :name="name"
-  v-bind="$attrs"
   @change="emit($event)"
 >
   <option :disabled="required" value="">{{ "{{ labelForEmpty }}" }}</option>
@@ -19,12 +19,12 @@
 tabindex="0" v-else>
   <li class="list-box__option list-box__option--empty" v-if="labelForEmpty || !required">
     <input
+      v-bind="$attrs"
       :id="`option__${ name }--empty`"
       value=""
       :checked="!currentValues.length || currentValues.includes('')"
       type="radio"
       :name="name"
-      v-bind="$attrs"
       @change.prevent="emit($event)"
       class="list-box__input list-box__input--empty"
       ref="empty"
@@ -47,6 +47,7 @@ tabindex="0" v-else>
     }"
   >
     <input
+      v-bind="$attrs"
       :id="`option__${ name }--${ option.id ?? option }`"
       :key="`option__${ option.id ?? option }`"
       :value="option.value ?? option"
@@ -54,7 +55,6 @@ tabindex="0" v-else>
       :true-value="option.value ?? option"
       :type="normalizedType"
       :name="name"
-      v-bind="$attrs"
       @change.prevent="emit($event)"
       class="list-box__input"
     />
