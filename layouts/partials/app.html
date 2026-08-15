@@ -310,6 +310,7 @@
                             </button>
 
                             <a
+                              v-if="candidate.person_id && candidate.name"
                               :href="`${personUrl({ id: candidate.person_id, name: candidate.name })}?na_eleicao=${candidate.id}`"
                               class="button">
                               {{ i18n "seeElectionPage" }}
