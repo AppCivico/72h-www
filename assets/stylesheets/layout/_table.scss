@@ -107,6 +107,10 @@ td {
   @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
     display: flex;
 
+    gap: 0.25em;
+
+    hyphens: auto;
+
     &:empty {
       display: none;
     }
@@ -146,7 +150,7 @@ tbody {
     @supports (grid-template-rows: subgrid) {
       display: grid;
 
-      grid-template-columns: repeat(auto-fit, minmax($card-width, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(max(#{$card-width}, 15em), 1fr));
 
       gap: 0 1.5rem;
     }
@@ -176,7 +180,10 @@ tbody td {
       &::before {
         display: inline;
 
+        flex-basis: 0;
+
         font-weight: functions.font-weight('bold');
+        hyphens: none;
 
         content: attr(data-label)':\A0';
       }
