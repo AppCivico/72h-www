@@ -49,7 +49,6 @@ tfoot {
 }
 
 thead {
-  background-color: functions.palette('gray', 'light');
 }
 
 tr {
@@ -96,13 +95,13 @@ th {
   font-weight: functions.font-weight('bold');
   text-align: left;
 
-  border-bottom: 2px solid functions.palette('gray', 'medium');
+  border-bottom: 2px solid functions.palette('main-colors', 'secondary');
 }
 
 td {
   font-family: inherit;
 
-  border-bottom: 1px solid functions.palette('gray', 'light');
+  border-bottom: 1px solid functions.palette('main-colors', 'tertiary');
 
   @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
     display: flex;
