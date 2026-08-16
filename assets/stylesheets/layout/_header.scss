@@ -8,8 +8,9 @@ $logo-size-desktop: 5.812rem;
 $logo-left-desktop: calc(50% - 3.46rem);
 
 .main-header {
-  position: relative;
-  z-index: functions.layer('up');
+  position: sticky;
+  top: 0;
+  z-index: functions.layer('dropdown');
 
   display: flex;
 
@@ -20,8 +21,9 @@ $logo-left-desktop: calc(50% - 3.46rem);
   padding-top: 0.5rem;
   margin-bottom: 2rem;
 
-  background-color: functions.palette('white');
-  box-shadow: 0 8px 21px -3px functions.palette('shadow', 'light');
+  background-color: rgba(252, 252, 251, 0.88);
+  border-bottom: 1px solid var(--hairline);
+  backdrop-filter: blur(12px);
 
   &::before {
     position: absolute;
@@ -155,5 +157,30 @@ $logo-left-desktop: calc(50% - 3.46rem);
     margin-right: 0;
     margin-bottom: 0;
     margin-left: 0.5rem;
+  }
+}
+
+.main-header__link {
+  display: inline-flex;
+
+  align-items: center;
+
+  min-height: 2.75rem;
+  padding: 0.25rem 0.9rem;
+
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--ink-2);
+  text-decoration: none;
+
+  border-radius: 999px;
+
+  &:hover {
+    color: var(--ink);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
   }
 }

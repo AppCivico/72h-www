@@ -63,7 +63,7 @@
 
         <div class="big-numbers">
           <div class="big-number__box big-number__box--border big-number__box--border-quaternary">
-            <h1>{{ i18n "total" }}</h1>
+            <h3>{{ i18n "total" }}</h3>
             <p>
               {{ "{{ formatNumeral(current.total_transfers) }}" }} {{ i18n "transfers" }}
               <template v-if="core && core.first_transfer_date">{{ i18n "since" }} {{ "{{ formatDateBR(core.first_transfer_date) }}" }}</template>
@@ -75,7 +75,7 @@
             class="big-number__box big-number__box--border big-number__box--border-secondary"
             v-if="comparisonLoading || (comparison && comparison.position_uf)"
             :aria-busy="comparisonLoading">
-            <h1>{{ i18n "candidateVsMedianOffice" }}</h1>
+            <h3>{{ i18n "candidateVsMedianOffice" }}</h3>
             <p>
               {{ "{{ formatNumeral(comparison?.position_uf?.count) }}" }} {{ i18n "candidate" 2 }}
             </p>
@@ -86,7 +86,7 @@
             class="big-number__box big-number__box--border big-number__box--border-primary"
             v-if="comparisonLoading || (comparison && comparison.party_uf)"
             :aria-busy="comparisonLoading">
-            <h1>{{ i18n "candidatePartyRank" }}</h1>
+            <h3>{{ i18n "candidatePartyRank" }}</h3>
             <p>
               {{ "{{ formatNumeral(comparison?.party_uf?.count) }}" }} {{ i18n "candidate" 2 }}
             </p>
@@ -97,7 +97,7 @@
             class="big-number__box big-number__box--border big-number__box--border-quaternary"
             v-if="coreLoading || (core && core.biggest_transfer)"
             :aria-busy="coreLoading">
-            <h1>{{ i18n "candidateBiggestTransfer" }}</h1>
+            <h3>{{ i18n "candidateBiggestTransfer" }}</h3>
             <p>
               {{ "{{ core?.biggest_transfer?.payer }}" }} · {{ "{{ formatDateBR(core?.biggest_transfer?.date) }}" }}
             </p>

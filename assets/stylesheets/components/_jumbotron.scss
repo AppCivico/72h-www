@@ -1,90 +1,71 @@
-@use '../vendor/modularscale-sass/sugar';
 @use '../abstracts/functions';
 @use '../abstracts/mixins';
 @use '../abstracts/variables';
 
+/// Editorial hero: left-aligned serif display over a quiet radial tint,
+/// dek-style intro copy, year selector as an inline control.
+
 .jumbotron {
   width: 100%;
+  padding-top: variables.$gutter * 2;
+  padding-bottom: variables.$gutter;
 
-  text-align: center;
+  text-align: left;
 
   @media screen and (min-width: functions.breakpoint('desktop')) {
-    max-width: 60rem;
-    margin-right: auto;
-    margin-left: auto;
+    padding-top: variables.$gutter * 3;
   }
 }
 
 .jumbotron h1 {
+  max-width: 21ch;
   margin-top: variables.$gutter * 0.5;
-  margin-bottom: variables.$gutter * 0.5;
+  margin-bottom: variables.$gutter * 0.75;
 
-  font-size: sugar.ms(5);
-  line-height: 1.2;
-  letter-spacing: -0.05ex;
+  font-size: clamp(2.2rem, 5.2vw, var(--t-3xl));
+  font-weight: 600;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+}
+
+.jumbotron p {
+  max-width: 56ch;
+
+  font-size: var(--t-m);
+  line-height: 1.55;
+  color: var(--ink-2);
 }
 
 .jumbotron__year-selector {
-  display: inline-block;
+  display: inline-flex;
 
-  align-items: center;
-  justify-content: center;
+  align-items: baseline;
 
   width: fit-content;
   max-width: 100%;
-  margin-right: auto;
   margin-bottom: variables.$gutter;
-  margin-left: auto;
 
-  font-size: sugar.ms(10);
+  font-size: var(--t-2xl);
   font-weight: functions.font-weight('bold');
   line-height: 1;
-  color: functions.palette('main-colors', 'primary');
+  color: var(--brand);
   white-space: nowrap;
-
-  @supports (display: flex) {
-    display: flex;
-  }
 
   select {
     font: inherit;
     color: inherit;
 
+    cursor: pointer;
+
     background-color: transparent;
-    border-color: functions.palette('main-colors', 'secondary');
+    border-color: var(--hairline-2);
     border-style: solid;
-    border-width: 0 0 1px;
-  }
+    border-width: 0 0 2px;
 
-  &::before,
-  &::after {
-    box-sizing: content-box;
-    display: inline-block;
-
-    flex-basis: 0.5rem;
-    flex-grow: 1;
-    flex-shrink: 0;
-
-    width: 4.5rem;
-    max-width: 15%;
-    height: 0.5rem;
-
-    color: functions.palette('main-colors', 'quaternary');
-    vertical-align: middle;
-
-    content: '';
-
-    background-color: currentcolor;
-    border: 0.15rem solid functions.palette('main-colors', 'tertiary');
-    border-radius: 10px;
-  }
-
-  &::before {
-    margin-right: 0.25em;
-  }
-
-  &::after {
-    margin-left: 0.25em;
+    &:focus-visible {
+      outline: 2px solid var(--brand);
+      outline-offset: 4px;
+    }
   }
 }
 
@@ -93,6 +74,6 @@
 }
 
 .jumbotron [class*='pay-attention-to'] {
-  font-size: sugar.ms(-1);
+  font-size: var(--t-xs);
   text-align: inherit;
 }

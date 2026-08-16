@@ -29,7 +29,7 @@ $title-font-stack: font-stacks.$basic-title-font-stack !default;
 ///
 /// @example scss
 /// $text-font-stack: ComicSans, $native-font-stack;
-$text-font-stack: 'Montserrat' !default;
+$text-font-stack: font-stacks.$inter-font-stack !default;
 
 
 /// Code (monospace) font stack
@@ -112,11 +112,12 @@ $palette: (
     'quaternary': rgb(222, 49, 55),
   ),
   'gray': (
-    'x-light': rgb(248, 248, 248),
-    'light': rgb(242, 242, 242),
-    'base': rgb(189, 189, 189),
-    'medium': rgb(145, 142, 144),
-    'dark': rgb(51, 51, 51),
+    'x-light': rgb(246, 244, 238),
+    'light': rgb(231, 227, 218),
+    'base': rgb(216, 211, 198),
+    // WCAG AA: 6.6:1 on white — was rgb(145, 142, 144) at 3.2:1
+    'medium': rgb(86, 80, 100),
+    'dark': rgb(27, 23, 35),
     // 'x-dark': shade(rgb(64, 68, 71), 10%),
   ),
   'loading': (
@@ -173,12 +174,12 @@ $palette: (
   ),
   'debug': rgb(255, 0, 0),
   'anchor': (
-    'base': rgb(0, 102, 204),
-    'link': rgb(0, 102, 204),
-    'visited': rgb(128, 0, 128),
-    'hover': rgb(50, 152, 255),
-    'focus': rgb(50, 152, 255),
-    'active': rgb(229, 0, 80),
+    'base': rgb(76, 29, 149),
+    'link': rgb(76, 29, 149),
+    'visited': rgb(105, 51, 147),
+    'hover': rgb(98, 14, 217),
+    'focus': rgb(98, 14, 217),
+    'active': rgb(194, 24, 91),
   ),
   'border': (
     'base': rgb(192, 192, 192),
@@ -236,7 +237,7 @@ $palette: (
   'tap-highlight': rgb(255, 94, 153),
   'target-highlight': rgb(255, 255, 102),
   'text': (
-    'dark': hsl(0, 0%, 13%),
+    'dark': rgb(27, 23, 35),
     'light': rgb(229, 231, 234),
   ),
 );

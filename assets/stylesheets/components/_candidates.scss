@@ -1,5 +1,9 @@
-@use "../vendor/modularscale-sass/sugar";
-@use "../abstracts/functions";
+@use '../vendor/modularscale-sass/sugar';
+@use '../abstracts/font-stacks';
+@use '../abstracts/functions';
+
+/// Editorial refresh: each result is a card with a clear hierarchy —
+/// name first, the money as the protagonist, one primary action.
 
 .candidates {
   display: flex;
@@ -40,19 +44,13 @@
   }
 }
 
-.candidates h1 {
+.candidates h2 {
   width: 100%;
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 
-  font-size: sugar.ms(3);
+  font-size: var(--t-xl);
   line-height: 1.2;
-  // text-align: center;
-  text-transform: uppercase;
-
-  @media screen and (min-width: functions.breakpoint('tablet')) {
-    margin-bottom: 2rem;
-  }
 }
 
 .candidates__subtitle {
@@ -60,48 +58,104 @@
 }
 
 .candidates__subtitle p {
-  font-size: sugar.ms(-1);
-  color: functions.palette('gray', 'medium');
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }
 
 .candidates__candidate {
   display: flex;
 
+  gap: 1rem;
+
   width: 100%;
-  margin-bottom: 2rem;
+  padding: 1.4rem;
+  margin-bottom: 1.25rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--shadow-lift);
+
+    transform: translateY(-2px);
+  }
 
   @media screen and (min-width: functions.breakpoint('tablet')) {
-    width: 50%;
+    width: calc(50% - 1rem);
+    margin-right: 0.5rem;
+    margin-left: 0.5rem;
   }
 
   @media screen and (min-width: functions.breakpoint('desktop')) {
     width: calc(33.3333333% - 1rem);
-    margin-right: 0.5rem;
-    margin-left: 0.5rem;
   }
 }
 
 .candidates__image {
-  width: 3rem;
-  height: 4rem;
-  margin-right: 1rem;
+  flex: none;
 
-  background-color: functions.palette('gray', 'light');
-  box-shadow: 5px 8px 21px -3px functions.palette('shadow', 'light');
+  width: 3.4rem;
+  height: 3.4rem;
+
+  object-fit: cover;
+
+  background-color: var(--brand-tint);
+  border: 2px solid functions.palette('white');
+  border-radius: 50%;
+  box-shadow: 0 0 0 1px var(--hairline);
+}
+
+.candidates__text {
+  display: flex;
+
+  flex-direction: column;
+
+  width: 100%;
+  min-width: 0;
 }
 
 .candidates__name {
-  margin-bottom: 0;
+  margin-bottom: 0.15rem;
 
   font-weight: functions.font-weight('bold');
+  line-height: 1.35;
 }
 
 .candidates__info {
   width: 100%;
   margin-bottom: 0;
 
-  font-size: sugar.ms(-2);
-  color: functions.palette('gray', 'medium');
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+.candidates__total {
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+
+  border-top: 1px solid var(--hairline);
+}
+
+.candidates__total-label {
+  display: block;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.candidates__total-value {
+  font-family: font-stacks.$fraunces-font-stack;
+  font-size: var(--t-l);
+  font-weight: functions.font-weight('bold');
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.2;
+  color: var(--ink);
+  letter-spacing: -0.01em;
 }
 
 .candidates__history {
@@ -115,8 +169,11 @@
   display: flex;
 
   flex-wrap: wrap;
-  align-items: center;
 
   gap: 0.5rem;
-  margin-top: 0.5rem;
+
+  align-items: center;
+  justify-content: space-between;
+
+  margin-top: 1rem;
 }

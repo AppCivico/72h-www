@@ -1,29 +1,50 @@
-@use "../vendor/modularscale-sass/sugar";
-@use "../abstracts/font-stacks";
-@use "../abstracts/functions";
+@use '../abstracts/font-stacks';
+@use '../abstracts/functions';
+
+/// Editorial refresh: pill buttons, 44px touch targets, sentence case.
+/// Default action wears ink; `--primary` wears the brand purple (8.1:1
+/// with white text). The old teal background (2.7:1) is gone for good.
 
 .button {
   display: inline-flex;
 
-  padding: 0.2rem 1.2rem;
+  align-items: center;
+  justify-content: center;
 
-  font-family: font-stacks.$monteserrat-font-stack;
-  font-size: sugar.ms(-2);
-  font-weight: functions.font-weight('bold');
+  min-height: 2.75rem;
+  padding: 0.55rem 1.5rem;
+
+  font-family: font-stacks.$inter-font-stack;
+  font-size: var(--t-xs);
+  font-weight: 600;
   color: functions.palette('white');
   text-align: center;
   text-decoration: none;
-  text-transform: uppercase;
 
   cursor: pointer;
 
-  background: functions.palette('main-colors', 'secondary');
+  background: var(--ink);
   border: 0;
-  border-radius: 6px;
+  border-radius: 999px;
+
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+
+  &:hover {
+    background: functions.palette('black');
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
 }
 
 .button--primary {
-  background: functions.palette('main-colors', 'primary');
+  background: var(--brand);
+
+  &:hover {
+    background: var(--brand-deep);
+  }
 }
 
 .button--big {
@@ -31,11 +52,15 @@
   justify-content: center;
 
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 1.5rem;
 
-  font-size: sugar.ms(0);
+  font-size: 1rem;
 
-  background: functions.palette('main-colors', 'primary');
+  background: var(--brand);
+
+  &:hover {
+    background: var(--brand-deep);
+  }
 
   @media screen and (min-width: functions.breakpoint('tablet')) {
     max-width: 27rem;
@@ -49,15 +74,47 @@
   justify-content: center;
 
   max-width: 18rem;
-  padding: 0.5rem 1rem;
+  padding: 0.65rem 1.5rem;
 
-  font-size: sugar.ms(0);
+  background: var(--brand);
 
-  background: functions.palette('main-colors', 'primary');
+  &:hover {
+    background: var(--brand-deep);
+  }
 
   @media screen and (min-width: functions.breakpoint('tablet')) {
     margin-right: auto;
     margin-left: auto;
+  }
+}
+
+/// Quiet outlined action (e.g. secondary options inside cards)
+.button--ghost {
+  color: var(--ink);
+
+  background: transparent;
+  border: 1px solid var(--hairline-2);
+
+  &:hover {
+    background: transparent;
+    border-color: var(--ink-2);
+  }
+}
+
+/// Link-looking action for tertiary destinations (e.g. external TSE page)
+.button--link {
+  min-height: 0;
+  padding: 0.25rem 0;
+
+  color: var(--ink-2);
+
+  background: transparent;
+  border-radius: 4px;
+
+  &:hover {
+    color: var(--brand-deep);
+
+    background: transparent;
   }
 }
 
@@ -68,15 +125,20 @@
   margin-bottom: 1rem;
   margin-left: auto;
 
-  color: functions.palette('main-colors', 'secondary');
+  color: var(--brand-deep);
 
   background-color: transparent;
-  border: 1px solid functions.palette('main-colors', 'secondary');
+  border: 1px solid var(--hairline-2);
+
+  &:hover {
+    background-color: var(--brand-tint);
+    border-color: var(--brand-deep);
+  }
 
   &::before {
     width: 1rem;
     height: 1rem;
-    margin-right: 0.3rem;
+    margin-right: 0.4rem;
 
     content: '';
 

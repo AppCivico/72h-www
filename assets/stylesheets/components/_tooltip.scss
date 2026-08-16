@@ -1,0 +1,102 @@
+@use '../abstracts/functions';
+
+/// Rich tooltip bubble (see assets/scripts/components/tooltip.js) and the
+/// small "i" trigger used next to big-number headings.
+
+.tooltip-bubble {
+  position: absolute;
+  z-index: functions.layer('modal');
+
+  width: min(19rem, 86vw);
+  padding: 0.9rem 1rem;
+
+  font-family: var(--font-sans);
+  font-size: var(--t-xs);
+  font-weight: 400;
+  line-height: 1.5;
+  color: functions.palette('white');
+  text-align: left;
+  text-transform: none;
+  letter-spacing: 0;
+
+  background: var(--ink-card);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lift);
+
+  &::after {
+    position: absolute;
+    top: -6px;
+    left: 24px;
+
+    width: 12px;
+    height: 12px;
+
+    content: '';
+
+    background: var(--ink-card);
+
+    transform: rotate(45deg);
+  }
+}
+
+.tooltip-bubble--above {
+  &::after {
+    top: auto;
+    bottom: -6px;
+  }
+}
+
+.info-button {
+  display: inline-grid;
+
+  flex: none;
+
+  place-items: center;
+
+  width: 1.35rem;
+  height: 1.35rem;
+  padding: 0;
+
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--ink-2);
+
+  cursor: help;
+
+  background: var(--card);
+  border: 1px solid var(--hairline-2);
+  border-radius: 50%;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--brand);
+
+    border-color: var(--brand);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+}
+
+.skip-link {
+  position: absolute;
+  top: 0;
+  left: -999rem;
+  z-index: functions.layer('modal');
+
+  padding: 0.6rem 1rem;
+
+  color: functions.palette('white');
+
+  background: var(--brand);
+  border-radius: 0 0 8px;
+
+  &:focus {
+    left: 0;
+  }
+}

@@ -288,3 +288,17 @@
 
 - id: yearSelector
   translation: "Ano da eleição"
+- id: skipToData
+  translation: "Pular para os dados"
+- id: tipButtonLabel
+  translation: "Mais informações"
+- id: tipAccumulatedValue
+  translation: "Soma de todos os repasses de fundos públicos declarados ao TSE e capturados pelo monitor em até 72 horas após a declaração."
+- id: tipCandidatesWhoReceived
+  translation: "Cada candidatura é contada uma única vez, mesmo quando recebe de mais de um fundo — por isso a soma dos recortes pode superar este número."
+- id: tipPartyFund
+  translation: "Fundo Partidário: verba pública permanente, repartida entre os partidos todos os anos. Pode financiar campanhas e a manutenção das legendas."
+- id: tipFEFC
+  translation: "FEFC (Fundo Especial de Financiamento de Campanha): verba pública liberada apenas em anos eleitorais, distribuída conforme o tamanho das bancadas no Congresso."
+- id: tipOtherResources
+  translation: "Recursos declarados que não vêm do Fundo Partidário nem do FEFC, como doações de pessoas físicas e autofinanciamento."

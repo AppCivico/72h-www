@@ -14,9 +14,9 @@
       {{ with .Site.Menus.header }}
         {{ range . }}
           <a
-            class="button"
+            class="main-header__link"
             href="{{ .URL }}"
-            target="_blank">
+            {{- if (hasPrefix .URL "http") }} target="_blank" rel="noopener"{{ end }}>
               {{ .Name }}
           </a>
         {{ end }}

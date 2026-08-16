@@ -1,0 +1,56 @@
+////
+/// Design tokens — "editorial / data journalism" refresh.
+///
+/// Single source of truth for the redesign, exposed as CSS custom
+/// properties so components (and future dark mode) can consume them
+/// without recompiling Sass. See `proposta-visual.html` at the repo root
+/// for the reference mockup these values come from.
+///
+/// @group configurations
+////
+
+:root {
+  /* surfaces */
+  --paper: #fcfcfb;
+  --paper-warm: #f6f4ee;
+  --card: #ffffff;
+  --ink-card: #211d2b;
+
+  /* ink (all AA-checked on --paper) */
+  --ink: #1b1723;
+  --ink-2: #565064; /* 6.6:1 — secondary text */
+  --ink-3: #7a7488; /* meta, >=14px only */
+  --hairline: #e7e3da;
+  --hairline-2: #d8d3c6;
+
+  /* brand */
+  --brand: #620ed9; /* 8.1:1 with white text */
+  --brand-deep: #4c1d95; /* links */
+  --brand-tint: #f1eafd; /* badges, soft fills */
+  --accent-warm: #b45309;
+
+  /* dataviz — CVD-validated, fixed order, never cycled */
+  --dv-1: #6d28d9;
+  --dv-2: #00897b;
+  --dv-3: #b45309;
+  --dv-4: #1d4ed8;
+  --dv-5: #c2185b;
+  --dv-muted: #cbc6bb;
+
+  /* type — scale 1.25 (major third), 14px floor */
+  --font-sans: 'Inter', -apple-system, blinkmacsystemfont, 'Segoe UI', 'Roboto', 'Helvetica Neue', arial, sans-serif;
+  --font-serif: 'Fraunces', 'Georgia', 'Times New Roman', serif;
+  --t-xs: 0.875rem; /* 14 */
+  --t-s: 1rem; /* 16 */
+  --t-m: 1.25rem; /* 20 */
+  --t-l: 1.563rem; /* 25 */
+  --t-xl: 1.953rem; /* 31 */
+  --t-2xl: 2.441rem; /* 39 */
+  --t-3xl: 3.052rem; /* 49 */
+
+  /* shape & elevation */
+  --radius: 12px;
+  --radius-s: 8px;
+  --shadow: 0 1px 2px rgba(27, 23, 35, 0.05), 0 8px 24px -12px rgba(27, 23, 35, 0.12);
+  --shadow-lift: 0 2px 4px rgba(27, 23, 35, 0.06), 0 16px 40px -16px rgba(27, 23, 35, 0.22);
+}

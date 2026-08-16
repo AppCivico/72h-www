@@ -14,6 +14,7 @@
 @use 'abstracts/mixins';
 
 // 3. Base stuff
+@use 'base/tokens';
 @use 'base/base';
 @use 'base/fonts';
 @use 'base/typography';
@@ -53,6 +54,7 @@
 @use 'components/pagination';
 @use 'components/jumbotron';
 @use 'components/list-boxes';
+@use 'components/tooltip';
 @use 'components/transition-expand';
 @use 'components/pay-attention-to';
 @use 'components/intro-charts';

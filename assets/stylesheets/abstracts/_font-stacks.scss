@@ -264,3 +264,11 @@ $merriweather-sans-font-stack: 'Merriweather Sans', sans-serif !default;
 $quattrocento-font-stack: 'Quattrocento', serif !default;
 $quattrocento-sans-font-stack: 'Quattrocento Sans', sans-serif !default;
 $monteserrat-font-stack: 'Montserrat', sans-serif !default;
+
+/// Inter — interface / body text of the editorial refresh
+/// @type list
+$inter-font-stack: 'Inter', -apple-system, blinkmacsystemfont, 'Segoe UI', 'Roboto', 'Helvetica Neue', arial, sans-serif !default;
+
+/// Fraunces — editorial serif for headings and hero numbers
+/// @type list
+$fraunces-font-stack: 'Fraunces', 'Georgia', 'Times New Roman', serif !default;

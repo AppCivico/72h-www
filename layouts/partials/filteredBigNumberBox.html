@@ -17,7 +17,7 @@
 {{ if .lowerLabel }}{{ $candidateLabelText = lower $candidateLabelText }}{{ end }}
 
 <div class="big-number__box big-number__box--icon big-number__box--icon-{{ .icon }}">
-  <h1>{{ i18n .title }}</h1>
+  <h3>{{ i18n .title }}</h3>
   {{ partial "filterText" }}
   <p v-else>
     {{ i18n "TSEData" }}

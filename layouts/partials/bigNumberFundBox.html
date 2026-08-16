@@ -20,7 +20,11 @@
 <transition-expand>
   <div class="big-number__box big-number__box--border
     big-number__box--border-secondary">
-    <h1>{{ i18n .title }}</h1>
+    <h3>{{ i18n .title }}
+      {{- with .tip }}
+      <button type="button" class="info-button" data-tooltip="{{ i18n . }}" aria-label="{{ i18n "tipButtonLabel" }}">i</button>
+      {{- end }}
+    </h3>
     <p>
       {{ i18n "entriesQuantity" }}
       <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $transfersField }}">{{ partial "formatNumeralBR.html" (index $acc $transfersField) }}</span>

@@ -16,13 +16,14 @@
   <meta charset="utf-8">
 
   <link rel="dns-prefetch" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
 
   {{ $style := resources.Get "stylesheets/main.scss" | css.Sass (dict "transpiler" "dartsass") | css.PostCSS | resources.Minify | resources.Fingerprint "sha512" }}
   <link rel="stylesheet" href="{{ $style.RelPermalink }}" integrity="{{ $style.Data.Integrity }}">
 
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,800" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
   {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.global.prod.js" "vendor/vue.global.js") | resources.Fingerprint "sha512" }}
   <link rel="preload" type="text/javascript" as="script" href="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}">
