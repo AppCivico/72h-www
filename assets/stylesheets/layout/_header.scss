@@ -213,6 +213,11 @@ $mark-size-desktop: 3rem;
 /* election switcher — same Vue model as the hero's, so both stay in sync
 ============================================================================ */
 .main-header__year {
+  // contains [v-cloak]'s absolutely-positioned loading overlay, which
+  // would otherwise spread across the whole (sticky, hence positioned)
+  // masthead
+  position: relative;
+
   display: flex;
 
   flex: none;

@@ -1,0 +1,99 @@
+@use '../abstracts/font-stacks';
+@use '../abstracts/functions';
+
+/// Editorial data table: hairline rows, small-caps header, tabular numbers
+/// and a quiet hover. Keeps the stacked card layout the shared table rules
+/// switch to on narrow screens (each cell labelled by its `data-label`).
+
+.data-table {
+  width: 100%;
+
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums lining-nums;
+
+  border-collapse: collapse;
+}
+
+.data-table th {
+  padding: 0 0.75rem 0.6rem;
+
+  font-family: font-stacks.$inter-font-stack;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--ink-2);
+  text-align: left;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+
+  border-bottom: 1px solid var(--hairline-2);
+}
+
+.data-table td {
+  padding: 0.7rem 0.75rem;
+
+  color: var(--ink);
+  vertical-align: middle;
+
+  border-bottom: 1px solid var(--hairline);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.data-table tbody tr:hover {
+  background-color: var(--paper-warm);
+}
+
+.data-table .table-cell--numeric {
+  text-align: right;
+}
+
+.data-table td:first-child,
+.data-table th:first-child {
+  padding-left: 0;
+}
+
+.data-table td:last-child,
+.data-table th:last-child {
+  padding-right: 0;
+}
+
+/// Below the table breakpoint the shared rules turn rows into cards; the
+/// value keeps its label alongside it.
+@media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
+  .data-table td {
+    display: flex;
+
+    gap: 1rem;
+
+    justify-content: space-between;
+
+    padding-right: 0;
+    padding-left: 0;
+
+    text-align: right;
+  }
+
+  .data-table td::before {
+    flex: none;
+
+    font-weight: 600;
+    color: var(--ink-2);
+    text-align: left;
+
+    content: attr(data-label);
+  }
+
+  .data-table tbody tr {
+    display: block;
+
+    padding: 0.75rem 0;
+
+    border-bottom: 1px solid var(--hairline-2);
+  }
+
+  .data-table tbody tr:last-child {
+    border-bottom: 0;
+  }
+}

@@ -1,5 +1,6 @@
 /* global Vue, Highcharts */
 import MicroModal from 'micromodal';
+import chartTheme, { categorical, compactCurrency } from './utilities/chartTheme';
 import config from './config';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
@@ -463,16 +464,21 @@ window.$vueCandidato = Vue.createApp({
         return `${year} (${[...officesByYear[year]].join(', ')})`;
       });
 
+      Highcharts.setOptions(chartTheme);
+
       this.historyChart = Highcharts.chart('js-candidato-history-chart', {
         chart: {
           type: 'column',
           backgroundColor: 'transparent',
+          height: 300,
+          spacingTop: 16,
+          marginTop: 84,
         },
         title: {
-          text: null,
+          text: window.appCandidateChart?.title || '',
         },
-        credits: {
-          enabled: false,
+        subtitle: {
+          text: window.appCandidateChart?.subtitle || '',
         },
         legend: {
           enabled: false,
@@ -481,19 +487,44 @@ window.$vueCandidato = Vue.createApp({
           categories,
         },
         yAxis: {
-          title: {
-            text: 'valor (R$)',
+          title: { text: null },
+          labels: {
+            // eslint-disable-next-line object-shorthand, func-names
+            formatter: function () {
+              return compactCurrency(this.value, 1);
+            },
           },
         },
         tooltip: {
-          pointFormatter() {
-            return formatCurrencyNoAbbr(this.y);
+          // eslint-disable-next-line object-shorthand, func-names
+          formatter: function () {
+            return `<div style="min-width:9rem">
+                <div style="margin-bottom:.25rem;font-weight:600">${this.key}</div>
+                <div><b>${formatCurrencyNoAbbr(this.y)}</b></div>
+              </div>`;
+          },
+        },
+        plotOptions: {
+          column: {
+            borderRadius: 4,
+            pointPadding: 0.08,
+            groupPadding: 0.12,
+            dataLabels: {
+              enabled: true,
+              // eslint-disable-next-line object-shorthand, func-names
+              formatter: function () {
+                return compactCurrency(this.y, 1);
+              },
+              style: {
+                fontSize: '12px', fontWeight: '600', color: '#565064', textOutline: 'none',
+              },
+            },
           },
         },
         series: [{
           name: 'Total',
           data: values,
-          color: '#620ED9',
+          color: categorical[0],
         }],
       });
 
