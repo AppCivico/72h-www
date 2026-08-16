@@ -40,6 +40,14 @@
   display: contents;
 }
 
+/// The candidate page has 4 boxes in a 59rem column: two rows of two keeps
+/// the currency values readable, where four across would squeeze them.
+@media screen and (min-width: functions.breakpoint('phablet')) {
+  .big-numbers--candidate {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 /// The home summary has 5 boxes: a 6-column grid lets them sit 3 + 2 with
 /// both rows full, instead of leaving an orphan card.
 @media screen and (min-width: functions.breakpoint('desktop')) {

@@ -394,3 +394,25 @@
   translation: "Fonte: TSE · DivulgaCandContas"
 - id: footerFollow
   translation: "Acompanhe"
+- id: candidateEyebrow
+  translation: "Candidatura"
+- id: candidateFundsEyebrow
+  translation: "Composição"
+- id: candidateComparisonEyebrow
+  translation: "Em perspectiva"
+- id: candidateTransfersEyebrow
+  translation: "Repasse a repasse"
+- id: candidateHistoryEyebrow
+  translation: "Trajetória"
+- id: candidateComparisonNote
+  translation: "A mediana divide o grupo ao meio: metade das candidaturas recebeu menos que ela, metade recebeu mais. É menos sensível a valores extremos do que a média."
+- id: candidateHistoryChartTitle
+  translation: "Quanto recebeu em cada eleição"
+- id: candidateHistoryChartSubtitle
+  translation: "Valor total declarado ao TSE por candidatura"
+- id: candidateFundsNote
+  translation: "Divisão do total recebido entre os fundos públicos e os demais recursos declarados."
+- id: backToList
+  translation: "Todas as candidaturas"
+- id: amongCandidates
+  translation: "entre"

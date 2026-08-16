@@ -1,15 +1,27 @@
 {{/* Sticky masthead: brand on the left, then the two content pages, the
      election switcher and the social links on the right. "Página inicial"
      is gone from the menu — the logo is the way home, and the site is
-     effectively one page. The year <select> here shares Vue's
-     `selectedYear`, so it stays in sync with the one in the hero and
-     lets readers change election without scrolling back up. */}}
+     effectively one page.
+
+     The year <select> is bound to the home app's `selectedYear`, so it is
+     only rendered where that app exists. Pages with their own Vue root
+     (the candidate detail) pass `false` — otherwise the control's
+     `v-cloak` would never be removed, and `[v-cloak]`'s loading overlay
+     would paint the whole masthead white.
+     Call: {{ partial "siteNav.html" . }} or
+           {{ partial "siteNav.html" (dict "ctx" . "yearSwitcher" false) }} */}}
+{{- $ctx := . -}}
+{{- $yearSwitcher := true -}}
+{{- if reflect.IsMap . -}}
+  {{- $ctx = .ctx -}}
+  {{- $yearSwitcher = .yearSwitcher -}}
+{{- end -}}
 <header class="main-header">
   <div class="container">
     <p class="main-header__logo-heading">
       <a class="main-header__logo" href="/">
         <span class="main-header__mark" aria-hidden="true"></span>
-        <span class="main-header__wordmark">{{ .Site.Params.name }}</span>
+        <span class="main-header__wordmark">{{ $ctx.Site.Params.name }}</span>
       </a>
     </p>
 
@@ -25,7 +37,7 @@
 
     <div class="main-header__links js-menu-area" id="js-main-menu">
       <nav class="main-header__nav" aria-label="{{ i18n "mainMenu" }}">
-        {{ with .Site.Menus.header }}
+        {{ with $ctx.Site.Menus.header }}
           {{ range . }}
             <a
               class="main-header__link"
@@ -37,7 +49,7 @@
         {{ end }}
       </nav>
 
-      {{ with $.Site.Params.run }}
+      {{ if and $yearSwitcher $ctx.Site.Params.run }}
         <label class="main-header__year" v-cloak>
           <span class="main-header__year-label">{{ i18n "electionLabel" }}</span>
           <select
