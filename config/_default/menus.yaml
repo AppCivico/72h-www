@@ -1,8 +1,4 @@
 header:
-- identifier: "home"
-  name: "Página inicial"
-  url: "/"
-  weight: 1
 - identifier: "aboutData"
   name: "Sobre os dados"
   url: "/sobre-os-dados/"

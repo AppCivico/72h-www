@@ -69,3 +69,17 @@
   font-size: var(--t-xs);
   color: var(--ink-2);
 }
+
+/// Comparison note: what the distribution should be measured against
+/// (population share, legal minimum). Sits under its own figure.
+.chart-benchmark {
+  padding-top: 0.75rem;
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  line-height: 1.5;
+  color: var(--ink-2);
+
+  border-top: 1px solid var(--hairline);
+}

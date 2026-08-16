@@ -318,3 +318,61 @@
   translation: "Valor acumulado ao longo do período selecionado"
 - id: exploreEyebrow
   translation: "Explore os dados"
+- id: explainerToggle
+  translation: "Quero entender melhor os números"
+- id: explainerIntro
+  translation: "De onde vem o dinheiro que financia as campanhas e como ele é contado aqui."
+- id: explainerCompositionTitle
+  translation: "Como o total se divide"
+- id: explainerNotesTitle
+  translation: "Ao ler estes números, lembre-se"
+- id: explainerFPTitle
+  translation: "Fundo Partidário"
+- id: explainerFPText
+  translation: "Verba pública permanente, repartida entre os partidos todos os anos. Pode financiar campanhas e a manutenção das legendas."
+- id: explainerFEFCTitle
+  translation: "Fundo Eleitoral (FEFC)"
+- id: explainerFEFCText
+  translation: "Fundo Especial de Financiamento de Campanha: verba pública liberada apenas em anos eleitorais, distribuída conforme o tamanho das bancadas no Congresso."
+- id: explainerOtherTitle
+  translation: "Outros recursos"
+- id: explainerOtherText
+  translation: "Recursos declarados que não vêm dos dois fundos públicos: doação direta de pessoas físicas, financiamento coletivo e autofinanciamento."
+- id: initiativeBy
+  translation: "Uma iniciativa de"
+- id: videoEyebrow
+  translation: "Em vídeo"
+- id: videoTitle
+  translation: "Conheça o projeto"
+- id: electionLabel
+  translation: "Eleição"
+- id: heroEyebrow
+  translation: "Atualização contínua"
+- id: heroHeadlineBefore
+  translation: "Só"
+- id: heroHeadlineAfter
+  translation: "das candidaturas receberam recursos dos fundos até agora."
+- id: heroSourceLabel
+  translation: "Fonte dos dados"
+- id: heroSourceValue
+  translation: "TSE · DivulgaCandContas"
+- id: chartTitleEthnicity
+  translation: "Candidaturas de cor/raça %s concentram %s do valor repassado"
+- id: chartTitleGender
+  translation: "Candidaturas do gênero %s concentram %s do valor repassado"
+- id: chartTitleParty
+  translation: "%s lidera os repasses, com %s do valor"
+- id: chartTitleState
+  translation: "%s concentra %s do valor repassado"
+- id: chartTitleFallback
+  translation: "Repasses por %s"
+- id: chartSubtitleValue
+  translation: "Valor acumulado declarado ao TSE"
+- id: ethnicityBenchmark
+  translation: "Para comparar: no Censo 2022 do IBGE, a população brasileira se declarou 45,3% parda, 43,5% branca, 10,2% preta, 0,8% indígena e 0,4% amarela."
+- id: genderBenchmark
+  translation: "Para comparar: a lei exige que ao menos 30% dos recursos dos fundos sejam destinados a candidaturas de mulheres."
+- id: openMenu
+  translation: "Abrir menu"
+- id: mainMenu
+  translation: "Menu principal"

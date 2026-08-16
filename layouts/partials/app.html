@@ -12,6 +12,8 @@
 {{- else -}}
   {{- warnf "SSR snapshot for /v1/index?year=%d failed (err=%v) — page will render without real pre-hydration big numbers" $ssrYear $ssrResult.Err -}}
 {{- end -}}
+{{- $heroAcc := $ssrData.accumulated | default dict -}}
+{{- $heroElection := $ssrData.election | default dict -}}
     <body>
       <a class="skip-link" href="#js-candidate-box">{{ i18n "skipToData" }}</a>
       <div id="vueHome">
@@ -20,7 +22,21 @@
         <main>
           <div class="container">
             <header class="jumbotron">
-              <h1>{{ .Title }}</h1>
+              <div class="jumbotron__lead">
+                {{/* The headline states the finding and carries a live
+                     figure: editors reword it in i18n (heroHeadlineBefore/
+                     After), the percentage follows the data. The static
+                     value is the build-time snapshot, replaced by Vue. */}}
+                <h1 class="jumbotron__headline">
+                  {{ i18n "heroHeadlineBefore" }}
+                  <em
+                    class="jumbotron__stat"
+                    v-text="formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $heroAcc.total_candidates_who_received "denominator" $heroElection.candidate_count) }}</em>
+                  {{ i18n "heroHeadlineAfter" }}
+                </h1>
+
+                <div class="jumbotron__dek">{{ .Content }}</div>
+
                 {{ with $.Site.Params.run }}
                   <label class="jumbotron__year-selector" v-cloak>
                     <span class="jumbotron__year-selector-inner-label">{{ i18n "yearSelector" }}</span>
@@ -32,14 +48,24 @@
                     </select>
                   </label>
                 {{ end }}
-              {{ .Content }}
+              </div>
+
+              <aside class="jumbotron__status">
+                <p class="jumbotron__pulse">{{ i18n "heroEyebrow" }}</p>
+
+                <p class="jumbotron__status-item" v-cloak v-if="mainData && mainData.last_run_at">
+                  <span class="jumbotron__status-label">{{ i18n "lastUpdatedAt" }}</span>
+                  <span class="jumbotron__status-value">{{ "{{ mainData ? formatDateTime(mainData.last_run_at) : '' }}" }}</span>
+                </p>
+
+                <p class="jumbotron__status-item">
+                  <span class="jumbotron__status-label">{{ i18n "heroSourceLabel" }}</span>
+                  <span class="jumbotron__status-value">{{ i18n "heroSourceValue" }}</span>
+                </p>
+              </aside>
             </header>
 
             <div class="big-numbers__wrapper">
-              <p class="big-number__update pay-attention-to__warning" v-cloak v-if="mainData && mainData.last_run_at">
-                  {{ i18n "lastUpdatedAt" }}
-                  {{ "{{ mainData ?  formatDateTime(mainData.last_run_at) : '' }}" }}
-                </p>
 
               {{ partial "bigNumbers.html" (dict "data" $ssrData "page" .) }}
 
@@ -55,6 +81,12 @@
               <template v-if="!loadingIntroCharts && hasIntroCharts">
                 <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
                   <div :id="`js-chart__${chart.type}`"></div>
+                  {{/* Benchmarks turn a distribution into a comparison —
+                       the population it should mirror, or the share the
+                       law requires. Wording lives in i18n so it can be
+                       updated when the reference data changes. */}}
+                  <p class="chart-benchmark" v-if="chart.type === 'ethnicity'">{{ i18n "ethnicityBenchmark" }}</p>
+                  <p class="chart-benchmark" v-if="chart.type === 'gender'">{{ i18n "genderBenchmark" }}</p>
                 </div>
               </template>
               <div v-else-if="!loadingIntroCharts" class="no-results">
@@ -374,18 +406,28 @@
               </div>
             </div>
           </div>
-          <div class="container">
-            <div class="ted">
-              <iframe src="https://www.youtube-nocookie.com/embed/qKIDnS6Ve0o?si=5PD5Dr-Gjic3Zspf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-            <div class="partners">
-              <h2>{{ i18n "partnersAndOrganizations" }}</h2>
+          <section class="home-section home-section--warm">
+            <div class="container">
+              <figure class="ted">
+                <p class="eyebrow">{{ i18n "videoEyebrow" }}</p>
+                <h2 class="ted__title">{{ i18n "videoTitle" }}</h2>
+                <iframe src="https://www.youtube-nocookie.com/embed/qKIDnS6Ve0o?si=5PD5Dr-Gjic3Zspf" title="{{ i18n "videoTitle" }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              </figure>
 
-              {{ range where .Site.RegularPages ".Type" "partners" }}
-                <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
-              {{ end }}
+              <div class="partners">
+                <p class="eyebrow">{{ i18n "initiativeBy" }}</p>
+                <h2>{{ i18n "partnersAndOrganizations" }}</h2>
+
+                <ul class="partners__grid">
+                  {{ range where .Site.RegularPages ".Type" "partners" }}
+                    <li class="partners__item">
+                      <img src="{{ .Params.image }}" alt="{{ .Title }}" loading="lazy">
+                    </li>
+                  {{ end }}
+                </ul>
+              </div>
             </div>
-          </div>
+          </section>
 
           <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true" v-cloak>
             <div class="modal__overlay" tabindex="-1" data-micromodal-close>

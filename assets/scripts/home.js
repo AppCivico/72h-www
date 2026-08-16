@@ -94,6 +94,7 @@ if (window.location.href.indexOf('/') > -1) {
         epochFromParam: null,
         useEpoch: false,
         introCharts: [],
+        explainerOpen: false,
         pieColors: [
           '#dc5b64',
           '#4e79e6',
@@ -605,6 +606,57 @@ if (window.location.href.indexOf('/') > -1) {
       },
       formatCurrencyNoAbbr,
       personUrl,
+      /**
+       * Builds a chart headline that states the finding ("Candidaturas de
+       * cor/raça Branca concentram 58% do valor repassado") from the
+       * leading category, falling back to a neutral label when there is
+       * no clear leader or no wording configured for the type.
+       */
+      chartHeadline(chart, total, label) {
+        const templates = window.appChartTitles || {};
+        const fallback = (templates.fallback || 'Repasses por %s').replace('%s', (label || '').toLowerCase());
+
+        if (!total || !Array.isArray(chart.data) || !chart.data.length) {
+          return fallback;
+        }
+
+        // handleColumnData() moves names into xAxis.categories and nulls
+        // them on the points, so read the label back from there.
+        const categories = chart.xAxis?.categories;
+        const points = chart.data.map((point, i) => ({
+          name: point.name || categories?.[i] || '',
+          y: point.y || 0,
+        }));
+        const top = points.reduce((best, point) => (point.y > best.y ? point : best), points[0]);
+
+        if (!top || !top.name) {
+          return fallback;
+        }
+
+        const template = templates[chart.type];
+
+        if (!template) {
+          return fallback;
+        }
+
+        const share = `${((top.y / total) * 100).toFixed(0)}%`;
+
+        return template.replace('%s', top.name).replace('%s', share);
+      },
+      /** Share of the period's total value, as a CSS length (dot decimal). */
+      shareOfTotalCss(value) {
+        const total = this.mainData?.accumulated?.total_value;
+
+        if (!total || !value) {
+          return '0%';
+        }
+
+        return `${((value / total) * 100).toFixed(1)}%`;
+      },
+      /** Same share, formatted for reading (pt-BR comma decimal). */
+      shareOfTotal(value) {
+        return this.shareOfTotalCss(value).replace('.', ',');
+      },
       formatPercent(value) {
         return value === 0
           ? `${numeral(value).format()}%`
@@ -998,6 +1050,7 @@ if (window.location.href.indexOf('/') > -1) {
           const label = window.appDictionary[chart.type];
           const total = chart.total
             || chart.data.reduce((sum, point) => sum + (point.y || 0), 0);
+          const headline = this.chartHeadline(chart, total, label);
 
           Highcharts.chart(`js-chart__${chart.type}`, {
             chart: {
@@ -1026,10 +1079,10 @@ if (window.location.href.indexOf('/') > -1) {
               },
             },
             title: {
-              text: `Repasses por ${label.toLowerCase()}`,
+              text: headline,
             },
             subtitle: {
-              text: 'Valor acumulado declarado ao TSE',
+              text: (window.appChartTitles && window.appChartTitles.subtitle) || '',
             },
             tooltip: {
               // eslint-disable-next-line object-shorthand, func-names
