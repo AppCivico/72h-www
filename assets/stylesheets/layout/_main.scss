@@ -21,39 +21,12 @@
   padding-top: variables.$gutter * 2;
   margin-bottom: variables.$gutter * 2;
 
-  background-color: functions.palette('gray', 'x-light');
-  box-shadow: 0 8px 21px -3px functions.palette('shadow', 'light'), 0 -3px 21px -3px functions.palette('shadow', 'light');
+  background-color: var(--paper-warm);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
 
   .container {
     display: block;
-  }
-
-  .filters {
-    @media screen and (min-width: functions.breakpoint('wide')) {
-      position: sticky;
-      top: variables.$gutter;
-      z-index: functions.layer('default');
-
-      float: left;
-      width: 20%;
-      padding-right: variables.$gutter;
-
-      ~ * {
-        width: 80%;
-        margin-left: 20%;
-
-        transition: width margin-left 0.3s;
-      }
-
-      &[hidden] ~ * {
-        width: 100%;
-        margin-left: 0;
-      }
-    }
-  }
-
-  .filters__items form {
-    background-color: functions.palette('gray', 'x-light');
   }
 
   .outdated {

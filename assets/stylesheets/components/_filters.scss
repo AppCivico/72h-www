@@ -1,21 +1,21 @@
+@use '../abstracts/font-stacks';
 @use '../abstracts/functions';
 @use '../abstracts/variables';
 
-/// Editorial refresh: the filter area reads as one card, controls get
-/// real boxes (not underlines), and the toggle is a proper heading
-/// wrapping a button.
+/// The filters used to become a sticky 20%-wide column on large screens:
+/// eleven controls stacked in a narrow strip, each separated by two
+/// gutters of empty space, with the results squeezed into the remaining
+/// 80%. They now read as one panel above the results — a responsive grid
+/// of equal controls that fills the row and ends in an actions bar.
 
 .filters {
   width: 100%;
-
-  @media screen and (min-width: functions.breakpoint('tablet')) {
-    margin-bottom: 4rem;
-  }
+  margin-bottom: variables.$gutter * 1.5;
 }
 
 .filters__heading {
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 }
 
 .filters__toggle {
@@ -91,77 +91,66 @@
   }
 }
 
+/* the panel
+============================================================================ */
 .filters__items {
-  display: flex;
+  display: block;
 
-  transition: max-width max-height 0.3s;
-
-  &[hidden] {
-    max-height: 0;
-    overflow: hidden;
-
-    @media screen and (min-width: functions.breakpoint('wide')) {
-      max-width: 0;
-    }
-  }
-
-  @media screen and (min-width: functions.breakpoint('wide')) {
-    display: block;
-
-    max-height: none;
-  }
+  width: 100%;
 }
 
 .filters__items form {
-  display: flex;
+  display: grid;
 
-  flex-wrap: wrap;
+  grid-template-columns: 1fr;
+
+  gap: 1.1rem 1.25rem;
 
   width: 100%;
+  padding: 1.5rem;
 
-  @media screen and (min-width: functions.breakpoint('wide')) {
-    display: block;
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+
+  @media screen and (min-width: functions.breakpoint('phablet')) {
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   }
 }
 
-.filters__items select,
 .filters__items .filters__item {
-  flex-grow: 1;
-
-  width: 100%;
-  min-width: 15rem;
-  padding-right: 0.5rem;
-  padding-left: 0.5rem;
-  margin-right: 0.5rem;
-  margin-bottom: variables.$gutter;
-  margin-left: 0.5rem;
+  width: auto;
+  min-width: 0;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
 
   font-family: variables.$text-font-stack;
+}
 
-  @media screen and (min-width: functions.breakpoint('tablet')) {
-    width: calc(50% - 1rem);
-  }
+/// Field labels were inheriting the editorial serif from the global
+/// heading rule (legend is in that selector list), which read as decorative
+/// lowercase titles rather than form labels.
+.filters legend {
+  margin-bottom: 0.35rem;
 
-  @media screen and (min-width: functions.breakpoint('desktop')) {
-    width: calc(33% - #{variables.$gutter * 2});
-    padding-right: 0.1rem;
-    padding-left: 0.1rem;
-    margin-right: 0.1rem;
-    margin-left: 0.1rem;
-  }
+  font-family: font-stacks.$inter-font-stack;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+  letter-spacing: 0;
 
-  @media screen and (min-width: functions.breakpoint('wide')) {
-    width: auto;
-    min-width: 0;
-    max-width: 100%;
-    padding-left: 0;
-    margin-right: 0.5rem;
-    margin-bottom: variables.$gutter * 2;
+  // the i18n strings are lowercase ("estados", "cor/raça"); capitalising
+  // only the first letter keeps compound labels readable
+  &::first-letter {
+    text-transform: uppercase;
   }
 }
 
 .filters__items select,
 .filters__items .list-box {
+  width: 100%;
+
   background-color: var(--card);
   border: 1px solid var(--hairline-2);
   border-radius: var(--radius-s);
@@ -194,22 +183,31 @@
   color: var(--ink-2);
 }
 
-.filters .button {
-  align-self: flex-end;
-  justify-content: center;
+/* actions bar
+============================================================================ */
+.filters__actions {
+  display: flex;
 
-  width: 100%;
-  margin-bottom: variables.$gutter;
+  flex-wrap: wrap;
 
-  text-align: center;
+  grid-column: 1 / -1;
 
-  @media screen and (min-width: functions.breakpoint('tablet')) {
-    max-width: 17rem;
-    margin-right: auto;
-    margin-left: auto;
-  }
+  gap: 0.75rem;
 
-  @media screen and (min-width: functions.breakpoint('desktop')) {
-    width: auto;
-  }
+  align-items: center;
+
+  padding-top: 1.25rem;
+
+  border-top: 1px solid var(--hairline);
+}
+
+.filters__actions .button {
+  width: auto;
+  margin: 0;
+}
+
+/// The share action is secondary here, so it sits after the primary pair
+/// and pushes to the far end on wide rows.
+.filters__actions .button--icon {
+  margin-left: auto;
 }

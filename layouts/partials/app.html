@@ -88,13 +88,6 @@
 
           <div class="filterable-area" v-cloak>
             <div class="container">
-              <button
-                @click="sharingFrom = 'filters'"
-                data-micromodal-trigger="js-share-modal"
-                class="button button--icon button--icon-share">
-                {{ i18n "shareFilteredData" }}
-              </button>
-
               <p class="eyebrow">{{ i18n "exploreEyebrow" }}</p>
 
               <h2 class="filters__heading">
@@ -238,7 +231,24 @@
                         required
                       ></list-box>
                     </fieldset>
-                    <button class="button button--primary">{{ i18n "apply" }}</button>
+                    <div class="filters__actions">
+                      <button class="button button--primary">{{ i18n "apply" }}</button>
+
+                      <button
+                        type="button"
+                        class="button button--ghost"
+                        @click="clearFilters">
+                        {{ i18n "clearFilters" }}
+                      </button>
+
+                      <button
+                        type="button"
+                        @click="sharingFrom = 'filters'"
+                        data-micromodal-trigger="js-share-modal"
+                        class="button button--icon button--icon-share">
+                        {{ i18n "shareFilteredData" }}
+                      </button>
+                    </div>
                   </form>
                 </div>
               </div>
