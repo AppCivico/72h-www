@@ -67,6 +67,19 @@
     "gender": '{{ i18n "gender" }}',
     "state": '{{ i18n "state" }}',
   }
+
+  // Chart headlines state what the data shows and are rebuilt from the
+  // live figures on every render, so they follow the moment instead of
+  // reading as neutral labels. Editors change the wording here (i18n),
+  // the numbers come from the API.
+  window.appChartTitles = {
+    "ethnicity": '{{ i18n "chartTitleEthnicity" }}',
+    "gender": '{{ i18n "chartTitleGender" }}',
+    "party": '{{ i18n "chartTitleParty" }}',
+    "state": '{{ i18n "chartTitleState" }}',
+    "fallback": '{{ i18n "chartTitleFallback" }}',
+    "subtitle": '{{ i18n "chartSubtitleValue" }}',
+  }
 </script>
 
 {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.global.prod.js" "vendor/vue.global.js") | resources.Fingerprint "sha512" }}

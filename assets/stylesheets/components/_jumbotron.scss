@@ -1,25 +1,39 @@
+@use '../abstracts/font-stacks';
 @use '../abstracts/functions';
-@use '../abstracts/mixins';
 @use '../abstracts/variables';
 
 /// Editorial hero: left-aligned serif display over a quiet radial tint,
 /// dek-style intro copy, year selector as an inline control.
 
 .jumbotron {
+  display: grid;
+
+  grid-template-columns: 1fr;
+
+  gap: 2rem;
+
   width: 100%;
   padding-top: variables.$gutter * 2;
   padding-bottom: variables.$gutter;
 
   text-align: left;
 
+  // The right column used to be dead space; it now carries the freshness
+  // and provenance of the data, which is the paper's whole claim.
   @media screen and (min-width: functions.breakpoint('desktop')) {
+    grid-template-columns: minmax(0, 1.65fr) minmax(15rem, 1fr);
+
+    gap: 3rem;
+
+    align-items: start;
+
     padding-top: variables.$gutter * 3;
   }
 }
 
-.jumbotron h1 {
-  max-width: 21ch;
-  margin-top: variables.$gutter * 0.5;
+.jumbotron__headline {
+  max-width: 22ch;
+  margin-top: 0;
   margin-bottom: variables.$gutter * 0.75;
 
   font-size: clamp(2.2rem, 5.2vw, var(--t-3xl));
@@ -28,7 +42,13 @@
   letter-spacing: -0.015em;
 }
 
-.jumbotron p {
+.jumbotron__stat {
+  font-style: normal;
+  font-variant-numeric: lining-nums;
+  color: var(--brand);
+}
+
+.jumbotron__dek p {
   max-width: 56ch;
 
   font-size: var(--t-m);
@@ -36,41 +56,121 @@
   color: var(--ink-2);
 }
 
+/* freshness & provenance card
+============================================================================ */
+.jumbotron__status {
+  padding: 1.25rem 1.35rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+
+.jumbotron__pulse {
+  display: flex;
+
+  gap: 0.5rem;
+
+  align-items: center;
+
+  margin-bottom: 1rem;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink);
+
+  &::before {
+    width: 0.5rem;
+    height: 0.5rem;
+
+    content: '';
+
+    background: #0e8a66;
+    border-radius: 50%;
+    box-shadow: 0 0 0 3px rgba(14, 138, 102, 0.18);
+  }
+}
+
+.jumbotron__status-item {
+  margin-bottom: 0.85rem;
+
+  font-size: var(--t-xs);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.jumbotron__status-label {
+  display: block;
+
+  color: var(--ink-2);
+}
+
+.jumbotron__status-value {
+  display: block;
+
+  font-weight: 600;
+  color: var(--ink);
+}
+
+/// The election year is a real choice (four cycles), so the control reads
+/// as a control: a visible label above a bordered, chevroned select.
 .jumbotron__year-selector {
   display: inline-flex;
 
-  align-items: baseline;
+  flex-direction: column;
+
+  align-items: flex-start;
 
   width: fit-content;
   max-width: 100%;
   margin-bottom: variables.$gutter;
 
-  font-size: var(--t-2xl);
-  font-weight: functions.font-weight('bold');
-  line-height: 1;
-  color: var(--brand);
   white-space: nowrap;
 
   select {
-    font: inherit;
-    color: inherit;
+    padding: 0.35rem 2.75rem 0.35rem 1rem;
+
+    font-family: font-stacks.$fraunces-font-stack;
+    font-size: var(--t-2xl);
+    font-weight: functions.font-weight('bold');
+    font-variant-numeric: lining-nums;
+    line-height: 1.15;
+    color: var(--brand);
 
     cursor: pointer;
 
-    background-color: transparent;
-    border-color: var(--hairline-2);
-    border-style: solid;
-    border-width: 0 0 2px;
+    background-color: var(--card);
+    background-image: functions.image('icons/chevron-down.svg');
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 0.8rem;
+    border: 1px solid var(--hairline-2);
+    border-radius: 999px;
+    appearance: none;
+
+    &:hover {
+      border-color: var(--brand);
+    }
 
     &:focus-visible {
       outline: 2px solid var(--brand);
-      outline-offset: 4px;
+      outline-offset: 3px;
     }
   }
 }
 
 .jumbotron__year-selector-inner-label {
-  @include mixins.visually-hidden;
+  margin-bottom: 0.4rem;
+  margin-left: 0.15rem;
+
+  font-family: font-stacks.$inter-font-stack;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 .jumbotron [class*='pay-attention-to'] {

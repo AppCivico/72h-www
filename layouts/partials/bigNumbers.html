@@ -78,12 +78,79 @@
       "election" $election) }}
 </div>
 
-<p class="big-number__warning pay-attention-to__warning">
-  {{ i18n "multipleFundsWarning" }}
-</p>
-<p class="big-number__warning pay-attention-to__warning">
-  {{ i18n "receivedFundsWarning" }}
-</p>
-<p class="big-number__warning pay-attention-to__warning">
-  {{ i18n "otherFundsWarning" | $page.RenderString }}
-</p>
+{{/* The methodological caveats used to sit loose under the cards as three
+     icon-prefixed lines. They now live inside one disclosure so the page
+     stays calm, and open into a proper explainer — composition bar plus
+     definitions — for readers who want the detail. */}}
+<div class="explainer">
+  {{/* A <button> rather than <summary>: Chromium draws its own disclosure
+       marker on summary regardless of list-style/::marker, and it can't be
+       styled away. Without JS the :hidden binding never applies, so the
+       body simply renders open — no content is lost. */}}
+  <button
+    type="button"
+    class="explainer__toggle"
+    :class="{ 'explainer__toggle--open': explainerOpen }"
+    :aria-expanded="explainerOpen ? 'true' : 'false'"
+    aria-controls="js-explainer-body"
+    @click="explainerOpen = !explainerOpen">{{ i18n "explainerToggle" }}</button>
+
+  <div class="explainer__body" id="js-explainer-body" :hidden="!explainerOpen">
+    <p class="explainer__intro">{{ i18n "explainerIntro" }}</p>
+
+    <div class="explainer__composition" v-cloak v-if="mainData && mainData.accumulated">
+      <h3 class="explainer__subtitle">{{ i18n "explainerCompositionTitle" }}</h3>
+
+      <div class="explainer__bar" role="img" aria-label="{{ i18n "explainerCompositionTitle" }}">
+        <span
+          class="explainer__slice explainer__slice--fefc"
+          :style="{ width: shareOfTotalCss(mainData.accumulated.value_special_fund) }"></span>
+        <span
+          class="explainer__slice explainer__slice--party"
+          :style="{ width: shareOfTotalCss(mainData.accumulated.value_party_fund) }"></span>
+        <span
+          class="explainer__slice explainer__slice--other"
+          :style="{ width: shareOfTotalCss(mainData.accumulated.value_other_resources) }"></span>
+      </div>
+
+      <ul class="explainer__legend">
+        <li class="explainer__legend-item explainer__legend-item--fefc">
+          {{ i18n "explainerFEFCTitle" }}
+          <b>{{ "{{ shareOfTotal(mainData.accumulated.value_special_fund) }}" }}</b>
+        </li>
+        <li class="explainer__legend-item explainer__legend-item--party">
+          {{ i18n "explainerFPTitle" }}
+          <b>{{ "{{ shareOfTotal(mainData.accumulated.value_party_fund) }}" }}</b>
+        </li>
+        <li class="explainer__legend-item explainer__legend-item--other">
+          {{ i18n "explainerOtherTitle" }}
+          <b>{{ "{{ shareOfTotal(mainData.accumulated.value_other_resources) }}" }}</b>
+        </li>
+      </ul>
+    </div>
+
+    <div class="explainer__terms">
+      <div class="explainer__term explainer__term--fefc">
+        <h3 class="explainer__subtitle">{{ i18n "explainerFEFCTitle" }}</h3>
+        <p>{{ i18n "explainerFEFCText" }}</p>
+      </div>
+      <div class="explainer__term explainer__term--party">
+        <h3 class="explainer__subtitle">{{ i18n "explainerFPTitle" }}</h3>
+        <p>{{ i18n "explainerFPText" }}</p>
+      </div>
+      <div class="explainer__term explainer__term--other">
+        <h3 class="explainer__subtitle">{{ i18n "explainerOtherTitle" }}</h3>
+        <p>{{ i18n "explainerOtherText" }}</p>
+      </div>
+    </div>
+
+    <div class="explainer__notes">
+      <h3 class="explainer__subtitle">{{ i18n "explainerNotesTitle" }}</h3>
+      <ul>
+        <li>{{ i18n "multipleFundsWarning" }}</li>
+        <li>{{ i18n "receivedFundsWarning" }}</li>
+        <li>{{ i18n "otherFundsWarning" | $page.RenderString }}</li>
+      </ul>
+    </div>
+  </div>
+</div>

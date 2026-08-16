@@ -1,16 +1,41 @@
+@use '../abstracts/functions';
+
+/// The project video reads as a figure: eyebrow, title, then a framed
+/// 16:9 player that never overflows the viewport.
+
 .ted {
-  margin-bottom: 2.5rem;
+  // .container is a flex row, so the figure needs an explicit width or it
+  // shrinks to the iframe's intrinsic 300px.
+  width: 100%;
+  max-width: 46rem;
+  margin: 0 auto;
+
+  text-align: center;
+}
+
+.ted .eyebrow {
+  display: block;
+
+  margin-bottom: 0.5rem;
+}
+
+.ted__title {
+  margin-bottom: 1.25rem;
+
+  font-size: var(--t-l);
+  text-align: center;
 }
 
 .ted > iframe {
   display: block;
 
   width: 100%;
-  max-width: 46rem;
   height: auto;
   aspect-ratio: 16 / 9;
   margin-right: auto;
   margin-left: auto;
 
+  background: var(--ink-card);
+  border: 1px solid var(--hairline);
   border-radius: var(--radius);
 }

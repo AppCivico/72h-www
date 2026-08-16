@@ -1,17 +1,21 @@
-@use '../abstracts/functions';
+/// Logos used to sit loose in a flex row right under the video, at wildly
+/// different sizes. They now read as a credit block: eyebrow, heading and
+/// equally sized bordered cards that centre each logo whatever its shape.
 
 .partners {
-  display: flex;
-
-  flex-wrap: wrap;
-
-  justify-content: center;
-
   width: 100%;
+  padding-top: 3rem;
+  margin-top: 3rem;
 
-  @media screen and (min-width: functions.breakpoint('tablet')) {
-    justify-content: space-evenly;
-  }
+  text-align: center;
+
+  border-top: 1px solid var(--hairline);
+}
+
+.partners .eyebrow {
+  display: block;
+
+  margin-bottom: 0.5rem;
 }
 
 .partners h2 {
@@ -19,17 +23,48 @@
   margin-bottom: 2rem;
 
   font-size: var(--t-l);
+  text-align: center;
+}
 
-  @media screen and (min-width: functions.breakpoint('tablet')) {
-    text-align: center;
+.partners__grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+
+  gap: 1rem;
+
+  max-width: 52rem;
+  padding: 0;
+  margin: 0 auto;
+
+  list-style: none;
+}
+
+.partners__item {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 8.5rem;
+  padding: 1.25rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    border-color: var(--hairline-2);
+    box-shadow: var(--shadow);
   }
 }
 
-.partners img {
-  min-width: 12.5rem;
-  margin-bottom: 2rem;
+.partners__item img {
+  width: auto;
+  max-width: 100%;
+  max-height: 5.5rem;
 
-  @media screen and (min-width: functions.breakpoint('desktop')) {
-    max-width: calc(25% - 2rem);
-  }
+  object-fit: contain;
 }
