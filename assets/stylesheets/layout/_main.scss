@@ -29,6 +29,34 @@
     display: block;
   }
 
+
+  /// The filter column sticks while the results scroll past it — that
+  /// independence is the whole point of this screen. It is wider than the
+  /// original 20% so the controls stop being a thin strip.
+  .filters {
+    @media screen and (min-width: functions.breakpoint('wide')) {
+      position: sticky;
+      top: variables.$gutter;
+      z-index: functions.layer('default');
+
+      float: left;
+      width: 24%;
+      padding-right: variables.$gutter;
+
+      ~ * {
+        width: 76%;
+        margin-left: 24%;
+
+        transition: width margin-left 0.3s;
+      }
+
+      &[hidden] ~ * {
+        width: 100%;
+        margin-left: 0;
+      }
+    }
+  }
+
   .outdated {
     margin-top: 0;
   }
