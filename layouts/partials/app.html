@@ -44,8 +44,14 @@
               {{ partial "bigNumbers.html" (dict "data" $ssrData "page" .) }}
 
             </div>
+          </div>
+
+          <section class="home-section home-section--warm">
+            <div class="container">
             <div class="intro-charts" :aria-busy="loadingIntroCharts">
+              <p class="eyebrow">{{ i18n "homePieEyebrow" }}</p>
               <h2 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h2>
+              <p class="intro-charts__intro">{{ i18n "chartsIntro" }}</p>
               <template v-if="!loadingIntroCharts && hasIntroCharts">
                 <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
                   <div :id="`js-chart__${chart.type}`"></div>
@@ -55,8 +61,10 @@
                 <img src="/assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
                 <p>{{ i18n "noResultsCharts" }}</p>
               </div>
+              <p class="chart-source" v-if="hasIntroCharts">{{ i18n "dataSource" }}</p>
             </div>
-          </div>
+            </div>
+          </section>
 
           <div class="filterable-area" v-cloak>
             <div class="container">
@@ -66,6 +74,8 @@
                 class="button button--icon button--icon-share">
                 {{ i18n "shareFilteredData" }}
               </button>
+
+              <p class="eyebrow">{{ i18n "exploreEyebrow" }}</p>
 
               <h2 class="filters__heading">
                 <button class="filters__toggle" @click="toggleFilter" aria-controls="filters" :aria-expanded="filterOpen ? 'true' : 'false'">
@@ -214,6 +224,10 @@
               </div>
 
               <div id="js-main-chart" class="main-chart" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData"></div>
+              <div class="main-chart__note">
+                {{ partial "filterText" }}
+                <p class="chart-source">{{ i18n "dataSource" }}</p>
+              </div>
 
               <transition-expand>
                 <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" v-if="!loadingChartData">

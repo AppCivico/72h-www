@@ -8,8 +8,6 @@
 /// serif display value, 14px floor on every label. Headings are h3
 /// (single h1 per page now).
 
-$height-of-last: variables.$gutter * 1.333333;
-
 .big-numbers__wrapper {
   margin-top: variables.$gutter * 2;
   margin-bottom: variables.$gutter * 2;
@@ -18,29 +16,66 @@ $height-of-last: variables.$gutter * 1.333333;
 .big-numbers {
   position: relative;
 
-  flex-wrap: wrap;
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 
   gap: 1rem;
 
   width: 100%;
-  min-height: 12.5rem;
   margin-bottom: 0;
 
   text-align: left;
+}
 
-  @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 2) {
-    display: flex;
+/// <transition-expand> only wraps the box (Vue renders the child in its
+/// place once mounted); `display: contents` makes the box itself the grid
+/// item in the pre-hydration/no-JS state too.
+.big-numbers > transition-expand {
+  display: contents;
+}
+
+/// The home summary has 5 boxes: a 6-column grid lets them sit 3 + 2 with
+/// both rows full, instead of leaving an orphan card.
+@media screen and (min-width: functions.breakpoint('desktop')) {
+  .big-numbers__wrapper .big-numbers {
+    grid-template-columns: repeat(6, 1fr);
+  }
+
+  .big-numbers__wrapper .big-number__box {
+    grid-column: span 2;
+  }
+
+  .big-numbers__wrapper .big-number__box--span-wide {
+    grid-column: span 3;
   }
 }
 
 .big-numbers__wrapper .big-number__warning,
 .big-numbers__wrapper .big-number__update {
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: 0;
+
   font-size: var(--t-xs);
   color: var(--ink-2);
+  text-align: left;
 }
 
+/// Methodological notes read as a footnote block under the cards.
 .big-numbers__wrapper .big-number__warning {
-  margin-bottom: 0;
+  margin-bottom: 0.35rem;
+}
+
+.big-numbers__wrapper .big-number__warning:first-of-type {
+  padding-top: 1.25rem;
+  margin-top: 1.5rem;
+
+  border-top: 1px solid var(--hairline);
+}
+
+.big-numbers__wrapper .big-number__update {
+  margin-bottom: 0.75rem;
 }
 
 .big-number__box {
@@ -48,8 +83,7 @@ $height-of-last: variables.$gutter * 1.333333;
 
   flex-direction: column;
 
-  padding: 1.25rem 1.5rem 1.5rem;
-  margin-bottom: variables.$gutter;
+  padding: 1.25rem 1.5rem 1.35rem;
 
   background: var(--card);
   border: 1px solid var(--hairline);
@@ -59,16 +93,6 @@ $height-of-last: variables.$gutter * 1.333333;
 
   &:hover {
     box-shadow: var(--shadow);
-  }
-
-  @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 2) {
-    width: calc(50% - 0.5rem);
-  }
-
-  @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 3) {
-    order: 4;
-
-    width: calc(33.3333% - 0.7rem);
   }
 }
 
@@ -81,10 +105,6 @@ $height-of-last: variables.$gutter * 1.333333;
 
   font-size: var(--t-xs);
   color: var(--ink-2);
-}
-
-.big-number__box span {
-  text-align: right;
 }
 
 .big-number__box--border {
@@ -135,135 +155,85 @@ $height-of-last: variables.$gutter * 1.333333;
   color: var(--ink-2);
 }
 
-.big-number__number {
+.big-numbers .big-number__number,
+.big-number__box .big-number__number {
   display: block;
 
-  margin-top: auto;
+  margin-top: 0.15rem;
+  margin-bottom: 0;
   overflow: hidden;
 
   font-family: font-stacks.$fraunces-font-stack;
-  font-size: var(--t-2xl);
+  font-size: clamp(1.75rem, 2.4vw, var(--t-2xl));
   font-weight: functions.font-weight('bold');
   font-variant-numeric: tabular-nums lining-nums;
-  line-height: 1.15;
+  line-height: 1.1;
   color: var(--ink);
+  text-align: left;
   text-overflow: ellipsis;
-  letter-spacing: -0.01em;
-
-  &:last-child {
-    margin-bottom: $height-of-last + variables.$gutter;
-  }
+  letter-spacing: -0.015em;
 }
 
-.big-number__not-so-big {
-  height: $height-of-last;
+/// Secondary line right under the value ("128 repasses · 72 candidaturas")
+.big-numbers .big-number__context {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--ink-2);
+  text-align: left;
+}
+
+/// Pinned to the bottom so every card in a row shares the same baseline
+.big-numbers .big-number__footnote {
+  margin-top: auto;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--ink-2);
+  text-align: left;
+}
+
+.big-numbers .big-number__footnote strong {
+  font-size: var(--t-m);
+  font-weight: functions.font-weight('bold');
+  color: var(--ink);
+}
+
+/// The footnote needs breathing room from the value above it
+.big-numbers .big-number__context + .big-number__footnote,
+.big-numbers .big-number__number + .big-number__footnote {
+  padding-top: 0.75rem;
+  margin-top: 1rem;
+
+  border-top: 1px solid var(--hairline);
+}
+
+.big-numbers .big-number__not-so-big {
+  margin-top: 0.35rem;
 
   font-size: var(--t-m);
   font-weight: functions.font-weight('bold');
   font-variant-numeric: tabular-nums lining-nums;
-  line-height: $height-of-last;
+  line-height: 1.25;
+  text-align: left;
 }
 
-.big-number__number small,
-.big-number__not-so-big small {
+.big-numbers .big-number__number small,
+.big-numbers .big-number__not-so-big small {
   font-size: var(--t-xs);
   font-weight: functions.font-weight('text');
   color: var(--ink-2);
 }
 
-.big-number__number span {
+.big-numbers .big-number__number span {
   font-size: var(--t-xs);
   font-style: normal;
   font-weight: functions.font-weight('text');
   color: var(--ink-2);
   text-transform: none;
-}
-
-.big-number__math-sign {
-  font-weight: normal;
-  color: functions.palette('main-colors', 'quaternary');
-}
-
-.big-number__dividend {
-  margin-top: auto;
-  overflow: hidden;
-
-  font-family: font-stacks.$fraunces-font-stack;
-  font-size: var(--t-2xl);
-  font-weight: functions.font-weight('bold');
-  font-variant-numeric: tabular-nums lining-nums;
-  line-height: 1.15;
-  color: var(--ink);
-  text-overflow: ellipsis;
-  letter-spacing: -0.01em;
-}
-
-.big-number__divisor {
-  overflow: hidden;
-
-  font-size: var(--t-xs);
-  font-variant-numeric: tabular-nums lining-nums;
-  color: var(--ink-2);
-  text-overflow: ellipsis;
-}
-
-.big-number__quotient {
-  display: flex;
-
-  align-items: baseline;
-  justify-content: right;
-
-  height: $height-of-last;
-  padding-top: 0.4rem;
-  overflow: hidden;
-
-  font-size: var(--t-m);
-  font-weight: functions.font-weight('bold');
-  font-variant-numeric: tabular-nums lining-nums;
-  color: var(--ink);
-  text-overflow: ellipsis;
-
-  border-top: 1px solid var(--hairline);
-}
-
-.big-number__quotient output,
-.big-number__quotient small {
-  font-weight: functions.font-weight('text');
-  color: var(--ink-2);
-}
-
-.big-number__quotient output {
-  display: inline;
-
-  flex-grow: 1;
-
-  padding: 0;
-  margin-right: 0.25em;
-
-  font-size: var(--t-m);
-  font-weight: functions.font-weight('bold');
-  color: var(--ink);
-}
-
-.big-number__quotient .big-number__math-sign + output {
-  flex-grow: 0;
-
-  margin-left: 0.25em;
-}
-
-.big-number__quotient small {
-  display: inline-block;
-
-  flex-shrink: 1;
-
-  overflow: hidden;
-
-  font-size: var(--t-xs);
-  text-overflow: ellipsis;
-
-  &:last-child {
-    margin-left: 0.25em;
-  }
 }
 
 .big-number__box--icon h3 {

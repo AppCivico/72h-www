@@ -21,11 +21,11 @@
         <h3>{{ i18n "accumulatedValue" }}
           <button type="button" class="info-button" data-tooltip="{{ i18n "tipAccumulatedValue" }}" aria-label="{{ i18n "tipButtonLabel" }}">i</button>
         </h3>
-        <p>
-          {{ i18n "entriesQuantity" }}
+        <p class="big-number__number" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.total_value)">{{ partial "formatCurrencyBR.html" $acc.total_value }}</p>
+        <p class="big-number__context">
           <span v-text="formatNumeral(mainData?.accumulated?.total_transfers)">{{ partial "formatNumeralBR.html" $acc.total_transfers }}</span>
+          {{ i18n "transfersShort" }}
         </p>
-        <span class="big-number__number" v-html="formatCurrencyNoAbbr(mainData?.accumulated?.total_value)">{{ partial "formatCurrencyBR.html" $acc.total_value }}</span>
       </div>
     </transition-expand>
 
@@ -35,15 +35,16 @@
         <h3>{{ i18n "candidatesWhoReceivedFunds" }}
           <button type="button" class="info-button" data-tooltip="{{ i18n "tipCandidatesWhoReceived" }}" aria-label="{{ i18n "tipButtonLabel" }}">i</button>
         </h3>
-        <span class="big-number__dividend" v-text="formatNumeral(mainData?.accumulated?.total_candidates_who_received)">{{ partial "formatNumeralBR.html" $acc.total_candidates_who_received }}</span>
-        <br />
-        <span class="big-number__divisor">
-          <span class="big-number__math-sign">&divide;</span>&nbsp;<span v-text="formatNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $election.candidate_count }}</span> <small>{{ i18n "candidatesTotal" | lower }}</small>
-        </span>
-        <br />
-        <span class="big-number__quotient">
-          <span v-text="formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_who_received "denominator" $election.candidate_count) }}</span> <small>{{ i18n "ofCandidates" | lower }}</small>
-        </span>
+        <p class="big-number__number" v-text="formatNumeral(mainData?.accumulated?.total_candidates_who_received)">{{ partial "formatNumeralBR.html" $acc.total_candidates_who_received }}</p>
+        <p class="big-number__context">
+          {{ i18n "outOf" }}
+          <span v-text="formatNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $election.candidate_count }}</span>
+          {{ i18n "candidatesTotal" | lower }}
+        </p>
+        <p class="big-number__footnote">
+          <strong v-text="formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $acc.total_candidates_who_received "denominator" $election.candidate_count) }}</strong>
+          {{ i18n "ofCandidates" | lower }}
+        </p>
       </div>
     </transition-expand>
 
@@ -59,6 +60,7 @@
     {{ partial "bigNumberFundBox.html" (dict
       "title" "accumulatedValueSpecial"
       "tip" "tipFEFC"
+      "span" "wide"
       "transfersField" "transfers_special_fund"
       "valueField" "value_special_fund"
       "candidatesField" "total_candidates_special_fund"
@@ -68,6 +70,7 @@
     {{ partial "bigNumberFundBox.html" (dict
       "title" "accumulatedOtherResources"
       "tip" "tipOtherResources"
+      "span" "wide"
       "transfersField" "transfers_other_resources"
       "valueField" "value_other_resources"
       "candidatesField" "total_candidates_other_resources"

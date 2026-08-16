@@ -1,7 +1,28 @@
-@use "../abstracts/variables";
+@use '../abstracts/variables';
 
 .main-chart {
   min-height: 25rem;
+  padding: 1.25rem 1.25rem 1rem;
   margin-top: variables.$gutter;
-  margin-bottom: variables.$gutter * 2;
+  margin-bottom: 0.5rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+
+/// Active-filter description reads as the figure's note, not as a wall of
+/// text inside the chart's own subtitle.
+.main-chart__note {
+  margin-bottom: variables.$gutter * 1.5;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+.main-chart__note p {
+  margin-bottom: 0;
+
+  font-size: inherit;
+  color: inherit;
 }

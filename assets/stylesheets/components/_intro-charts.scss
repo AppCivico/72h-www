@@ -1,50 +1,71 @@
-@use "../vendor/modularscale-sass/sugar";
-@use "../abstracts/functions";
+@use '../abstracts/functions';
+
+/// Editorial refresh: every chart lives in its own card, with the title,
+/// subtitle and source note reading as one figure.
 
 .intro-charts {
   position: relative;
 
-  display: flex;
+  display: grid;
 
-  flex-direction: column;
+  grid-template-columns: 1fr;
+
+  gap: 1rem;
 
   width: 100%;
   min-height: 20rem;
   margin-bottom: 2rem;
 
   @media screen and (min-width: functions.breakpoint('desktop')) {
-    flex-direction: row;
-    flex-wrap: wrap;
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-.intro-charts h1 {
+.intro-charts > h2,
+.intro-charts > .eyebrow,
+.intro-charts > .intro-charts__intro,
+.intro-charts > .no-results,
+.intro-charts > .chart-source {
+  grid-column: 1 / -1;
+}
+
+.intro-charts h2 {
   width: 100%;
   margin-top: 0;
-  margin-bottom: 1rem;
+  margin-bottom: 0.5rem;
 
-  font-size: sugar.ms(3);
+  font-size: var(--t-xl);
   line-height: 1.2;
-  text-transform: uppercase;
+}
 
-  @media screen and (min-width: functions.breakpoint('tablet')) {
-    margin-bottom: 2rem;
-  }
+.intro-charts__intro {
+  max-width: 56ch;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+
+  color: var(--ink-2);
 }
 
 .intro-charts__chart {
   width: 100%;
-  padding-top: 1rem;
-  padding-right: 1rem;
-  padding-bottom: 1rem;
+  padding: 1.25rem 1.25rem 1rem;
 
-  @media screen and (min-width: functions.breakpoint('desktop')) {
-    width: 50%;
-  }
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
 }
 
+/// Ranked breakdowns (party, state) need the full width to stay readable.
 .intro-charts__chart--party,
 .intro-charts__chart--state {
-  width: 100%;
+  grid-column: 1 / -1;
+}
 
+/// Source/method note under a figure.
+.chart-source {
+  margin-top: 0.75rem;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }

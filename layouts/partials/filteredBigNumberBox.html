@@ -18,10 +18,6 @@
 
 <div class="big-number__box big-number__box--icon big-number__box--icon-{{ .icon }}">
   <h3>{{ i18n .title }}</h3>
-  {{ partial "filterText" }}
-  <p v-else>
-    {{ i18n "TSEData" }}
-  </p>
   <span class="big-number__number" v-html="{{ printf "formatCurrencyNoAbbr(%s)" $amountVar }}"></span>
   <br />
   <span class="big-number__not-so-big">{{ printf "{{ formatNumeral(%s) }}" $countVar }} <small>{{ $candidateLabelText }}</small></span>

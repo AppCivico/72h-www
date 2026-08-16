@@ -19,25 +19,23 @@
 
 <transition-expand>
   <div class="big-number__box big-number__box--border
-    big-number__box--border-secondary">
+    big-number__box--border-secondary{{ with .span }} big-number__box--span-{{ . }}{{ end }}">
     <h3>{{ i18n .title }}
       {{- with .tip }}
       <button type="button" class="info-button" data-tooltip="{{ i18n . }}" aria-label="{{ i18n "tipButtonLabel" }}">i</button>
       {{- end }}
     </h3>
-    <p>
-      {{ i18n "entriesQuantity" }}
+    <p class="big-number__number" v-html="{{ printf "formatCurrencyNoAbbr(mainData?.accumulated?.%s)" $valueField }}">{{ partial "formatCurrencyBR.html" (index $acc $valueField) }}</p>
+    <p class="big-number__context">
       <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $transfersField }}">{{ partial "formatNumeralBR.html" (index $acc $transfersField) }}</span>
+      {{ i18n "transfersShort" }}
+      &middot;
+      <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $candidatesField }}">{{ partial "formatNumeralBR.html" (index $acc $candidatesField) }}</span>
+      {{ i18n "candidate" 2 | lower }}
     </p>
-    <span class="big-number__dividend" v-html="{{ printf "formatCurrencyNoAbbr(mainData?.accumulated?.%s)" $valueField }}">{{ partial "formatCurrencyBR.html" (index $acc $valueField) }}</span>
-    <br />
-    <span class="big-number__divisor">
-      <span v-text="{{ printf "formatNumeral(mainData?.accumulated?.%s)" $candidatesField }}">{{ partial "formatNumeralBR.html" (index $acc $candidatesField) }}</span> <small>{{ i18n "candidate" 2 | lower }}</small>
-    </span>
-    <br />
-    <span class="big-number__quotient">
-      <span v-text="{{ printf "formatPercent(mainData?.accumulated?.%s / mainData?.election?.candidate_count * 100)" $candidatesField }}">{{ partial "formatPercentBR.html" (dict "numerator" (index $acc $candidatesField) "denominator" $election.candidate_count) }}</span>
-      <small>{{ i18n "ofCandidates" | lower }}</small>
-    </span>
+    <p class="big-number__footnote">
+      <strong v-text="{{ printf "formatPercent(mainData?.accumulated?.%s / mainData?.election?.candidate_count * 100)" $candidatesField }}">{{ partial "formatPercentBR.html" (dict "numerator" (index $acc $candidatesField) "denominator" $election.candidate_count) }}</strong>
+      {{ i18n "ofCandidates" | lower }}
+    </p>
   </div>
 </transition-expand>
