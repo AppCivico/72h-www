@@ -18,7 +18,9 @@
     <transition-expand>
       <div class="big-number__box big-number__box--border
         big-number__box--border-quaternary">
-        <h1>{{ i18n "accumulatedValue" }}</h1>
+        <h3>{{ i18n "accumulatedValue" }}
+          <button type="button" class="info-button" data-tooltip="{{ i18n "tipAccumulatedValue" }}" aria-label="{{ i18n "tipButtonLabel" }}">i</button>
+        </h3>
         <p>
           {{ i18n "entriesQuantity" }}
           <span v-text="formatNumeral(mainData?.accumulated?.total_transfers)">{{ partial "formatNumeralBR.html" $acc.total_transfers }}</span>
@@ -30,7 +32,9 @@
     <transition-expand>
       <div class="big-number__box big-number__box--border
         big-number__box--border-tertiary">
-        <h1>{{ i18n "candidatesWhoReceivedFunds" }}</h1>
+        <h3>{{ i18n "candidatesWhoReceivedFunds" }}
+          <button type="button" class="info-button" data-tooltip="{{ i18n "tipCandidatesWhoReceived" }}" aria-label="{{ i18n "tipButtonLabel" }}">i</button>
+        </h3>
         <span class="big-number__dividend" v-text="formatNumeral(mainData?.accumulated?.total_candidates_who_received)">{{ partial "formatNumeralBR.html" $acc.total_candidates_who_received }}</span>
         <br />
         <span class="big-number__divisor">
@@ -45,6 +49,7 @@
 
     {{ partial "bigNumberFundBox.html" (dict
       "title" "accumulatedValueParty"
+      "tip" "tipPartyFund"
       "transfersField" "transfers_party_fund"
       "valueField" "value_party_fund"
       "candidatesField" "total_candidates_party_fund"
@@ -53,6 +58,7 @@
 
     {{ partial "bigNumberFundBox.html" (dict
       "title" "accumulatedValueSpecial"
+      "tip" "tipFEFC"
       "transfersField" "transfers_special_fund"
       "valueField" "value_special_fund"
       "candidatesField" "total_candidates_special_fund"
@@ -61,6 +67,7 @@
 
     {{ partial "bigNumberFundBox.html" (dict
       "title" "accumulatedOtherResources"
+      "tip" "tipOtherResources"
       "transfersField" "transfers_other_resources"
       "valueField" "value_other_resources"
       "candidatesField" "total_candidates_other_resources"

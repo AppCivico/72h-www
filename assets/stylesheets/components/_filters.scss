@@ -1,6 +1,9 @@
-@use "../vendor/modularscale-sass/sugar";
-@use "../abstracts/functions";
-@use "../abstracts/variables";
+@use '../abstracts/functions';
+@use '../abstracts/variables';
+
+/// Editorial refresh: the filter area reads as one card, controls get
+/// real boxes (not underlines), and the toggle is a proper heading
+/// wrapping a button.
 
 .filters {
   width: 100%;
@@ -8,6 +11,11 @@
   @media screen and (min-width: functions.breakpoint('tablet')) {
     margin-bottom: 4rem;
   }
+}
+
+.filters__heading {
+  width: 100%;
+  margin-bottom: 1rem;
 }
 
 .filters__toggle {
@@ -19,9 +27,12 @@
 
   width: 100%;
   padding: 0;
-  margin-bottom: 1rem;
 
+  font: inherit;
+  color: inherit;
   text-align: left;
+
+  cursor: pointer;
 
   background-color: transparent;
   border: 0;
@@ -30,10 +41,15 @@
     flex-wrap: nowrap;
   }
 
+  &:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 4px;
+  }
+
   &::before {
     width: 1rem;
     height: 1rem;
-    margin-right: 0.3rem;
+    margin-right: 0.5rem;
 
     content: '';
 
@@ -41,13 +57,10 @@
   }
 }
 
-.filters__toggle h1 {
+.filters__title {
   width: calc(100% - 1.5rem);
   padding: 0;
   margin: 0;
-
-  font-size: sugar.ms(3);
-  text-transform: uppercase;
 }
 
 .filters__dropdown {
@@ -57,7 +70,11 @@
 
   min-width: fit-content;
 
-  color: functions.palette('gray', 'medium');
+  font-family: variables.$text-font-stack;
+  font-size: var(--t-xs);
+  font-weight: 500;
+  color: var(--ink-2);
+  letter-spacing: 0;
 
   @media screen and (min-width: functions.breakpoint('phablet')) {
     margin-left: auto;
@@ -145,20 +162,36 @@
 
 .filters__items select,
 .filters__items .list-box {
-  background-color: transparent;
-  border-color: functions.palette('main-colors', 'secondary');
-  border-style: solid;
-  border-width: 0 0 1px;
+  background-color: var(--card);
+  border: 1px solid var(--hairline-2);
+  border-radius: var(--radius-s);
+
+  &:focus-visible,
+  &:focus-within {
+    border-color: var(--brand);
+    outline: 1px solid var(--brand);
+  }
+}
+
+.filters__items select {
+  padding: 0.5rem 0.6rem;
+
+  cursor: pointer;
 }
 
 .filters__items select[disabled],
 .filters__items .list-box--empty {
-  border-color: functions.palette('gray', 'base');
+  color: var(--ink-3);
+
+  cursor: not-allowed;
+
+  background-color: var(--paper-warm);
+  border-color: var(--hairline);
 }
 
 .filters p {
-  font-size: sugar.ms(-2);
-  color: functions.palette('gray', 'medium');
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }
 
 .filters .button {
@@ -166,10 +199,8 @@
   justify-content: center;
 
   width: 100%;
-  padding: 0.5rem 1rem;
   margin-bottom: variables.$gutter;
 
-  font-size: sugar.ms(0);
   text-align: center;
 
   @media screen and (min-width: functions.breakpoint('tablet')) {
@@ -180,7 +211,5 @@
 
   @media screen and (min-width: functions.breakpoint('desktop')) {
     width: auto;
-
-    font-size: sugar.ms(-1);
   }
 }

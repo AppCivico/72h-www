@@ -13,6 +13,7 @@
   {{- warnf "SSR snapshot for /v1/index?year=%d failed (err=%v) — page will render without real pre-hydration big numbers" $ssrYear $ssrResult.Err -}}
 {{- end -}}
     <body>
+      <a class="skip-link" href="#js-candidate-box">{{ i18n "skipToData" }}</a>
       <div id="vueHome">
         {{ partial "header.html" . }}
 
@@ -44,7 +45,7 @@
 
             </div>
             <div class="intro-charts" :aria-busy="loadingIntroCharts">
-              <h1 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h1>
+              <h2 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h2>
               <template v-if="!loadingIntroCharts && hasIntroCharts">
                 <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
                   <div :id="`js-chart__${chart.type}`"></div>
@@ -66,19 +67,21 @@
                 {{ i18n "shareFilteredData" }}
               </button>
 
-              <button class="filters__toggle" @click="toggleFilter">
-                <h1>{{ i18n "filtersTitle" }}</h1>
-                <span
-                  v-if="filterOpen"
-                  class="filters__dropdown">
-                  {{ i18n "closeFilters" }}
-                </span>
-                <span
-                  v-else="filterOpen"
-                  class="filters__dropdown">
-                  {{ i18n "openFilters" }}
-                </span>
-              </button>
+              <h2 class="filters__heading">
+                <button class="filters__toggle" @click="toggleFilter" aria-controls="filters" :aria-expanded="filterOpen ? 'true' : 'false'">
+                  <span class="filters__title">{{ i18n "filtersTitle" }}</span>
+                  <span
+                    v-if="filterOpen"
+                    class="filters__dropdown">
+                    {{ i18n "closeFilters" }}
+                  </span>
+                  <span
+                    v-else="filterOpen"
+                    class="filters__dropdown">
+                    {{ i18n "openFilters" }}
+                  </span>
+                </button>
+              </h2>
 
               <p>{{ i18n "checkFound" }}</p>
 
@@ -247,9 +250,9 @@
                   class="button button--icon button--icon-share">
                   {{ i18n "shareFilteredData" }}
                 </button>
-                <h1>
+                <h2>
                   {{ i18n "candidatesListing" }}
-                </h1>
+                </h2>
                 <div class="candidates__subtitle">
                   {{ partial "filterText" }}
                 </div>
@@ -268,17 +271,16 @@
                         <div class="candidates__text">
                           <p class="candidates__name">
                             {{ "{{ candidate.name }}" }}
-                            - {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
-                            - {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
                           </p>
                           <p class="candidates__info">
-                            {{ "{{ candidate.total_transfers }}" }} {{ i18n "transfers" }}
+                            {{ "{{ candidate.party.acronym ? candidate.party.acronym : candidate.party.name }}" }}
+                            · {{ i18n "runsFor" }} {{ " {{ candidate.position.name }}" }}
+                            · {{ "{{ candidate.city.name }}, {{ candidate.city.region.name }}" }}
                           </p>
-                          <p class="candidates__info">
-                            {{ "{{ candidate.city.name }}, {{ candidate.city.region.name }}" }}
-                          </p>
-                          <p class="candidates__info">
-                            {{ i18n "total" }}: {{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}
+
+                          <p class="candidates__total">
+                            <span class="candidates__total-label">{{ i18n "total" }} · {{ "{{ candidate.total_transfers }}" }} {{ i18n "transfers" }}</span>
+                            <strong class="candidates__total-value">{{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}</strong>
                           </p>
 
                           <p class="candidates__info" v-if="candidate.votes_first_round">
@@ -301,26 +303,27 @@
                           </p>
 
                           <div class="candidates__actions">
+                            <a
+                              v-if="candidate.person_id && candidate.name"
+                              :href="`${personUrl({ id: candidate.person_id, name: candidate.name })}?na_eleicao=${candidate.id}`"
+                              class="button button--primary">
+                              {{ i18n "seeElectionPage" }}
+                            </a>
+
                             <button
                               v-if="candidate.has_other_elections && !candidate.historyLoaded"
                               @click="loadCandidateHistory(candidate)"
                               :aria-busy="candidate.historyLoading"
-                              class="button">
+                              class="button button--ghost">
                               {{ i18n "loadElectionHistory" }}
                             </button>
 
                             <a
-                              v-if="candidate.person_id && candidate.name"
-                              :href="`${personUrl({ id: candidate.person_id, name: candidate.name })}?na_eleicao=${candidate.id}`"
-                              class="button">
-                              {{ i18n "seeElectionPage" }}
-                            </a>
-
-                            <a
                               :href="candidate.divulgacand_url"
                               target="_blank"
-                              class="button">
-                              {{ i18n "seeOnTSE" }}
+                              rel="noopener"
+                              class="button button--link">
+                              {{ i18n "seeOnTSE" }} ↗
                             </a>
                           </div>
                         </div>
@@ -359,7 +362,7 @@
           </div>
           <div class="container">
             <div class="ted">
-              <iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/qKIDnS6Ve0o?si=5PD5Dr-Gjic3Zspf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+              <iframe src="https://www.youtube-nocookie.com/embed/qKIDnS6Ve0o?si=5PD5Dr-Gjic3Zspf" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
             <div class="partners">
               <h2>{{ i18n "partnersAndOrganizations" }}</h2>

@@ -1,7 +1,12 @@
-@use "sass:map";
-@use "../vendor/modularscale-sass/sugar";
-@use "../abstracts/functions";
-@use "../abstracts/variables";
+@use 'sass:map';
+@use '../abstracts/font-stacks';
+@use '../abstracts/functions';
+@use '../abstracts/variables';
+
+/// Editorial refresh: each big number is a card — white surface, hairline
+/// border, colored top accent (via the existing --border-* modifiers),
+/// serif display value, 14px floor on every label. Headings are h3
+/// (single h1 per page now).
 
 $height-of-last: variables.$gutter * 1.333333;
 
@@ -15,7 +20,7 @@ $height-of-last: variables.$gutter * 1.333333;
 
   flex-wrap: wrap;
 
-  justify-content: space-between;
+  gap: 1rem;
 
   width: 100%;
   min-height: 12.5rem;
@@ -30,7 +35,8 @@ $height-of-last: variables.$gutter * 1.333333;
 
 .big-numbers__wrapper .big-number__warning,
 .big-numbers__wrapper .big-number__update {
-  font-size: sugar.ms(-2);
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }
 
 .big-numbers__wrapper .big-number__warning {
@@ -42,20 +48,27 @@ $height-of-last: variables.$gutter * 1.333333;
 
   flex-direction: column;
 
-  margin-bottom: variables.$gutter * 3;
+  padding: 1.25rem 1.5rem 1.5rem;
+  margin-bottom: variables.$gutter;
 
-  border-bottom: 1px solid functions.palette('gray', 'light');
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+
+  transition: box-shadow 0.2s ease;
+
+  &:hover {
+    box-shadow: var(--shadow);
+  }
 
   @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 2) {
-    width: calc(50% - 2rem);
-
-    border-bottom: 0;
+    width: calc(50% - 0.5rem);
   }
 
   @media screen and (min-width: map.get(variables.$line-lengths, 'min') * 3) {
     order: 4;
 
-    width: calc(33.3333% - 2rem);
+    width: calc(33.3333% - 0.7rem);
   }
 }
 
@@ -65,6 +78,9 @@ $height-of-last: variables.$gutter * 1.333333;
 
 .big-number__box p {
   margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }
 
 .big-number__box span {
@@ -75,61 +91,48 @@ $height-of-last: variables.$gutter * 1.333333;
   margin-top: 0.5rem;
 }
 
-.big-number__box--border h1 {
-  position: relative;
-
-  &::before {
-    position: absolute;
-    top: -0.5rem;
-
-    width: 4.5rem;
-    height: 0.25rem;
-
-    content: '';
-
-    border-radius: 10px;
-  }
+/// Colored accent moves from a floating bar to the card's top edge.
+.big-number__box--border-primary {
+  border-top: 3px solid functions.palette('main-colors', 'primary');
 }
 
-.big-number__box--border-primary h1 {
-  &::before {
-    background-color: functions.palette('main-colors', 'primary');
-  }
+.big-number__box--border-secondary {
+  border-top: 3px solid functions.palette('main-colors', 'secondary');
 }
 
-.big-number__box--border-secondary h1 {
-  &::before {
-    background-color: functions.palette('main-colors', 'secondary');
-  }
+.big-number__box--border-tertiary {
+  border-top: 3px solid functions.palette('main-colors', 'tertiary');
 }
 
-.big-number__box--border-tertiary h1 {
-  &::before {
-    background-color: functions.palette('main-colors', 'tertiary');
-  }
+.big-number__box--border-quaternary {
+  border-top: 3px solid functions.palette('main-colors', 'quaternary');
 }
 
-.big-number__box--border-quaternary h1 {
-  &::before {
-    background-color: functions.palette('main-colors', 'quaternary');
-  }
-}
+.big-numbers h3 {
+  display: flex;
 
-.big-numbers h1 {
+  gap: 0.4rem;
+
+  align-items: baseline;
+
   margin-top: 0;
+  margin-bottom: 0.25rem;
 
-  font-size: sugar.ms(2);
-  line-height: 1.2;
-  text-transform: uppercase;
+  font-family: font-stacks.$inter-font-stack;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink-2);
+  letter-spacing: 0;
 }
 
 .big-numbers p {
-  font-size: sugar.ms(-1);
-  color: functions.palette('gray', 'medium');
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }
 
 .big-number small {
-  opacity: 0.65;
+  color: var(--ink-2);
 }
 
 .big-number__number {
@@ -138,9 +141,14 @@ $height-of-last: variables.$gutter * 1.333333;
   margin-top: auto;
   overflow: hidden;
 
-  font-size: sugar.ms(6);
+  font-family: font-stacks.$fraunces-font-stack;
+  font-size: var(--t-2xl);
   font-weight: functions.font-weight('bold');
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.15;
+  color: var(--ink);
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
 
   &:last-child {
     margin-bottom: $height-of-last + variables.$gutter;
@@ -150,24 +158,25 @@ $height-of-last: variables.$gutter * 1.333333;
 .big-number__not-so-big {
   height: $height-of-last;
 
-  font-size: sugar.ms(2);
+  font-size: var(--t-m);
   font-weight: functions.font-weight('bold');
+  font-variant-numeric: tabular-nums lining-nums;
   line-height: $height-of-last;
 }
 
 .big-number__number small,
 .big-number__not-so-big small {
-  font-size: sugar.ms(-3);
-  font-weight: functions.font-weight('normal');
-  color: functions.palette('gray', 'medium');
+  font-size: var(--t-xs);
+  font-weight: functions.font-weight('text');
+  color: var(--ink-2);
 }
 
 .big-number__number span {
-  font-size: sugar.ms(-8);
+  font-size: var(--t-xs);
   font-style: normal;
-  font-weight: functions.font-weight('normal');
-  color: functions.palette('gray', 'medium');
-  text-transform: uppercase;
+  font-weight: functions.font-weight('text');
+  color: var(--ink-2);
+  text-transform: none;
 }
 
 .big-number__math-sign {
@@ -179,15 +188,22 @@ $height-of-last: variables.$gutter * 1.333333;
   margin-top: auto;
   overflow: hidden;
 
-  font-size: sugar.ms(6);
+  font-family: font-stacks.$fraunces-font-stack;
+  font-size: var(--t-2xl);
   font-weight: functions.font-weight('bold');
+  font-variant-numeric: tabular-nums lining-nums;
+  line-height: 1.15;
+  color: var(--ink);
   text-overflow: ellipsis;
+  letter-spacing: -0.01em;
 }
 
 .big-number__divisor {
   overflow: hidden;
 
-  color: functions.palette('gray', 'medium');
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--ink-2);
   text-overflow: ellipsis;
 }
 
@@ -198,20 +214,22 @@ $height-of-last: variables.$gutter * 1.333333;
   justify-content: right;
 
   height: $height-of-last;
+  padding-top: 0.4rem;
   overflow: hidden;
 
-  font-size: sugar.ms(2);
+  font-size: var(--t-m);
   font-weight: functions.font-weight('bold');
-  color: functions.palette('gray', 'medium');
+  font-variant-numeric: tabular-nums lining-nums;
+  color: var(--ink);
   text-overflow: ellipsis;
 
-  border-top: 1px solid functions.palette('main-colors', 'tertiary');
+  border-top: 1px solid var(--hairline);
 }
 
 .big-number__quotient output,
 .big-number__quotient small {
-  font-weight: functions.font-weight('normal');
-  color: functions.palette('gray', 'medium');
+  font-weight: functions.font-weight('text');
+  color: var(--ink-2);
 }
 
 .big-number__quotient output {
@@ -222,8 +240,9 @@ $height-of-last: variables.$gutter * 1.333333;
   padding: 0;
   margin-right: 0.25em;
 
-  font-size: sugar.ms(2);
+  font-size: var(--t-m);
   font-weight: functions.font-weight('bold');
+  color: var(--ink);
 }
 
 .big-number__quotient .big-number__math-sign + output {
@@ -239,7 +258,7 @@ $height-of-last: variables.$gutter * 1.333333;
 
   overflow: hidden;
 
-  font-size: sugar.ms(-3);
+  font-size: var(--t-xs);
   text-overflow: ellipsis;
 
   &:last-child {
@@ -247,39 +266,40 @@ $height-of-last: variables.$gutter * 1.333333;
   }
 }
 
-.big-number__box--icon h1 {
-  display: inline-block;
-
+.big-number__box--icon h3 {
   &::before {
     display: inline-block;
 
-    width: 0.725rem;
-    height: 1.75rem;
-    margin-right: 0.5rem;
+    flex: none;
 
-    vertical-align: text-bottom;
+    align-self: center;
+
+    width: 0.725rem;
+    height: 1.35rem;
 
     content: '';
 
+    background-repeat: no-repeat;
+    background-position: center;
     background-size: contain;
   }
 }
 
-.big-number__box--icon-total h1 {
+.big-number__box--icon-total h3 {
   &::before {
-    width: 1.55rem;
+    width: 1.35rem;
 
     background-image: functions.image('logo.svg');
   }
 }
 
-.big-number__box--icon-female h1 {
+.big-number__box--icon-female h3 {
   &::before {
     background-image: functions.image('icons/female.svg');
   }
 }
 
-.big-number__box--icon-male h1 {
+.big-number__box--icon-male h3 {
   &::before {
     background-image: functions.image('icons/male.svg');
   }
