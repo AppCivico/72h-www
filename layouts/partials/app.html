@@ -35,7 +35,14 @@
                   {{ i18n "heroHeadlineAfter" }}
                 </h1>
 
-                <div class="jumbotron__dek">{{ .Content }}</div>
+                {{/* Same pattern as the headline: the sentence is editable
+                     in i18n, the number of registered candidacies comes
+                     from the API (SSR snapshot as the static fallback). */}}
+                <p class="jumbotron__dek">
+                  {{ i18n "heroDekBefore" }}
+                  <strong v-text="formatNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $heroElection.candidate_count }}</strong>
+                  {{ i18n "heroDekAfter" }}
+                </p>
               </div>
 
               <aside class="jumbotron__status">

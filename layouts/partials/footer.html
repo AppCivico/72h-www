@@ -1,44 +1,55 @@
+{{/* Footer as a masthead colophon: what the project is, where the numbers
+     come from and how often they move, then navigation and contact. The
+     methodological note used to be buried in a paragraph of marketing copy;
+     it now reads as the source statement a data desk would publish. */}}
 <footer class="footer">
   <div class="container">
-    <div class="footer__col">
-      <div class="footer__logo"></div>
+    <div class="footer__brand">
+      <p class="footer__logo-heading">
+        <a class="footer__logo" href="/">
+          <span class="footer__mark" aria-hidden="true"></span>
+          <span class="footer__wordmark">{{ .Site.Params.name }}</span>
+        </a>
+      </p>
+
+      <p class="footer__tagline">{{ i18n "footerTagline" }}</p>
+
+      <p class="footer__source">{{ i18n "footerSourceLine" }}</p>
     </div>
 
-    <div class="footer__col">
+    <nav class="footer__col" aria-label="{{ i18n "footerNavTitle" }}">
+      <h2 class="footer__col-title">{{ i18n "footerNavTitle" }}</h2>
+
       {{ with .Site.Menus.footer }}
-      <ul class="footer__menu">
-        {{ range . }}
-          <li>
-            {{ if .HasChildren }}
-              {{ if .URL }}
-                <a href="{{ .URL }}"{{ if (hasPrefix .URL "http") }} target="_blank" rel="noopener"{{ end }}>
-                    {{ .Name }}
-                </a>
-              {{ else }}
+        <ul class="footer__menu">
+          {{ range . }}
+            <li>
+              {{ if and .HasChildren (not .URL) }}
                 {{ .Name }}
+              {{ else }}
+                <a href="{{ .URL }}"{{ if (hasPrefix .URL "http") }} target="_blank" rel="noopener"{{ end }}>{{ .Name }}</a>
               {{ end }}
-              <ul class="sub-menu">
+
+              {{ if .HasChildren }}
+                <ul class="footer__sub-menu">
                   {{ range .Children }}
-                      <li>
-                          <a href="{{ .URL }}"{{ if (hasPrefix .URL "http") }} target="_blank" rel="noopener"{{ end }}>{{ .Name }}</a>
-                      </li>
+                    <li>
+                      <a href="{{ .URL }}"{{ if (hasPrefix .URL "http") }} target="_blank" rel="noopener"{{ end }}>{{ .Name }}</a>
+                    </li>
                   {{ end }}
-              </ul>
-            {{ else }}
-              <a href="{{ .URL }}"{{ if (hasPrefix .URL "http") }} target="_blank" rel="noopener"{{ end }}>
-                  {{ .Name }}
-              </a>
-            {{ end }}
-          </li>
-        {{ end }}
-      </ul>
+                </ul>
+              {{ end }}
+            </li>
+          {{ end }}
+        </ul>
       {{ end }}
-    </div>
+    </nav>
 
     <div class="footer__col">
-      <address>
-        <p>{{ i18n "footerDescription" }}</p>
-        <a href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
+      <h2 class="footer__col-title">{{ i18n "footerContactTitle" }}</h2>
+
+      <address class="footer__address">
+        <a class="footer__email" href="mailto:{{ .Site.Params.contactEmail }}">{{ .Site.Params.contactEmail }}</a>
       </address>
 
       {{ with hugo.Data.socialMedia }}
@@ -52,7 +63,9 @@
           {{ end }}
         </style>
 
-        <ul class="social">
+        <p class="footer__col-subtitle">{{ i18n "footerFollow" }}</p>
+
+        <ul class="social social--footer">
           {{ range .list }}
             <li>
               <a href="{{ .url }}" title="{{ .name }}" rel="noopener" class="{{ .name }}" target="_blank">
@@ -64,9 +77,14 @@
       {{ end }}
     </div>
 
-    <span class="footer__developed-by">
-      {{ i18n "developedBy" }}
-    </span>
+    <div class="footer__method">
+      <h2 class="footer__col-title">{{ i18n "footerDataTitle" }}</h2>
+      <p>{{ i18n "footerMethod" }}</p>
+    </div>
+
+    <div class="footer__legal">
+      <span class="footer__developed-by">{{ i18n "developedBy" }}</span>
+    </div>
   </div>
 </footer>
 

@@ -50,43 +50,23 @@ export function sequentialRamp(steps) {
  */
 export function compactCurrency(value, digits = 2) {
   const abs = Math.abs(value);
-  const br = (n, d) => n.toFixed(d).replace('.', ',');
+  // trailing ",0" is noise on an axis ("R$ 1,0 mi"), but the decimal has to
+  // stay when it carries information ("R$ 1,5 mi") — and zeros in the
+  // integer part must never be touched ("500 mil")
+  const br = (n, d) => {
+    const fixed = n.toFixed(d);
+    const trimmed = fixed.includes('.')
+      ? fixed.replace(/0+$/, '').replace(/\.$/, '')
+      : fixed;
+
+    return trimmed.replace('.', ',');
+  };
 
   if (abs >= 1e9) { return `R$ ${br(value / 1e9, digits)} bi`; }
   if (abs >= 1e6) { return `R$ ${br(value / 1e6, digits)} mi`; }
   if (abs >= 1e3) { return `R$ ${br(value / 1e3, 0)} mil`; }
 
   return `R$ ${br(value, 0)}`;
-}
-
-/** Draws the total in the middle of a donut, editorial style. */
-export function renderDonutCenter(chart, valueText, labelText) {
-  const target = chart;
-  const series = target.series && target.series[0];
-
-  if (!series || !series.center) {
-    return;
-  }
-
-  const x = target.plotLeft + series.center[0];
-  const y = target.plotTop + series.center[1];
-
-  if (target.centerValue) { target.centerValue.destroy(); }
-  if (target.centerLabel) { target.centerLabel.destroy(); }
-
-  target.centerValue = target.renderer
-    .text(valueText, x, y + 2)
-    .attr({ 'text-anchor': 'middle', zIndex: 5 })
-    .css({
-      fontFamily: SERIF, fontSize: '17px', fontWeight: '600', color: ink,
-    })
-    .add();
-
-  target.centerLabel = target.renderer
-    .text(labelText, x, y + 22)
-    .attr({ 'text-anchor': 'middle', zIndex: 5 })
-    .css({ fontFamily: SANS, fontSize: '12px', color: inkSoft })
-    .add();
 }
 
 /** Global Highcharts options — recessive chrome, editorial type. */

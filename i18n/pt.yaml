@@ -121,7 +121,7 @@
 - id: days
   translation: "Dias"
 - id: developedBy
-  translation: "desenvolvido por AppCívico"
+  translation: "Desenvolvido por AppCívico"
 - id: donate
   translation: "Doe"
 - id: electionStatuses
@@ -167,7 +167,7 @@
 - id: linkCopiedSuccessfully
   translation: "Link copiado!"
 - id: loadElectionHistory
-  translation: "Carregar outras eleições"
+  translation: "Ver outras eleições"
 - id: loadingData
   translation: "Carregando dados..."
 - id: menu
@@ -378,3 +378,21 @@
   translation: "Menu principal"
 - id: clearFilters
   translation: "Limpar filtros"
+- id: heroDekBefore
+  translation: "O 72 Horas acompanha, quase em tempo real, como o Fundo Partidário e o Fundo Eleitoral (FEFC) chegam, ou não, a cada uma das"
+- id: heroDekAfter
+  translation: "candidaturas registradas no TSE, com recorte de gênero, raça e partido."
+- id: footerTagline
+  translation: "Monitor independente do financiamento público de campanhas eleitorais no Brasil."
+- id: footerMethod
+  translation: "Todos os números vêm dos repasses declarados ao TSE e são atualizados em até 72 horas após a declaração. Os dados dependem da disponibilidade do DivulgaCandContas e podem ser revisados pela Justiça Eleitoral."
+- id: footerNavTitle
+  translation: "Navegue"
+- id: footerDataTitle
+  translation: "Sobre os dados"
+- id: footerContactTitle
+  translation: "Fale com a gente"
+- id: footerSourceLine
+  translation: "Fonte: TSE · DivulgaCandContas"
+- id: footerFollow
+  translation: "Acompanhe"
