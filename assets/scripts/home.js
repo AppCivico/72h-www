@@ -11,7 +11,6 @@ import chartTheme, {
   binary,
   categorical,
   compactCurrency,
-  renderDonutCenter,
   sequentialRamp,
 } from './utilities/chartTheme';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
@@ -565,19 +564,41 @@ if (window.location.href.indexOf('/') > -1) {
         }
         return newItem;
       },
-      handlePieData(item) {
+      /**
+       * Prepares a breakdown for a bar chart: ranked descending, one bar
+       * per category, colours assigned by the kind of comparison rather
+       * than by rank.
+       */
+      handleBarData(item) {
         const newItem = item;
-        newItem.chartType = 'pie';
-        newItem.total = (newItem.data || []).reduce((sum, point) => sum + point.y, 0);
 
-        // Two-category breakdowns get the binary pair; everything else a
-        // single-hue sequential ramp, so magnitude reads off lightness.
-        if (item.type === 'gender') {
-          newItem.colors = binary;
-        } else if (newItem.data && newItem.data.length <= categorical.length) {
-          newItem.colors = categorical.slice(0, newItem.data.length);
+        newItem.data = Array.isArray(newItem.data) ? newItem.data : [];
+        newItem.chartType = 'bar';
+        newItem.total = newItem.data.reduce((sum, point) => sum + (point.y || 0), 0);
+
+        newItem.data.sort((a, b) => b.y - a.y);
+
+        newItem.xAxis = { categories: [] };
+
+        // Two-category breakdowns get the binary pair; a handful of
+        // categories the fixed categorical order; long tails a single-hue
+        // ramp, so magnitude reads off lightness instead of a rainbow.
+        let palette;
+
+        if (newItem.data.length === 2) {
+          palette = binary;
+        } else if (newItem.data.length <= categorical.length) {
+          palette = categorical;
         } else {
-          newItem.colors = sequentialRamp((newItem.data || []).length);
+          palette = sequentialRamp(newItem.data.length);
+        }
+
+        newItem.colors = palette.slice(0, newItem.data.length);
+
+        for (let i = 0; i < newItem.data.length; i += 1) {
+          newItem.xAxis.categories.push(newItem.data[i].name);
+          newItem.data[i].color = newItem.colors[i];
+          newItem.data[i].name = null;
         }
 
         return newItem;
@@ -785,7 +806,6 @@ if (window.location.href.indexOf('/') > -1) {
           })
           .then((response) => response.json())
           .then((response) => {
-            const pieCharts = ['ethnicity', 'gender'];
             this.mainData = response;
 
             // Always reassign (not just when there's something to show) —
@@ -794,7 +814,7 @@ if (window.location.href.indexOf('/') > -1) {
             // year's charts stay stuck on screen.
             this.introCharts = Array.isArray(response?.accumulated?.pie_charts)
               // eslint-disable-next-line max-len
-              ? response.accumulated.pie_charts.map((x) => (pieCharts.indexOf(x.type) > -1 ? this.handlePieData(x) : this.handleColumnData(x)))
+              ? response.accumulated.pie_charts.map((x) => this.handleBarData(x))
               : [];
 
             return true;
@@ -1062,41 +1082,46 @@ if (window.location.href.indexOf('/') > -1) {
             return;
           }
 
-          const isPie = chart.chartType === 'pie';
           const label = window.appDictionary[chart.type];
           const total = chart.total
             || chart.data.reduce((sum, point) => sum + (point.y || 0), 0);
           const headline = this.chartHeadline(chart, total, label);
+          // one row per category, plus room for the title block
+          const height = 132 + (chart.data.length * 38);
 
           Highcharts.chart(`js-chart__${chart.type}`, {
             chart: {
-              type: chart.chartType,
+              type: 'bar',
               backgroundColor: 'transparent',
-              plotBackgroundColor: null,
-              plotBorderWidth: null,
-              plotShadow: false,
-              height: isPie ? 340 : 360,
+              height,
               spacingTop: 16,
               marginTop: 84,
-              events: isPie ? {
-                render() {
-                  renderDonutCenter(this, compactCurrency(total), 'no total');
-                },
-              } : {},
+              marginRight: 24,
             },
-            xAxis: chart.xAxis,
-            yAxis: isPie ? undefined : {
-              title: { text: null },
+            xAxis: {
+              categories: chart.xAxis?.categories || [],
+              lineWidth: 0,
+              tickWidth: 0,
               labels: {
-                // eslint-disable-next-line object-shorthand, func-names
-                formatter: function () {
-                  return compactCurrency(this.value, 0);
+                style: {
+                  fontSize: '13px', fontWeight: '500', color: '#1B1723',
                 },
               },
             },
-            title: {
-              text: headline,
+            yAxis: {
+              title: { text: null },
+              gridLineDashStyle: 'Dash',
+              // room at the end of the longest bar for its direct label
+              maxPadding: 0.16,
+              tickPixelInterval: 130,
+              labels: {
+                // eslint-disable-next-line object-shorthand, func-names
+                formatter: function () {
+                  return compactCurrency(this.value, 1);
+                },
+              },
             },
+            title: { text: headline },
             subtitle: {
               text: (window.appChartTitles && window.appChartTitles.subtitle) || '',
             },
@@ -1104,48 +1129,35 @@ if (window.location.href.indexOf('/') > -1) {
               // eslint-disable-next-line object-shorthand, func-names
               formatter: function () {
                 const share = total ? ((this.y / total) * 100) : 0;
-                const name = this.key || this.point.category || label;
 
                 return `<div style="min-width:9rem">
-                    <div style="margin-bottom:.25rem;font-weight:600">${name}</div>
+                    <div style="margin-bottom:.25rem;font-weight:600">${this.key}</div>
                     <div><b>${window.$vueHome.formatCurrencyNoAbbr(this.y)}</b></div>
                     <div style="color:#CFC9DE">${share.toFixed(1).replace('.', ',')}% do total</div>
                   </div>`;
               },
             },
-            accessibility: {
-              point: { valueSuffix: '%' },
-            },
+            legend: { enabled: false },
             plotOptions: {
-              pie: {
-                innerSize: '72%',
-                size: '84%',
-                allowPointSelect: true,
-                cursor: 'pointer',
-                colors: chart.colors,
-                dataLabels: {
-                  enabled: true,
-                  // Only label slices with room for a legible number; the
-                  // legend carries identity for the rest.
-                  // eslint-disable-next-line object-shorthand, func-names
-                  formatter: function () {
-                    return this.percentage >= 4
-                      ? `${this.percentage.toFixed(1).replace('.', ',')}%`
-                      : null;
-                  },
-                },
-                showInLegend: true,
-              },
-              column: {
-                colors: chart.colors,
+              bar: {
                 colorByPoint: true,
+                colors: chart.colors,
+                borderRadius: 4,
+                pointPadding: 0.08,
+                groupPadding: 0.06,
                 cursor: 'pointer',
                 dataLabels: {
                   enabled: true,
+                  inside: false,
+                  crop: false,
+                  overflow: 'allow',
+                  // share as a direct label at the end of each bar — no
+                  // legend needed, identity is on the axis
                   // eslint-disable-next-line object-shorthand, func-names
                   formatter: function () {
                     const share = total ? ((this.y / total) * 100) : 0;
-                    return share >= 3 ? `${share.toFixed(0)}%` : null;
+
+                    return `${share.toFixed(1).replace('.', ',')}%`;
                   },
                   style: {
                     fontSize: '12px', fontWeight: '600', color: '#565064', textOutline: 'none',
@@ -1153,13 +1165,10 @@ if (window.location.href.indexOf('/') > -1) {
                 },
               },
             },
-            legend: {
-              enabled: isPie,
-            },
             series: [{
               name: label,
               data: chart.data,
-              showInLegend: isPie,
+              showInLegend: false,
             }],
           });
         });

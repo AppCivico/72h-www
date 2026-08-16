@@ -164,11 +164,26 @@
 
   flex-wrap: wrap;
 
-  gap: 0.5rem;
+  gap: 0.4rem 0.75rem;
 
   align-items: center;
-  justify-content: space-between;
 
   padding-top: 1rem;
   margin-top: auto;
+}
+
+/// Inside a card the actions are secondary to the money: smaller type and
+/// tighter pills buy back the space three full-size buttons were eating.
+.candidates__actions .button {
+  min-height: 2.25rem;
+  padding: 0.35rem 0.9rem;
+
+  font-size: 0.8125rem;
+  white-space: nowrap;
+}
+
+.candidates__actions .button--link {
+  min-height: 0;
+  padding: 0.2rem 0;
+  margin-left: auto;
 }
