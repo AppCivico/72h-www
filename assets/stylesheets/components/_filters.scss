@@ -2,11 +2,13 @@
 @use '../abstracts/functions';
 @use '../abstracts/variables';
 
-/// The filters used to become a sticky 20%-wide column on large screens:
-/// eleven controls stacked in a narrow strip, each separated by two
-/// gutters of empty space, with the results squeezed into the remaining
-/// 80%. They now read as one panel above the results — a responsive grid
-/// of equal controls that fills the row and ends in an actions bar.
+/// Two layouts for the same panel:
+/// - up to `wide`, a full-width grid above the results;
+/// - from `wide` up, the sticky left column (see layout/_main.scss), where
+///   the fields stack in a single column that scrolls on its own while the
+///   results scroll behind it, and the actions stay pinned to the bottom.
+/// The old column wasted its height on two gutters of blank space between
+/// each control; the rhythm here is tight and the strip is wider.
 
 .filters {
   width: 100%;
@@ -116,6 +118,18 @@
   @media screen and (min-width: functions.breakpoint('phablet')) {
     grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
   }
+
+  // sticky column: one field per row, tight rhythm, own scrollbar
+  @media screen and (min-width: functions.breakpoint('wide')) {
+    grid-template-columns: 1fr;
+
+    gap: 0.85rem;
+
+    max-height: calc(100vh - #{variables.$gutter * 3});
+    padding: 1.25rem 1.25rem 0;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
 }
 
 .filters__items .filters__item {
@@ -199,15 +213,43 @@
   padding-top: 1.25rem;
 
   border-top: 1px solid var(--hairline);
+
+  // pinned to the foot of the scrolling column so "Aplicar" is always
+  // reachable, however many filters are open
+  @media screen and (min-width: functions.breakpoint('wide')) {
+    position: sticky;
+    bottom: 0;
+
+    flex-direction: column;
+
+    gap: 0.5rem;
+
+    align-items: stretch;
+
+    padding-bottom: 1.25rem;
+    margin-top: 0.25rem;
+
+    background: var(--card);
+  }
 }
 
 .filters__actions .button {
   width: auto;
   margin: 0;
+
+  @media screen and (min-width: functions.breakpoint('wide')) {
+    width: 100%;
+  }
 }
 
 /// The share action is secondary here, so it sits after the primary pair
 /// and pushes to the far end on wide rows.
 .filters__actions .button--icon {
   margin-left: auto;
+
+  @media screen and (min-width: functions.breakpoint('wide')) {
+    justify-content: center;
+
+    margin-left: 0;
+  }
 }

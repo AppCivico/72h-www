@@ -121,11 +121,15 @@ $mark-size-desktop: 3rem;
   width: 100%;
   padding: 1rem 1.5rem 1.5rem;
 
+  // parked off-screen rather than hidden, so also take it out of the tab
+  // order while closed
+  visibility: hidden;
+
   background: var(--card);
   border-bottom: 1px solid var(--hairline);
   box-shadow: var(--shadow);
 
-  transition: top 0.3s ease;
+  transition: top 0.3s ease, visibility 0.3s ease;
 
   @media screen and (min-width: functions.breakpoint('toggle-menu')) {
     position: relative;
@@ -141,6 +145,8 @@ $mark-size-desktop: 3rem;
     width: auto;
     padding: 0;
 
+    visibility: visible;
+
     background: transparent;
     border-bottom: 0;
     box-shadow: none;
@@ -149,6 +155,8 @@ $mark-size-desktop: 3rem;
 
 .main-header__links.is-active {
   top: 4rem;
+
+  visibility: visible;
 
   @media screen and (min-width: functions.breakpoint('toggle-menu')) {
     top: auto;
