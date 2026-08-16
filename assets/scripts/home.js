@@ -754,22 +754,6 @@ if (window.location.href.indexOf('/') > -1) {
         this.updateLocaleText();
         this.updateFilterText();
       },
-      /** Resets every filter to its "all"/"ignore" state and reloads. */
-      clearFilters() {
-        this.selectedState = [];
-        this.selectedCity = [];
-        this.selectedOffices = [];
-        this.selectedParty = [];
-        this.selectedFund = [];
-        this.selectedRace = [];
-        this.selectedSchooling = [];
-        this.selectedElectionStatuses = [];
-        this.selectedRangeOfVotes = '';
-        this.isReelectionSelected = '';
-        this.selectedDay = 'all';
-
-        this.applyFilters();
-      },
       applyFilters() {
         this.syncURL();
         this.updateData();

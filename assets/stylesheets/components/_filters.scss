@@ -177,9 +177,19 @@
 }
 
 .filters__items select {
-  padding: 0.5rem 0.6rem;
+  height: 2.5rem;
+  padding: 0 2rem 0 0.75rem;
+
+  font-size: var(--t-xs);
+  color: var(--ink);
 
   cursor: pointer;
+
+  background-image: functions.image('icons/chevron-down.svg');
+  background-repeat: no-repeat;
+  background-position: right 0.75rem center;
+  background-size: 0.65rem;
+  appearance: none;
 }
 
 .filters__items select[disabled],
