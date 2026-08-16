@@ -175,7 +175,7 @@
 - id: multipleFundsWarning
   translation: "Uma mesma candidatura pode receber fundos de diversas fontes."
 - id: next
-  translation: "Próximo >"
+  translation: "Próximo →"
 - id: noResults
   translation: "Sem resultados"
 - id: noResultsCandidates
@@ -210,7 +210,7 @@
 - id: party
   translation: "Partido"
 - id: previous
-  translation: "< Anterior"
+  translation: "← Anterior"
 - id: rangeOfVotes
   translation: "Número de votos"
 - id: receivedFundsWarning

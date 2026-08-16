@@ -67,6 +67,14 @@
   color: var(--ink-2);
 }
 
+/// Everything in the results grid that is not a card — pagination, error
+/// message, empty state — spans the full row.
+.candidates__container > .pagination,
+.candidates__container > .candidates__error-message,
+.candidates__container > .no-results {
+  grid-column: 1 / -1;
+}
+
 .candidates__candidate {
   display: flex;
 
