@@ -1,6 +1,6 @@
-@use "../vendor/modularscale-sass/sugar";
-@use "../abstracts/functions";
-@use "../abstracts/variables";
+@use '../vendor/modularscale-sass/sugar';
+@use '../abstracts/functions';
+@use '../abstracts/variables';
 
 .footer {
   position: relative;
@@ -117,10 +117,9 @@
 }
 
 .footer__menu a {
-  font-size: sugar.ms(-1);
+  font-size: var(--t-xs);
   font-weight: functions.font-weight('bold');
   color: functions.palette('white');
-  text-transform: uppercase;
 }
 
 .footer address {
@@ -144,8 +143,9 @@
 .footer__developed-by {
   width: 100%;
 
-  font-size: sugar.ms(-3);
+  font-size: var(--t-xs);
   text-transform: uppercase;
+  letter-spacing: 0.06em;
 
   @media screen and (min-width: functions.breakpoint('desktop')) {
     margin-top: 1rem;

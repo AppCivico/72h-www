@@ -7,7 +7,13 @@ import numeral from 'numeral';
 import listBox from './components/listBox';
 import TransitionExpand from './components/TransitionExpand';
 import config from './config';
-import colorsPerTypeOfData from './utilities/colorsPerTypeOfData';
+import chartTheme, {
+  binary,
+  categorical,
+  compactCurrency,
+  renderDonutCenter,
+  sequentialRamp,
+} from './utilities/chartTheme';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 import personUrl from './utilities/personUrl';
@@ -223,15 +229,23 @@ if (window.location.href.indexOf('/') > -1) {
       },
 
       formatChartSeries() {
+        // Colour follows the entity, never its rank: Total keeps the brand
+        // hue, and the gender split reuses the same pair as the pie.
         return [{
           name: 'Total',
           data: this.totalArray,
+          color: categorical[0],
+          zIndex: 3,
         }, {
           name: 'Mulheres',
           data: this.femaleArray,
+          color: binary[0],
+          zIndex: 2,
         }, {
           name: 'Homens',
           data: this.maleArray,
+          color: binary[1],
+          zIndex: 1,
         }];
       },
       shareURL() {
@@ -473,48 +487,7 @@ if (window.location.href.indexOf('/') > -1) {
         return dayjs.unix(date).format('DD [de] MMMM [de] YYYY [às] hh[h]mm[m]ss[s]');
       },
       setChartOptions() {
-        Highcharts.setOptions({
-          colors: ['#DC3236', '#620ED9', '#22B1A7', '#DDDF00', '#24CBE5', '#64E572', '#FF9655', '#FFF263', '#6AF9C4'],
-          palette: {
-            colorScheme: 'light',
-          },
-          chart: {
-            style: {
-              fontFamily: 'Montserrat',
-            },
-          },
-          lang: {
-            viewFullscreen: 'Ver em tela cheia',
-            printChart: 'Imprimir gráfico',
-            downloadPNG: 'Baixar em PNG',
-            downloadJPEG: 'Baixar em JPG',
-            downloadPDF: 'Baixar em PDF',
-            downloadSVG: 'Baixar em SVG',
-
-            resetZoom: 'Resetar zoom',
-            loading: 'Carregando...',
-          },
-          navigation: {
-            menuItemStyle: {
-              fontSize: 11,
-            },
-          },
-          exporting: {
-            buttons: {
-              contextButton: {
-                menuItems: [
-                  'viewFullscreen',
-                  'printChart',
-                  'separator',
-                  'downloadPNG',
-                  'downloadJPEG',
-                  'downloadPDF',
-                  'downloadSVG',
-                ],
-              },
-            },
-          },
-        });
+        Highcharts.setOptions(chartTheme);
       },
       handleData() {
         const entries = typeof this.mainData?.chart === 'object' ? Object.entries(this.mainData.chart) : [];
@@ -581,8 +554,10 @@ if (window.location.href.indexOf('/') > -1) {
           newItem.data.sort((a, b) => a.name.localeCompare(b.name));
         }
 
+        const ramp = sequentialRamp(newItem.data.length);
+
         for (let i = 0; i < newItem.data.length; i += 1) {
-          newItem.data[i].color = colorsPerTypeOfData[item.type]?.[i];
+          newItem.data[i].color = ramp[i];
           newItem.xAxis.categories.push(newItem.data[i].name);
           newItem.data[i].name = null;
           newItem.total += newItem.data[i].y;
@@ -592,18 +567,18 @@ if (window.location.href.indexOf('/') > -1) {
       handlePieData(item) {
         const newItem = item;
         newItem.chartType = 'pie';
-        if (item.type === 'state') {
-          newItem.colors = ['#DC5B64', '#DD6367', '#DD6B6A', '#DE746D', '#DE7C70', '#DF8473', '#DF8977', '#E08E7A', '#E0937E', '#E09982', '#E19E85', '#E1A389', '#E1A88F', '#E2AD94', '#E2B39A', '#E2B89F', '#E3BDA4', '#E3C2AA', '#E4C6B0', '#E4CAB6', '#E5CEBC', '#E5D2C2', '#E6D6C8', '#E6DACE', '#E7DED4', '#E8E0D7', '#E8E2DB', '#E9E3DE', '#E9E5E1', '#E9E7E5', '#EAE9E8', '#ECEBEB', '#EDEDED'];
-        }
-        if (item.type === 'party') {
-          newItem.colors = ['#4E79E6', '#537DE7', '#5780E7', '#5C84E8', '#6187E8', '#658BE9', '#6F92EA', '#7396EA', '#789AEB', '#7D9DEC', '#81A1EC', '#86A4ED', '#8BA8ED', '#8FACEE', '#94AFEE', '#99B3EF', '#86B2F2', '#8CB6F2', '#92BAF3', '#92BAF3', '#9BC0F3', '#9EC2F4', '#A7C7F4', '#AAC9F4', '#B3CFF5', '#BAD3F5', '#C0D7F6', '#C9DDF7', '#E1ECF8', '#E4EEF8', '#E7F0F9', '#EAF2F9', '#EDF4F9'];
-        }
+        newItem.total = (newItem.data || []).reduce((sum, point) => sum + point.y, 0);
+
+        // Two-category breakdowns get the binary pair; everything else a
+        // single-hue sequential ramp, so magnitude reads off lightness.
         if (item.type === 'gender') {
-          newItem.colors = ['#22B1A7', '#620ED9'];
+          newItem.colors = binary;
+        } else if (newItem.data && newItem.data.length <= categorical.length) {
+          newItem.colors = categorical.slice(0, newItem.data.length);
+        } else {
+          newItem.colors = sequentialRamp((newItem.data || []).length);
         }
-        if (item.type === 'ethnicity') {
-          newItem.colors = ['#1B78A4', '#3C8EB1', '#5EA3BF', '#7FB9CC', '#A0CED9', '#C2E3E7', '#E3F9F4'];
-        }
+
         return newItem;
       },
       generatePieChartColors(baseColor) {
@@ -954,36 +929,59 @@ if (window.location.href.indexOf('/') > -1) {
 
         this.chart = Highcharts.chart('js-main-chart', {
           chart: {
-            type: 'line',
+            type: 'spline',
             backgroundColor: 'transparent',
+            spacingBottom: 8,
+            spacingTop: 16,
+            marginTop: 84,
           },
           title: {
-            text: 'Repasses Realizados',
+            text: 'Evolução dos repasses',
           },
           subtitle: {
-            text: document.querySelector('.js-filter-text').textContent,
+            text: 'Valor acumulado ao longo do período selecionado',
           },
           xAxis: {
             categories: this.chartDates,
-            // ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+            tickInterval: Math.max(1, Math.ceil(this.chartDates.length / 8)),
+            crosshair: {
+              width: 1,
+              color: '#D8D3C6',
+              dashStyle: 'Dash',
+            },
           },
           yAxis: {
-            title: {
-              text: 'valor (R$)',
+            title: { text: null },
+            labels: {
+              // eslint-disable-next-line object-shorthand, func-names
+              formatter: function () {
+                return compactCurrency(this.value, 0);
+              },
             },
           },
           tooltip: {
+            shared: true,
             // eslint-disable-next-line object-shorthand, func-names
-            pointFormatter: function () {
-              return `${this.series.name}: <b>${window.$vueHome.formatCurrencyNoAbbr(this.y)}</b>`;
+            formatter: function () {
+              const rows = this.points.map((point) => `<div style="display:flex;gap:.75rem;justify-content:space-between">
+                  <span style="color:#CFC9DE">
+                    <span style="color:${point.color}">\u25CF</span> ${point.series.name}
+                  </span>
+                  <b>${window.$vueHome.formatCurrencyNoAbbr(point.y)}</b>
+                </div>`).join('');
+
+              return `<div style="min-width:11rem"><div style="margin-bottom:.35rem;font-weight:600">${this.x}</div>${rows}</div>`;
             },
           },
           plotOptions: {
-            line: {
-              dataLabels: {
+            spline: {
+              marker: {
                 enabled: false,
+                symbol: 'circle',
+                radius: 3,
+                states: { hover: { radius: 5, lineWidth: 2, lineColor: '#FFFFFF' } },
               },
-              enableMouseTracking: true,
+              states: { hover: { lineWidthPlus: 0.5 } },
             },
           },
           series: this.formatChartSeries,
@@ -996,66 +994,103 @@ if (window.location.href.indexOf('/') > -1) {
             return;
           }
 
+          const isPie = chart.chartType === 'pie';
+          const label = window.appDictionary[chart.type];
+          const total = chart.total
+            || chart.data.reduce((sum, point) => sum + (point.y || 0), 0);
+
           Highcharts.chart(`js-chart__${chart.type}`, {
             chart: {
+              type: chart.chartType,
+              backgroundColor: 'transparent',
               plotBackgroundColor: null,
               plotBorderWidth: null,
               plotShadow: false,
-              type: chart.chartType,
+              height: isPie ? 340 : 360,
+              spacingTop: 16,
+              marginTop: 84,
+              events: isPie ? {
+                render() {
+                  renderDonutCenter(this, compactCurrency(total), 'no total');
+                },
+              } : {},
             },
             xAxis: chart.xAxis,
-            yAxis: chart.chartType === 'pie' ? undefined : {
-              title: {
-                text: 'valor (R$)',
+            yAxis: isPie ? undefined : {
+              title: { text: null },
+              labels: {
+                // eslint-disable-next-line object-shorthand, func-names
+                formatter: function () {
+                  return compactCurrency(this.value, 0);
+                },
               },
             },
             title: {
-              useHTML: true,
-              align: 'center',
-              // x: -10,
-              style: {
-                fontSize: '1.26562em',
-                textTransform: 'uppercase',
-              },
-              text: `por <span style="color: ${chart.data[0].color}">${window.appDictionary[chart.type]}</span>`,
+              text: `Repasses por ${label.toLowerCase()}`,
             },
-            credits: {
-              enabled: false,
+            subtitle: {
+              text: 'Valor acumulado declarado ao TSE',
             },
             tooltip: {
-              pointFormatter() {
-                return window.$vueHome.formatCurrencyNoAbbr(this.y);
+              // eslint-disable-next-line object-shorthand, func-names
+              formatter: function () {
+                const share = total ? ((this.y / total) * 100) : 0;
+                const name = this.key || this.point.category || label;
+
+                return `<div style="min-width:9rem">
+                    <div style="margin-bottom:.25rem;font-weight:600">${name}</div>
+                    <div><b>${window.$vueHome.formatCurrencyNoAbbr(this.y)}</b></div>
+                    <div style="color:#CFC9DE">${share.toFixed(1).replace('.', ',')}% do total</div>
+                  </div>`;
               },
             },
             accessibility: {
-              point: {
-                valueSuffix: '%',
-              },
-            },
-            navigation: {
-              buttonOptions: {
-                x: -30,
-              },
+              point: { valueSuffix: '%' },
             },
             plotOptions: {
-              [chart.chartType]: {
+              pie: {
+                innerSize: '72%',
+                size: '84%',
                 allowPointSelect: true,
                 cursor: 'pointer',
                 colors: chart.colors,
                 dataLabels: {
                   enabled: true,
-                  pointFormatter() {
-                    return this.percentage
-                      ? `${this.percentage.toFixed(2)}%`
-                      : `${Number((this.y / chart.total) * 100).toFixed(2)}%`;
+                  // Only label slices with room for a legible number; the
+                  // legend carries identity for the rest.
+                  // eslint-disable-next-line object-shorthand, func-names
+                  formatter: function () {
+                    return this.percentage >= 4
+                      ? `${this.percentage.toFixed(1).replace('.', ',')}%`
+                      : null;
+                  },
+                },
+                showInLegend: true,
+              },
+              column: {
+                colors: chart.colors,
+                colorByPoint: true,
+                cursor: 'pointer',
+                dataLabels: {
+                  enabled: true,
+                  // eslint-disable-next-line object-shorthand, func-names
+                  formatter: function () {
+                    const share = total ? ((this.y / total) * 100) : 0;
+                    return share >= 3 ? `${share.toFixed(0)}%` : null;
+                  },
+                  style: {
+                    fontSize: '12px', fontWeight: '600', color: '#565064', textOutline: 'none',
                   },
                 },
               },
             },
+            legend: {
+              enabled: isPie,
+            },
             series: [{
-              name: window.appDictionary[chart.type],
+              name: label,
               data: chart.data,
-              showInLegend: chart.chartType === 'pie',
+              showInLegend: isPie,
             }],
           });
         });

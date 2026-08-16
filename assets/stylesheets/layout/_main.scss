@@ -1,6 +1,6 @@
-@use "../abstracts/functions";
-@use "../abstracts/mixins";
-@use "../abstracts/variables";
+@use '../abstracts/functions';
+@use '../abstracts/mixins';
+@use '../abstracts/variables';
 
 .container {
   @include mixins.container;
@@ -63,4 +63,25 @@
 
 html {
   scroll-behavior: smooth;
+}
+
+/// Alternating page sections give the home a reading rhythm instead of
+/// one continuous scroll.
+.home-section {
+  padding-top: 3.5rem;
+  padding-bottom: 3.5rem;
+  margin-top: 3rem;
+}
+
+.home-section--warm {
+  background-color: var(--paper-warm);
+  border-top: 1px solid var(--hairline);
+  border-bottom: 1px solid var(--hairline);
+}
+
+.home-section .eyebrow,
+.filterable-area .eyebrow {
+  display: block;
+
+  margin-bottom: 0.5rem;
 }

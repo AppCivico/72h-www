@@ -1,4 +1,4 @@
-@use "../abstracts/functions";
+@use '../abstracts/functions';
 
 .partners {
   display: flex;
@@ -18,7 +18,7 @@
   width: 100%;
   margin-bottom: 2rem;
 
-  text-transform: uppercase;
+  font-size: var(--t-l);
 
   @media screen and (min-width: functions.breakpoint('tablet')) {
     text-align: center;

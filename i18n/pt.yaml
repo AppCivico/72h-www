@@ -302,3 +302,19 @@
   translation: "FEFC (Fundo Especial de Financiamento de Campanha): verba pública liberada apenas em anos eleitorais, distribuída conforme o tamanho das bancadas no Congresso."
 - id: tipOtherResources
   translation: "Recursos declarados que não vêm do Fundo Partidário nem do FEFC, como doações de pessoas físicas e autofinanciamento."
+- id: outOf
+  translation: "de"
+- id: transfersShort
+  translation: "repasses"
+- id: dataSource
+  translation: "Fonte: TSE · DivulgaCandContas"
+- id: homePieEyebrow
+  translation: "O que os dados mostram"
+- id: chartsIntro
+  translation: "Distribuição do valor total repassado por gênero, cor/raça e partido."
+- id: mainChartTitle
+  translation: "Evolução dos repasses"
+- id: mainChartSubtitle
+  translation: "Valor acumulado ao longo do período selecionado"
+- id: exploreEyebrow
+  translation: "Explore os dados"
