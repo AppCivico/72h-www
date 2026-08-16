@@ -376,8 +376,6 @@
   translation: "Abrir menu"
 - id: mainMenu
   translation: "Menu principal"
-- id: clearFilters
-  translation: "Limpar filtros"
 - id: heroDekBefore
   translation: "O 72 Horas acompanha, quase em tempo real, como o Fundo Partidário e o Fundo Eleitoral (FEFC) chegam, ou não, a cada uma das"
 - id: heroDekAfter
