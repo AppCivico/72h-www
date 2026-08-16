@@ -63,15 +63,6 @@ tr {
     flex-wrap: wrap;
 
     min-width: min-content;
-
-    @supports (grid-template-rows: subgrid) {
-      display: grid;
-
-      grid-template-rows: subgrid;
-      grid-row: span 3;
-
-      margin-bottom: variables.$gutter;
-    }
   }
 }
 
@@ -113,11 +104,6 @@ td {
     &:empty {
       display: none;
     }
-
-    @supports (grid-template-rows: subgrid) {
-      padding-right: 0;
-      padding-left: 0;
-    }
   }
 }
 
@@ -145,14 +131,6 @@ tbody {
     flex-wrap: wrap;
 
     gap: variables.$gutter;
-
-    @supports (grid-template-rows: subgrid) {
-      display: grid;
-
-      grid-template-columns: repeat(auto-fit, minmax(max(#{$card-width}, 15em), 1fr));
-
-      gap: 0 1.5rem;
-    }
   }
 }
 

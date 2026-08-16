@@ -1,6 +1,7 @@
 @use '../vendor/modularscale-sass/sugar';
 @use '../abstracts/functions';
 @use '../abstracts/variables';
+@use '../layout/table';
 
 // .container's shared mixin sets flex-direction: column + flex-wrap: wrap
 // with no fixed height. With a single, very tall child (this whole page),
@@ -250,4 +251,50 @@
 
 .candidato__compare-bar--mine .candidato__compare-label {
   font-weight: functions.font-weight('bold');
+}
+
+@mixin _table-card-layout($number-of-columns: 0) {
+  @if $number-of-columns == 0 {
+    @warn 'No number of columns specified for card layout. Defaulting to 1.';
+    $number-of-columns: 1;
+  }
+
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
+    tr {
+      @supports (grid-template-rows: subgrid) {
+        display: grid;
+
+        grid-template-rows: subgrid;
+        grid-row: span $number-of-columns;
+
+        margin-bottom: variables.$gutter;
+      }
+    }
+
+    td {
+      @supports (grid-template-rows: subgrid) {
+        padding-right: 0;
+        padding-left: 0;
+
+      }
+    }
+
+    tbody {
+      @supports (grid-template-rows: subgrid) {
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(max(#{table.$card-width}, 15em), 1fr));
+
+        gap: 0 variables.$gutter;
+      }
+    }
+  }
+}
+
+.candidato__transfers-table {
+  @include _table-card-layout(3);
+}
+
+.candidato__history-table {
+  @include _table-card-layout(6);
 }
