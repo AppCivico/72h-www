@@ -36,18 +36,6 @@
                 </h1>
 
                 <div class="jumbotron__dek">{{ .Content }}</div>
-
-                {{ with $.Site.Params.run }}
-                  <label class="jumbotron__year-selector" v-cloak>
-                    <span class="jumbotron__year-selector-inner-label">{{ i18n "yearSelector" }}</span>
-                    <select
-                      v-model.number="selectedYear"
-                      @change="changeYear(selectedYear)"
-                    >
-                      <option v-for="y in years" :key="y" :value="y">{{ "{{ y }}" }}</option>
-                    </select>
-                  </label>
-                {{ end }}
               </div>
 
               <aside class="jumbotron__status">

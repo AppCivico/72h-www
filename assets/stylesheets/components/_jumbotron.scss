@@ -1,9 +1,8 @@
-@use '../abstracts/font-stacks';
 @use '../abstracts/functions';
 @use '../abstracts/variables';
 
 /// Editorial hero: left-aligned serif display over a quiet radial tint,
-/// dek-style intro copy, year selector as an inline control.
+/// dek-style intro copy, and a provenance card filling the right column.
 
 .jumbotron {
   display: grid;
@@ -14,7 +13,7 @@
 
   width: 100%;
   padding-top: variables.$gutter * 2;
-  padding-bottom: variables.$gutter;
+  padding-bottom: 0;
 
   text-align: left;
 
@@ -34,7 +33,7 @@
 .jumbotron__headline {
   max-width: 22ch;
   margin-top: 0;
-  margin-bottom: variables.$gutter * 0.75;
+  margin-bottom: variables.$gutter * 0.6;
 
   font-size: clamp(2.2rem, 5.2vw, var(--t-3xl));
   font-weight: 600;
@@ -54,6 +53,10 @@
   font-size: var(--t-m);
   line-height: 1.55;
   color: var(--ink-2);
+}
+
+.jumbotron__dek p:last-child {
+  margin-bottom: 0;
 }
 
 /* freshness & provenance card
@@ -112,65 +115,6 @@
 
   font-weight: 600;
   color: var(--ink);
-}
-
-/// The election year is a real choice (four cycles), so the control reads
-/// as a control: a visible label above a bordered, chevroned select.
-.jumbotron__year-selector {
-  display: inline-flex;
-
-  flex-direction: column;
-
-  align-items: flex-start;
-
-  width: fit-content;
-  max-width: 100%;
-  margin-bottom: variables.$gutter;
-
-  white-space: nowrap;
-
-  select {
-    padding: 0.35rem 2.75rem 0.35rem 1rem;
-
-    font-family: font-stacks.$fraunces-font-stack;
-    font-size: var(--t-2xl);
-    font-weight: functions.font-weight('bold');
-    font-variant-numeric: lining-nums;
-    line-height: 1.15;
-    color: var(--brand);
-
-    cursor: pointer;
-
-    background-color: var(--card);
-    background-image: functions.image('icons/chevron-down.svg');
-    background-repeat: no-repeat;
-    background-position: right 1rem center;
-    background-size: 0.8rem;
-    border: 1px solid var(--hairline-2);
-    border-radius: 999px;
-    appearance: none;
-
-    &:hover {
-      border-color: var(--brand);
-    }
-
-    &:focus-visible {
-      outline: 2px solid var(--brand);
-      outline-offset: 3px;
-    }
-  }
-}
-
-.jumbotron__year-selector-inner-label {
-  margin-bottom: 0.4rem;
-  margin-left: 0.15rem;
-
-  font-family: font-stacks.$inter-font-stack;
-  font-size: var(--t-xs);
-  font-weight: 600;
-  color: var(--ink-2);
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
 }
 
 .jumbotron [class*='pay-attention-to'] {
