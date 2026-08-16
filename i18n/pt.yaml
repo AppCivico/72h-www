@@ -376,3 +376,5 @@
   translation: "Abrir menu"
 - id: mainMenu
   translation: "Menu principal"
+- id: clearFilters
+  translation: "Limpar filtros"

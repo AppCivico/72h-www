@@ -1,6 +1,6 @@
-@use '../vendor/modularscale-sass/sugar';
 @use '../abstracts/font-stacks';
 @use '../abstracts/functions';
+@use '../abstracts/variables';
 
 /// Editorial refresh: each result is a card with a clear hierarchy —
 /// name first, the money as the protagonist, one primary action.
@@ -13,6 +13,7 @@
   align-content: flex-start;
 
   width: 100%;
+  padding-top: variables.$gutter * 1.5;
   margin-bottom: 2rem;
 
   @media screen and (min-width: functions.breakpoint('desktop')) {
@@ -42,6 +43,10 @@
     margin-right: -0.5rem;
     margin-left: -0.5rem;
   }
+}
+
+.candidates .button--icon {
+  margin-bottom: 1.25rem;
 }
 
 .candidates h2 {
