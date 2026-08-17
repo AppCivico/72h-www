@@ -142,6 +142,15 @@
   font-family: variables.$text-font-stack;
 }
 
+/// Anchor for the open list-box overlay, and a fixed height so the field
+/// keeps its closed footprint while the absolute overlay floats over the
+/// form (legend line + control).
+.filters__items .list-box__wrapper {
+  position: relative;
+
+  height: 4.2rem;
+}
+
 /// Field labels were inheriting the editorial serif from the global
 /// heading rule (legend is in that selector list), which read as decorative
 /// lowercase titles rather than form labels.
