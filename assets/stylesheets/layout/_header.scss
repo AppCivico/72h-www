@@ -1,9 +1,11 @@
 @use '../abstracts/font-stacks';
 @use '../abstracts/functions';
 
-/// Masthead: brand left, content pages + election switcher + social right.
-/// Stays stuck to the top on scroll (the logo is the anchor readers use),
-/// with a translucent, blurred surface so content scrolls under it.
+/// Masthead: brand left, content pages + election switcher + social right,
+/// with the project's statement of purpose on a strip underneath. Stays
+/// stuck to the top on scroll (the logo is the anchor readers use), with a
+/// translucent, blurred surface so content scrolls under it; the strip
+/// folds away on the first scroll (see components/headerCondense.js).
 
 $mark-size: 2.5rem;
 $mark-size-desktop: 3rem;
@@ -13,20 +15,64 @@ $mark-size-desktop: 3rem;
   top: 0;
   z-index: functions.layer('dropdown');
 
-  display: flex;
+  display: block;
 
-  align-items: center;
-
-  height: 4rem;
   margin-bottom: 2rem;
 
   background-color: rgba(252, 252, 251, 0.88);
   border-bottom: 1px solid var(--hairline);
   backdrop-filter: blur(12px);
+}
+
+.main-header__bar {
+  display: flex;
+
+  align-items: center;
+
+  height: 4rem;
 
   @media screen and (min-width: functions.breakpoint('desktop')) {
     height: 4.5rem;
   }
+}
+
+/* statement of purpose
+============================================================================ */
+.main-header__tagline {
+  max-height: 3rem;
+  overflow: hidden;
+
+  border-top: 1px solid var(--hairline);
+
+  transition: max-height 0.3s ease, opacity 0.25s ease, border-color 0.3s ease;
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
+}
+
+.main-header__tagline p {
+  padding: 0.5rem 0;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--ink-2);
+  text-align: center;
+
+  @media screen and (min-width: functions.breakpoint('tablet')) {
+    text-align: left;
+  }
+}
+
+/// Folded away once the reader starts scrolling: it has done its job of
+/// saying what the project is for, and the masthead goes back to being a
+/// thin bar.
+.main-header.is-condensed .main-header__tagline {
+  max-height: 0;
+
+  border-top-color: transparent;
+  opacity: 0;
 }
 
 .main-header .container {
@@ -154,7 +200,9 @@ $mark-size-desktop: 3rem;
 }
 
 .main-header__links.is-active {
-  top: 4rem;
+  // 100% rather than a fixed height: the masthead is taller while the
+  // tagline strip is open
+  top: 100%;
 
   visibility: visible;
 

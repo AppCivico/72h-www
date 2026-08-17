@@ -18,9 +18,10 @@
 .list-box {
   position: relative;
 
-  display: flex;
-
-  align-items: center;
+  // the collapsed control is a single line of comma-separated labels, so
+  // it stays in normal inline flow (flex items would shrink each label
+  // and drop the first ones); the height comes from line-height
+  display: block;
 
   max-width: 100%;
   height: 2.5rem;
@@ -31,7 +32,7 @@
   overflow: hidden;
 
   font-size: var(--t-xs);
-  line-height: 1.4;
+  line-height: 2.4rem;
   color: var(--ink);
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -52,17 +53,27 @@
   &:hover,
   &:focus,
   &:focus-within {
+    // Static position (no top offset) keeps the open list exactly where
+    // the closed control sits; left/right pin it to the wrapper's width.
+    // Being absolute is the point: opening must NOT push the rest of the
+    // form down — the collapse on an outside click used to shift the
+    // layout mid-click, and "Aplicar" slid out from under the cursor
+    // before mouseup, swallowing the click.
+    position: absolute;
+    right: 0;
+    left: 0;
     z-index: functions.layer('dropdown');
 
     display: block;
 
     height: auto;
-    max-height: variables.$gutter * 22;
+    max-height: 20rem;
     padding: 0.5rem;
     overflow: auto;
     overflow-x: clip;
     overflow-y: auto;
 
+    line-height: 1.5;
     color: functions.palette('text', 'dark');
 
     background-color: functions.palette('white');
@@ -88,6 +99,22 @@
   &.list-box--empty,
   &:empty {
     pointer-events: none;
+  }
+}
+
+.list-box__summary {
+  display: block;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  list-style-type: none;
+
+  .list-box:hover &,
+  .list-box:focus &,
+  .list-box:focus-within & {
+    display: none;
   }
 }
 
@@ -147,28 +174,6 @@
   text-overflow: ellipsis;
   text-transform: inherit;
   white-space: nowrap;
-
-  :checked + & {
-    display: inline-block;
-
-    font-weight: inherit;
-    color: inherit;
-
-    &::after {
-      float: right;
-
-      color: functions.palette('gray', 'medium');
-
-      content: ', ';
-    }
-  }
-
-  .list-box__option--empty > &,
-  .list-box__option--last-selected > & {
-    &::after {
-      content: none;
-    }
-  }
 
   .list-box:hover &,
   .list-box:focus &,

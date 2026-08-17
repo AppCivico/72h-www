@@ -141,6 +141,9 @@ export default {
     line: { lineWidth: 2.5 },
     spline: { lineWidth: 2.5 },
   },
+  // Hidden on screen (the page already prints "Fonte: TSE ·
+  // DivulgaCandContas" under each figure), but switched on for exports so
+  // a downloaded PNG/PDF carries where it came from.
   credits: { enabled: false },
   lang: {
     viewFullscreen: 'Ver em tela cheia',
@@ -160,6 +163,15 @@ export default {
     menuItemStyle: { fontSize: '13px' },
   },
   exporting: {
+    chartOptions: {
+      credits: {
+        enabled: true,
+        text: (typeof window !== 'undefined' && window.appChartCredits) || 'Fonte: 72horas.org',
+        href: 'https://72horas.org',
+        position: { align: 'left', x: 10, y: -8 },
+        style: { fontSize: '12px', color: inkSoft },
+      },
+    },
     buttons: {
       contextButton: {
         menuItems: [

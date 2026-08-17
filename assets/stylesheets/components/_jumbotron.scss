@@ -1,3 +1,4 @@
+@use '../abstracts/font-stacks';
 @use '../abstracts/functions';
 @use '../abstracts/variables';
 
@@ -31,11 +32,11 @@
 }
 
 .jumbotron__headline {
-  max-width: 22ch;
+  max-width: 26ch;
   margin-top: 0;
   margin-bottom: variables.$gutter * 0.6;
 
-  font-size: clamp(2.2rem, 5.2vw, var(--t-3xl));
+  font-size: clamp(1.9rem, 4.2vw, var(--t-2xl));
   font-weight: 600;
   line-height: 1.12;
   letter-spacing: -0.015em;
@@ -69,6 +70,20 @@
   background: var(--card);
   border: 1px solid var(--hairline);
   border-radius: var(--radius);
+}
+
+.jumbotron__status-tagline {
+  padding-bottom: 0.85rem;
+  margin-bottom: 0.85rem;
+
+  font-family: font-stacks.$fraunces-font-stack;
+  font-size: var(--t-s);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+
+  border-bottom: 1px solid var(--hairline);
 }
 
 .jumbotron__pulse {

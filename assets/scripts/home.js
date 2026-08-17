@@ -330,7 +330,12 @@ if (window.location.href.indexOf('/') > -1) {
         // when a state is unselected, we need to remove its cities from selection
         // as well. However, we keep cities in case of empty states to save the
         // user from select everything again on an bad state selection
-        if (this.selectedCity.length) {
+        //
+        // `selectedCity` may be null here (the states control resets it on
+        // change); an unguarded `.length` threw inside Vue's flush, which
+        // aborted the whole re-render — checkboxes froze in their previous
+        // visual state and no result ever loaded.
+        if (this.selectedCity?.length) {
           this.selectedCity = this.selectedCity.filter((x) => this.citiesById[x]);
         }
       },
