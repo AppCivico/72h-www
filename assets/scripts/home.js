@@ -1077,8 +1077,12 @@ if (window.location.href.indexOf('/') > -1) {
           const headline = this.chartHeadline(chart, total, label);
           // one row per category, plus room for the title block
           const height = 132 + (chart.data.length * 38);
+          const containerId = `js-chart__${chart.type}`;
 
-          Highcharts.chart(`js-chart__${chart.type}`, {
+          // no-param-reassign: same alias-the-parameter workaround already
+          // used by loadCandidateHistory() below.
+          const target = chart;
+          target.highchartsInstance = Highcharts.chart(containerId, {
             chart: {
               type: 'bar',
               backgroundColor: 'transparent',
@@ -1160,6 +1164,32 @@ if (window.location.href.indexOf('/') > -1) {
               showInLegend: false,
             }],
           });
+
+          // Some intro-chart cards span the whole grid width
+          // (.intro-charts__chart--party/--state, _intro-charts.scss).
+          // Highcharts' own window-resize listener doesn't reliably
+          // reflow every chart in this grid — observed live: ethnicity/
+          // gender's SVGs reflowed correctly on resize, but party's could
+          // stay frozen at its first-render width. Since that card spans
+          // every column, its stale width drags the shared grid track (and
+          // the whole page) wider than the viewport as it shrinks — the
+          // charts look like they're "growing" relative to the narrowing
+          // window. Watching each chart's own container directly, same
+          // pattern as the candidate page's history chart
+          // (renderHistoryChart(), candidato.js), sidesteps whatever's
+          // inconsistent about the shared listener.
+          const container = document.getElementById(containerId);
+          if (container) {
+            if (!target.resizeObserver) {
+              target.resizeObserver = new ResizeObserver(() => {
+                window.requestAnimationFrame(() => {
+                  target.highchartsInstance?.reflow();
+                });
+              });
+            }
+            target.resizeObserver.disconnect();
+            target.resizeObserver.observe(container);
+          }
         });
       },
     },

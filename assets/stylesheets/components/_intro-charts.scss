@@ -48,6 +48,12 @@
 
 .intro-charts__chart {
   width: 100%;
+  // Grid items default to a content-based automatic minimum size (same
+  // rule that bites flex items) — without this, a chart whose Highcharts
+  // SVG hasn't reflowed yet (see the ResizeObserver in generateIntroCharts,
+  // home.js) can hold its track open at that stale, wider width instead of
+  // shrinking with the viewport.
+  min-width: 0;
   padding: 1.25rem 1.25rem 1rem;
 
   background: var(--card);
