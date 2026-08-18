@@ -17,7 +17,8 @@
   {{- $yearSwitcher = .yearSwitcher -}}
 {{- end -}}
 <header class="main-header">
-  <div class="container">
+  <div class="main-header__bar">
+    <div class="container">
     <p class="main-header__logo-heading">
       <a class="main-header__logo" href="/">
         <span class="main-header__mark" aria-hidden="true"></span>
@@ -72,6 +73,17 @@
           {{ end }}
         </ul>
       {{ end }}
+      </div>
+    </div>
+  </div>
+
+  {{/* The project's statement of purpose, shown on arrival and folded away
+       on the first scroll (assets/scripts/components/headerCondense.js),
+       so it greets the reader without permanently competing with the
+       masthead. */}}
+  <div class="main-header__tagline">
+    <div class="container">
+      <p>{{ i18n "siteTagline" }}</p>
     </div>
   </div>
 </header>
