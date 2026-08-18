@@ -61,11 +61,14 @@
 {{- end -}}
 
 <script>
+  window.appChartCredits = '{{ i18n "chartExportCredits" }}';
+
   window.appDictionary = {
     "ethnicity": '{{ i18n "ethnicity" }}',
     "party": '{{ i18n "party" }}',
     "gender": '{{ i18n "gender" }}',
     "state": '{{ i18n "state" }}',
+    "selectedCount": '{{ i18n "selectedCountLabel" }}',
   }
 
   // Chart headlines state what the data shows and are rebuilt from the

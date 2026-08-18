@@ -46,6 +46,8 @@
               </div>
 
               <aside class="jumbotron__status">
+                <p class="jumbotron__status-tagline">{{ i18n "heroCardTagline" }}</p>
+
                 <p class="jumbotron__pulse">{{ i18n "heroEyebrow" }}</p>
 
                 <p class="jumbotron__status-item" v-cloak v-if="mainData && mainData.last_run_at">
@@ -58,6 +60,7 @@
                   <span class="jumbotron__status-value">{{ i18n "heroSourceValue" }}</span>
                 </p>
               </aside>
+
             </header>
 
             <div class="big-numbers__wrapper">
@@ -124,7 +127,9 @@
                         id="states"
                         name="states"
                         v-model="selectedState"
-                        @change="selectedCity = null"
+                        {{/* reset must stay an array: watchers and v-model
+                             both read .length off this value */}}
+                        @change="selectedCity = []"
                         label-for-empty="{{ i18n "allStates" }}"
                         :options="states"
                         multiple

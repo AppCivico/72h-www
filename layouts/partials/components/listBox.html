@@ -16,7 +16,13 @@
   </option>
 </select>
 <ul class="list-box" :class="{'list-box--empty': !normalizedOptions.length}"
-tabindex="0" v-else>
+tabindex="0" @pointerdown="pointerUsed = true" v-else>
+  {{/* Collapsed face of the control. Concatenating the chosen labels broke
+       the line as soon as two or three were picked, so the closed state
+       only says THAT something was chosen: the single label when there is
+       one, "N selecionados" beyond that. The full list is right below on
+       open. */}}
+  <li class="list-box__summary" aria-hidden="true">{{ "{{ summaryText }}" }}</li>
   <li class="list-box__option list-box__option--empty" v-if="labelForEmpty || !required">
     <input
       v-bind="$attrs"
@@ -26,6 +32,11 @@ tabindex="0" v-else>
       type="radio"
       :name="name"
       @change.prevent="emit($event)"
+      {{/* A radio that is already checked fires no change event, so a
+           reader clicking "todos" to undo a stale selection would get
+           nothing. The click handler makes the reset unconditional; the
+           extra emit is idempotent. */}}
+      @click="emit($event)"
       class="list-box__input list-box__input--empty"
       ref="empty"
     />
@@ -62,10 +73,9 @@ tabindex="0" v-else>
       :for="`option__${ name }--${ option.id ?? option }`"
       class="list-box__option-label"
       :title="option.acronym && option.name ? option.name : null"
-      >
-      {{ "{{ option.label ?? option }}" }}
-
-      <small class="list-box__option-helper" v-if="option.helper">{{ "{{ option.helper }}" }}</small>
-    </label>
+      {{/* no whitespace around the label text: the collapsed control
+           appends a comma after each selected label, and a stray space
+           would read as "ACRE , AMAPÁ" */}}
+      >{{ "{{ option.label ?? option }}" }}<small class="list-box__option-helper" v-if="option.helper">{{ "{{ option.helper }}" }}</small></label>
   </li>
 </ul>

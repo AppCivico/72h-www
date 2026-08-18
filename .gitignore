@@ -315,4 +315,6 @@ $RECYCLE.BIN/
 
 .layouts/index.bcp.html
 
+_to_delete/
+
 # End of https://www.toptal.com/developers/gitignore/api/vim,node,hugo,sass,linux,macos,windows,sublimetext,visualstudiocode
