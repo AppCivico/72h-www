@@ -46,8 +46,6 @@
               </div>
 
               <aside class="jumbotron__status">
-                <p class="jumbotron__status-tagline">{{ i18n "heroCardTagline" }}</p>
-
                 <p class="jumbotron__pulse">{{ i18n "heroEyebrow" }}</p>
 
                 <p class="jumbotron__status-item" v-cloak v-if="mainData && mainData.last_run_at">
@@ -60,7 +58,6 @@
                   <span class="jumbotron__status-value">{{ i18n "heroSourceValue" }}</span>
                 </p>
               </aside>
-
             </header>
 
             <div class="big-numbers__wrapper">
@@ -303,11 +300,17 @@
                       <div
                         v-for="candidate in candidates.candidates"
                         class="candidates__candidate">
+                        {{/* alt="" on purpose: the candidate's name is the
+                             very next text node, so the photo is decorative
+                             — repeating the name in alt would read twice in
+                             a screen reader. Also keeps the pre-hydration
+                             markup valid (the old :alt didn't exist as a
+                             real alt attribute until Vue mounted). */}}
                         <img
                           class="candidates__image"
                           :src="candidate.picture"
                           @error="candidate.picture = '/assets/images/no-picture.svg'"
-                          :alt="candidate.name"
+                          alt=""
                           loading="lazy">
                         <div class="candidates__text">
                           <p class="candidates__name">

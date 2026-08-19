@@ -11,6 +11,22 @@
     {{ $canonicalURL = printf "%d/" $.Site.Params.run | absURL }}
   {{ end }}
 
+  {{/* One page-aware title/description pair feeds <title>, the meta
+       description and every social tag below, so search snippets, shared
+       links and the tab all tell the same story. The home (and the year
+       pages, which are the same app) get the year-specific pitch; other
+       pages fall back to their own front matter, then to the site's. */}}
+  {{ $metaTitle := printf "%s · %s" .Title .Site.Title }}
+  {{ $metaDescription := .Description | default .Params.description | default $.Site.Params.siteDescription }}
+  {{ if .IsHome }}
+    {{ $metaTitle = printf "%s — Monitor de Financiamento de Campanhas Eleitorais %d" .Site.Title $.Site.Params.run }}
+    {{ $metaDescription = printf "Quanto cada candidatura das Eleições %d já recebeu? Repasses do Fundo Partidário, do Fundo Eleitoral (FEFC) e doações declaradas ao TSE, atualizados em até 72 horas." $.Site.Params.run }}
+  {{ else if eq .Type "year" }}
+    {{ with .Params.year }}
+      {{ $metaDescription = printf "Quanto cada candidatura das Eleições %d recebeu? Repasses do Fundo Partidário, do Fundo Eleitoral (FEFC) e doações declaradas ao TSE, com recorte por estado, partido, gênero e cor/raça." . }}
+    {{ end }}
+  {{ end }}
+
   <meta content="IE=edge" http-equiv="X-UA-Compatible">
 
   <meta charset="utf-8">
@@ -50,28 +66,32 @@
 
   <link rel="canonical" href="{{ $canonicalURL }}" />
 
+  {{/* CMS leftovers and other pages that should stay out of the index can
+       set `noindex: true` in their front matter. */}}
+  {{ if .Params.noindex }}
+  <meta name="robots" content="noindex">
+  {{ end }}
+
+  <meta name="description" content="{{ $metaDescription }}">
+
 	{{ with $.Site.Params.shareImages.default }}
 	<meta name="image" content="{{ . | absURL }}">
 	{{ end }}
 
 	<!-- Schema.org for Google -->
-	<meta itemprop="name" content="{{ .Site.Title }}">
+	<meta itemprop="name" content="{{ $metaTitle }}">
 
-	{{ with $.Site.Params.siteDescription }}
-	<meta itemprop="description" content="{{ . }}">
-	{{ end }}
+	<meta itemprop="description" content="{{ $metaDescription }}">
 
 	{{ with $.Site.Params.shareImages.default }}
 	<meta itemprop="image" content="{{ . | absURL }}">
 	{{ end }}
 
 	<!-- Twitter and Open Graph general -->
-	<meta name="twitter:title" property="og:title" content="{{ .Site.Title }}">
+	<meta name="twitter:title" property="og:title" content="{{ $metaTitle }}">
 
-	{{ with $.Site.Params.siteDescription }}
-	<meta name="twitter:description" property="og:description" content="{{ substr . 0 200 }}">
+	<meta name="twitter:description" property="og:description" content="{{ substr $metaDescription 0 200 }}">
 	<!-- max of 200 characters for Twitter & Facebook -->
-	{{ end }}
 
 	<meta name="twitter:url" property="og:url" content="{{ $canonicalURL }}">
 
@@ -97,5 +117,45 @@
 	{{ end }}
 
 
-  <title>{{ if not .IsHome }}{{ .Title }} &middot; {{ end }}{{ .Site.Title }}</title>
+  {{ if .IsHome }}
+  {{/* Machine-readable identity card: who publishes this data and where
+       else the project lives. The social URLs come from the same data
+       file the header renders, so they can't drift apart. */}}
+  {{ $sameAs := slice }}
+  {{ with hugo.Data.socialMedia }}
+    {{ range .list }}
+      {{ $sameAs = $sameAs | append .url }}
+    {{ end }}
+  {{ end }}
+  {{/* Built as one dict and serialized once: writing JSON by hand inside a
+       <script> runs into Hugo's JS-context escaping, which double-quotes
+       every interpolated string. */}}
+  {{ $orgId := printf "%s#organization" (absURL "/") }}
+  {{ $schema := dict
+    "@context" "https://schema.org"
+    "@graph" (slice
+      (dict
+        "@type" "Organization"
+        "@id" $orgId
+        "name" .Site.Title
+        "url" (absURL "/")
+        "logo" (absURL "android-chrome-512x512.png")
+        "email" $.Site.Params.contactEmail
+        "sameAs" $sameAs
+      )
+      (dict
+        "@type" "WebSite"
+        "@id" (printf "%s#website" (absURL "/"))
+        "name" $metaTitle
+        "description" $metaDescription
+        "url" (absURL "/")
+        "inLanguage" "pt-BR"
+        "publisher" (dict "@id" $orgId)
+      )
+    )
+  }}
+  <script type="application/ld+json">{{ $schema | jsonify | safeJS }}</script>
+  {{ end }}
+
+  <title>{{ $metaTitle }}</title>
 </head>

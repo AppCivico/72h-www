@@ -1,0 +1,704 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>72 Horas — Proposta visual (mockup)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  /* superfícies */
+  --paper:#FCFCFB;
+  --paper-warm:#F6F4EE;
+  --card:#FFFFFF;
+  --ink-card:#211D2B;
+  /* tinta */
+  --ink:#1B1723;
+  --ink-2:#565064;      /* 6,6:1 sobre paper — AA ✓ */
+  --ink-3:#7A7488;      /* só para meta ≥14px      */
+  --hairline:#E7E3DA;
+  --hairline-2:#D8D3C6;
+  /* marca */
+  --brand:#620ED9;
+  --brand-deep:#4C1D95;
+  --brand-tint:#F1EAFD;
+  --accent-warm:#B45309;
+  /* dataviz (validada: CVD + contraste) */
+  --dv-1:#6D28D9; --dv-2:#00897B; --dv-3:#B45309; --dv-4:#1D4ED8; --dv-5:#C2185B;
+  --dv-muted:#CBC6BB;
+  /* tipografia */
+  --serif:"Fraunces",Georgia,"Times New Roman",serif;
+  --sans:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  /* escala 1.25 (major third), piso 14px */
+  --t-xs:.875rem;   /* 14 */
+  --t-s:1rem;       /* 16 */
+  --t-m:1.25rem;    /* 20 */
+  --t-l:1.563rem;   /* 25 */
+  --t-xl:1.953rem;  /* 31 */
+  --t-2xl:2.441rem; /* 39 */
+  --t-3xl:3.052rem; /* 49 */
+  --radius:12px;
+  --shadow:0 1px 2px rgba(27,23,35,.05),0 8px 24px -12px rgba(27,23,35,.12);
+  --shadow-lift:0 2px 4px rgba(27,23,35,.06),0 16px 40px -16px rgba(27,23,35,.22);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);font-size:var(--t-s);line-height:1.6;color:var(--ink);background:var(--paper)}
+.container{max-width:72rem;margin:0 auto;padding:0 1.5rem}
+.container--narrow{max-width:46rem}
+a{color:var(--brand-deep);text-decoration-thickness:1px;text-underline-offset:3px}
+.num{font-variant-numeric:tabular-nums lining-nums}
+
+/* eyebrow: o ÚNICO lugar com uppercase */
+.eyebrow{font-size:var(--t-xs);font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--brand-deep)}
+.eyebrow--plain{color:var(--ink-2)}
+
+/* ============ FAIXA DE DEMO ============ */
+.demo-note{background:var(--ink);color:#EFEBF7;font-size:var(--t-xs);text-align:center;padding:.5rem 1rem}
+.demo-note strong{color:#CBB2F5}
+
+/* ============ HEADER ============ */
+.site-header{position:sticky;top:0;z-index:50;background:rgba(252,252,251,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--hairline)}
+.site-header .container{display:flex;align-items:center;gap:2rem;height:4rem}
+.logo{font-family:var(--serif);font-weight:700;font-size:var(--t-m);color:var(--ink);text-decoration:none;letter-spacing:-.01em;display:flex;align-items:baseline;gap:.4rem}
+.logo b{color:var(--brand)}
+.logo small{font-family:var(--sans);font-weight:500;font-size:var(--t-xs);color:var(--ink-2)}
+.site-nav{margin-left:auto;display:flex;gap:1.75rem;align-items:center}
+.site-nav a{font-size:var(--t-xs);font-weight:500;color:var(--ink-2);text-decoration:none}
+.site-nav a:hover{color:var(--ink)}
+.year-switch{display:flex;gap:.25rem;background:var(--paper-warm);border:1px solid var(--hairline);border-radius:999px;padding:.2rem}
+.year-switch button{border:0;background:transparent;font:inherit;font-size:var(--t-xs);font-weight:600;color:var(--ink-2);padding:.25rem .8rem;border-radius:999px;cursor:pointer}
+.year-switch button[aria-pressed="true"]{background:var(--ink);color:#fff}
+@media(max-width:760px){.site-nav a{display:none}.site-nav .year-switch{display:flex}}
+
+/* ============ HERO ============ */
+.hero{padding:5rem 0 3.5rem;background:
+  radial-gradient(60rem 24rem at 85% -10%,rgba(98,14,217,.07),transparent 60%),
+  var(--paper)}
+.hero .eyebrow{display:block;margin-bottom:1.25rem}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(2.2rem,5.2vw,var(--t-3xl));line-height:1.12;letter-spacing:-.015em;max-width:21ch}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero .dek{margin-top:1.5rem;font-size:var(--t-m);line-height:1.55;color:var(--ink-2);max-width:56ch}
+.hero-meta{margin-top:2rem;display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;font-size:var(--t-xs);color:var(--ink-2)}
+.pulse{display:inline-flex;align-items:center;gap:.5rem;background:var(--card);border:1px solid var(--hairline);border-radius:999px;padding:.35rem .9rem;font-weight:500}
+.pulse::before{content:"";width:.5rem;height:.5rem;border-radius:50%;background:#0E8A66;box-shadow:0 0 0 3px rgba(14,138,102,.18)}
+
+/* ============ TERMOS COM TOOLTIP (definições) ============ */
+.term{appearance:none;background:none;border:0;padding:0;margin:0;font:inherit;line-height:inherit;border-bottom:2px dotted var(--brand);cursor:help;font-weight:500;color:inherit}
+
+/* tooltip rico — usado em termos, KPIs e gráficos */
+.tip{position:absolute;z-index:100;width:min(19rem,86vw);background:var(--ink-card);color:#F3F0F9;border-radius:10px;padding:.9rem 1rem;font-size:var(--t-xs);line-height:1.5;box-shadow:var(--shadow-lift);opacity:0;transform:translateY(4px);pointer-events:none;transition:opacity .15s,transform .15s}
+.tip.is-open{opacity:1;transform:none;pointer-events:auto}
+.tip h4{font-family:var(--serif);font-size:var(--t-s);font-weight:600;margin-bottom:.3rem;color:#fff}
+.tip p{color:#CFC9DE;margin-bottom:.4rem}
+.tip .tip__src{color:#B79BEC;font-weight:500;text-decoration:none}
+.tip .tip__kv{display:flex;justify-content:space-between;gap:1rem;padding:.2rem 0;border-top:1px solid rgba(255,255,255,.12)}
+.tip .tip__kv:first-of-type{border-top:0}
+.tip .tip__kv b{font-weight:600;color:#fff}
+.tip::after{content:"";position:absolute;top:-6px;left:24px;width:12px;height:12px;background:var(--ink-card);transform:rotate(45deg)}
+.tip.tip--above::after{top:auto;bottom:-6px}
+
+/* ============ KPI STRIP ============ */
+.kpis{margin-top:-1px;padding:0 0 4rem}
+.kpi-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:1rem}
+.kpi{grid-column:span 4;background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:1.5rem 1.5rem 1.25rem;position:relative;transition:box-shadow .2s,transform .2s}
+.kpi:hover{box-shadow:var(--shadow)}
+.kpi--hero{grid-column:span 4;border-top:3px solid var(--brand)}
+.kpi--sub{grid-column:span 4}
+.kpi__label{display:flex;align-items:center;gap:.4rem;font-size:var(--t-xs);font-weight:600;color:var(--ink-2)}
+.kpi__value{font-family:var(--serif);font-weight:600;font-size:var(--t-2xl);line-height:1.1;letter-spacing:-.01em;margin-top:.5rem}
+.kpi__value small{font-family:var(--sans);font-weight:500;font-size:var(--t-xs);color:var(--ink-2);letter-spacing:0}
+.kpi__ctx{margin-top:.4rem;font-size:var(--t-xs);color:var(--ink-2)}
+.kpi__ctx b{color:var(--ink);font-weight:600}
+.kpi__bar{margin-top:.9rem;height:6px;border-radius:4px;background:var(--paper-warm);overflow:hidden}
+.kpi__bar i{display:block;height:100%;border-radius:4px;background:var(--brand)}
+.info-btn{margin-left:auto;flex:none;width:1.35rem;height:1.35rem;border-radius:50%;border:1px solid var(--hairline-2);background:var(--card);color:var(--ink-2);font-size:.72rem;font-weight:700;line-height:1;cursor:pointer;display:inline-grid;place-items:center}
+.info-btn:hover,.info-btn:focus-visible{border-color:var(--brand);color:var(--brand)}
+.info-btn:focus-visible,.term:focus-visible,button:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+@media(max-width:900px){.kpi,.kpi--hero,.kpi--sub{grid-column:span 6}}
+@media(max-width:600px){.kpi,.kpi--hero,.kpi--sub{grid-column:span 12}}
+
+/* ============ SEÇÕES ============ */
+.section{padding:5rem 0}
+.section--warm{background:var(--paper-warm);border-top:1px solid var(--hairline);border-bottom:1px solid var(--hairline)}
+.section-head{max-width:46rem;margin-bottom:2.5rem}
+.section-head .eyebrow{display:block;margin-bottom:.75rem}
+.section-head h2{font-family:var(--serif);font-weight:600;font-size:var(--t-xl);line-height:1.2;letter-spacing:-.01em}
+.section-head p{margin-top:.75rem;color:var(--ink-2)}
+
+/* ============ CHARTS ============ */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+@media(max-width:900px){.chart-grid{grid-template-columns:1fr}}
+.chart-card{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:1.75rem;position:relative}
+.chart-card--wide{grid-column:1/-1}
+.chart-card h3{font-family:var(--serif);font-weight:600;font-size:var(--t-m);line-height:1.3;max-width:30ch}
+.chart-card .sub{font-size:var(--t-xs);color:var(--ink-2);margin-top:.35rem}
+.chart-card figure{margin-top:1.5rem}
+.chart-card figcaption{margin-top:1rem;font-size:var(--t-xs);color:var(--ink-2);display:flex;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.chart-card figcaption a{color:var(--ink-2)}
+.legend{display:flex;flex-wrap:wrap;gap:.4rem 1.1rem;margin-top:1.1rem;font-size:var(--t-xs);color:var(--ink-2)}
+.legend i{display:inline-block;width:.65rem;height:.65rem;border-radius:3px;margin-right:.4rem;vertical-align:-1px}
+/* barras horizontais */
+.hbar{display:grid;grid-template-columns:7.5rem 1fr 4.5rem;align-items:center;gap:.75rem;padding:.45rem 0}
+.hbar__label{font-size:var(--t-xs);font-weight:500;color:var(--ink);text-align:right}
+.hbar__track{height:14px;background:var(--paper-warm);border-radius:4px;position:relative}
+.hbar__fill{position:absolute;inset:0 auto 0 0;border-radius:4px;min-width:4px;cursor:pointer;transition:filter .15s}
+.hbar__fill:hover{filter:brightness(1.12)}
+.hbar__val{font-size:var(--t-xs);font-weight:600;color:var(--ink)}
+/* stacked */
+.stack{display:flex;height:20px;border-radius:6px;overflow:hidden;gap:2px;background:var(--paper)}
+.stack i{display:block;height:100%;cursor:pointer;transition:filter .15s}
+.stack i:hover{filter:brightness(1.12)}
+/* linha do tempo (svg) */
+.tl-wrap{position:relative}
+.tl-wrap svg{width:100%;height:auto;display:block}
+.tl-dot{cursor:pointer}
+.tl-dot circle.halo{fill:transparent}
+.tl-dot:hover circle.pt,.tl-dot:focus-visible circle.pt{r:6}
+/* tabela acessível */
+details.data-table{margin-top:1rem;font-size:var(--t-xs)}
+details.data-table summary{cursor:pointer;color:var(--brand-deep);font-weight:500}
+details.data-table table{margin-top:.6rem;border-collapse:collapse;width:100%}
+details.data-table th,details.data-table td{text-align:left;padding:.35rem .6rem;border-bottom:1px solid var(--hairline)}
+details.data-table th{color:var(--ink-2);font-weight:600}
+
+/* ============ EXPLORAR / FILTROS ============ */
+.explore-bar{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:1.1rem 1.25rem;box-shadow:var(--shadow)}
+.filter-row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center}
+.fpill{display:inline-flex;align-items:center;gap:.45rem;border:1px solid var(--hairline-2);background:var(--card);border-radius:999px;padding:.5rem 1rem;font:inherit;font-size:var(--t-xs);font-weight:500;color:var(--ink);cursor:pointer;min-height:2.5rem}
+.fpill:hover{border-color:var(--ink-2)}
+.fpill.is-active{border-color:var(--brand);background:var(--brand-tint);color:var(--brand-deep);font-weight:600}
+.fpill::after{content:"";width:.55rem;height:.55rem;border-right:1.5px solid currentColor;border-bottom:1.5px solid currentColor;transform:rotate(45deg) translateY(-2px)}
+.fpill--more::after{content:none}
+.fpill--more{color:var(--brand-deep);border-style:dashed}
+.chips{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.9rem;padding-top:.9rem;border-top:1px dashed var(--hairline)}
+.chip{display:inline-flex;align-items:center;gap:.5rem;background:var(--ink);color:#fff;border-radius:999px;padding:.3rem .5rem .3rem .9rem;font-size:var(--t-xs);font-weight:500}
+.chip small{opacity:.65;font-size:.72rem;font-weight:600;letter-spacing:.04em}
+.chip button{all:unset;cursor:pointer;width:1.15rem;height:1.15rem;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:.7rem;line-height:1}
+.chip button:hover{background:rgba(255,255,255,.35)}
+.chips .clear-all{margin-left:auto;font-size:var(--t-xs);align-self:center}
+.result-line{display:flex;flex-wrap:wrap;gap:.75rem;align-items:baseline;margin:1.75rem 0 1.25rem}
+.result-line h3{font-family:var(--serif);font-size:var(--t-l);font-weight:600}
+.result-line .num{color:var(--brand)}
+.result-line .sort{margin-left:auto;font-size:var(--t-xs);color:var(--ink-2)}
+.result-line select{font:inherit;font-size:var(--t-xs);font-weight:600;color:var(--ink);border:0;border-bottom:2px solid var(--hairline-2);background:transparent;padding:.15rem .2rem;cursor:pointer}
+
+/* ============ CANDIDATE CARDS ============ */
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem}
+@media(max-width:980px){.cards{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:640px){.cards{grid-template-columns:1fr}}
+.cand{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:1.4rem;display:flex;flex-direction:column;gap:1rem;transition:box-shadow .2s,transform .2s;position:relative}
+.cand:hover{box-shadow:var(--shadow-lift);transform:translateY(-2px)}
+.cand__top{display:flex;gap:1rem;align-items:flex-start}
+.cand__photo{width:3.4rem;height:3.4rem;border-radius:50%;object-fit:cover;flex:none;background:linear-gradient(135deg,var(--brand-tint),#E4D6FA);display:grid;place-items:center;font-family:var(--serif);font-weight:600;font-size:var(--t-m);color:var(--brand-deep);border:2px solid #fff;box-shadow:0 0 0 1px var(--hairline)}
+.cand__name{font-weight:600;font-size:var(--t-s);line-height:1.3}
+.cand__name a{color:inherit;text-decoration:none}
+.cand__name a::after{content:"";position:absolute;inset:0}
+.cand__name a:hover{color:var(--brand-deep)}
+.cand__meta{font-size:var(--t-xs);color:var(--ink-2);margin-top:.15rem}
+.badge{display:inline-block;font-size:.72rem;font-weight:700;letter-spacing:.05em;color:var(--brand-deep);background:var(--brand-tint);border-radius:5px;padding:.1rem .45rem;margin-right:.35rem;vertical-align:1px}
+.cand__value{border-top:1px solid var(--hairline);padding-top:.9rem}
+.cand__value .lbl{font-size:.78rem;font-weight:600;color:var(--ink-2)}
+.cand__value .val{font-family:var(--serif);font-weight:600;font-size:var(--t-l);letter-spacing:-.01em;line-height:1.15}
+.cand__value .val small{font-family:var(--sans);font-size:var(--t-xs);font-weight:500;color:var(--ink-2)}
+.cand__spark{display:flex;gap:3px;align-items:flex-end;height:26px;margin-top:.5rem}
+.cand__spark i{flex:1;border-radius:2px 2px 0 0;background:var(--dv-1);opacity:.85;min-height:3px}
+.cand__foot{display:flex;align-items:center;justify-content:space-between;font-size:var(--t-xs)}
+.cand__foot .go{font-weight:600;color:var(--brand-deep);text-decoration:none}
+.cand__foot .tse{position:relative;z-index:2;color:var(--ink-2)}
+.load-more{display:flex;justify-content:center;margin-top:2.5rem}
+
+/* ============ BOTÕES ============ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.5rem;min-height:2.75rem;padding:.55rem 1.5rem;border-radius:999px;border:0;font:inherit;font-size:var(--t-xs);font-weight:600;cursor:pointer;text-decoration:none}
+.btn--primary{background:var(--ink);color:#fff}
+.btn--primary:hover{background:#000}
+.btn--brand{background:var(--brand);color:#fff}
+.btn--brand:hover{background:var(--brand-deep)}
+.btn--ghost{background:transparent;color:var(--ink);border:1px solid var(--hairline-2)}
+.btn--ghost:hover{border-color:var(--ink-2)}
+
+/* ============ STYLE GUIDE ============ */
+.sg-block{margin-top:3rem}
+.sg-block h3{font-family:var(--serif);font-size:var(--t-m);font-weight:600;margin-bottom:1rem}
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(9.5rem,1fr));gap:.75rem}
+.sw{border:1px solid var(--hairline);border-radius:10px;overflow:hidden;background:var(--card)}
+.sw i{display:block;height:3.4rem}
+.sw div{padding:.5rem .75rem;font-size:.78rem;line-height:1.45}
+.sw b{display:block;font-weight:600}
+.sw span{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.type-row{display:flex;gap:1.5rem;align-items:baseline;padding:.85rem 0;border-bottom:1px solid var(--hairline)}
+.type-row .spec{flex:none;width:11rem;font-size:.78rem;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+@media(max-width:760px){.compare{grid-template-columns:1fr}}
+.compare .col{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:1.5rem}
+.compare .col h4{font-size:var(--t-xs);font-weight:700;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.compare .col--before h4{color:#A13333}
+.compare .col--after h4{color:#0E6E4C}
+.compare .col ul{list-style:none}
+.compare .col li{padding:.4rem 0 .4rem 1.4rem;position:relative;font-size:var(--t-xs);color:var(--ink-2);border-top:1px dashed var(--hairline)}
+.compare .col li:first-child{border-top:0}
+.compare .col--before li::before{content:"✕";position:absolute;left:0;color:#A13333;font-weight:700}
+.compare .col--after li::before{content:"✓";position:absolute;left:0;color:#0E6E4C;font-weight:700}
+.bench{display:grid;grid-template-columns:repeat(2,1fr);gap:1rem}
+@media(max-width:760px){.bench{grid-template-columns:1fr}}
+.bench article{background:var(--card);border:1px solid var(--hairline);border-radius:var(--radius);padding:1.4rem}
+.bench h4{font-family:var(--serif);font-size:var(--t-s);font-weight:600}
+.bench h4 span{font-family:var(--sans);font-weight:500;font-size:.78rem;color:var(--ink-2);margin-left:.4rem}
+.bench p{font-size:var(--t-xs);color:var(--ink-2);margin-top:.4rem}
+
+/* ============ FOOTER ============ */
+.site-footer{background:var(--ink);color:#B9B3C6;padding:4rem 0 3rem;margin-top:5rem}
+.site-footer .logo{color:#fff}
+.site-footer .cols{display:flex;flex-wrap:wrap;gap:2rem 4rem;margin-top:1.5rem;font-size:var(--t-xs)}
+.site-footer a{color:#D9D4E4}
+.skip{position:absolute;left:-999px;top:0;background:var(--brand);color:#fff;padding:.6rem 1rem;z-index:200;border-radius:0 0 8px 0}
+.skip:focus{left:0}
+</style>
+</head>
+<body>
+<a class="skip" href="#explorar">Pular para os dados</a>
+<div class="demo-note"><strong>Mockup de proposta visual</strong> · dados parcialmente ilustrativos · direção “editorial / jornalismo de dados” · 16 ago 2026</div>
+
+<!-- ===================== HEADER ===================== -->
+<header class="site-header">
+  <div class="container">
+    <a class="logo" href="#"><span>72<b>horas</b></span><small>monitor do financiamento eleitoral</small></a>
+    <nav class="site-nav" aria-label="principal">
+      <a href="#">Sobre os dados</a>
+      <a href="#">Metodologia</a>
+      <a href="#">English</a>
+      <div class="year-switch" role="group" aria-label="Ano da eleição">
+        <button aria-pressed="true">2026</button>
+        <button aria-pressed="false">2024</button>
+        <button aria-pressed="false">2022</button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">Eleições 2026 · atualização contínua</span>
+    <h1>Só <em>0,43%</em> das candidaturas receberam recursos dos fundos até agora.</h1>
+    <p class="dek">O 72 Horas acompanha, quase em tempo real, como o
+      <button class="term" data-tip="fp">Fundo Partidário</button> e o
+      <button class="term" data-tip="fefc">Fundo Eleitoral (FEFC)</button>
+      chegam — ou não — a cada uma das 16.890 candidaturas registradas no TSE, com recorte de gênero, raça e partido.</p>
+    <div class="hero-meta">
+      <span class="pulse">Atualizado há 3 horas</span>
+      <span>Fonte: <a href="#">TSE · DivulgaCandContas</a></span>
+      <span><a href="#">Baixe os dados abertos</a></span>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== KPIs ===================== -->
+<section class="kpis" aria-label="Números principais">
+  <div class="container">
+    <div class="kpi-grid">
+      <article class="kpi kpi--hero">
+        <div class="kpi__label">Total repassado
+          <button class="info-btn" data-tip="total" aria-label="O que é o total repassado?">i</button>
+        </div>
+        <p class="kpi__value num">R$&nbsp;2,85&nbsp;<small>milhões</small></p>
+        <p class="kpi__ctx num">em <b>128</b> repasses declarados</p>
+      </article>
+
+      <article class="kpi kpi--hero">
+        <div class="kpi__label">Candidaturas contempladas
+          <button class="info-btn" data-tip="contempladas" aria-label="Como contamos candidaturas contempladas?">i</button>
+        </div>
+        <p class="kpi__value num">72 <small>de 16.890</small></p>
+        <p class="kpi__ctx num"><b>0,43%</b> do total registrado</p>
+        <div class="kpi__bar" role="img" aria-label="0,43 por cento das candidaturas"><i style="width:2%"></i></div>
+      </article>
+
+      <article class="kpi kpi--hero">
+        <div class="kpi__label">Origem dos recursos
+          <button class="info-btn" data-tip="origem" aria-label="Quais são as origens dos recursos?"><span aria-hidden="true">i</span></button>
+        </div>
+        <p class="kpi__value num">67% <small>via FEFC</small></p>
+        <div class="stack" style="margin-top:.9rem" aria-hidden="true">
+          <i style="width:67%;background:var(--dv-1)" data-tt="FEFC · R$ 1,91 mi (67%)"></i>
+          <i style="width:27%;background:var(--dv-2)" data-tt="Fundo Partidário · R$ 0,77 mi (27%)"></i>
+          <i style="width:6%;background:var(--dv-3)" data-tt="Outros recursos · R$ 0,17 mi (6%)"></i>
+        </div>
+        <div class="legend">
+          <span><i style="background:var(--dv-1)"></i>FEFC</span>
+          <span><i style="background:var(--dv-2)"></i>Fundo Partidário</span>
+          <span><i style="background:var(--dv-3)"></i>Outros</span>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== O QUE OS DADOS MOSTRAM ===================== -->
+<section class="section section--warm" id="achados">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">O que os dados mostram</span>
+      <h2>Cada gráfico afirma um achado — não apenas “distribuição por X”.</h2>
+      <p>Títulos-síntese, rótulos diretos, tooltip com contexto e tabela acessível em todos os gráficos.</p>
+    </div>
+
+    <div class="chart-grid">
+      <!-- RAÇA -->
+      <div class="chart-card">
+        <h3>Candidaturas brancas concentram 58% dos valores repassados</h3>
+        <p class="sub">Valor acumulado por raça/cor declarada ao TSE · 2026</p>
+        <figure>
+          <div class="hbar"><span class="hbar__label">Branca</span><span class="hbar__track"><i class="hbar__fill" style="width:58%;background:var(--dv-1)" data-tt="Branca · R$ 1,65 mi · 39 candidaturas"></i></span><span class="hbar__val num">58%</span></div>
+          <div class="hbar"><span class="hbar__label">Parda</span><span class="hbar__track"><i class="hbar__fill" style="width:27%;background:var(--dv-1)" data-tt="Parda · R$ 0,77 mi · 21 candidaturas"></i></span><span class="hbar__val num">27%</span></div>
+          <div class="hbar"><span class="hbar__label">Preta</span><span class="hbar__track"><i class="hbar__fill" style="width:12%;background:var(--dv-1)" data-tt="Preta · R$ 0,34 mi · 9 candidaturas"></i></span><span class="hbar__val num">12%</span></div>
+          <div class="hbar"><span class="hbar__label">Indígena</span><span class="hbar__track"><i class="hbar__fill" style="width:2%;background:var(--dv-1)" data-tt="Indígena · R$ 57 mil · 2 candidaturas"></i></span><span class="hbar__val num">2%</span></div>
+          <div class="hbar"><span class="hbar__label">Amarela</span><span class="hbar__track"><i class="hbar__fill" style="width:1%;background:var(--dv-1)" data-tt="Amarela · R$ 28 mil · 1 candidatura"></i></span><span class="hbar__val num">1%</span></div>
+          <figcaption><span>População brasileira: 43% branca (IBGE 2022)</span><a href="#">Ver tabela ↓</a></figcaption>
+        </figure>
+        <details class="data-table">
+          <summary>Dados em tabela</summary>
+          <table>
+            <thead><tr><th>Raça/cor</th><th>Valor</th><th>%</th></tr></thead>
+            <tbody>
+              <tr><td>Branca</td><td class="num">R$ 1,65 mi</td><td class="num">58%</td></tr>
+              <tr><td>Parda</td><td class="num">R$ 0,77 mi</td><td class="num">27%</td></tr>
+              <tr><td>Preta</td><td class="num">R$ 0,34 mi</td><td class="num">12%</td></tr>
+              <tr><td>Indígena</td><td class="num">R$ 57 mil</td><td class="num">2%</td></tr>
+              <tr><td>Amarela</td><td class="num">R$ 28 mil</td><td class="num">1%</td></tr>
+            </tbody>
+          </table>
+        </details>
+      </div>
+
+      <!-- GÊNERO -->
+      <div class="chart-card">
+        <h3>Homens recebem quase o dobro por candidatura</h3>
+        <p class="sub">Valor médio por candidatura contemplada, por gênero · 2026</p>
+        <figure>
+          <div class="hbar"><span class="hbar__label">Masculino</span><span class="hbar__track"><i class="hbar__fill" style="width:100%;background:var(--dv-4)" data-tt="Masculino · média R$ 47,1 mil · 46 candidaturas"></i></span><span class="hbar__val num">R$ 47 mil</span></div>
+          <div class="hbar"><span class="hbar__label">Feminino</span><span class="hbar__track"><i class="hbar__fill" style="width:55%;background:var(--dv-5)" data-tt="Feminino · média R$ 26,0 mil · 26 candidaturas"></i></span><span class="hbar__val num">R$ 26 mil</span></div>
+          <figcaption><span>A lei exige mínimo de 30% dos fundos para mulheres</span><a href="#">Entenda a regra</a></figcaption>
+        </figure>
+        <div class="legend">
+          <span><i style="background:var(--dv-4)"></i>Masculino</span>
+          <span><i style="background:var(--dv-5)"></i>Feminino</span>
+        </div>
+      </div>
+
+      <!-- LINHA DO TEMPO -->
+      <div class="chart-card chart-card--wide">
+        <h3>Os repasses aceleraram na última semana de julho</h3>
+        <p class="sub">Valor acumulado repassado por semana, em R$ milhões · passe o cursor pelos pontos</p>
+        <figure class="tl-wrap">
+          <svg viewBox="0 0 920 240" role="img" aria-label="Linha do tempo do valor acumulado. Cresce de 0,2 para 2,85 milhões entre junho e agosto, com aceleração no fim de julho.">
+            <!-- grid -->
+            <g stroke="#E7E3DA" stroke-width="1">
+              <line x1="60" y1="30" x2="900" y2="30"/><line x1="60" y1="90" x2="900" y2="90"/>
+              <line x1="60" y1="150" x2="900" y2="150"/><line x1="60" y1="210" x2="900" y2="210"/>
+            </g>
+            <g font-family="Inter,sans-serif" font-size="12" fill="#565064">
+              <text x="52" y="34" text-anchor="end">3,0</text>
+              <text x="52" y="94" text-anchor="end">2,0</text>
+              <text x="52" y="154" text-anchor="end">1,0</text>
+              <text x="52" y="214" text-anchor="end">0</text>
+              <text x="80" y="232">7 jun</text><text x="260" y="232">28 jun</text>
+              <text x="440" y="232">12 jul</text><text x="620" y="232">26 jul</text><text x="810" y="232">9 ago</text>
+            </g>
+            <!-- área -->
+            <path d="M80,198 L200,192 L320,183 L440,168 L560,148 L680,96 L800,58 L880,39 L880,210 L80,210 Z" fill="rgba(109,40,217,.09)"/>
+            <path d="M80,198 L200,192 L320,183 L440,168 L560,148 L680,96 L800,58 L880,39" fill="none" stroke="#6D28D9" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- pontos com hover -->
+            <g class="tl-dots">
+              <g class="tl-dot" tabindex="0" data-tt="7 jun · R$ 0,20 mi acumulados"><circle class="halo" cx="80" cy="198" r="14"/><circle class="pt" cx="80" cy="198" r="4" fill="#6D28D9" stroke="#fff" stroke-width="2"/></g>
+              <g class="tl-dot" tabindex="0" data-tt="28 jun · R$ 0,45 mi acumulados"><circle class="halo" cx="320" cy="183" r="14"/><circle class="pt" cx="320" cy="183" r="4" fill="#6D28D9" stroke="#fff" stroke-width="2"/></g>
+              <g class="tl-dot" tabindex="0" data-tt="12 jul · R$ 0,70 mi acumulados"><circle class="halo" cx="440" cy="168" r="14"/><circle class="pt" cx="440" cy="168" r="4" fill="#6D28D9" stroke="#fff" stroke-width="2"/></g>
+              <g class="tl-dot" tabindex="0" data-tt="26 jul · R$ 1,90 mi acumulados · +R$ 1,2 mi na semana"><circle class="halo" cx="680" cy="96" r="14"/><circle class="pt" cx="680" cy="96" r="4" fill="#6D28D9" stroke="#fff" stroke-width="2"/></g>
+              <g class="tl-dot" tabindex="0" data-tt="9 ago · R$ 2,54 mi acumulados"><circle class="halo" cx="800" cy="58" r="14"/><circle class="pt" cx="800" cy="58" r="4" fill="#6D28D9" stroke="#fff" stroke-width="2"/></g>
+              <g class="tl-dot" tabindex="0" data-tt="16 ago · R$ 2,85 mi acumulados (hoje)"><circle class="halo" cx="880" cy="39" r="14"/><circle class="pt" cx="880" cy="39" r="5" fill="#6D28D9" stroke="#fff" stroke-width="2"/></g>
+            </g>
+            <!-- anotação editorial -->
+            <g font-family="Inter,sans-serif" font-size="12.5" fill="#1B1723">
+              <text x="600" y="70" font-weight="600">Liberação do FEFC</text>
+              <text x="600" y="86" fill="#565064">+R$ 1,2 mi em uma semana</text>
+              <line x1="660" y1="92" x2="678" y2="94" stroke="#B9B3C6" stroke-width="1"/>
+            </g>
+          </svg>
+          <figcaption><span>Valores nominais declarados ao TSE até 16 ago 2026</span><a href="#">Ver tabela ↓</a></figcaption>
+        </figure>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== EXPLORAR ===================== -->
+<section class="section" id="explorar">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Explore os dados</span>
+      <h2>Filtros primários sempre à mão; o resto, a um toque.</h2>
+      <p>Estado ativo visível em chips removíveis, contagem de resultados imediata e ordenação — sem reabrir painel para lembrar o que foi filtrado.</p>
+    </div>
+
+    <div class="explore-bar">
+      <div class="filter-row">
+        <button class="fpill is-active">Estado · SP</button>
+        <button class="fpill">Cargo</button>
+        <button class="fpill is-active">Partido · 2</button>
+        <button class="fpill">Origem do recurso</button>
+        <button class="fpill">Gênero</button>
+        <button class="fpill fpill--more">+ 6 filtros</button>
+        <button class="btn btn--ghost" style="margin-left:auto">Limpar</button>
+      </div>
+      <div class="chips">
+        <span class="chip"><small>UF</small> São Paulo <button aria-label="Remover filtro São Paulo">✕</button></span>
+        <span class="chip"><small>Partido</small> PT <button aria-label="Remover filtro PT">✕</button></span>
+        <span class="chip"><small>Partido</small> PSOL <button aria-label="Remover filtro PSOL">✕</button></span>
+        <a class="clear-all" href="#">Compartilhar esta seleção</a>
+      </div>
+    </div>
+
+    <div class="result-line">
+      <h3><span class="num">23</span> candidaturas · <span class="num">R$ 1,12 mi</span></h3>
+      <label class="sort">Ordenar por
+        <select>
+          <option>maior valor recebido</option>
+          <option>mais repasses</option>
+          <option>nome (A–Z)</option>
+          <option>mais votos em 2022</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="cards">
+      <article class="cand">
+        <div class="cand__top">
+          <span class="cand__photo" aria-hidden="true">MA</span>
+          <div>
+            <h4 class="cand__name"><a href="#">Maria Aparecida dos Santos</a></h4>
+            <p class="cand__meta"><span class="badge">PT</span>Deputada federal · São Paulo, SP</p>
+          </div>
+        </div>
+        <div class="cand__value">
+          <span class="lbl">Recebeu dos fundos</span>
+          <p class="val num">R$ 182.400 <small>· 6 repasses</small></p>
+          <div class="cand__spark" aria-hidden="true"><i style="height:20%"></i><i style="height:32%"></i><i style="height:28%"></i><i style="height:55%"></i><i style="height:70%"></i><i style="height:100%"></i></div>
+        </div>
+        <div class="cand__foot"><span class="go">Ver candidatura →</span><a class="tse" href="#">TSE ↗</a></div>
+      </article>
+
+      <article class="cand">
+        <div class="cand__top">
+          <span class="cand__photo" aria-hidden="true">JO</span>
+          <div>
+            <h4 class="cand__name"><a href="#">João Otávio Ferreira Lima</a></h4>
+            <p class="cand__meta"><span class="badge">PSOL</span>Deputado estadual · Campinas, SP</p>
+          </div>
+        </div>
+        <div class="cand__value">
+          <span class="lbl">Recebeu dos fundos</span>
+          <p class="val num">R$ 96.750 <small>· 3 repasses</small></p>
+          <div class="cand__spark" aria-hidden="true"><i style="height:40%"></i><i style="height:40%"></i><i style="height:0"></i><i style="height:0"></i><i style="height:100%"></i><i style="height:0"></i></div>
+        </div>
+        <div class="cand__foot"><span class="go">Ver candidatura →</span><a class="tse" href="#">TSE ↗</a></div>
+      </article>
+
+      <article class="cand">
+        <div class="cand__top">
+          <span class="cand__photo" aria-hidden="true">CR</span>
+          <div>
+            <h4 class="cand__name"><a href="#">Cristiane Rodrigues Nunes</a></h4>
+            <p class="cand__meta"><span class="badge">PT</span>Senadora · Santos, SP</p>
+          </div>
+        </div>
+        <div class="cand__value">
+          <span class="lbl">Recebeu dos fundos</span>
+          <p class="val num">R$ 88.000 <small>· 2 repasses</small></p>
+          <div class="cand__spark" aria-hidden="true"><i style="height:0"></i><i style="height:0"></i><i style="height:60%"></i><i style="height:0"></i><i style="height:0"></i><i style="height:100%"></i></div>
+        </div>
+        <div class="cand__foot"><span class="go">Ver candidatura →</span><a class="tse" href="#">TSE ↗</a></div>
+      </article>
+    </div>
+
+    <div class="load-more">
+      <button class="btn btn--primary">Carregar mais 20 <span class="num" style="opacity:.6">de 23</span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SISTEMA VISUAL ===================== -->
+<section class="section section--warm" id="sistema">
+  <div class="container">
+    <div class="section-head">
+      <span class="eyebrow">Anexo · sistema visual proposto</span>
+      <h2>Os tokens por trás do mockup</h2>
+      <p>Tudo acima deriva destas decisões — trocar o site inteiro vira uma questão de aplicar tokens, não de reescrever CSS.</p>
+    </div>
+
+    <div class="sg-block">
+      <h3>Cor — 12 tokens semânticos (todos passam WCAG AA nos usos previstos)</h3>
+      <div class="swatches">
+        <div class="sw"><i style="background:#1B1723"></i><div><b>ink</b><span>#1B1723 · texto</span></div></div>
+        <div class="sw"><i style="background:#565064"></i><div><b>ink-2</b><span>#565064 · apoio 6,6:1</span></div></div>
+        <div class="sw"><i style="background:#FCFCFB;border-bottom:1px solid #E7E3DA"></i><div><b>paper</b><span>#FCFCFB · fundo</span></div></div>
+        <div class="sw"><i style="background:#F6F4EE"></i><div><b>paper-warm</b><span>#F6F4EE · seções</span></div></div>
+        <div class="sw"><i style="background:#E7E3DA"></i><div><b>hairline</b><span>#E7E3DA · bordas</span></div></div>
+        <div class="sw"><i style="background:#620ED9"></i><div><b>brand</b><span>#620ED9 · 8,1:1 ✓</span></div></div>
+        <div class="sw"><i style="background:#4C1D95"></i><div><b>brand-deep</b><span>#4C1D95 · links</span></div></div>
+        <div class="sw"><i style="background:#F1EAFD"></i><div><b>brand-tint</b><span>#F1EAFD · badges</span></div></div>
+        <div class="sw"><i style="background:linear-gradient(90deg,#6D28D9 20%,#00897B 20% 40%,#B45309 40% 60%,#1D4ED8 60% 80%,#C2185B 80%)"></i><div><b>dataviz ×5</b><span>validada p/ daltonismo</span></div></div>
+      </div>
+      <p style="font-size:var(--t-xs);color:var(--ink-2);margin-top:.9rem">A paleta de gráficos foi checada programaticamente: separação deutan/tritan ΔE ≥ 12,9, contraste ≥ 3:1 sobre o papel, ordem fixa (nunca ciclada). O teal atual dos botões (2,7:1) sai de cena como cor de ação — o roxo assume.</p>
+    </div>
+
+    <div class="sg-block">
+      <h3>Tipografia — Fraunces (títulos) + Inter (interface), escala 1.25, piso 14px</h3>
+      <div class="type-row"><span class="spec">display · 49px serif 600</span><span style="font-family:var(--serif);font-size:var(--t-3xl);font-weight:600;line-height:1.1">Aa Financiamento</span></div>
+      <div class="type-row"><span class="spec">título de seção · 31px</span><span style="font-family:var(--serif);font-size:var(--t-xl);font-weight:600">Cada gráfico afirma um achado</span></div>
+      <div class="type-row"><span class="spec">título de card · 20px</span><span style="font-family:var(--serif);font-size:var(--t-m);font-weight:600">Candidaturas contempladas</span></div>
+      <div class="type-row"><span class="spec">corpo · 16px Inter</span><span>O monitor acompanha os repasses declarados ao TSE em até 72 horas.</span></div>
+      <div class="type-row"><span class="spec">apoio · 14px (piso)</span><span style="font-size:var(--t-xs);color:var(--ink-2)">Fonte: TSE · DivulgaCandContas · atualizado há 3 horas</span></div>
+      <div class="type-row" style="border-bottom:0"><span class="spec">números · tabulares</span><span class="num" style="font-family:var(--serif);font-size:var(--t-l);font-weight:600">R$ 2.853.182</span></div>
+    </div>
+
+    <div class="sg-block">
+      <h3>Antes → depois, elemento a elemento</h3>
+      <div class="compare">
+        <div class="col col--before">
+          <h4>Hoje</h4>
+          <ul>
+            <li>Montserrat única, pesos 400/800, títulos ~20–29px em CAIXA ALTA</li>
+            <li>Rótulos de 6–12,6px; cinza de apoio 3,2:1 (reprova AA)</li>
+            <li>Botões teal 2,7:1, uppercase, ~28px de altura</li>
+            <li>11 filtros iguais, sem estado visível pós-aplicação</li>
+            <li>Card: 3 botões iguais, valor perdido no meio da pilha</li>
+            <li>Gráficos “distribuição por X”, sem síntese nem tabela</li>
+            <li>Página contínua sem ritmo, ~9 h1 por página</li>
+          </ul>
+        </div>
+        <div class="col col--after">
+          <h4>Proposta</h4>
+          <ul>
+            <li>Serifa editorial nos títulos (até 49px), sentence case; uppercase só em eyebrows</li>
+            <li>Piso 14px; apoio a 6,6:1; números tabulares</li>
+            <li>Ação em roxo/tinta, pílula 44px, foco visível</li>
+            <li>5 filtros primários + “mais filtros”; chips removíveis; contagem imediata</li>
+            <li>Card com valor como protagonista, 1 ação primária, sparkline de repasses</li>
+            <li>Títulos-síntese, anotações no gráfico, tooltip rico, tabela acessível</li>
+            <li>Seções alternadas (papel/creme), 1 h1, âncoras e skip link</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="sg-block">
+      <h3>Referências do gênero que ancoram a proposta</h3>
+      <div class="bench">
+        <article><h4>ProPublica <span>· EUA</span></h4><p>Serifa editorial + dados: títulos que afirmam o achado, gráficos anotados dentro da narrativa, sobriedade que gera credibilidade.</p></article>
+        <article><h4>The Pudding <span>· EUA</span></h4><p>Tooltips ricos e camadas de leitura: o número primeiro, o contexto no hover, a metodologia a um clique.</p></article>
+        <article><h4>OpenSecrets <span>· EUA</span></h4><p>Mesmo domínio (dinheiro na política): KPIs hierarquizados, filtros com estado persistente e compartilhável.</p></article>
+        <article><h4>Nexo / Pindograma <span>· BR</span></h4><p>Jornalismo de dados brasileiro: paleta contida, respiro generoso, gráficos com fonte e nota metodológica sempre visíveis.</p></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== FOOTER ===================== -->
+<footer class="site-footer">
+  <div class="container">
+    <a class="logo" href="#"><span>72<b style="color:#B79BEC">horas</b></span></a>
+    <div class="cols">
+      <p style="max-width:34ch">Transparência e participação cívica no processo eleitoral. Dados do TSE processados em até 72 horas.</p>
+      <p><a href="#">Sobre os dados</a><br><a href="#">Metodologia</a><br><a href="#">API e dados abertos</a></p>
+      <p><a href="#">contato@72horas.org</a><br><a href="#">Bluesky</a> · <a href="#">Instagram</a></p>
+    </div>
+  </div>
+</footer>
+
+<!-- ===================== TOOLTIP DEFINITIONS + JS ===================== -->
+<template id="tipdefs">
+  <div data-id="fp">
+    <h4>Fundo Partidário</h4>
+    <p>Verba pública permanente repartida entre os partidos todos os anos. Pode financiar campanhas e a manutenção das legendas.</p>
+    <div class="tip__kv"><span>Neste ciclo</span><b class="num">R$ 0,77 mi</b></div>
+    <div class="tip__kv"><span>Candidaturas</span><b class="num">31</b></div>
+    <a class="tip__src" href="#">Como funciona → </a>
+  </div>
+  <div data-id="fefc">
+    <h4>Fundo Eleitoral (FEFC)</h4>
+    <p>Fundo Especial de Financiamento de Campanha: verba pública liberada apenas em anos eleitorais, distribuída conforme o tamanho das bancadas.</p>
+    <div class="tip__kv"><span>Neste ciclo</span><b class="num">R$ 1,91 mi</b></div>
+    <div class="tip__kv"><span>Candidaturas</span><b class="num">54</b></div>
+    <a class="tip__src" href="#">Critérios de divisão →</a>
+  </div>
+  <div data-id="total">
+    <h4>Total repassado</h4>
+    <p>Soma de todos os repasses dos fundos públicos declarados ao TSE, capturados pelo monitor em até 72 horas após a declaração.</p>
+    <a class="tip__src" href="#">Metodologia de coleta →</a>
+  </div>
+  <div data-id="contempladas">
+    <h4>Candidaturas contempladas</h4>
+    <p>Cada candidatura é contada uma única vez, mesmo recebendo de mais de um fundo — por isso a soma dos recortes pode superar este número.</p>
+    <a class="tip__src" href="#">Nota metodológica →</a>
+  </div>
+  <div data-id="origem">
+    <h4>Origem dos recursos</h4>
+    <p>Divisão do valor total entre FEFC, Fundo Partidário e outros recursos públicos declarados.</p>
+    <div class="tip__kv"><span>FEFC</span><b class="num">67%</b></div>
+    <div class="tip__kv"><span>Fundo Partidário</span><b class="num">27%</b></div>
+    <div class="tip__kv"><span>Outros</span><b class="num">6%</b></div>
+  </div>
+</template>
+
+<script>
+(function(){
+  const tpl=document.getElementById('tipdefs');
+  const tip=document.createElement('div');tip.className='tip';tip.setAttribute('role','tooltip');document.body.appendChild(tip);
+  let hideT=null,current=null;
+
+  function place(el){
+    const r=el.getBoundingClientRect(),sx=window.scrollX,sy=window.scrollY;
+    tip.classList.remove('tip--above');
+    let top=r.bottom+sy+10, left=Math.min(Math.max(12+sx,r.left+sx-24), sx+document.documentElement.clientWidth-tip.offsetWidth-12);
+    tip.style.left=left+'px';tip.style.top=top+'px';
+    const tr=tip.getBoundingClientRect();
+    if(tr.bottom>window.innerHeight-8){tip.classList.add('tip--above');tip.style.top=(r.top+sy-tip.offsetHeight-10)+'px';}
+  }
+  function showRich(el){
+    const def=tpl.content.querySelector('[data-id="'+el.dataset.tip+'"]');
+    if(!def)return;
+    tip.innerHTML=def.innerHTML;open(el);
+  }
+  function showText(el){
+    tip.innerHTML='<p style="color:#fff;margin:0;font-weight:500">'+el.dataset.tt+'</p>';open(el);
+  }
+  function open(el){
+    clearTimeout(hideT);current=el;
+    tip.classList.add('is-open');tip.style.left='0px';tip.style.top='-999px';
+    requestAnimationFrame(()=>place(el));
+  }
+  function scheduleHide(){hideT=setTimeout(()=>{tip.classList.remove('is-open');current=null;},180);}
+
+  document.querySelectorAll('[data-tip]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>showRich(el));
+    el.addEventListener('focus',()=>showRich(el));
+    el.addEventListener('click',e=>{e.preventDefault();current===el&&tip.classList.contains('is-open')?scheduleHide():showRich(el);});
+    el.addEventListener('mouseleave',scheduleHide);
+    el.addEventListener('blur',scheduleHide);
+  });
+  document.querySelectorAll('[data-tt]').forEach(el=>{
+    el.addEventListener('mouseenter',()=>showText(el));
+    el.addEventListener('focus',()=>showText(el));
+    el.addEventListener('mouseleave',scheduleHide);
+    el.addEventListener('blur',scheduleHide);
+  });
+  tip.addEventListener('mouseenter',()=>clearTimeout(hideT));
+  tip.addEventListener('mouseleave',scheduleHide);
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'){tip.classList.remove('is-open');}});
+})();
+</script>
+</body>
+</html>
