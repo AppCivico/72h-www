@@ -32,6 +32,14 @@
   margin-bottom: 0;
 
   text-align: left;
+
+  &::after {
+    flex-basis: auto;
+    flex-grow: 1;
+    flex-shrink: 1;
+
+    content: '';
+  }
 }
 
 /// <transition-expand> only wraps the box (Vue renders the child in its
