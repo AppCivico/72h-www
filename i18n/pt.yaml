@@ -173,7 +173,7 @@
 - id: menu
   translation: "Menu"
 - id: multipleFundsWarning
-  translation: "Uma mesma candidatura pode receber fundos de diversas fontes."
+  translation: "Uma mesma candidatura pode receber recursos de diversas fontes."
 - id: next
   translation: "Próximo →"
 - id: noResults
@@ -214,7 +214,7 @@
 - id: rangeOfVotes
   translation: "Número de votos"
 - id: receivedFundsWarning
-  translation: "Nem todas as candidaturas recebem fundos."
+  translation: "Nem todas as candidaturas recebem recursos."
 - id: reelection
   translation: "Reeleição"
 - id: remainingDays
@@ -351,21 +351,21 @@
 - id: heroHeadlineBefore
   translation: "Só"
 - id: heroHeadlineAfter
-  translation: "das candidaturas receberam recursos dos fundos até agora."
+  translation: "das candidaturas declararam recebimento de recursos financeiros até o momento."
 - id: heroSourceLabel
   translation: "Fonte dos dados"
 - id: heroSourceValue
   translation: "TSE · DivulgaCandContas"
 - id: chartTitleEthnicity
-  translation: "Candidaturas de cor/raça %s concentram %s do valor repassado"
+  translation: "Candidaturas de cor/raça %s concentram %s do valor total"
 - id: chartTitleGender
-  translation: "Candidaturas do gênero %s concentram %s do valor repassado"
+  translation: "Candidaturas do gênero %s concentram %s do valor total"
 - id: chartTitleParty
-  translation: "%s lidera os repasses, com %s do valor"
+  translation: "%s lidera a declaração de recebimento de recursos, com %s do valor total"
 - id: chartTitleState
-  translation: "%s concentra %s do valor repassado"
+  translation: "%s concentra %s do valor total"
 - id: chartTitleFallback
-  translation: "Repasses por %s"
+  translation: "Declaração de recebimento de recursos por %s"
 - id: chartSubtitleValue
   translation: "Valor acumulado declarado ao TSE"
 - id: ethnicityBenchmark
@@ -377,11 +377,11 @@
 - id: mainMenu
   translation: "Menu principal"
 - id: heroDekBefore
-  translation: "O 72 Horas acompanha, quase em tempo real, como o Fundo Partidário e o Fundo Eleitoral (FEFC) chegam, ou não, a cada uma das"
+  translation: "O 72 Horas acompanha, em tempo real, como os Recursos Públicos (Fundo Partidário e o Fundo Eleitoral (FEFC)) e as doações chegam, ou não, a cada uma das"
 - id: heroDekAfter
-  translation: "candidaturas registradas no TSE, com recorte de gênero, raça e partido."
+  translation: "candidaturas registradas no TSE, com recorte de gênero, raça, partido, entre outros."
 - id: footerTagline
-  translation: "Monitor independente do financiamento público de campanhas eleitorais no Brasil."
+  translation: "Monitor independente do financiamento de campanhas eleitorais no Brasil."
 - id: footerMethod
   translation: "Todos os números vêm dos repasses declarados ao TSE e são atualizados em até 72 horas após a declaração. Os dados dependem da disponibilidade do DivulgaCandContas e podem ser revisados pela Justiça Eleitoral."
 - id: footerNavTitle
@@ -416,6 +416,14 @@
   translation: "Todas as candidaturas"
 - id: amongCandidates
   translation: "entre"
+- id: siteTagline
+  translation: "Educação Política e Transparência para a Participação Cidadã."
+- id: chartExportCredits
+  translation: "Fonte: 72horas.org"
+- id: heroCardTagline
+  translation: "Monitor independente do financiamento de campanhas eleitorais no Brasil."
+- id: selectedCountLabel
+  translation: "selecionados"
 - id: anySchooling
   translation: "Qualquer escolaridade"
 - id: anyResult
@@ -430,3 +438,5 @@
   translation: "As medianas ainda estão em R$ 0: até o momento, a maioria das candidaturas destes grupos não declarou repasses ao TSE."
 - id: methodologyLink
   translation: "Como interpretamos os dados →"
+- id: applyNewFilters
+  translation: "Aplicar novos filtros"

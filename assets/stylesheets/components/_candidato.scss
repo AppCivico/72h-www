@@ -1,6 +1,7 @@
 @use '../abstracts/font-stacks';
 @use '../abstracts/functions';
 @use '../abstracts/variables';
+@use '../layout/table';
 
 // .container's shared mixin sets flex-direction: column + flex-wrap: wrap
 // with no fixed height. With a single, very tall child (this whole page),
@@ -460,14 +461,58 @@
   margin-left: auto;
 }
 
-.candidato__history-table {
-  margin-top: 1.5rem;
-}
-
 /// The chart container is addressed by id from candidato.js (Highcharts
 /// mounts into it), so the class here is only for the sizing hook.
 .candidato__panel > div[id^='js-candidato-history-chart'] {
   min-height: 18rem;
+}
+
+@mixin _table-card-layout($number-of-columns: 0) {
+  @if $number-of-columns == 0 {
+    @warn 'No number of columns specified for card layout. Defaulting to 1.';
+    $number-of-columns: 1;
+  }
+
+  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
+    tr {
+      @supports (grid-template-rows: subgrid) {
+        display: grid;
+
+        grid-template-rows: subgrid;
+        grid-row: span $number-of-columns;
+
+        margin-bottom: variables.$gutter;
+      }
+    }
+
+    td {
+      @supports (grid-template-rows: subgrid) {
+        padding-right: 0;
+        padding-left: 0;
+
+      }
+    }
+
+    tbody {
+      @supports (grid-template-rows: subgrid) {
+        display: grid;
+
+        grid-template-columns: repeat(auto-fit, minmax(max(#{table.$card-width}, 15em), 1fr));
+
+        gap: 0 variables.$gutter;
+      }
+    }
+  }
+}
+
+.candidato__transfers-table {
+  @include _table-card-layout(3);
+}
+
+.candidato__history-table {
+  @include _table-card-layout(6);
+
+  margin-top: 1.5rem;
 }
 
 /// Why-the-bars-are-empty note under the comparison chart.

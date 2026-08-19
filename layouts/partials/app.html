@@ -46,6 +46,8 @@
               </div>
 
               <aside class="jumbotron__status">
+                <p class="jumbotron__status-tagline">{{ i18n "heroCardTagline" }}</p>
+
                 <p class="jumbotron__pulse">{{ i18n "heroEyebrow" }}</p>
 
                 <p class="jumbotron__status-item" v-cloak v-if="mainData && mainData.last_run_at">
@@ -58,6 +60,7 @@
                   <span class="jumbotron__status-value">{{ i18n "heroSourceValue" }}</span>
                 </p>
               </aside>
+
             </header>
 
             <div class="big-numbers__wrapper">
@@ -252,6 +255,19 @@
                     </div>
                   </form>
                 </div>
+              </div>
+
+              {{/* Floating call-to-action pinned over the dimmed results:
+                   the grey-out alone said "something froze" without saying
+                   what to do about it, and the Aplicar button can be out of
+                   sight in the scrolled filter column. Sticky inside the
+                   results container, so it rides mid-viewport for as long
+                   as the reader scrolls through stale content — any screen
+                   size, desktop or phone. */}}
+              <div class="filters__stale-cta" v-if="isFilterableChartOutdated" v-cloak>
+                <button type="button" class="button button--primary" @click="applyFilters">
+                  {{ i18n "applyNewFilters" }}
+                </button>
               </div>
 
               <div id="js-main-chart" class="main-chart" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData"></div>
