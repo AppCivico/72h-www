@@ -271,6 +271,10 @@
 
 .candidato__fund-segment {
   height: 100%;
+
+  &[style='width: 0%;'] {
+    display: none;
+  }
 }
 
 .candidato__fund-segment--fefc {
