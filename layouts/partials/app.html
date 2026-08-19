@@ -76,7 +76,13 @@
               <p class="eyebrow">{{ i18n "homePieEyebrow" }}</p>
               <h2 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h2>
               <p class="intro-charts__intro">{{ i18n "chartsIntro" }}</p>
-              <template v-if="!loadingIntroCharts && hasIntroCharts">
+              {{/* Kept mounted while new data loads: unmounting on
+                   `loadingIntroCharts` tore ~800px out of the page and put
+                   it back a moment later, which is what made the page
+                   flicker and appear to jump after Aplicar. The previous
+                   charts stay on screen, dimmed and aria-busy, until the
+                   new ones replace them in place. */}}
+              <template v-if="hasIntroCharts">
                 <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
                   <div :id="`js-chart__${chart.type}`"></div>
                   {{/* Benchmarks turn a distribution into a comparison —
@@ -277,7 +283,10 @@
               </div>
 
               <transition-expand>
-                <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" v-if="!loadingChartData">
+                {{/* Same reason as the intro charts above: this block used
+                     to unmount while loading, collapsing the page under the
+                     reader. It now stays put and only dims. */}}
+                <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData">
                   {{ partial "filteredBigNumberBox.html" (dict
                     "title" "accumulatedValue"
                     "icon" "total"

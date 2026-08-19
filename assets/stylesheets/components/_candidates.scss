@@ -6,6 +6,10 @@
 /// name first, the money as the protagonist, one primary action.
 
 .candidates {
+  // paging scrolls this block into view; keep its heading clear of the
+  // sticky masthead when it lands
+  scroll-margin-top: 6rem;
+
   display: flex;
 
   flex-direction: column;
