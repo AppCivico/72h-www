@@ -1,5 +1,18 @@
 {{ partial "head.html" . }}
 <body>
+  {{/* Pages that name the humans behind the project (quem-somos) can list
+       them in front matter as `people:` — machine-readable authorship is
+       a big part of why a data source gets trusted and cited. */}}
+  {{ with .Params.people }}
+    {{ $graph := slice }}
+    {{ range . }}
+      {{ $person := dict "@type" "Person" "name" .name }}
+      {{ with .role }}{{ $person = merge $person (dict "jobTitle" .) }}{{ end }}
+      {{ with .sameAs }}{{ $person = merge $person (dict "sameAs" .) }}{{ end }}
+      {{ $graph = $graph | append $person }}
+    {{ end }}
+    <script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $graph | jsonify | safeJS }}</script>
+  {{ end }}
   {{ partial "siteNav.html" . }}
 
   <main>

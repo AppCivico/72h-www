@@ -76,7 +76,13 @@
               <p class="eyebrow">{{ i18n "homePieEyebrow" }}</p>
               <h2 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h2>
               <p class="intro-charts__intro">{{ i18n "chartsIntro" }}</p>
-              <template v-if="!loadingIntroCharts && hasIntroCharts">
+              {{/* Kept mounted while new data loads: unmounting on
+                   `loadingIntroCharts` tore ~800px out of the page and put
+                   it back a moment later, which is what made the page
+                   flicker and appear to jump after Aplicar. The previous
+                   charts stay on screen, dimmed and aria-busy, until the
+                   new ones replace them in place. */}}
+              <template v-if="hasIntroCharts">
                 <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
                   <div :id="`js-chart__${chart.type}`"></div>
                   {{/* Benchmarks turn a distribution into a comparison —
@@ -197,7 +203,7 @@
                         id="schooling"
                         name="schooling"
                         v-model="selectedSchooling"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "anySchooling" }}"
                         :options="schooling"
                         multiple
                       ></list-box>
@@ -208,7 +214,7 @@
                         id="electionStatuses"
                         name="electionStatuses"
                         v-model="selectedElectionStatuses"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "anyResult" }}"
                         :options="electionStatuses"
                         multiple
                       ></list-box>
@@ -219,7 +225,7 @@
                         id="rangeOfVotes"
                         name="rangeOfVotes"
                         v-model="selectedRangeOfVotes"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "anyVotes" }}"
                         :options="rangeOfVotes"
                       />
                     </fieldset>
@@ -229,7 +235,7 @@
                         id="isReelection"
                         name="isReelection"
                         v-model="isReelectionSelected"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "indifferent" }}"
                         :options="reelection"
                       ></list-box>
                     </fieldset>
@@ -244,10 +250,30 @@
                       ></list-box>
                     </fieldset>
                     <div class="filters__actions">
-                      <button class="button button--primary">{{ i18n "apply" }}</button>
+                      {{/* The "something changed" state already existed
+                           (isFilterableChartOutdated dims the chart), but
+                           the chart is far from where the reader's eyes
+                           are. Surfacing the same state on the button
+                           itself answers "I picked a filter and nothing
+                           happened". */}}
+                      <button class="button button--primary" :class="{ 'button--pending': isFilterableChartOutdated }">{{ i18n "apply" }}</button>
+                      <p class="filters__pending-hint" v-if="isFilterableChartOutdated" aria-live="polite">{{ i18n "pendingFilters" }}</p>
                     </div>
                   </form>
                 </div>
+              </div>
+
+              {{/* Floating call-to-action pinned over the dimmed results:
+                   the grey-out alone said "something froze" without saying
+                   what to do about it, and the Aplicar button can be out of
+                   sight in the scrolled filter column. Sticky inside the
+                   results container, so it rides mid-viewport for as long
+                   as the reader scrolls through stale content — any screen
+                   size, desktop or phone. */}}
+              <div class="filters__stale-cta" v-if="isFilterableChartOutdated" v-cloak>
+                <button type="button" class="button button--primary" @click="applyFilters">
+                  {{ i18n "applyNewFilters" }}
+                </button>
               </div>
 
               <div id="js-main-chart" class="main-chart" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData"></div>
@@ -257,7 +283,10 @@
               </div>
 
               <transition-expand>
-                <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" v-if="!loadingChartData">
+                {{/* Same reason as the intro charts above: this block used
+                     to unmount while loading, collapsing the page under the
+                     reader. It now stays put and only dims. */}}
+                <div class="big-numbers" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData">
                   {{ partial "filteredBigNumberBox.html" (dict
                     "title" "accumulatedValue"
                     "icon" "total"
@@ -303,11 +332,17 @@
                       <div
                         v-for="candidate in candidates.candidates"
                         class="candidates__candidate">
+                        {{/* alt="" on purpose: the candidate's name is the
+                             very next text node, so the photo is decorative
+                             — repeating the name in alt would read twice in
+                             a screen reader. Also keeps the pre-hydration
+                             markup valid (the old :alt didn't exist as a
+                             real alt attribute until Vue mounted). */}}
                         <img
                           class="candidates__image"
                           :src="candidate.picture"
                           @error="candidate.picture = '/assets/images/no-picture.svg'"
-                          :alt="candidate.name"
+                          alt=""
                           loading="lazy">
                         <div class="candidates__text">
                           <p class="candidates__name">
@@ -381,20 +416,26 @@
                       {{ "{{ errorMessages.candidates }}" }}
                     </div>
 
+                    {{/* Real anchors instead of bare buttons: crawlers get
+                         a followable ?page= URL (honoured on load by
+                         populateParams), while @click.prevent keeps the
+                         in-page behavior for humans. */}}
                     <div class="pagination">
-                      <button
+                      <a
                         v-if="candidates_page > 1"
-                        @click="getCandidates(candidates_page - 1)"
+                        :href="`?page=${candidates_page - 1}`"
+                        @click.prevent="getCandidates(candidates_page - 1)"
                         class="button button--medium">
                         {{ i18n "previous" }}
-                      </button>
+                      </a>
 
-                      <button
+                      <a
                         v-if="candidates && candidates.has_more"
-                        @click="getCandidates(candidates_page + 1)"
+                        :href="`?page=${candidates_page + 1}`"
+                        @click.prevent="getCandidates(candidates_page + 1)"
                         class="button button--medium">
                         {{ i18n "next" }}
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </transition-expand>

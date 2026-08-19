@@ -103,6 +103,7 @@ if (window.location.href.indexOf('/') > -1) {
 
         candidates: null,
         candidates_page: 1,
+        pageFromParam: 0,
 
         selectedState: [],
         selectedCity: [],
@@ -116,7 +117,7 @@ if (window.location.href.indexOf('/') > -1) {
         isReelectionSelected: '',
 
         days: [
-          { label: 'ignorar', value: 'all' },
+          { label: 'todo o período', value: 'all' },
           { label: 'últimos 7 dias', value: 7 },
           { label: 'últimos 15 dias', value: 15 },
           { label: 'últimos 30 dias', value: 30 },
@@ -209,23 +210,27 @@ if (window.location.href.indexOf('/') > -1) {
         return this.introCharts.some((chart) => Array.isArray(chart.data) && chart.data.length > 0);
       },
 
-      amountFemale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
-        return !bigNumbers?.amount_female ? 0 : Number.parseFloat(bigNumbers?.amount_female) || 0;
+      // `mainData` is null until the first response lands, and a nested
+      // destructuring default (`= {}`) only covers `undefined` — on null it
+      // throws, taking the whole render down with it. Optional chaining
+      // covers both, so these read as 0 before any data arrives.
+      amountFemale({ mainData } = this) {
+        return Number.parseFloat(mainData?.big_numbers?.amount_female) || 0;
       },
-      amountMale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
-        return !bigNumbers?.amount_male ? 0 : Number.parseFloat(bigNumbers?.amount_male) || 0;
+      amountMale({ mainData } = this) {
+        return Number.parseFloat(mainData?.big_numbers?.amount_male) || 0;
       },
-      amountAll({ mainData: { big_numbers: bigNumbers } = {} } = this) {
-        return !bigNumbers?.total_amount ? 0 : Number.parseFloat(bigNumbers?.total_amount) || 0;
+      amountAll({ mainData } = this) {
+        return Number.parseFloat(mainData?.big_numbers?.total_amount) || 0;
       },
-      countAll({ mainData: { big_numbers: bigNumbers } } = this) {
-        return !bigNumbers?.count_all ? 0 : Number.parseInt(bigNumbers?.count_all, 10) || 0;
+      countAll({ mainData } = this) {
+        return Number.parseInt(mainData?.big_numbers?.count_all, 10) || 0;
       },
-      countFemale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
-        return !bigNumbers?.count_female ? 0 : Number.parseInt(bigNumbers?.count_female, 10) || 0;
+      countFemale({ mainData } = this) {
+        return Number.parseInt(mainData?.big_numbers?.count_female, 10) || 0;
       },
-      countMale({ mainData: { big_numbers: bigNumbers } = {} } = this) {
-        return !bigNumbers?.count_male ? 0 : Number.parseInt(bigNumbers?.count_male, 10) || 0;
+      countMale({ mainData } = this) {
+        return Number.parseInt(mainData?.big_numbers?.count_male, 10) || 0;
       },
 
       formatChartSeries() {
@@ -345,7 +350,7 @@ if (window.location.href.indexOf('/') > -1) {
 
       await this.populateParams();
       this.getData();
-      this.getCandidates();
+      this.getCandidates(this.pageFromParam || false);
       this.setChartOptions();
       this.updateFilterText();
       this.generateIntroCharts();
@@ -431,6 +436,13 @@ if (window.location.href.indexOf('/') > -1) {
         }
         if (epoch) {
           this.epochFromParam = Number(params.get('epoch'));
+        }
+
+        // Pagination links carry a real ?page= now (crawlable anchors);
+        // honouring it on load is what makes those URLs mean something.
+        const page = Number.parseInt(params.get('page') || '1', 10);
+        if (page > 1) {
+          this.pageFromParam = page;
         }
       },
       updateLocaleText() {
@@ -762,7 +774,20 @@ if (window.location.href.indexOf('/') > -1) {
       applyFilters() {
         this.syncURL();
         this.updateData();
-        document.querySelector('#js-main-chart').scrollIntoView();
+
+        // Only move the page when the chart is actually out of sight, and
+        // smoothly — the old unconditional scrollIntoView() yanked readers
+        // away from the filter column they were still using, which read as
+        // "the page jumped to the bottom".
+        const chart = document.querySelector('#js-main-chart');
+        if (!chart) {
+          return;
+        }
+        const rect = chart.getBoundingClientRect();
+        const inView = rect.top >= 0 && rect.top <= window.innerHeight * 0.5;
+        if (!inView) {
+          chart.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       },
       getData() {
         this.loadingBigNumbers = true;
@@ -842,11 +867,12 @@ if (window.location.href.indexOf('/') > -1) {
           document.querySelector('#js-candidate-box').scrollIntoView();
         }
 
-        if (page === false) {
-          if (this.candidates?.candidates) {
-            this.candidates.candidates = [];
-          }
-        }
+        // The previous results deliberately stay on screen while the new
+        // ones load. Emptying the list here collapsed the card grid and
+        // refilled it a moment later, which read as the page flickering
+        // and jumping after Aplicar. The container is already dimmed
+        // (outdated-chart) and aria-busy, so stale cards are never
+        // mistaken for fresh ones.
 
         this.candidatesAbortController?.abort();
         this.candidatesAbortController = new AbortController();

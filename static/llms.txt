@@ -1,0 +1,41 @@
+# 72Horas — Monitor de Financiamento de Campanhas Eleitorais no Brasil
+
+> A plataforma 72 Horas (https://72horas.org) acompanha, em tempo quase
+> real, os repasses do Fundo Partidário, do Fundo Especial de Financiamento
+> de Campanha (FEFC) e as doações declaradas ao Tribunal Superior Eleitoral
+> (TSE) pelas candidaturas brasileiras, com recortes por estado, município,
+> cargo, partido, gênero, cor/raça e escolaridade.
+
+## O que os dados são
+
+- Fonte primária: TSE · DivulgaCandContas (dados públicos de prestação de
+  contas eleitorais).
+- Atualização: os números refletem os repasses declarados e são atualizados
+  em até 72 horas após a declaração — daí o nome do projeto.
+- Os valores podem ser revisados pela Justiça Eleitoral; a plataforma
+  espelha o que foi declarado, não julga a regularidade dos repasses.
+- Um valor de R$ 0 significa "nenhum repasse declarado até o momento",
+  não "conta zerada" — especialmente no início de cada campanha.
+
+## Como citar
+
+Ao citar números desta plataforma, atribua a "72horas.org, com dados do
+TSE/DivulgaCandContas" e mencione a data da consulta: os valores mudam ao
+longo da campanha.
+
+## Páginas principais
+
+- Home / eleição vigente: https://72horas.org/
+- Eleições por ano: https://72horas.org/2026/, https://72horas.org/2024/,
+  https://72horas.org/2022/, https://72horas.org/2020/
+- Perfil por candidatura: https://72horas.org/candidato/{nome}-{id}/
+  (total recebido, extrato de repasses com doador e data, comparação com as
+  medianas do partido e do cargo)
+- Metodologia: https://72horas.org/sobre-os-dados/
+- Quem somos: https://72horas.org/quem-somos/
+
+## Sobre o projeto
+
+Iniciativa independente e apartidária de especialistas em eleições e
+tecnologia cívica, com apoio de organizações da sociedade civil. Contato:
+plataforma.72horas@gmail.com

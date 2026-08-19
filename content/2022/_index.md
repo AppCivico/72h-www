@@ -1,5 +1,5 @@
 ---
-title: Com você, de olho nas eleições
+title: Eleições 2022 — Financiamento de campanhas em tempo real
 type: year
 year: 2022
 date: 2018-09-14T14:58:16.000Z

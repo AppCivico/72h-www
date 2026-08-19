@@ -18,3 +18,12 @@
   from = "/candidato/*"
   to = "/candidato/index.html"
   status = 200
+
+# The shell above is identical for every candidate; this edge function
+# rewrites its <head> (title, description, canonical, og:*, JSON-LD) with
+# the candidate's own data before the HTML leaves the edge, so search
+# engines and link previews finally see each candidate as a page of its
+# own. See netlify/edge-functions/candidato-meta.js.
+[[edge_functions]]
+  path = "/candidato/*"
+  function = "candidato-meta"

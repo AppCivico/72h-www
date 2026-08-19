@@ -271,6 +271,10 @@
 
 .candidato__fund-segment {
   height: 100%;
+
+  &[style='width: 0%;'] {
+    display: none;
+  }
 }
 
 .candidato__fund-segment--fefc {
@@ -461,10 +465,6 @@
   margin-left: auto;
 }
 
-.candidato__history-table {
-  margin-top: 1.5rem;
-}
-
 /// The chart container is addressed by id from candidato.js (Highcharts
 /// mounts into it), so the class here is only for the sizing hook.
 .candidato__panel > div[id^='js-candidato-history-chart'] {
@@ -515,4 +515,31 @@
 
 .candidato__history-table {
   @include _table-card-layout(6);
+
+  margin-top: 1.5rem;
+}
+
+/// Why-the-bars-are-empty note under the comparison chart.
+.candidato__compare-note {
+  margin-top: 1rem;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+/// Provenance/methodology line closing the profile.
+.candidato__method-note {
+  padding-top: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+
+  border-top: 1px solid var(--hairline);
+}
+
+.candidato__method-note a {
+  color: var(--brand);
 }

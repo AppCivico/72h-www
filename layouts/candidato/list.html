@@ -22,12 +22,14 @@
         </nav>
 
         <header class="candidato__hero">
+          {{/* This photo is the page's LCP element — lazy-loading it was
+               telling the browser to fetch the most prominent thing last. */}}
           <img
             class="candidato__picture"
             :src="picture"
             @error="picture = '/assets/images/no-picture.svg'"
             :alt="current.name"
-            loading="lazy">
+            fetchpriority="high">
 
           <div class="candidato__identity">
             <p class="eyebrow">{{ i18n "candidateEyebrow" }} {{ "{{ current.year }}" }}</p>
@@ -179,6 +181,13 @@
               </div>
             </div>
 
+            {{/* Early in the campaign every median sits at R$ 0 and the
+                 empty bars read as a rendering bug. Saying why turns the
+                 apparent glitch into the finding it actually is. */}}
+            <p class="candidato__compare-note" v-if="comparisonChart.groups.length && comparisonChart.groups.every(group => !group.median)">
+              {{ i18n "comparisonAllZero" }}
+            </p>
+
             <p class="chart-source">{{ i18n "dataSource" }}</p>
           </div>
         </section>
@@ -269,6 +278,15 @@
             <p class="chart-source">{{ i18n "dataSource" }}</p>
           </div>
         </section>
+
+        {{/* The methodology page is the page's provenance trail — linking
+             it from every candidate profile is both reader-service and the
+             kind of source-transparency signal search engines and AI tools
+             reward. */}}
+        <p class="candidato__method-note">
+          {{ i18n "footerMethod" }}
+          <a href="/sobre-os-dados/">{{ i18n "methodologyLink" }}</a>
+        </p>
 
       </template>
 

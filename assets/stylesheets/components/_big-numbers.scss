@@ -32,14 +32,6 @@
   margin-bottom: 0;
 
   text-align: left;
-
-  &::after {
-    flex-basis: auto;
-    flex-grow: 1;
-    flex-shrink: 1;
-
-    content: '';
-  }
 }
 
 /// <transition-expand> only wraps the box (Vue renders the child in its
@@ -58,10 +50,19 @@
 }
 
 /// The home summary has 5 boxes: a 6-column grid lets them sit 3 + 2 with
-/// both rows full, instead of leaving an orphan card.
+/// both rows full, instead of leaving an orphan card. `display: grid` is
+/// explicit — the base .big-numbers switched to flexbox upstream, which
+/// silently turned these grid-template/span rules into no-ops (that's how
+/// the 4 + 1 misaligned rows crept back in).
 @media screen and (min-width: functions.breakpoint('desktop')) {
   .big-numbers__wrapper .big-numbers {
+    display: grid;
+
     grid-template-columns: repeat(6, 1fr);
+
+    &::after {
+      content: none;
+    }
   }
 
   .big-numbers__wrapper .big-number__box {

@@ -272,3 +272,87 @@
     margin-left: 0;
   }
 }
+
+/// "Something changed" state, mirrored from isFilterableChartOutdated: the
+/// chart dims far below, but the reader's eyes are here — so the button
+/// itself pulses and a one-line hint says what to do next.
+.filters__actions .button--pending {
+  animation: filters-pending-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes filters-pending-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(97, 16, 214, 0.45);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(97, 16, 214, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filters__actions .button--pending {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+
+    animation: none;
+  }
+}
+
+.filters__pending-hint {
+  width: 100%;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+/// Floating CTA over the dimmed (stale) results.
+///
+/// Phone first: fixed to the bottom of the viewport, so it appears the
+/// instant a filter changes — on a small screen the reader is still up at
+/// the filter panel and the greyed results are below the fold, so a
+/// sticky-in-content button would only meet them after a scroll.
+.filters__stale-cta {
+  position: fixed;
+  right: 1rem;
+  bottom: calc(1.25rem + env(safe-area-inset-bottom, 0px));
+  left: 1rem;
+  z-index: functions.layer('dropdown');
+
+  display: flex;
+
+  justify-content: center;
+
+  height: auto;
+  overflow: visible;
+
+  // Desktop: the filter column (with its own Aplicar + hint) is always in
+  // view, so the extra button belongs over the stale content instead —
+  // a zero-height sticky box pinned mid-viewport while the reader scrolls
+  // through outdated results.
+  @media screen and (min-width: functions.breakpoint('wide')) {
+    position: sticky;
+    top: 40vh;
+    right: auto;
+    bottom: auto;
+    left: auto;
+
+    height: 0;
+  }
+}
+
+.filters__stale-cta .button {
+  width: auto;
+
+  box-shadow: 0 12px 32px rgba(28, 27, 31, 0.28);
+
+  animation: filters-pending-pulse 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filters__stale-cta .button {
+    animation: none;
+  }
+}
