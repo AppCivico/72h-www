@@ -21,11 +21,12 @@
 .big-numbers {
   position: relative;
 
-  display: grid;
+  display: flex;
 
-  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  flex-wrap: wrap;
 
-  gap: 1rem;
+
+  gap: variables.$gutter;
 
   width: 100%;
   margin-bottom: 0;
@@ -94,7 +95,10 @@
 .big-number__box {
   display: flex;
 
+  flex-basis: 15rem;
   flex-direction: column;
+  flex-grow: 1;
+  flex-shrink: 1;
 
   padding: 1.25rem 1.5rem 1.35rem;
 
@@ -172,6 +176,7 @@
 .big-number__box .big-number__number {
   display: block;
 
+  max-width: 100%;
   margin-top: 0.15rem;
   margin-bottom: 0;
   overflow: hidden;
@@ -185,6 +190,7 @@
   text-align: left;
   text-overflow: ellipsis;
   letter-spacing: -0.015em;
+  white-space: nowrap;
 }
 
 /// Secondary line right under the value ("128 repasses · 72 candidaturas")
