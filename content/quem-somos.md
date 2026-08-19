@@ -3,6 +3,12 @@ title: "72 Horas | Quem somos"
 date: 2020-10-21T00:00:00.000Z
 draft: false
 source: "https://plataforma-72horas.medium.com/72-horas-quem-somos-69cb31f79da9"
+description: "Quem faz a plataforma 72 Horas: idealizadoras, conselho e organizações parceiras do monitor independente de financiamento de campanhas eleitorais."
+people:
+  - name: "Drica Guzzi"
+    role: "Idealizadora"
+  - name: "Fefa Costa"
+    role: "Idealizadora"
 ---
 
 A plataforma 72horas é uma iniciativa de especialistas no campo eleitoral,

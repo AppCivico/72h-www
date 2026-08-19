@@ -103,6 +103,7 @@ if (window.location.href.indexOf('/') > -1) {
 
         candidates: null,
         candidates_page: 1,
+        pageFromParam: 0,
 
         selectedState: [],
         selectedCity: [],
@@ -116,7 +117,7 @@ if (window.location.href.indexOf('/') > -1) {
         isReelectionSelected: '',
 
         days: [
-          { label: 'ignorar', value: 'all' },
+          { label: 'todo o período', value: 'all' },
           { label: 'últimos 7 dias', value: 7 },
           { label: 'últimos 15 dias', value: 15 },
           { label: 'últimos 30 dias', value: 30 },
@@ -345,7 +346,7 @@ if (window.location.href.indexOf('/') > -1) {
 
       await this.populateParams();
       this.getData();
-      this.getCandidates();
+      this.getCandidates(this.pageFromParam || false);
       this.setChartOptions();
       this.updateFilterText();
       this.generateIntroCharts();
@@ -431,6 +432,13 @@ if (window.location.href.indexOf('/') > -1) {
         }
         if (epoch) {
           this.epochFromParam = Number(params.get('epoch'));
+        }
+
+        // Pagination links carry a real ?page= now (crawlable anchors);
+        // honouring it on load is what makes those URLs mean something.
+        const page = Number.parseInt(params.get('page') || '1', 10);
+        if (page > 1) {
+          this.pageFromParam = page;
         }
       },
       updateLocaleText() {
@@ -762,7 +770,20 @@ if (window.location.href.indexOf('/') > -1) {
       applyFilters() {
         this.syncURL();
         this.updateData();
-        document.querySelector('#js-main-chart').scrollIntoView();
+
+        // Only move the page when the chart is actually out of sight, and
+        // smoothly — the old unconditional scrollIntoView() yanked readers
+        // away from the filter column they were still using, which read as
+        // "the page jumped to the bottom".
+        const chart = document.querySelector('#js-main-chart');
+        if (!chart) {
+          return;
+        }
+        const rect = chart.getBoundingClientRect();
+        const inView = rect.top >= 0 && rect.top <= window.innerHeight * 0.5;
+        if (!inView) {
+          chart.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       },
       getData() {
         this.loadingBigNumbers = true;
@@ -1077,12 +1098,8 @@ if (window.location.href.indexOf('/') > -1) {
           const headline = this.chartHeadline(chart, total, label);
           // one row per category, plus room for the title block
           const height = 132 + (chart.data.length * 38);
-          const containerId = `js-chart__${chart.type}`;
 
-          // no-param-reassign: same alias-the-parameter workaround already
-          // used by loadCandidateHistory() below.
-          const target = chart;
-          target.highchartsInstance = Highcharts.chart(containerId, {
+          Highcharts.chart(`js-chart__${chart.type}`, {
             chart: {
               type: 'bar',
               backgroundColor: 'transparent',
@@ -1164,32 +1181,6 @@ if (window.location.href.indexOf('/') > -1) {
               showInLegend: false,
             }],
           });
-
-          // Some intro-chart cards span the whole grid width
-          // (.intro-charts__chart--party/--state, _intro-charts.scss).
-          // Highcharts' own window-resize listener doesn't reliably
-          // reflow every chart in this grid — observed live: ethnicity/
-          // gender's SVGs reflowed correctly on resize, but party's could
-          // stay frozen at its first-render width. Since that card spans
-          // every column, its stale width drags the shared grid track (and
-          // the whole page) wider than the viewport as it shrinks — the
-          // charts look like they're "growing" relative to the narrowing
-          // window. Watching each chart's own container directly, same
-          // pattern as the candidate page's history chart
-          // (renderHistoryChart(), candidato.js), sidesteps whatever's
-          // inconsistent about the shared listener.
-          const container = document.getElementById(containerId);
-          if (container) {
-            if (!target.resizeObserver) {
-              target.resizeObserver = new ResizeObserver(() => {
-                window.requestAnimationFrame(() => {
-                  target.highchartsInstance?.reflow();
-                });
-              });
-            }
-            target.resizeObserver.disconnect();
-            target.resizeObserver.observe(container);
-          }
         });
       },
     },

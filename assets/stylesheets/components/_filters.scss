@@ -272,3 +272,38 @@
     margin-left: 0;
   }
 }
+
+/// "Something changed" state, mirrored from isFilterableChartOutdated: the
+/// chart dims far below, but the reader's eyes are here — so the button
+/// itself pulses and a one-line hint says what to do next.
+.filters__actions .button--pending {
+  animation: filters-pending-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes filters-pending-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(97, 16, 214, 0.45);
+  }
+
+  50% {
+    box-shadow: 0 0 0 6px rgba(97, 16, 214, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filters__actions .button--pending {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+
+    animation: none;
+  }
+}
+
+.filters__pending-hint {
+  width: 100%;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}

@@ -194,7 +194,7 @@
                         id="schooling"
                         name="schooling"
                         v-model="selectedSchooling"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "anySchooling" }}"
                         :options="schooling"
                         multiple
                       ></list-box>
@@ -205,7 +205,7 @@
                         id="electionStatuses"
                         name="electionStatuses"
                         v-model="selectedElectionStatuses"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "anyResult" }}"
                         :options="electionStatuses"
                         multiple
                       ></list-box>
@@ -216,7 +216,7 @@
                         id="rangeOfVotes"
                         name="rangeOfVotes"
                         v-model="selectedRangeOfVotes"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "anyVotes" }}"
                         :options="rangeOfVotes"
                       />
                     </fieldset>
@@ -226,7 +226,7 @@
                         id="isReelection"
                         name="isReelection"
                         v-model="isReelectionSelected"
-                        label-for-empty="{{ i18n "toIgnore" }}"
+                        label-for-empty="{{ i18n "indifferent" }}"
                         :options="reelection"
                       ></list-box>
                     </fieldset>
@@ -241,7 +241,14 @@
                       ></list-box>
                     </fieldset>
                     <div class="filters__actions">
-                      <button class="button button--primary">{{ i18n "apply" }}</button>
+                      {{/* The "something changed" state already existed
+                           (isFilterableChartOutdated dims the chart), but
+                           the chart is far from where the reader's eyes
+                           are. Surfacing the same state on the button
+                           itself answers "I picked a filter and nothing
+                           happened". */}}
+                      <button class="button button--primary" :class="{ 'button--pending': isFilterableChartOutdated }">{{ i18n "apply" }}</button>
+                      <p class="filters__pending-hint" v-if="isFilterableChartOutdated" aria-live="polite">{{ i18n "pendingFilters" }}</p>
                     </div>
                   </form>
                 </div>
@@ -384,20 +391,26 @@
                       {{ "{{ errorMessages.candidates }}" }}
                     </div>
 
+                    {{/* Real anchors instead of bare buttons: crawlers get
+                         a followable ?page= URL (honoured on load by
+                         populateParams), while @click.prevent keeps the
+                         in-page behavior for humans. */}}
                     <div class="pagination">
-                      <button
+                      <a
                         v-if="candidates_page > 1"
-                        @click="getCandidates(candidates_page - 1)"
+                        :href="`?page=${candidates_page - 1}`"
+                        @click.prevent="getCandidates(candidates_page - 1)"
                         class="button button--medium">
                         {{ i18n "previous" }}
-                      </button>
+                      </a>
 
-                      <button
+                      <a
                         v-if="candidates && candidates.has_more"
-                        @click="getCandidates(candidates_page + 1)"
+                        :href="`?page=${candidates_page + 1}`"
+                        @click.prevent="getCandidates(candidates_page + 1)"
                         class="button button--medium">
                         {{ i18n "next" }}
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </transition-expand>

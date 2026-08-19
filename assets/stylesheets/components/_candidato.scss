@@ -1,7 +1,6 @@
 @use '../abstracts/font-stacks';
 @use '../abstracts/functions';
 @use '../abstracts/variables';
-@use '../layout/table';
 
 // .container's shared mixin sets flex-direction: column + flex-wrap: wrap
 // with no fixed height. With a single, very tall child (this whole page),
@@ -471,48 +470,27 @@
   min-height: 18rem;
 }
 
-@mixin _table-card-layout($number-of-columns: 0) {
-  @if $number-of-columns == 0 {
-    @warn 'No number of columns specified for card layout. Defaulting to 1.';
-    $number-of-columns: 1;
-  }
+/// Why-the-bars-are-empty note under the comparison chart.
+.candidato__compare-note {
+  margin-top: 1rem;
+  margin-bottom: 0;
 
-  @media screen and (max-width: #{functions.breakpoint('toggle-table-layout') - 0.01}) {
-    tr {
-      @supports (grid-template-rows: subgrid) {
-        display: grid;
-
-        grid-template-rows: subgrid;
-        grid-row: span $number-of-columns;
-
-        margin-bottom: variables.$gutter;
-      }
-    }
-
-    td {
-      @supports (grid-template-rows: subgrid) {
-        padding-right: 0;
-        padding-left: 0;
-
-      }
-    }
-
-    tbody {
-      @supports (grid-template-rows: subgrid) {
-        display: grid;
-
-        grid-template-columns: repeat(auto-fit, minmax(max(#{table.$card-width}, 15em), 1fr));
-
-        gap: 0 variables.$gutter;
-      }
-    }
-  }
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }
 
-.candidato__transfers-table {
-  @include _table-card-layout(3);
+/// Provenance/methodology line closing the profile.
+.candidato__method-note {
+  padding-top: 1.25rem;
+  margin-top: 2rem;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+
+  border-top: 1px solid var(--hairline);
 }
 
-.candidato__history-table {
-  @include _table-card-layout(6);
+.candidato__method-note a {
+  color: var(--brand);
 }
