@@ -13,6 +13,7 @@ import chartTheme, {
   compactCurrency,
   sequentialRamp,
 } from './utilities/chartTheme';
+import { liveHtml, liveText } from './directives/liveValue';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 import personUrl from './utilities/personUrl';
@@ -90,6 +91,8 @@ if (window.location.href.indexOf('/') > -1) {
         chartDates: [],
 
         mainData: null,
+        dataError: false,
+        hasBuildFigures: document.querySelector('#vueHome')?.dataset.hasBuildFigures === 'true',
         epochFromParam: null,
         useEpoch: false,
         introCharts: [],
@@ -208,6 +211,33 @@ if (window.location.href.indexOf('/') > -1) {
       // no-results message instead of a grid of blank containers.
       hasIntroCharts() {
         return this.introCharts.some((chart) => Array.isArray(chart.data) && chart.data.length > 0);
+      },
+
+      /**
+       * The four states the summary figures can be in, in order of how
+       * much we can honestly show:
+       *   live      — the API answered; show it.
+       *   build     — no answer yet, but this build captured real figures;
+       *               show those and say we're fetching fresher ones.
+       *   pending   — nothing anywhere; show skeletons, never zeros.
+       *   error     — gave up waiting; say so and offer to retry.
+       */
+      figuresState({ mainData, dataError, hasBuildFigures } = this) {
+        if (mainData) return 'live';
+        if (dataError) return 'error';
+        return hasBuildFigures ? 'build' : 'pending';
+      },
+      figuresPending({ figuresState } = this) {
+        return figuresState === 'pending';
+      },
+      /**
+       * True whenever there is no figure to show at all — while loading and
+       * after giving up. Both cases must render a neutral placeholder: the
+       * markup still carries the build's "0", and revealing it on failure
+       * would put the false zero right back on screen.
+       */
+      figuresPlaceholder({ figuresState, hasBuildFigures } = this) {
+        return figuresState === 'pending' || (figuresState === 'error' && !hasBuildFigures);
       },
 
       // `mainData` is null until the first response lands, and a nested
@@ -700,6 +730,24 @@ if (window.location.href.indexOf('/') > -1) {
           ? `${numeral(value).format()}%`
           : `${numeral(value).format('0.00').replace('.', ',')}%`;
       },
+
+      /**
+       * "Live" formatters, for the figures that Hugo also renders at build
+       * time. They return null — not 0 — while the API hasn't answered, so
+       * v-live-text/v-live-html leave the server-rendered figure in place
+       * instead of flashing a zero that reads as a real measurement.
+       * See assets/scripts/directives/liveValue.js.
+       */
+      liveNumeral(value) {
+        return value === null || value === undefined ? null : formatNumeral(value);
+      },
+      liveCurrency(value) {
+        return value === null || value === undefined ? null : formatCurrencyNoAbbr(value);
+      },
+      livePercent(numerator, denominator) {
+        const hasBoth = numerator !== null && numerator !== undefined && Number(denominator);
+        return hasBoth ? this.formatPercent((numerator / denominator) * 100) : null;
+      },
       formatNumeral,
       formatDateTime(value) {
         return dayjs(value).format('DD/MM/YYYY [às] HH[h]MM[min]');
@@ -798,9 +846,19 @@ if (window.location.href.indexOf('/') > -1) {
           this.chart.showLoading();
         }
 
+        this.dataError = false;
+
         this.dataAbortController?.abort();
         this.dataAbortController = new AbortController();
         const { signal } = this.dataAbortController;
+
+        // Without a deadline a stalled API leaves the page loading forever:
+        // whatever we show meanwhile (a figure from the build, a skeleton)
+        // would never resolve into either data or an explanation.
+        const timeoutId = window.setTimeout(
+          () => this.dataAbortController?.abort(new Error('timeout')),
+          config.api.timeoutMs,
+        );
 
         let url = `${config.api.domain}index?year=${this.selectedYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
@@ -846,12 +904,25 @@ if (window.location.href.indexOf('/') > -1) {
             return true;
           })
           .catch((error) => {
-            if (error.name === 'AbortError') {
+            // A newer request superseded this one — the newer one owns the
+            // loading state, so leave it alone. A timeout aborts too, but
+            // carries our own reason, and does need reporting.
+            const timedOut = signal.reason instanceof Error && signal.reason.message === 'timeout';
+            if (error.name === 'AbortError' && !timedOut) {
               return;
+            }
+
+            this.dataError = true;
+            this.loadingBigNumbers = false;
+            this.loadingChartData = false;
+            this.loadingIntroCharts = false;
+            if (this.chart) {
+              this.chart.hideLoading();
             }
             // eslint-disable-next-line no-console
             console.error(error);
-          });
+          })
+          .finally(() => window.clearTimeout(timeoutId));
       },
       getCandidates(page = false) {
         this.loadingCandidates = true;
@@ -1240,6 +1311,11 @@ if (window.location.href.indexOf('/') > -1) {
     // eslint-disable-next-line no-console
     console.warn(`Template compilation error: ${err.message}`);
   };
+
+  // Used wherever Hugo already rendered a real value into the element:
+  // they hold that value until the API has a live one to replace it with.
+  vueApp.directive('live-text', liveText);
+  vueApp.directive('live-html', liveHtml);
 
   window.$vueHome = vueApp.mount('#vueHome');
 }

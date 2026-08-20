@@ -1,4 +1,5 @@
 @use "../abstracts/functions";
+@use '../abstracts/mixins';
 @use "../abstracts/variables";
 
 // -----------------------------------------------------------------------------
@@ -182,4 +183,9 @@ textarea {
       content: 'breakpoint: wide';
     }
   }
+}
+
+/// Screen-reader-only text (see mixins.visually-hidden).
+.visually-hidden {
+  @include mixins.visually-hidden;
 }
