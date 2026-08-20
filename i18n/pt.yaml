@@ -440,3 +440,15 @@
   translation: "Como interpretamos os dados →"
 - id: applyNewFilters
   translation: "Aplicar novos filtros"
+- id: dataLoading
+  translation: "Buscando dados atualizados"
+- id: dataUnavailable
+  translation: "Dados indisponíveis no momento"
+- id: dataUnavailableHelp
+  translation: "Não foi possível carregar os números do TSE agora."
+- id: showingLastConfirmed
+  translation: "Exibindo os últimos números confirmados"
+- id: tryAgain
+  translation: "Tentar novamente"
+- id: figureUnavailableSR
+  translation: "(número ainda não disponível)"

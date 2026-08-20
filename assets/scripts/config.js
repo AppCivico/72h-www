@@ -10,5 +10,8 @@ export default {
   initialLoadingYear: 2026,
   api: {
     domain: 'https://h72-api.appcivico.com/v1/',
+    // Past this, the page stops waiting and says so — an indefinite
+    // loading state is worse than an honest failure.
+    timeoutMs: 12000,
   },
 };

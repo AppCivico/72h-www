@@ -16,12 +16,18 @@
 {{- $heroElection := $ssrData.election | default dict -}}
     <body>
       <a class="skip-link" href="#js-candidate-box">{{ i18n "skipToData" }}</a>
-      <div id="vueHome">
+      {{/* Whether this build actually got figures from the API. Vue can't
+           tell a real zero from a "the snapshot failed" zero on its own,
+           and the two need opposite treatments: keep the figure, or admit
+           there isn't one yet. */}}
+      <div id="vueHome" data-has-build-figures="{{ if $heroElection.candidate_count }}true{{ else }}false{{ end }}">
         {{ partial "header.html" . }}
 
         <main>
           <div class="container">
-            <header class="jumbotron">
+            {{/* is-skeleton: no figure anywhere yet (see figuresState) —
+                 the values render as neutral bars instead of zeros. */}}
+            <header class="jumbotron" :class="{ 'is-skeleton': figuresPlaceholder, 'is-skeleton--static': figuresState === 'error' }">
               <div class="jumbotron__lead">
                 {{/* The headline states the finding and carries a live
                      figure: editors reword it in i18n (heroHeadlineBefore/
@@ -29,10 +35,19 @@
                      value is the build-time snapshot, replaced by Vue. */}}
                 <h1 class="jumbotron__headline">
                   {{ i18n "heroHeadlineBefore" }}
+                  {{/* v-live-text, not v-text: the headline states a fact,
+                       so it must never show a placeholder zero while the
+                       API answers — it keeps this build-time figure until
+                       a real one arrives. */}}
                   <em
                     class="jumbotron__stat"
-                    v-text="formatPercent(mainData?.accumulated?.total_candidates_who_received / mainData?.election?.candidate_count * 100)">{{ partial "formatPercentBR.html" (dict "numerator" $heroAcc.total_candidates_who_received "denominator" $heroElection.candidate_count) }}</em>
+                    :aria-hidden="figuresPlaceholder ? 'true' : null"
+                    v-live-text="livePercent(mainData?.accumulated?.total_candidates_who_received, mainData?.election?.candidate_count)">{{ partial "formatPercentBR.html" (dict "numerator" $heroAcc.total_candidates_who_received "denominator" $heroElection.candidate_count) }}</em>
                   {{ i18n "heroHeadlineAfter" }}
+                  {{/* Sem isto o leitor de tela anunciaria o "0" que está
+                       escondido sob a barra cinza — exatamente a afirmação
+                       falsa que o skeleton existe para evitar. */}}
+                  <span class="visually-hidden" v-if="figuresPlaceholder">{{ i18n "figureUnavailableSR" }}</span>
                 </h1>
 
                 {{/* Same pattern as the headline: the sentence is editable
@@ -40,7 +55,7 @@
                      from the API (SSR snapshot as the static fallback). */}}
                 <p class="jumbotron__dek">
                   {{ i18n "heroDekBefore" }}
-                  <strong v-text="formatNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $heroElection.candidate_count }}</strong>
+                  <strong v-live-text="liveNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $heroElection.candidate_count }}</strong>
                   {{ i18n "heroDekAfter" }}
                 </p>
               </div>
@@ -48,11 +63,34 @@
               <aside class="jumbotron__status">
                 <p class="jumbotron__status-tagline">{{ i18n "heroCardTagline" }}</p>
 
-                <p class="jumbotron__pulse">{{ i18n "heroEyebrow" }}</p>
+                {{/* The pulse dot doubles as the connection state: green
+                     while things are normal, amber while we wait, red when
+                     we gave up. */}}
+                <p class="jumbotron__pulse" :class="`jumbotron__pulse--${figuresState}`" v-cloak>
+                  <span v-if="figuresState === 'live'">{{ i18n "heroEyebrow" }}</span>
+                  <span v-else-if="figuresState === 'error'">{{ i18n "dataUnavailable" }}</span>
+                  <span v-else>{{ i18n "dataLoading" }}</span>
+                </p>
+
+                {{/* Static fallback for no-JS/first paint: plain eyebrow,
+                     replaced by the stateful line above once Vue mounts. */}}
+                <noscript><p class="jumbotron__pulse">{{ i18n "heroEyebrow" }}</p></noscript>
 
                 <p class="jumbotron__status-item" v-cloak v-if="mainData && mainData.last_run_at">
                   <span class="jumbotron__status-label">{{ i18n "lastUpdatedAt" }}</span>
                   <span class="jumbotron__status-value">{{ "{{ mainData ? formatDateTime(mainData.last_run_at) : '' }}" }}</span>
+                </p>
+
+                {{/* Showing the build snapshot: say plainly that these are
+                     the last confirmed figures, so nobody reads them as
+                     this second's. */}}
+                <p class="jumbotron__status-item" v-cloak v-else-if="figuresState === 'build'">
+                  <span class="jumbotron__status-label">{{ i18n "showingLastConfirmed" }}</span>
+                </p>
+
+                <p class="jumbotron__status-item jumbotron__status-item--error" v-cloak v-if="figuresState === 'error'">
+                  <span class="jumbotron__status-label">{{ i18n "dataUnavailableHelp" }}</span>
+                  <button type="button" class="jumbotron__retry" @click="getData(); getCandidates();">{{ i18n "tryAgain" }}</button>
                 </p>
 
                 <p class="jumbotron__status-item">
@@ -63,7 +101,7 @@
 
             </header>
 
-            <div class="big-numbers__wrapper">
+            <div class="big-numbers__wrapper" :class="{ 'is-skeleton': figuresPlaceholder, 'is-skeleton--static': figuresState === 'error' }">
 
               {{ partial "bigNumbers.html" (dict "data" $ssrData "page" .) }}
 
