@@ -423,8 +423,12 @@
   border-radius: 5px;
 }
 
+/// Reference (median) bars: recessive against the candidate's own bar, but
+/// still legible. The previous tone sat at 1.36:1 against its track — below
+/// the 3:1 floor for meaningful graphics, so the shorter medians read as
+/// empty rails rather than as values.
 .candidato__compare-fill--reference {
-  background-color: var(--hairline-2);
+  background-color: #8c8577;
 }
 
 .candidato__compare-value {
