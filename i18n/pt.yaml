@@ -458,3 +458,5 @@
   translation: "declararam"
 - id: noMedianYet
   translation: "—"
+- id: listOrderedByValue
+  translation: "Ordenadas do maior para o menor valor recebido."

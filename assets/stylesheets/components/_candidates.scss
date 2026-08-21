@@ -199,3 +199,12 @@
   padding: 0.2rem 0;
   margin-left: auto;
 }
+
+/// States the list's ordering, right under the active-filter description.
+.candidates__ordering {
+  margin-top: 0.35rem;
+  margin-bottom: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}

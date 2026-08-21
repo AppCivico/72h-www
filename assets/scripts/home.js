@@ -927,7 +927,14 @@ if (window.location.href.indexOf('/') > -1) {
       getCandidates(page = false) {
         this.loadingCandidates = true;
 
-        let url = `${config.api.domain}candidates?year=${this.selectedYear}&results=9&days=${this.selectedDay}${this.filtersAsQueryString}`;
+        // Highest first. Both parameters go explicitly: the API documents
+        // total_value/desc as the default, but it only sorts when at least
+        // one of them is present — without them the order is arbitrary.
+        // Sorting happens before pagination server-side (verified), so
+        // page 2 really is the next nine largest.
+        let url = `${config.api.domain}candidates?year=${this.selectedYear}&results=9&days=${this.selectedDay}`
+          + `&order_by=${config.api.candidatesOrderBy}&order=${config.api.candidatesOrder}`
+          + `${this.filtersAsQueryString}`;
 
         if (this.epochFromParam) {
           url += `&epoch=${this.epochFromParam}`;

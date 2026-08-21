@@ -363,6 +363,9 @@
                 </h2>
                 <div class="candidates__subtitle">
                   {{ partial "filterText" }}
+                  {{/* Ordering is a claim about the data, so it is stated
+                       rather than left for the reader to infer. */}}
+                  <p class="candidates__ordering">{{ i18n "listOrderedByValue" }}</p>
                 </div>
                 <transition-expand>
                   <div :aria-busy="loadingCandidates" class="candidates__container">
