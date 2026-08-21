@@ -150,12 +150,24 @@ window.$vueCandidato = Vue.createApp({
         .filter((group) => group.data)
         .map((group) => ({
           key: group.key,
-          median: Number(group.data.median),
+          // The API returns null — not 0 — when nobody in the group has
+          // declared revenue yet (documented in its OpenAPI). Coercing that
+          // to 0 would state "a mediana é R$ 0", which reads as a measured
+          // value instead of an absent one.
+          median: group.data.median === null || group.data.median === undefined
+            ? null
+            : Number(group.data.median),
           count: group.data.count,
+          // How many of the group actually declared receiving anything —
+          // the median is computed over these, not over `count`.
+          declaredCount: group.data.declared_count,
           rank: group.data.rank,
         }));
-      const maxValue = Math.max(myValue, ...groups.map((group) => group.median), 1);
-      const withWidth = (value) => (value / maxValue) * 100;
+      const maxValue = Math.max(myValue, ...groups.map((group) => group.median || 0), 1);
+      // A candidate can be two orders of magnitude above the median, which
+      // renders the reference bar sub-pixel — indistinguishable from "no
+      // value". Floor it at a visible sliver, but only for real values.
+      const withWidth = (value) => (value > 0 ? Math.max((value / maxValue) * 100, 0.8) : 0);
       return {
         mine: { value: myValue, widthPercent: withWidth(myValue) },
         groups: groups.map((group) => ({ ...group, widthPercent: withWidth(group.median) })),

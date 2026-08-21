@@ -89,9 +89,10 @@
             v-if="comparisonLoading || (comparison && comparison.position_uf)"
             :aria-busy="comparisonLoading">
             <h3>{{ i18n "candidateVsMedianOffice" }}</h3>
-            <p class="big-number__number" v-html="formatCurrencyNoAbbr(comparison?.position_uf?.median)"></p>
+            <p class="big-number__number" v-if="comparison && comparison.position_uf?.median === null">{{ i18n "noMedianYet" }}</p>
+            <p class="big-number__number" v-else v-html="formatCurrencyNoAbbr(comparison?.position_uf?.median)"></p>
             <p class="big-number__context">
-              {{ i18n "amongCandidates" }} {{ "{{ formatNumeral(comparison?.position_uf?.count) }}" }} {{ i18n "candidate" 2 | lower }}
+              {{ "{{ formatNumeral(comparison?.position_uf?.declared_count) }}" }} {{ i18n "ofTotal" }} {{ "{{ formatNumeral(comparison?.position_uf?.count) }}" }} {{ i18n "declaredVerb" }}
             </p>
           </div>
 
@@ -172,12 +173,18 @@
                   <template v-if="group.key === 'party_uf'">{{ i18n "comparisonPartyUF" }}</template>
                   <template v-else-if="group.key === 'position_uf'">{{ i18n "comparisonOfficeUF" }}</template>
                   <template v-else>{{ i18n "comparisonOfficeNational" }}</template>
-                  <small>{{ "{{ formatNumeral(group.count) }}" }} {{ i18n "candidate" 2 | lower }}</small>
+                  {{/* A mediana é calculada só sobre quem declarou algum
+                       recebimento; mostrar o total do grupo aqui sugeria que
+                       ela saía de todas as candidaturas. */}}
+                  <small>{{ "{{ formatNumeral(group.declaredCount) }}" }} {{ i18n "ofTotal" }} {{ "{{ formatNumeral(group.count) }}" }} {{ i18n "declaredVerb" }}</small>
                 </span>
                 <span class="candidato__compare-track candidato__compare-track--reference">
                   <span class="candidato__compare-fill candidato__compare-fill--reference" :style="{ width: group.widthPercent + '%' }"></span>
                 </span>
-                <span class="candidato__compare-value" v-html="formatCurrencyNoAbbr(group.median)"></span>
+                {{/* median null = ninguém do grupo declarou ainda; um
+                     "R$ 0" aqui leria como valor apurado. */}}
+                <span class="candidato__compare-value" v-if="group.median === null">{{ i18n "noMedianYet" }}</span>
+                <span class="candidato__compare-value" v-else v-html="formatCurrencyNoAbbr(group.median)"></span>
               </div>
             </div>
 

@@ -405,7 +405,7 @@
 - id: candidateHistoryEyebrow
   translation: "Trajetória"
 - id: candidateComparisonNote
-  translation: "A mediana divide o grupo ao meio: metade das candidaturas recebeu menos que ela, metade recebeu mais. É menos sensível a valores extremos do que a média."
+  translation: "A mediana divide ao meio quem já declarou recursos: metade recebeu menos que ela, metade recebeu mais — é menos sensível a valores extremos do que a média. Candidaturas que ainda não declararam nada ficam fora do cálculo, por isso o grupo comparado é menor que o total."
 - id: candidateHistoryChartTitle
   translation: "Quanto recebeu em cada eleição"
 - id: candidateHistoryChartSubtitle
@@ -435,7 +435,7 @@
 - id: pendingFilters
   translation: "Filtros alterados — clique em Aplicar para atualizar os resultados."
 - id: comparisonAllZero
-  translation: "As medianas ainda estão em R$ 0: até o momento, a maioria das candidaturas destes grupos não declarou repasses ao TSE."
+  translation: "Sem mediana ainda: nenhuma candidatura destes grupos declarou recebimento de recursos até o momento."
 - id: methodologyLink
   translation: "Como interpretamos os dados →"
 - id: applyNewFilters
@@ -452,3 +452,11 @@
   translation: "Tentar novamente"
 - id: figureUnavailableSR
   translation: "(número ainda não disponível)"
+- id: ofTotal
+  translation: "de"
+- id: declaredVerb
+  translation: "declararam"
+- id: noMedianYet
+  translation: "—"
+- id: listOrderedByValue
+  translation: "Ordenadas do maior para o menor valor recebido."
