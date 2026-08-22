@@ -16,6 +16,7 @@ import chartTheme, {
 import { liveHtml, liveText } from './directives/liveValue';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
+import { FEFC_TOTALS, QUOTA_DEADLINES } from './utilities/electoralFund';
 import personUrl from './utilities/personUrl';
 
 dayjs.extend(duration);
@@ -261,6 +262,37 @@ if (window.location.href.indexOf('/') > -1) {
       },
       countMale({ mainData } = this) {
         return Number.parseInt(mainData?.big_numbers?.count_male, 10) || 0;
+      },
+      // The home's "Onde está o dinheiro?" block: public-fund money that has reached
+      // candidacies vs the cycle's FEFC pot, plus the countdown to the legal deadline
+      // for the quota minimums. FEFC and Fundo Partidário are summed on purpose -- the
+      // origin label in early deliveries is unreliable (fund money arrives tagged as
+      // party fund), so two-funds-received vs FEFC-pot is the conservative comparison:
+      // it can only overstate, never understate, how much has arrived. `accumulated`
+      // is election-wide and ignores the page's filters, so the block holds still
+      // while the list below is filtered. null (no constants for the selected year,
+      // or data not in yet) hides the block entirely.
+      publicFunds({ mainData, selectedYear } = this) {
+        const fefcTotal = FEFC_TOTALS[selectedYear];
+        const accumulated = mainData?.accumulated;
+        if (!fefcTotal || !accumulated) return null;
+
+        const received = (Number.parseFloat(accumulated.value_party_fund) || 0)
+          + (Number.parseFloat(accumulated.value_special_fund) || 0);
+
+        // End of the deadline day in Brasília time; visitors ahead of or behind BRT by
+        // a few hours still see the flip within the right day.
+        const deadlineISO = QUOTA_DEADLINES[selectedYear];
+        const daysLeft = deadlineISO
+          ? Math.ceil((new Date(`${deadlineISO}T23:59:59-03:00`).getTime() - Date.now()) / 86400000)
+          : null;
+
+        return {
+          fefcTotal,
+          received,
+          daysLeft,
+          deadlinePassed: daysLeft !== null && daysLeft <= 0,
+        };
       },
 
       formatChartSeries() {

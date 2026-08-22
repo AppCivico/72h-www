@@ -295,7 +295,7 @@
 - id: tipAccumulatedValue
   translation: "Soma de todos os repasses de fundos públicos declarados ao TSE e capturados pelo monitor em até 72 horas após a declaração."
 - id: tipCandidatesWhoReceived
-  translation: "Cada candidatura é contada uma única vez, mesmo quando recebe de mais de um fundo — por isso a soma dos recortes pode superar este número."
+  translation: "Cada candidatura é contada uma única vez, mesmo quando recebe de mais de um fundo; por isso a soma dos recortes pode superar este número."
 - id: tipPartyFund
   translation: "Fundo Partidário: verba pública permanente, repartida entre os partidos todos os anos. Pode financiar campanhas e a manutenção das legendas."
 - id: tipFEFC
@@ -405,7 +405,7 @@
 - id: candidateHistoryEyebrow
   translation: "Trajetória"
 - id: candidateComparisonNote
-  translation: "A mediana divide ao meio quem já declarou recursos: metade recebeu menos que ela, metade recebeu mais — é menos sensível a valores extremos do que a média. Candidaturas que ainda não declararam nada ficam fora do cálculo, por isso o grupo comparado é menor que o total."
+  translation: "A mediana divide ao meio quem já declarou recursos: metade recebeu menos que ela, metade recebeu mais. É menos sensível a valores extremos do que a média. Candidaturas que ainda não declararam nada ficam fora do cálculo, por isso o grupo comparado é menor que o total."
 - id: candidateHistoryChartTitle
   translation: "Quanto recebeu em cada eleição"
 - id: candidateHistoryChartSubtitle
@@ -433,7 +433,7 @@
 - id: indifferent
   translation: "Indiferente"
 - id: pendingFilters
-  translation: "Filtros alterados — clique em Aplicar para atualizar os resultados."
+  translation: "Filtros alterados: clique em Aplicar para atualizar os resultados."
 - id: comparisonAllZero
   translation: "Sem mediana ainda: nenhuma candidatura destes grupos declarou recebimento de recursos até o momento."
 - id: methodologyLink
@@ -457,6 +457,124 @@
 - id: declaredVerb
   translation: "declararam"
 - id: noMedianYet
-  translation: "—"
+  translation: "sem dados"
 - id: listOrderedByValue
   translation: "Ordenadas do maior para o menor valor recebido."
+- id: candidateCapEyebrow
+  translation: "A régua da lei"
+- id: candidateCapTitle
+  translation: "Teto legal de gastos"
+- id: candidateCapNote
+  translation: "A lei fixa quanto cada campanha pode gastar, por cargo (Portaria TSE nº 449/2026). O teto limita as despesas; aqui comparamos o quanto já entrou em repasses com esse limite."
+- id: candidateCapLead
+  translation: "do teto legal já entrou em repasses"
+- id: candidateCapCeiling
+  translation: "Teto do 1º turno para este cargo:"
+- id: candidateCapOverNote
+  translation: "A arrecadação superou o teto. Arrecadar mais que o teto não é vedado; gastar acima dele é (multa de 100% do excedente, Lei 9.504/97, art. 18-B)."
+- id: candidateCapSource
+  translation: "Limites: Portaria TSE nº 449/2026 (valores mantidos de 2022)."
+- id: candidateSelfFundingLead
+  translation: "Recursos próprios declarados:"
+- id: candidateSelfFundingOf
+  translation: "do limite legal de autofinanciamento, que é 10% do teto"
+- id: candidateConcentrationEyebrow
+  translation: "Origem e concentração"
+- id: candidateConcentrationTitle
+  translation: "Quem banca a campanha"
+- id: candidateConcentrationNote
+  translation: "Os maiores repassadores desta candidatura, o tamanho de cada faixa de repasse e quantas pessoas físicas doaram. Repassador é quem transferiu o recurso: partido, pessoa física ou o próprio candidato."
+- id: candidateTopPayerLead
+  translation: "do total veio de"
+- id: candidatePersonPayers
+  translation: "pessoas físicas doaram"
+- id: candidateTicketMedian
+  translation: "doação típica (mediana) de pessoa física:"
+- id: candidateBandsTitle
+  translation: "Repasses por faixa de valor"
+- id: bandEmpty
+  translation: "nenhum"
+- id: valueBand1
+  translation: "Até R$ 500"
+- id: valueBand2
+  translation: "R$ 500 a R$ 2 mil"
+- id: valueBand3
+  translation: "R$ 2 mil a R$ 10 mil"
+- id: valueBand4
+  translation: "R$ 10 mil a R$ 50 mil"
+- id: valueBand5
+  translation: "Acima de R$ 50 mil"
+- id: fundingProfileAlmostAllPublic
+  translation: "financiamento quase inteiramente público-partidário"
+- id: fundingProfileMostlyPublic
+  translation: "financiamento predominantemente público-partidário"
+- id: fundingProfileMixed
+  translation: "financiamento misto"
+- id: fundingProfileMostlyPrivate
+  translation: "financiamento predominantemente privado ou próprio"
+- id: candidateTimingEyebrow
+  translation: "Linha do tempo"
+- id: candidateTimingTitle
+  translation: "Quando o dinheiro chegou"
+- id: candidateTimingNote
+  translation: "Total acumulado de repasses, semana a semana, sobre o período eleitoral inteiro. A linha fixa marca o teto legal de gastos do cargo; as tracejadas verticais, o início da campanha e o 1º turno."
+- id: candidateTimingChartTitle
+  translation: "Repasses acumulados por semana"
+- id: candidateTimingChartSubtitle
+  translation: "Soma de tudo que havia entrado até cada semana"
+- id: candidateTimingTooltip
+  translation: "Acumulado:"
+- id: campaignStartLabel
+  translation: "início da campanha"
+- id: candidateTopPercentLead
+  translation: "· entre os"
+- id: candidateTopPercentTail
+  translation: "que mais receberam"
+- id: electionDayLabel
+  translation: "1º turno"
+- id: candidateCapChartLine
+  translation: "teto legal de gastos"
+- id: donorFilterGroup
+  translation: "Filtrar repasses por porte do doador"
+- id: donorFilterAll
+  translation: "Todos"
+- id: donorFilterSuper
+  translation: "Super doadores · acima de R$ 100 mil"
+- id: donorFilterLarge
+  translation: "Grandes · R$ 10 mil a R$ 100 mil"
+- id: donorFilterMedium
+  translation: "Médios · R$ 2 mil a R$ 10 mil"
+- id: donorFilterSmall
+  translation: "Pequenos · até R$ 2 mil"
+- id: extractSummarySum
+  translation: "somando"
+- id: extractRankNote
+  translation: "do maior doador para o menor"
+- id: publicFundsEyebrow
+  translation: "Dinheiro público"
+- id: publicFundsTitle
+  translation: "Onde está o dinheiro?"
+- id: publicFundsLead1
+  translation: "Os partidos têm cerca de"
+- id: publicFundsPot
+  translation: "R$ 4,9 bilhões"
+- id: publicFundsLead2
+  translation: "do Fundo Eleitoral (FEFC) para usar nesta eleição. Até agora, as candidaturas declararam"
+- id: publicFundsLead3
+  translation: "recebidos dos fundos públicos, o que representa"
+- id: publicFundsLead4
+  translation: "desse total. O dinheiro ainda está, quase todo, nos diretórios dos partidos."
+- id: publicFundsCountdownSingular
+  translation: "Falta"
+- id: publicFundsCountdownPlural
+  translation: "Faltam"
+- id: publicFundsDay
+  translation: "dia"
+- id: publicFundsDays
+  translation: "dias"
+- id: publicFundsCountdownTail
+  translation: "para o fim do prazo legal (8 de setembro) de repasse, pelos partidos, dos valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas."
+- id: publicFundsDeadlinePast
+  translation: "O prazo legal para os partidos repassarem os valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas terminou em 8 de setembro."
+- id: publicFundsSource
+  translation: "Cota do Fundo Eleitoral 2026: aproximadamente R$ 4,9 bilhões (TSE, jun/2026). No valor recebido, somamos FEFC e Fundo Partidário, porque nas primeiras entregas o rótulo de origem declarado ao TSE é impreciso."

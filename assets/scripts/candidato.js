@@ -5,6 +5,7 @@ import config from './config';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 import personUrl, { slugify } from './utilities/personUrl';
+import spendingLimit, { SELF_FUNDING_FRACTION } from './utilities/spendingLimits';
 import watchMainMenu from './menuToggle';
 import watchHeaderCondense from './components/headerCondense';
 
@@ -65,6 +66,17 @@ function candidateIdFromQuery() {
   return value && /^\d+$/.test(value) ? Number(value) : null;
 }
 
+// 'YYYY-MM-DD' -> the Monday of that ISO week, also 'YYYY-MM-DD'. Mirrors the
+// DATE_TRUNC('week', ...) the breakdown endpoint uses, so the client-side fallback
+// buckets transfers into exactly the same weeks the API would.
+function mondayOfWeek(isoDate) {
+  const [year, month, day] = isoDate.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  const shift = (date.getUTCDay() + 6) % 7;
+  date.setUTCDate(date.getUTCDate() - shift);
+  return date.toISOString().slice(0, 10);
+}
+
 // "YYYY-MM-DD" -> "DD/MM/YYYY". Transfer dates are date-only, no time
 // component — a small string split avoids pulling in dayjs (unlike
 // home.js, this bundle stays lean) for something this simple.
@@ -91,6 +103,15 @@ window.$vueCandidato = Vue.createApp({
       coreLoading: true,
       comparison: null,
       comparisonLoading: true,
+      breakdown: null,
+      breakdownLoading: true,
+      // The complete transfers extract, when it fits the fetch budget (see
+      // loadFullExtract). null = over budget or still loading: the table then stays in
+      // its classic API-paginated, newest-first mode and the donor filters never render.
+      fullTransfers: null,
+      fullExtractPromise: null,
+      donorFilter: 'all',
+      extractVisible: 20,
       transfers: [],
       transfersPage: 1,
       transfersHasMore: false,
@@ -171,6 +192,151 @@ window.$vueCandidato = Vue.createApp({
       return {
         mine: { value: myValue, widthPercent: withWidth(myValue) },
         groups: groups.map((group) => ({ ...group, widthPercent: withWidth(group.median) })),
+      };
+    },
+    // Verbal funding profile for the concentration block. Thresholds follow the published
+    // scale (>= 90 / 70-90 / 40-70 / < 40 of public-fund money: FEFC + Fundo Partidário)
+    // and the label always renders next to the raw numbers, never alone -- the raw figures
+    // are what make the label credible.
+    fundingProfile({ fundBreakdown } = this) {
+      const labels = window.appFundingProfiles || {};
+      if (!fundBreakdown) return null;
+      const publicPercent = fundBreakdown.fefc.percent + fundBreakdown.partidario.percent;
+      let label = labels.mostlyPrivate;
+      if (publicPercent >= 90) label = labels.almostAllPublic;
+      else if (publicPercent >= 70) label = labels.mostlyPublic;
+      else if (publicPercent >= 40) label = labels.mixed;
+      return label ? { label, publicPercent } : null;
+    },
+    // Top payers and person-donor stats from the breakdown endpoint. Percentages are
+    // computed against the breakdown's own total (not core.total_value) so the shares
+    // always sum coherently even if the two fetches raced a scraper run.
+    concentration({ breakdown } = this) {
+      if (!breakdown || !breakdown.top_payers?.length) return null;
+      const total = Number(breakdown.total_value);
+      if (!(total > 0)) return null;
+      const payers = breakdown.top_payers.map((payer) => ({
+        name: payer.name,
+        isPerson: payer.is_person,
+        value: Number(payer.value),
+        transfers: payer.transfers,
+        percent: (Number(payer.value) / total) * 100,
+      }));
+      return {
+        payers,
+        top: payers[0],
+        personPayers: breakdown.person_payers_count,
+        ticketMedian: breakdown.person_ticket_median == null
+          ? null
+          : Number(breakdown.person_ticket_median),
+      };
+    },
+    // All five fixed bands in order, including empty ones -- an absent band is information
+    // ("nothing above R$ 50 mil"), not noise. Band bounds live in the API's SQL; the
+    // labels (window.appCandidateBands) must describe the same bounds.
+    valueBands({ breakdown } = this) {
+      if (!breakdown || !breakdown.value_bands?.length) return null;
+      const labels = window.appCandidateBands || [];
+      const total = breakdown.value_bands.reduce((sum, band) => sum + Number(band.value), 0);
+      if (!(total > 0)) return null;
+      return [1, 2, 3, 4, 5].map((n) => {
+        const band = breakdown.value_bands.find((candidate) => candidate.band === n);
+        const value = band ? Number(band.value) : 0;
+        return {
+          band: n,
+          label: labels[n - 1] || '',
+          transfers: band ? band.transfers : 0,
+          value,
+          // Same sub-pixel floor as the comparison bars: a real value must never render
+          // indistinguishable from zero.
+          widthPercent: value > 0 ? Math.max((value / total) * 100, 1.2) : 0,
+        };
+      });
+    },
+    // Spending-cap gauge. The cap limits SPENDING; the page compares REVENUE against it,
+    // and the i18n copy keeps that distinction explicit. null when the local table has no
+    // cap for this election/office (municipal years have per-city caps we don't carry) --
+    // the block then hides entirely: never a wrong number, never R$ 0.
+    spendingCap({ current, core } = this) {
+      if (!current) return null;
+      const limit = spendingLimit(current.year, current.position?.name, current.city?.region?.name);
+      if (!limit) return null;
+      const raised = Number(current.total_value) || 0;
+      const selfValue = Number(core?.by_fund_type?.self_funding?.value || 0);
+      const selfLimit = limit * SELF_FUNDING_FRACTION;
+      return {
+        limit,
+        raised,
+        usedPercent: (raised / limit) * 100,
+        barPercent: Math.min((raised / limit) * 100, 100),
+        overLimit: raised > limit,
+        selfValue,
+        selfLimit,
+        selfPercent: (selfValue / selfLimit) * 100,
+        selfOverLimit: selfValue > selfLimit,
+      };
+    },
+    // "Among the top X% of the party's candidates in the state" -- derived from the rank
+    // the comparison endpoint already returns (rank = strictly-richer candidates + 1, so
+    // ceil() keeps the claim true under ties). Tiny groups are skipped: a percentile over
+    // a dozen people reads as false precision when the rank line above already says it.
+    partyPercentile({ comparison } = this) {
+      const rank = comparison?.party_uf?.rank;
+      const count = comparison?.party_uf?.count;
+      if (!rank || !count || count < 10) return null;
+      return Math.max(1, Math.ceil((rank / count) * 100));
+    },
+    // Total given by each payer across the whole extract, keyed by case-folded name.
+    // Donor size is judged on this TOTAL, not on the individual transfer: a donor who
+    // gave three R$ 5.000 transfers is one large donor, not three medium ones.
+    donorTotals({ fullTransfers } = this) {
+      if (!fullTransfers || !fullTransfers.length) return null;
+      const totals = new Map();
+      fullTransfers.forEach((transfer) => {
+        const key = (transfer.name || '').trim().toLowerCase();
+        totals.set(key, (totals.get(key) || 0) + (Number(transfer.value) || 0));
+      });
+      return totals;
+    },
+    // What the extract table renders when the full extract fits the fetch budget:
+    // rows filtered by the donor's size tier and ranked biggest donor first (then by
+    // transfer value within the same donor), per the editorial call that the extract
+    // should read as a donor ranking. Thresholds match the value bands: large above
+    // R$ 100 mil (super), R$ 10-100 mil (large), R$ 2-10 mil (medium), up to R$ 2 mil
+    // (small) -- change them together
+    // with the donorFilter* labels in pt.yaml. null = keep the API's newest-first
+    // paginated table and hide the filters.
+    extractView({
+      fullTransfers, donorTotals, donorFilter, extractVisible,
+    } = this) {
+      if (!fullTransfers || !fullTransfers.length || !donorTotals) return null;
+
+      const keyOf = (transfer) => (transfer.name || '').trim().toLowerCase();
+      const tierOf = (total) => {
+        if (total > 100000) return 'super';
+        if (total > 10000) return 'large';
+        if (total > 2000) return 'medium';
+        return 'small';
+      };
+
+      const rows = fullTransfers
+        .filter((transfer) => donorFilter === 'all'
+          || tierOf(donorTotals.get(keyOf(transfer))) === donorFilter)
+        .sort((a, b) => {
+          const totalA = donorTotals.get(keyOf(a));
+          const totalB = donorTotals.get(keyOf(b));
+          if (totalB !== totalA) return totalB - totalA;
+          const keyA = keyOf(a);
+          const keyB = keyOf(b);
+          if (keyA !== keyB) return keyA < keyB ? -1 : 1;
+          return (Number(b.value) || 0) - (Number(a.value) || 0);
+        });
+
+      return {
+        rows: rows.slice(0, extractVisible),
+        count: rows.length,
+        sum: rows.reduce((sum, transfer) => sum + (Number(transfer.value) || 0), 0),
+        hasMore: rows.length > extractVisible,
       };
     },
     // Same value the address bar itself gets synced to (urlForCandidateId,
@@ -336,6 +502,11 @@ window.$vueCandidato = Vue.createApp({
       this.syncAddressBar();
       this.core = null;
       this.comparison = null;
+      this.breakdown = null;
+      this.fullTransfers = null;
+      this.fullExtractPromise = null;
+      this.donorFilter = 'all';
+      this.extractVisible = 20;
       this.transfers = [];
       this.transfersPage = 1;
       this.transfersHasMore = false;
@@ -358,9 +529,28 @@ window.$vueCandidato = Vue.createApp({
     loadCandidacyDetails() {
       // Fire-and-forget — each tracks its own loading flag and updates
       // the page reactively as it resolves, on its own schedule.
+      //
+      // The full-extract fetch is memoized as a promise because it has two consumers
+      // with different timing: the donor-size filters on the extract table, and the
+      // /breakdown 404 fallback. Neither should trigger a second crawl of the pages.
+      this.fullExtractPromise = this.loadFullExtract();
       this.loadCore();
       this.loadComparison();
+      this.loadBreakdown();
       this.loadTransfers();
+    },
+    async loadFullExtract() {
+      const candidateId = this.selectedCandidateId;
+      try {
+        const transfers = await this.fetchAllTransfers(candidateId);
+        if (candidateId !== this.selectedCandidateId) return null;
+        this.fullTransfers = transfers;
+        return transfers;
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+        return null;
+      }
     },
     async loadCore() {
       const candidateId = this.selectedCandidateId;
@@ -406,6 +596,135 @@ window.$vueCandidato = Vue.createApp({
         }
       }
     },
+    async loadBreakdown() {
+      const candidateId = this.selectedCandidateId;
+      this.breakdownLoading = true;
+      try {
+        const response = await fetch(`${config.api.domain}candidates/${candidateId}/breakdown`);
+        if (response.status === 404) {
+          // The endpoint isn't deployed yet (the page's own /people fetch already proved
+          // the candidate exists). Fall back to aggregating the transfers extract right
+          // here in the client -- same buckets, same bands, so the page looks identical
+          // and simply stops using the fallback the day the API catches up.
+          const synthetic = await this.buildBreakdownFromTransfers(candidateId);
+          if (candidateId !== this.selectedCandidateId) return;
+          this.breakdown = synthetic;
+        } else {
+          if (!response.ok) {
+            throw new Error(`breakdown fetch failed: ${response.status}`);
+          }
+          const data = await response.json();
+          if (candidateId !== this.selectedCandidateId) return;
+          this.breakdown = data;
+        }
+        // The timing chart's container only enters the DOM once `breakdown` renders its
+        // v-if -- same reason MicroModal.init() waits for $nextTick in mounted().
+        await this.$nextTick();
+        this.renderTimingChart();
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      } finally {
+        if (candidateId === this.selectedCandidateId) {
+          this.breakdownLoading = false;
+        }
+      }
+    },
+    // The WHOLE transfers extract (pages of 100, at most 10 requests = 1.000 rows), or
+    // null when the candidacy is bigger than that budget. All or nothing, never
+    // partial: the extract comes newest-first, so a truncated set would misrepresent
+    // both a cumulative curve and a donor ranking. Campaigns over the budget (a 2022
+    // presidential has 387k rows) keep the classic paginated table and no filters --
+    // hidden beats wrong.
+    async fetchAllTransfers(candidateId) {
+      const pageSize = 100; // the API's documented maximum for `results`
+      const maxRequests = 10;
+      let transfers = [];
+      for (let page = 1; page <= maxRequests; page += 1) {
+        // Sequential on purpose: each page tells us whether another is needed, and the
+        // API rate-limits per IP -- a parallel burst would be both wasteful and rude.
+        // eslint-disable-next-line no-await-in-loop
+        const response = await fetch(`${config.api.domain}candidates/${candidateId}/transfers?page=${page}&results=${pageSize}`);
+        if (!response.ok) {
+          throw new Error(`transfers fallback fetch failed: ${response.status}`);
+        }
+        // eslint-disable-next-line no-await-in-loop
+        const data = await response.json();
+        if (candidateId !== this.selectedCandidateId) return null;
+        transfers = transfers.concat(Array.isArray(data.transfers) ? data.transfers : []);
+        if (!data.has_more) {
+          return transfers;
+        }
+      }
+      return null;
+    },
+    // Frontend-only stand-in for /breakdown: aggregate the full extract client-side.
+    // Reuses the memoized fetch from loadCandidacyDetails instead of crawling again.
+    async buildBreakdownFromTransfers(candidateId) {
+      const transfers = await (this.fullExtractPromise
+        || this.fetchAllTransfers(candidateId));
+      if (candidateId !== this.selectedCandidateId) return null;
+      if (!transfers) return null;
+      return this.aggregateTransfers(transfers);
+    },
+    // Client-side twin of the CandidateBreakdown SQL: same payer grouping idea, same
+    // band bounds, same Monday-start weeks. Two honest downgrades, both handled by the
+    // template already: the extract masks documents, so payers group by case-folded
+    // name only, and person-donor stats can't be told apart (person_payers_count 0
+    // hides that line; is_person stays null and is never displayed).
+    aggregateTransfers(transfers) {
+      if (!transfers.length) return null;
+
+      const payersByKey = new Map();
+      const bandsByNumber = new Map();
+      const weeksByStart = new Map();
+      let total = 0;
+
+      transfers.forEach((transfer) => {
+        const value = Number(transfer.value) || 0;
+        total += value;
+
+        const displayName = (transfer.name || '').trim();
+        const key = displayName.toLowerCase();
+        const payer = payersByKey.get(key)
+          || {
+            name: displayName, is_person: null, value: 0, transfers: 0,
+          };
+        payer.value += value;
+        payer.transfers += 1;
+        payersByKey.set(key, payer);
+
+        let band = 5;
+        if (value <= 500) band = 1;
+        else if (value <= 2000) band = 2;
+        else if (value <= 10000) band = 3;
+        else if (value <= 50000) band = 4;
+        const bandEntry = bandsByNumber.get(band) || { band, transfers: 0, value: 0 };
+        bandEntry.transfers += 1;
+        bandEntry.value += value;
+        bandsByNumber.set(band, bandEntry);
+
+        const weekStart = mondayOfWeek(transfer.date);
+        const weekEntry = weeksByStart.get(weekStart)
+          || { week_start: weekStart, transfers: 0, value: 0 };
+        weekEntry.transfers += 1;
+        weekEntry.value += value;
+        weeksByStart.set(weekStart, weekEntry);
+      });
+
+      return {
+        total_value: total,
+        payers_count: payersByKey.size,
+        person_payers_count: 0,
+        person_ticket_median: null,
+        top_payers: [...payersByKey.values()]
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 5),
+        value_bands: [...bandsByNumber.values()].sort((a, b) => a.band - b.band),
+        weekly_series: [...weeksByStart.values()]
+          .sort((a, b) => (a.week_start < b.week_start ? -1 : 1)),
+      };
+    },
     // Confirmed by direct testing against the real API: pagination is via
     // ?page=N (offset/skip params are silently ignored), default page
     // size 20. Some candidates have hundreds of thousands of transfers
@@ -435,6 +754,15 @@ window.$vueCandidato = Vue.createApp({
         }
       }
     },
+    // Switching tiers resets the local pagination -- the count restarts from the top
+    // of the new ranking, same as any filter change elsewhere on the site.
+    setDonorFilter(filter) {
+      this.donorFilter = filter;
+      this.extractVisible = 20;
+    },
+    showMoreExtract() {
+      this.extractVisible += 20;
+    },
     loadMoreTransfers() {
       this.loadTransfers(this.transfersPage + 1);
     },
@@ -444,6 +772,149 @@ window.$vueCandidato = Vue.createApp({
       document.execCommand('copy');
       this.shareURLCopied = true;
     },
+    // Cumulative revenue by ISO week -- answers "when did the money arrive": all at
+    // once, early, spread out. Rendered as a right-step area because between weekly
+    // buckets the accumulated total genuinely holds still; a smooth slope would invent
+    // movement the data doesn't have. A dashed plot line marks the campaign's legal
+    // start for election years where that date is a fixed known constant; 2020's
+    // postponed calendar is deliberately absent rather than approximated.
+    renderTimingChart() {
+      const container = document.getElementById('js-candidato-timing-chart');
+      if (!container || !this.breakdown?.weekly_series?.length) return;
+
+      let running = 0;
+      const data = this.breakdown.weekly_series.map((week) => {
+        running += Number(week.value);
+        return [Date.parse(`${week.week_start}T12:00:00Z`), running];
+      });
+
+      // The x axis spans the WHOLE electoral period (campaign start to 1st round), not
+      // just the weeks with data -- that's what lets the fixed cap line read as "the
+      // ceiling for the entire race" and shows how much runway is left. 2020's postponed
+      // calendar is deliberately absent rather than approximated.
+      const electoralPeriods = {
+        2022: { start: '2022-08-16', election: '2022-10-02' },
+        2024: { start: '2024-08-16', election: '2024-10-06' },
+        2026: { start: '2026-08-16', election: '2026-10-04' },
+      };
+      const period = electoralPeriods[this.current?.year];
+      // labelX pulls the text to the given side of the line -- the election line sits
+      // on the chart's right edge, where the default placement clips the label.
+      const verticalLine = (iso, text, labelX = 4) => ({
+        value: Date.parse(`${iso}T12:00:00Z`),
+        color: '#8c8577',
+        dashStyle: 'Dash',
+        width: 1,
+        zIndex: 3,
+        label: { text, x: labelX, style: { color: '#565064', fontSize: '11px' } },
+      });
+      const plotLines = period ? [
+        verticalLine(period.start, window.appTimingChart?.campaignStartLabel || ''),
+        verticalLine(period.election, window.appTimingChart?.electionDayLabel || '', -14),
+      ] : [];
+
+      // The second, fixed line: the legal spending cap, flat across the whole period.
+      // It deliberately compresses small campaigns against the floor -- being far from
+      // the ceiling IS the finding, not a rendering problem. Absent when the cap table
+      // doesn't cover this election/office (same rule as the cap section).
+      const cap = this.spendingCap?.limit;
+      const capLine = cap ? [{
+        value: cap,
+        color: '#b45309',
+        dashStyle: 'ShortDash',
+        width: 2,
+        zIndex: 3,
+        label: {
+          text: window.appTimingChart?.capLineLabel || '',
+          align: 'right',
+          x: -4,
+          style: { color: '#b45309', fontSize: '11px', fontWeight: '600' },
+        },
+      }] : [];
+
+      Highcharts.setOptions(chartTheme);
+
+      this.timingChart = Highcharts.chart('js-candidato-timing-chart', {
+        chart: {
+          type: 'area',
+          backgroundColor: 'transparent',
+          height: 300,
+          spacingTop: 16,
+          // Same top margin as the history chart below: without it the subtitle sits
+          // on top of the highest y-axis label.
+          marginTop: 84,
+        },
+        title: {
+          text: window.appTimingChart?.title || '',
+        },
+        subtitle: {
+          text: window.appTimingChart?.subtitle || '',
+        },
+        legend: {
+          enabled: false,
+        },
+        xAxis: {
+          type: 'datetime',
+          plotLines,
+          // Soft bounds: the axis always covers the whole electoral period (so the cap
+          // line spans the race even when data stops in August), but still stretches
+          // for real data outside it -- crowdfunding money lands before the period
+          // starts, and final accounting lands after the 1st round. Hard min/max would
+          // clip those rows.
+          softMin: period ? Date.parse(`${period.start}T00:00:00Z`) : undefined,
+          softMax: period ? Date.parse(`${period.election}T12:00:00Z`) : undefined,
+        },
+        yAxis: {
+          title: { text: null },
+          min: 0,
+          // Headroom above the cap line so its label never clips; without a cap the
+          // axis just fits the data as before.
+          softMax: cap ? cap * 1.08 : undefined,
+          plotLines: capLine,
+          labels: {
+            // eslint-disable-next-line object-shorthand, func-names
+            formatter: function () {
+              return compactCurrency(this.value, 1);
+            },
+          },
+        },
+        tooltip: {
+          // eslint-disable-next-line object-shorthand, func-names
+          formatter: function () {
+            return `<div style="min-width:9rem">
+                <div style="margin-bottom:.25rem;font-weight:600">${Highcharts.dateFormat('%d/%m/%Y', this.x)}</div>
+                <div>${window.appTimingChart?.tooltipLabel || ''} <b>${formatCurrencyNoAbbr(this.y)}</b></div>
+              </div>`;
+          },
+        },
+        plotOptions: {
+          area: {
+            step: 'right',
+            fillOpacity: 0.18,
+            lineWidth: 2,
+            marker: { enabled: this.breakdown.weekly_series.length < 20, radius: 3 },
+          },
+        },
+        series: [{
+          name: 'Total',
+          data,
+          color: categorical[0],
+        }],
+      });
+
+      // Same container-resize handling (and the same next-frame deferral, for the same
+      // resize-loop reason) as renderHistoryChart() below.
+      if (!this.timingChartResizeObserver) {
+        this.timingChartResizeObserver = new ResizeObserver(() => {
+          window.requestAnimationFrame(() => {
+            this.timingChart?.reflow();
+          });
+        });
+      }
+      this.timingChartResizeObserver.disconnect();
+      this.timingChartResizeObserver.observe(container);
+    },
+
     // Same grouping as loadCandidateHistory()'s chart on the homepage
     // candidate cards (home.js): a person can hold two candidacies in the
     // same election (Deputado Federal + Senador), so group by year and

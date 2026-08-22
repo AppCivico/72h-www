@@ -108,6 +108,54 @@
             </div>
           </div>
 
+          {{/* Onde está o dinheiro: fundos públicos que já chegaram às candidaturas
+               contra a cota total do Fundo Eleitoral do ciclo (constante externa em
+               utilities/electoralFund.js) + contagem regressiva do prazo legal dos
+               repasses MÍNIMOS de cota — não do fundo inteiro; o texto das chaves
+               i18n carrega essa distinção e ela não pode se perder. FEFC e Fundo
+               Partidário somados de propósito: o rótulo de origem nas primeiras
+               entregas é impreciso (fundo chega marcado como partidário), então
+               soma-dos-dois vs cota-do-FEFC é a comparação conservadora. Só
+               renderiza nos anos com constante definida — nunca um número errado
+               para as municipais. */}}
+          <section class="home-section public-funds" v-if="publicFunds" v-cloak>
+            <div class="container">
+              <p class="eyebrow">{{ i18n "publicFundsEyebrow" }}</p>
+              <h2 class="border-title border-title--secondary">{{ i18n "publicFundsTitle" }}</h2>
+              {{/* Duas colunas no desktop (manchete + cartão do prazo lado a lado) para
+                  a seção ocupar a largura da página em vez de deixar a metade direita
+                  vazia; empilha no mobile. O valor da cota aparece como texto fixo
+                  (publicFundsPot) porque o formatCurrency compacto rende "R$4,90
+                  Bilhões"; a constante em electoralFund.js segue sendo a fonte do
+                  percentual. Os espaços presos dentro dos <template> do contador não
+                  são descuido: o Vue descarta espaço em branco com quebra de linha
+                  entre elementos, e era isso que colava "Faltam18". */}}
+              <div class="public-funds__grid">
+                <p class="public-funds__lead">
+                  {{ i18n "publicFundsLead1" }}
+                  <strong>{{ i18n "publicFundsPot" }}</strong>
+                  {{ i18n "publicFundsLead2" }}
+                  <strong v-live-html="liveCurrency(publicFunds?.received)"></strong>
+                  {{ i18n "publicFundsLead3" }}
+                  <strong v-live-text="livePercent(publicFunds?.received, publicFunds?.fefcTotal)"></strong>
+                  {{ i18n "publicFundsLead4" }}
+                </p>
+                <p class="public-funds__deadline" v-if="publicFunds.daysLeft !== null && !publicFunds.deadlinePassed">
+                  <template v-if="publicFunds.daysLeft === 1">{{ i18n "publicFundsCountdownSingular" }} </template>
+                  <template v-else>{{ i18n "publicFundsCountdownPlural" }} </template>
+                  <strong>{{ "{{ publicFunds.daysLeft }}" }}
+                    <template v-if="publicFunds.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
+                    <template v-else>{{ i18n "publicFundsDays" }}</template></strong>
+                  {{ i18n "publicFundsCountdownTail" }}
+                </p>
+                <p class="public-funds__deadline public-funds__deadline--past" v-else-if="publicFunds.deadlinePassed">
+                  {{ i18n "publicFundsDeadlinePast" }}
+                </p>
+              </div>
+              <p class="chart-source">{{ i18n "publicFundsSource" }}</p>
+            </div>
+          </section>
+
           <section class="home-section home-section--warm">
             <div class="container">
             <div class="intro-charts" :aria-busy="loadingIntroCharts">
