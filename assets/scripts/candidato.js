@@ -66,6 +66,17 @@ function candidateIdFromQuery() {
   return value && /^\d+$/.test(value) ? Number(value) : null;
 }
 
+// 'YYYY-MM-DD' -> the Monday of that ISO week, also 'YYYY-MM-DD'. Mirrors the
+// DATE_TRUNC('week', ...) the breakdown endpoint uses, so the client-side fallback
+// buckets transfers into exactly the same weeks the API would.
+function mondayOfWeek(isoDate) {
+  const [year, month, day] = isoDate.split('-').map(Number);
+  const date = new Date(Date.UTC(year, month - 1, day));
+  const shift = (date.getUTCDay() + 6) % 7;
+  date.setUTCDate(date.getUTCDate() - shift);
+  return date.toISOString().slice(0, 10);
+}
+
 // "YYYY-MM-DD" -> "DD/MM/YYYY". Transfer dates are date-only, no time
 // component — a small string split avoids pulling in dayjs (unlike
 // home.js, this bundle stays lean) for something this simple.
@@ -508,12 +519,22 @@ window.$vueCandidato = Vue.createApp({
       this.breakdownLoading = true;
       try {
         const response = await fetch(`${config.api.domain}candidates/${candidateId}/breakdown`);
-        if (!response.ok) {
-          throw new Error(`breakdown fetch failed: ${response.status}`);
+        if (response.status === 404) {
+          // The endpoint isn't deployed yet (the page's own /people fetch already proved
+          // the candidate exists). Fall back to aggregating the transfers extract right
+          // here in the client -- same buckets, same bands, so the page looks identical
+          // and simply stops using the fallback the day the API catches up.
+          const synthetic = await this.buildBreakdownFromTransfers(candidateId);
+          if (candidateId !== this.selectedCandidateId) return;
+          this.breakdown = synthetic;
+        } else {
+          if (!response.ok) {
+            throw new Error(`breakdown fetch failed: ${response.status}`);
+          }
+          const data = await response.json();
+          if (candidateId !== this.selectedCandidateId) return;
+          this.breakdown = data;
         }
-        const data = await response.json();
-        if (candidateId !== this.selectedCandidateId) return;
-        this.breakdown = data;
         // The timing chart's container only enters the DOM once `breakdown` renders its
         // v-if -- same reason MicroModal.init() waits for $nextTick in mounted().
         await this.$nextTick();
@@ -526,6 +547,90 @@ window.$vueCandidato = Vue.createApp({
           this.breakdownLoading = false;
         }
       }
+    },
+    // Frontend-only stand-in for /breakdown: pull the WHOLE transfers extract (pages of
+    // 100, at most 10 requests = 1.000 rows) and aggregate it client-side. All or
+    // nothing, never partial: the extract comes newest-first, so a truncated set would
+    // draw a cumulative curve that starts mid-campaign and reads as a lie. Campaigns
+    // bigger than the budget (a 2022 presidential has 387k rows) just don't get these
+    // blocks until the real endpoint ships -- hidden beats wrong.
+    async buildBreakdownFromTransfers(candidateId) {
+      const pageSize = 100; // the API's documented maximum for `results`
+      const maxRequests = 10;
+      let transfers = [];
+      for (let page = 1; page <= maxRequests; page += 1) {
+        // Sequential on purpose: each page tells us whether another is needed, and the
+        // API rate-limits per IP -- a parallel burst would be both wasteful and rude.
+        // eslint-disable-next-line no-await-in-loop
+        const response = await fetch(`${config.api.domain}candidates/${candidateId}/transfers?page=${page}&results=${pageSize}`);
+        if (!response.ok) {
+          throw new Error(`transfers fallback fetch failed: ${response.status}`);
+        }
+        // eslint-disable-next-line no-await-in-loop
+        const data = await response.json();
+        if (candidateId !== this.selectedCandidateId) return null;
+        transfers = transfers.concat(Array.isArray(data.transfers) ? data.transfers : []);
+        if (!data.has_more) {
+          return this.aggregateTransfers(transfers);
+        }
+      }
+      return null;
+    },
+    // Client-side twin of the CandidateBreakdown SQL: same payer grouping idea, same
+    // band bounds, same Monday-start weeks. Two honest downgrades, both handled by the
+    // template already: the extract masks documents, so payers group by case-folded
+    // name only, and person-donor stats can't be told apart (person_payers_count 0
+    // hides that line; is_person stays null and is never displayed).
+    aggregateTransfers(transfers) {
+      if (!transfers.length) return null;
+
+      const payersByKey = new Map();
+      const bandsByNumber = new Map();
+      const weeksByStart = new Map();
+      let total = 0;
+
+      transfers.forEach((transfer) => {
+        const value = Number(transfer.value) || 0;
+        total += value;
+
+        const displayName = (transfer.name || '').trim();
+        const key = displayName.toLowerCase();
+        const payer = payersByKey.get(key)
+          || { name: displayName, is_person: null, value: 0, transfers: 0 };
+        payer.value += value;
+        payer.transfers += 1;
+        payersByKey.set(key, payer);
+
+        let band = 5;
+        if (value <= 500) band = 1;
+        else if (value <= 2000) band = 2;
+        else if (value <= 10000) band = 3;
+        else if (value <= 50000) band = 4;
+        const bandEntry = bandsByNumber.get(band) || { band, transfers: 0, value: 0 };
+        bandEntry.transfers += 1;
+        bandEntry.value += value;
+        bandsByNumber.set(band, bandEntry);
+
+        const weekStart = mondayOfWeek(transfer.date);
+        const weekEntry = weeksByStart.get(weekStart)
+          || { week_start: weekStart, transfers: 0, value: 0 };
+        weekEntry.transfers += 1;
+        weekEntry.value += value;
+        weeksByStart.set(weekStart, weekEntry);
+      });
+
+      return {
+        total_value: total,
+        payers_count: payersByKey.size,
+        person_payers_count: 0,
+        person_ticket_median: null,
+        top_payers: [...payersByKey.values()]
+          .sort((a, b) => b.value - a.value)
+          .slice(0, 5),
+        value_bands: [...bandsByNumber.values()].sort((a, b) => a.band - b.band),
+        weekly_series: [...weeksByStart.values()]
+          .sort((a, b) => (a.week_start < b.week_start ? -1 : 1)),
+      };
     },
     // Confirmed by direct testing against the real API: pagination is via
     // ?page=N (offset/skip params are silently ignored), default page
@@ -581,17 +686,45 @@ window.$vueCandidato = Vue.createApp({
         return [Date.parse(`${week.week_start}T12:00:00Z`), running];
       });
 
-      const campaignStarts = { 2022: '2022-08-16', 2024: '2024-08-16', 2026: '2026-08-16' };
-      const startISO = campaignStarts[this.current?.year];
-      const plotLines = startISO ? [{
-        value: Date.parse(`${startISO}T12:00:00Z`),
+      // The x axis spans the WHOLE electoral period (campaign start to 1st round), not
+      // just the weeks with data -- that's what lets the fixed cap line read as "the
+      // ceiling for the entire race" and shows how much runway is left. 2020's postponed
+      // calendar is deliberately absent rather than approximated.
+      const electoralPeriods = {
+        2022: { start: '2022-08-16', election: '2022-10-02' },
+        2024: { start: '2024-08-16', election: '2024-10-06' },
+        2026: { start: '2026-08-16', election: '2026-10-04' },
+      };
+      const period = electoralPeriods[this.current?.year];
+      const verticalLine = (iso, text) => ({
+        value: Date.parse(`${iso}T12:00:00Z`),
         color: '#8c8577',
         dashStyle: 'Dash',
         width: 1,
         zIndex: 3,
+        label: { text, style: { color: '#565064', fontSize: '11px' } },
+      });
+      const plotLines = period ? [
+        verticalLine(period.start, window.appTimingChart?.campaignStartLabel || ''),
+        verticalLine(period.election, window.appTimingChart?.electionDayLabel || ''),
+      ] : [];
+
+      // The second, fixed line: the legal spending cap, flat across the whole period.
+      // It deliberately compresses small campaigns against the floor -- being far from
+      // the ceiling IS the finding, not a rendering problem. Absent when the cap table
+      // doesn't cover this election/office (same rule as the cap section).
+      const cap = this.spendingCap?.limit;
+      const capLine = cap ? [{
+        value: cap,
+        color: '#b45309',
+        dashStyle: 'ShortDash',
+        width: 2,
+        zIndex: 3,
         label: {
-          text: window.appTimingChart?.campaignStartLabel || '',
-          style: { color: '#565064', fontSize: '11px' },
+          text: window.appTimingChart?.capLineLabel || '',
+          align: 'right',
+          x: -4,
+          style: { color: '#b45309', fontSize: '11px', fontWeight: '600' },
         },
       }] : [];
 
@@ -616,10 +749,21 @@ window.$vueCandidato = Vue.createApp({
         xAxis: {
           type: 'datetime',
           plotLines,
+          // Soft bounds: the axis always covers the whole electoral period (so the cap
+          // line spans the race even when data stops in August), but still stretches
+          // for real data outside it -- crowdfunding money lands before the period
+          // starts, and final accounting lands after the 1st round. Hard min/max would
+          // clip those rows.
+          softMin: period ? Date.parse(`${period.start}T00:00:00Z`) : undefined,
+          softMax: period ? Date.parse(`${period.election}T12:00:00Z`) : undefined,
         },
         yAxis: {
           title: { text: null },
           min: 0,
+          // Headroom above the cap line so its label never clips; without a cap the
+          // axis just fits the data as before.
+          softMax: cap ? cap * 1.08 : undefined,
+          plotLines: capLine,
           labels: {
             // eslint-disable-next-line object-shorthand, func-names
             formatter: function () {

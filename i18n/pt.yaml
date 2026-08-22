@@ -517,7 +517,7 @@
 - id: candidateTimingTitle
   translation: "Quando o dinheiro chegou"
 - id: candidateTimingNote
-  translation: "Total acumulado de repasses, semana a semana. Uma campanha que recebe tudo de uma vez conta uma história diferente de uma que recebe aos poucos."
+  translation: "Total acumulado de repasses, semana a semana, sobre o período eleitoral inteiro. A linha fixa marca o teto legal de gastos do cargo; as tracejadas verticais, o início da campanha e o 1º turno."
 - id: candidateTimingChartTitle
   translation: "Repasses acumulados por semana"
 - id: candidateTimingChartSubtitle
@@ -530,3 +530,7 @@
   translation: "· entre os"
 - id: candidateTopPercentTail
   translation: "que mais receberam"
+- id: electionDayLabel
+  translation: "1º turno"
+- id: candidateCapChartLine
+  translation: "teto legal de gastos"
