@@ -5,8 +5,9 @@
   "main": "index.html",
   "scripts": {
     "audit-deps": "rimraf -f package-lock.json && synp --source-file yarn.lock && npm audit & rimraf -f package-lock.json",
-    "prebuild": "npm-run-all --parallel clean",
+    "prebuild": "npm-run-all clean sitemap:candidates",
     "build": "cross-env NODE_ENV=production hugo --ignoreCache --cleanDestinationDir --logLevel info",
+    "sitemap:candidates": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-candidate-sitemap.mjs",
     "clean": "npm-run-all --parallel clean:*",
     "clean:dist": "rimraf ./public/**/*.*",
     "clean:testResults": "rimraf ./testResults/**/*.xml",
@@ -17,7 +18,7 @@
     "serve": "npm-run-all start:*",
     "start:hugo": "cross-env NODE_ENV=development hugo server --noHTTPCache=true --ignoreCache --templateMetrics --disableFastRender --logLevel info",
     "pretest": "npm run lint",
-    "test": "jest",
+    "test": "node --test \"scripts/*.test.mjs\"",
     "preversion": "git checkout master && git merge dev",
     "version": "version-changelog CHANGELOG.md && changelog-verify CHANGELOG.md && git add CHANGELOG.md",
     "postversion": "git checkout dev && git merge master"

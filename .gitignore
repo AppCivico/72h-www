@@ -318,3 +318,9 @@ $RECYCLE.BIN/
 _to_delete/
 
 # End of https://www.toptal.com/developers/gitignore/api/vim,node,hugo,sass,linux,macos,windows,sublimetext,visualstudiocode
+
+# Sitemap das páginas de candidatura: gerado a cada build a partir da API
+# (npm run sitemap:candidates), nunca versionado — o conteúdo muda a cada
+# 72h e um arquivo velho no repo viraria a versão publicada.
+/static/sitemap-candidatos.xml
+/static/sitemap-candidatos-*.xml
