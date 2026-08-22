@@ -1,0 +1,29 @@
+////
+/// Bloco "Onde está o dinheiro?" da home: um parágrafo-manchete com os
+/// fundos públicos que já chegaram às candidaturas e a contagem regressiva
+/// do prazo legal dos repasses mínimos de cota.
+///
+/// @group components
+////
+
+.public-funds__lead {
+  max-width: 38rem;
+
+  font-size: var(--t-m);
+  line-height: 1.5;
+}
+
+.public-funds__deadline {
+  max-width: 38rem;
+  padding: 0.75rem 1rem;
+  margin-top: 1rem;
+
+  font-size: var(--t-s);
+  color: var(--ink-2);
+
+  border-left: 3px solid var(--accent-warm);
+}
+
+.public-funds__deadline--past {
+  border-left-color: var(--ink-3);
+}

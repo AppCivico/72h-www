@@ -550,3 +550,29 @@
   translation: "somando"
 - id: extractRankNote
   translation: "do maior doador para o menor"
+- id: publicFundsEyebrow
+  translation: "Dinheiro público"
+- id: publicFundsTitle
+  translation: "Onde está o dinheiro?"
+- id: publicFundsLead1
+  translation: "Os partidos têm cerca de"
+- id: publicFundsLead2
+  translation: "do Fundo Eleitoral (FEFC) para usar nesta eleição. Até agora, as candidaturas declararam"
+- id: publicFundsLead3
+  translation: "recebidos dos fundos públicos —"
+- id: publicFundsLead4
+  translation: "desse total. O dinheiro ainda está, quase todo, nos diretórios dos partidos."
+- id: publicFundsCountdownSingular
+  translation: "Falta"
+- id: publicFundsCountdownPlural
+  translation: "Faltam"
+- id: publicFundsDay
+  translation: "dia"
+- id: publicFundsDays
+  translation: "dias"
+- id: publicFundsCountdownTail
+  translation: "para o fim do prazo legal (8 de setembro) de repasse, pelos partidos, dos valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas."
+- id: publicFundsDeadlinePast
+  translation: "O prazo legal para os partidos repassarem os valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas terminou em 8 de setembro."
+- id: publicFundsSource
+  translation: "Cota do Fundo Eleitoral 2026: aproximadamente R$ 4,9 bilhões (TSE, jun/2026). No valor recebido, somamos FEFC e Fundo Partidário — nas primeiras entregas, o rótulo de origem declarado ao TSE é impreciso."
