@@ -460,3 +460,73 @@
   translation: "—"
 - id: listOrderedByValue
   translation: "Ordenadas do maior para o menor valor recebido."
+- id: candidateCapEyebrow
+  translation: "A régua da lei"
+- id: candidateCapTitle
+  translation: "Teto legal de gastos"
+- id: candidateCapNote
+  translation: "A lei fixa quanto cada campanha pode gastar, por cargo (Portaria TSE nº 449/2026). O teto limita as despesas; aqui comparamos o quanto já entrou em repasses com esse limite."
+- id: candidateCapLead
+  translation: "do teto legal já entrou em repasses"
+- id: candidateCapCeiling
+  translation: "Teto do 1º turno para este cargo:"
+- id: candidateCapOverNote
+  translation: "A arrecadação superou o teto. Arrecadar mais que o teto não é vedado — gastar acima dele é (multa de 100% do excedente, Lei 9.504/97, art. 18-B)."
+- id: candidateCapSource
+  translation: "Limites: Portaria TSE nº 449/2026 (valores mantidos de 2022)."
+- id: candidateSelfFundingLead
+  translation: "Recursos próprios declarados:"
+- id: candidateSelfFundingOf
+  translation: "do limite legal de autofinanciamento, que é 10% do teto"
+- id: candidateConcentrationEyebrow
+  translation: "Origem e concentração"
+- id: candidateConcentrationTitle
+  translation: "Quem banca a campanha"
+- id: candidateConcentrationNote
+  translation: "Os maiores repassadores desta candidatura, o tamanho de cada faixa de repasse e quantas pessoas físicas doaram. Repassador é quem transferiu o recurso: partido, pessoa física ou o próprio candidato."
+- id: candidateTopPayerLead
+  translation: "do total veio de"
+- id: candidatePersonPayers
+  translation: "pessoas físicas doaram"
+- id: candidateTicketMedian
+  translation: "doação típica (mediana) de pessoa física:"
+- id: candidateBandsTitle
+  translation: "Repasses por faixa de valor"
+- id: bandEmpty
+  translation: "nenhum"
+- id: valueBand1
+  translation: "Até R$ 500"
+- id: valueBand2
+  translation: "R$ 500 a R$ 2 mil"
+- id: valueBand3
+  translation: "R$ 2 mil a R$ 10 mil"
+- id: valueBand4
+  translation: "R$ 10 mil a R$ 50 mil"
+- id: valueBand5
+  translation: "Acima de R$ 50 mil"
+- id: fundingProfileAlmostAllPublic
+  translation: "financiamento quase inteiramente público-partidário"
+- id: fundingProfileMostlyPublic
+  translation: "financiamento predominantemente público-partidário"
+- id: fundingProfileMixed
+  translation: "financiamento misto"
+- id: fundingProfileMostlyPrivate
+  translation: "financiamento predominantemente privado ou próprio"
+- id: candidateTimingEyebrow
+  translation: "Linha do tempo"
+- id: candidateTimingTitle
+  translation: "Quando o dinheiro chegou"
+- id: candidateTimingNote
+  translation: "Total acumulado de repasses, semana a semana. Uma campanha que recebe tudo de uma vez conta uma história diferente de uma que recebe aos poucos."
+- id: candidateTimingChartTitle
+  translation: "Repasses acumulados por semana"
+- id: candidateTimingChartSubtitle
+  translation: "Soma de tudo que havia entrado até cada semana"
+- id: candidateTimingTooltip
+  translation: "Acumulado:"
+- id: campaignStartLabel
+  translation: "início da campanha"
+- id: candidateTopPercentLead
+  translation: "· entre os"
+- id: candidateTopPercentTail
+  translation: "que mais receberam"

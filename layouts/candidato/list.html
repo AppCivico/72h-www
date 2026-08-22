@@ -104,6 +104,9 @@
             <p class="big-number__number">{{ "{{ comparison?.party_uf?.rank }}º" }}</p>
             <p class="big-number__context">
               {{ i18n "amongCandidates" }} {{ "{{ formatNumeral(comparison?.party_uf?.count) }}" }} {{ i18n "candidate" 2 | lower }}
+              {{/* Percentil derivado do rank que a API já devolve; some em grupos
+                  pequenos, onde a linha do rank acima já diz tudo. */}}
+              <template v-if="partyPercentile"><br>{{ i18n "candidateTopPercentLead" }} {{ "{{ partyPercentile }}" }}% {{ i18n "candidateTopPercentTail" }}</template>
             </p>
           </div>
 
@@ -118,6 +121,42 @@
             </p>
           </div>
         </div>
+
+        {{/* O teto limita GASTOS; a página compara o que ENTROU com ele — o texto
+            (candidateCapNote) carrega essa distinção e ela não pode se perder.
+            spendingCap é null fora de 2022/2026 (municipais têm teto por município,
+            que não carregamos): o bloco some em vez de mostrar número errado. */}}
+        <section class="candidato__section" v-if="spendingCap">
+          <p class="eyebrow">{{ i18n "candidateCapEyebrow" }}</p>
+          <h2>{{ i18n "candidateCapTitle" }}</h2>
+          <p class="candidato__section-intro">{{ i18n "candidateCapNote" }}</p>
+          <div class="candidato__panel">
+            <p class="candidato__cap-lead">
+              <strong>{{ "{{ formatNumeral(spendingCap.usedPercent, 1) }}" }}%</strong>
+              {{ i18n "candidateCapLead" }}
+            </p>
+            <div class="candidato__cap-track">
+              <span
+                class="candidato__cap-fill"
+                :class="{ 'candidato__cap-fill--over': spendingCap.overLimit }"
+                :style="{ width: spendingCap.barPercent + '%' }"></span>
+            </div>
+            <p class="candidato__cap-meta">
+              {{ i18n "candidateCapCeiling" }}
+              <span v-html="formatCurrencyNoAbbr(spendingCap.limit)"></span>
+            </p>
+            <p class="candidato__cap-meta" v-if="spendingCap.overLimit">
+              {{ i18n "candidateCapOverNote" }}
+            </p>
+            <p class="candidato__cap-meta" v-if="spendingCap.selfValue > 0">
+              {{ i18n "candidateSelfFundingLead" }}
+              <span v-html="formatCurrencyNoAbbr(spendingCap.selfValue)"></span>
+              — {{ "{{ formatNumeral(spendingCap.selfPercent, 1) }}" }}% {{ i18n "candidateSelfFundingOf" }}
+              (<span v-html="formatCurrencyNoAbbr(spendingCap.selfLimit)"></span>)
+            </p>
+            <p class="chart-source">{{ i18n "candidateCapSource" }}</p>
+          </div>
+        </section>
 
         <section class="candidato__section" v-if="coreLoading || fundBreakdown" :aria-busy="coreLoading">
           <p class="eyebrow">{{ i18n "candidateFundsEyebrow" }}</p>
@@ -149,6 +188,57 @@
               </li>
             </ul>
 
+            <p class="chart-source">{{ i18n "dataSource" }}</p>
+          </div>
+        </section>
+
+        <section
+          class="candidato__section"
+          v-if="breakdownLoading || concentration"
+          :aria-busy="breakdownLoading">
+          <p class="eyebrow">{{ i18n "candidateConcentrationEyebrow" }}</p>
+          <h2>{{ i18n "candidateConcentrationTitle" }}</h2>
+          <p class="candidato__section-intro">{{ i18n "candidateConcentrationNote" }}</p>
+          <div class="candidato__panel" v-if="concentration">
+            {{/* Rótulo verbal sempre colado nos números crus — é o que o torna crível. */}}
+            <p class="candidato__conc-lead">
+              <strong>{{ "{{ formatNumeral(concentration.top.percent, 0) }}" }}%</strong>
+              {{ i18n "candidateTopPayerLead" }}
+              <strong>{{ "{{ concentration.top.name }}" }}</strong><template v-if="fundingProfile">
+                — {{ "{{ fundingProfile.label }}" }}</template>.
+            </p>
+            <ul class="candidato__top-payers">
+              <li v-for="payer in concentration.payers" :key="payer.name">
+                <span class="candidato__top-payer-name">{{ "{{ payer.name }}" }}</span>
+                <span class="candidato__top-payer-bar">
+                  <span :style="{ width: Math.max(payer.percent, 1.2) + '%' }"></span>
+                </span>
+                <span class="candidato__top-payer-value">
+                  <span v-html="formatCurrencyNoAbbr(payer.value)"></span>
+                  <small>{{ "{{ formatNumeral(payer.percent, 1) }}" }}% · {{ "{{ payer.transfers }}" }} {{ i18n "transfersShort" }}</small>
+                </span>
+              </li>
+            </ul>
+            <p class="candidato__conc-meta" v-if="concentration.personPayers > 0">
+              {{ "{{ formatNumeral(concentration.personPayers) }}" }} {{ i18n "candidatePersonPayers" }}<template v-if="concentration.ticketMedian !== null">
+                · {{ i18n "candidateTicketMedian" }} <span v-html="formatCurrencyNoAbbr(concentration.ticketMedian)"></span></template>
+            </p>
+            <div class="candidato__bands" v-if="valueBands">
+              <h3 class="candidato__bands-title">{{ i18n "candidateBandsTitle" }}</h3>
+              <div class="candidato__band" v-for="band in valueBands" :key="band.band">
+                <span class="candidato__band-label">{{ "{{ band.label }}" }}</span>
+                <span class="candidato__band-track">
+                  <span :style="{ width: band.widthPercent + '%' }"></span>
+                </span>
+                <span class="candidato__band-value">
+                  <template v-if="band.transfers">
+                    {{ "{{ formatNumeral(band.transfers) }}" }} {{ i18n "transfersShort" }} ·
+                    <span v-html="formatCurrencyNoAbbr(band.value)"></span>
+                  </template>
+                  <template v-else>{{ i18n "bandEmpty" }}</template>
+                </span>
+              </div>
+            </div>
             <p class="chart-source">{{ i18n "dataSource" }}</p>
           </div>
         </section>
@@ -195,6 +285,19 @@
               {{ i18n "comparisonAllZero" }}
             </p>
 
+            <p class="chart-source">{{ i18n "dataSource" }}</p>
+          </div>
+        </section>
+
+        <section
+          class="candidato__section"
+          v-if="breakdownLoading || (breakdown && breakdown.weekly_series && breakdown.weekly_series.length)"
+          :aria-busy="breakdownLoading">
+          <p class="eyebrow">{{ i18n "candidateTimingEyebrow" }}</p>
+          <h2>{{ i18n "candidateTimingTitle" }}</h2>
+          <p class="candidato__section-intro">{{ i18n "candidateTimingNote" }}</p>
+          <div class="candidato__panel" v-if="breakdown && breakdown.weekly_series && breakdown.weekly_series.length">
+            <div id="js-candidato-timing-chart"></div>
             <p class="chart-source">{{ i18n "dataSource" }}</p>
           </div>
         </section>
@@ -321,6 +424,25 @@
       title: '{{ i18n "candidateHistoryChartTitle" }}',
       subtitle: '{{ i18n "candidateHistoryChartSubtitle" }}',
     }
+    window.appTimingChart = {
+      title: '{{ i18n "candidateTimingChartTitle" }}',
+      subtitle: '{{ i18n "candidateTimingChartSubtitle" }}',
+      tooltipLabel: '{{ i18n "candidateTimingTooltip" }}',
+      campaignStartLabel: '{{ i18n "campaignStartLabel" }}',
+    }
+    window.appFundingProfiles = {
+      almostAllPublic: '{{ i18n "fundingProfileAlmostAllPublic" }}',
+      mostlyPublic: '{{ i18n "fundingProfileMostlyPublic" }}',
+      mixed: '{{ i18n "fundingProfileMixed" }}',
+      mostlyPrivate: '{{ i18n "fundingProfileMostlyPrivate" }}',
+    }
+    window.appCandidateBands = [
+      '{{ i18n "valueBand1" }}',
+      '{{ i18n "valueBand2" }}',
+      '{{ i18n "valueBand3" }}',
+      '{{ i18n "valueBand4" }}',
+      '{{ i18n "valueBand5" }}',
+    ]
   </script>
 
   {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.global.prod.js" "vendor/vue.global.js") | resources.Fingerprint "sha512" }}
