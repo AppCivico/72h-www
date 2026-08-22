@@ -105,6 +105,13 @@ window.$vueCandidato = Vue.createApp({
       comparisonLoading: true,
       breakdown: null,
       breakdownLoading: true,
+      // The complete transfers extract, when it fits the fetch budget (see
+      // loadFullExtract). null = over budget or still loading: the table then stays in
+      // its classic API-paginated, newest-first mode and the donor filters never render.
+      fullTransfers: null,
+      fullExtractPromise: null,
+      donorFilter: 'all',
+      extractVisible: 20,
       transfers: [],
       transfersPage: 1,
       transfersHasMore: false,
@@ -279,6 +286,59 @@ window.$vueCandidato = Vue.createApp({
       if (!rank || !count || count < 10) return null;
       return Math.max(1, Math.ceil((rank / count) * 100));
     },
+    // Total given by each payer across the whole extract, keyed by case-folded name.
+    // Donor size is judged on this TOTAL, not on the individual transfer: a donor who
+    // gave three R$ 5.000 transfers is one large donor, not three medium ones.
+    donorTotals({ fullTransfers } = this) {
+      if (!fullTransfers || !fullTransfers.length) return null;
+      const totals = new Map();
+      fullTransfers.forEach((transfer) => {
+        const key = (transfer.name || '').trim().toLowerCase();
+        totals.set(key, (totals.get(key) || 0) + (Number(transfer.value) || 0));
+      });
+      return totals;
+    },
+    // What the extract table renders when the full extract fits the fetch budget:
+    // rows filtered by the donor's size tier and ranked biggest donor first (then by
+    // transfer value within the same donor), per the editorial call that the extract
+    // should read as a donor ranking. Thresholds match the value bands: large above
+    // R$ 100 mil (super), R$ 10-100 mil (large), R$ 2-10 mil (medium), up to R$ 2 mil
+    // (small) -- change them together
+    // with the donorFilter* labels in pt.yaml. null = keep the API's newest-first
+    // paginated table and hide the filters.
+    extractView({
+      fullTransfers, donorTotals, donorFilter, extractVisible,
+    } = this) {
+      if (!fullTransfers || !fullTransfers.length || !donorTotals) return null;
+
+      const keyOf = (transfer) => (transfer.name || '').trim().toLowerCase();
+      const tierOf = (total) => {
+        if (total > 100000) return 'super';
+        if (total > 10000) return 'large';
+        if (total > 2000) return 'medium';
+        return 'small';
+      };
+
+      const rows = fullTransfers
+        .filter((transfer) => donorFilter === 'all'
+          || tierOf(donorTotals.get(keyOf(transfer))) === donorFilter)
+        .sort((a, b) => {
+          const totalA = donorTotals.get(keyOf(a));
+          const totalB = donorTotals.get(keyOf(b));
+          if (totalB !== totalA) return totalB - totalA;
+          const keyA = keyOf(a);
+          const keyB = keyOf(b);
+          if (keyA !== keyB) return keyA < keyB ? -1 : 1;
+          return (Number(b.value) || 0) - (Number(a.value) || 0);
+        });
+
+      return {
+        rows: rows.slice(0, extractVisible),
+        count: rows.length,
+        sum: rows.reduce((sum, transfer) => sum + (Number(transfer.value) || 0), 0),
+        hasMore: rows.length > extractVisible,
+      };
+    },
     // Same value the address bar itself gets synced to (urlForCandidateId,
     // via syncAddressBar) — reused here so sharing always points at
     // whichever candidacy is currently selected, not just the person's
@@ -443,6 +503,10 @@ window.$vueCandidato = Vue.createApp({
       this.core = null;
       this.comparison = null;
       this.breakdown = null;
+      this.fullTransfers = null;
+      this.fullExtractPromise = null;
+      this.donorFilter = 'all';
+      this.extractVisible = 20;
       this.transfers = [];
       this.transfersPage = 1;
       this.transfersHasMore = false;
@@ -465,10 +529,28 @@ window.$vueCandidato = Vue.createApp({
     loadCandidacyDetails() {
       // Fire-and-forget — each tracks its own loading flag and updates
       // the page reactively as it resolves, on its own schedule.
+      //
+      // The full-extract fetch is memoized as a promise because it has two consumers
+      // with different timing: the donor-size filters on the extract table, and the
+      // /breakdown 404 fallback. Neither should trigger a second crawl of the pages.
+      this.fullExtractPromise = this.loadFullExtract();
       this.loadCore();
       this.loadComparison();
       this.loadBreakdown();
       this.loadTransfers();
+    },
+    async loadFullExtract() {
+      const candidateId = this.selectedCandidateId;
+      try {
+        const transfers = await this.fetchAllTransfers(candidateId);
+        if (candidateId !== this.selectedCandidateId) return null;
+        this.fullTransfers = transfers;
+        return transfers;
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+        return null;
+      }
     },
     async loadCore() {
       const candidateId = this.selectedCandidateId;
@@ -548,13 +630,13 @@ window.$vueCandidato = Vue.createApp({
         }
       }
     },
-    // Frontend-only stand-in for /breakdown: pull the WHOLE transfers extract (pages of
-    // 100, at most 10 requests = 1.000 rows) and aggregate it client-side. All or
-    // nothing, never partial: the extract comes newest-first, so a truncated set would
-    // draw a cumulative curve that starts mid-campaign and reads as a lie. Campaigns
-    // bigger than the budget (a 2022 presidential has 387k rows) just don't get these
-    // blocks until the real endpoint ships -- hidden beats wrong.
-    async buildBreakdownFromTransfers(candidateId) {
+    // The WHOLE transfers extract (pages of 100, at most 10 requests = 1.000 rows), or
+    // null when the candidacy is bigger than that budget. All or nothing, never
+    // partial: the extract comes newest-first, so a truncated set would misrepresent
+    // both a cumulative curve and a donor ranking. Campaigns over the budget (a 2022
+    // presidential has 387k rows) keep the classic paginated table and no filters --
+    // hidden beats wrong.
+    async fetchAllTransfers(candidateId) {
       const pageSize = 100; // the API's documented maximum for `results`
       const maxRequests = 10;
       let transfers = [];
@@ -571,10 +653,19 @@ window.$vueCandidato = Vue.createApp({
         if (candidateId !== this.selectedCandidateId) return null;
         transfers = transfers.concat(Array.isArray(data.transfers) ? data.transfers : []);
         if (!data.has_more) {
-          return this.aggregateTransfers(transfers);
+          return transfers;
         }
       }
       return null;
+    },
+    // Frontend-only stand-in for /breakdown: aggregate the full extract client-side.
+    // Reuses the memoized fetch from loadCandidacyDetails instead of crawling again.
+    async buildBreakdownFromTransfers(candidateId) {
+      const transfers = await (this.fullExtractPromise
+        || this.fetchAllTransfers(candidateId));
+      if (candidateId !== this.selectedCandidateId) return null;
+      if (!transfers) return null;
+      return this.aggregateTransfers(transfers);
     },
     // Client-side twin of the CandidateBreakdown SQL: same payer grouping idea, same
     // band bounds, same Monday-start weeks. Two honest downgrades, both handled by the
@@ -596,7 +687,9 @@ window.$vueCandidato = Vue.createApp({
         const displayName = (transfer.name || '').trim();
         const key = displayName.toLowerCase();
         const payer = payersByKey.get(key)
-          || { name: displayName, is_person: null, value: 0, transfers: 0 };
+          || {
+            name: displayName, is_person: null, value: 0, transfers: 0,
+          };
         payer.value += value;
         payer.transfers += 1;
         payersByKey.set(key, payer);
@@ -661,6 +754,15 @@ window.$vueCandidato = Vue.createApp({
         }
       }
     },
+    // Switching tiers resets the local pagination -- the count restarts from the top
+    // of the new ranking, same as any filter change elsewhere on the site.
+    setDonorFilter(filter) {
+      this.donorFilter = filter;
+      this.extractVisible = 20;
+    },
+    showMoreExtract() {
+      this.extractVisible += 20;
+    },
     loadMoreTransfers() {
       this.loadTransfers(this.transfersPage + 1);
     },
@@ -696,17 +798,19 @@ window.$vueCandidato = Vue.createApp({
         2026: { start: '2026-08-16', election: '2026-10-04' },
       };
       const period = electoralPeriods[this.current?.year];
-      const verticalLine = (iso, text) => ({
+      // labelX pulls the text to the given side of the line -- the election line sits
+      // on the chart's right edge, where the default placement clips the label.
+      const verticalLine = (iso, text, labelX = 4) => ({
         value: Date.parse(`${iso}T12:00:00Z`),
         color: '#8c8577',
         dashStyle: 'Dash',
         width: 1,
         zIndex: 3,
-        label: { text, style: { color: '#565064', fontSize: '11px' } },
+        label: { text, x: labelX, style: { color: '#565064', fontSize: '11px' } },
       });
       const plotLines = period ? [
         verticalLine(period.start, window.appTimingChart?.campaignStartLabel || ''),
-        verticalLine(period.election, window.appTimingChart?.electionDayLabel || ''),
+        verticalLine(period.election, window.appTimingChart?.electionDayLabel || '', -14),
       ] : [];
 
       // The second, fixed line: the legal spending cap, flat across the whole period.
@@ -734,8 +838,11 @@ window.$vueCandidato = Vue.createApp({
         chart: {
           type: 'area',
           backgroundColor: 'transparent',
-          height: 280,
+          height: 300,
           spacingTop: 16,
+          // Same top margin as the history chart below: without it the subtitle sits
+          // on top of the highest y-axis label.
+          marginTop: 84,
         },
         title: {
           text: window.appTimingChart?.title || '',

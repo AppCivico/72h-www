@@ -309,7 +309,49 @@
           <p class="eyebrow">{{ i18n "candidateTransfersEyebrow" }}</p>
           <h2>{{ i18n "candidateTransfersExtract" }}</h2>
 
-          <div class="candidato__panel" v-if="transfers.length">
+          <div class="candidato__panel" v-if="transfers.length || extractView">
+            {{/* Com o extrato completo em mãos, a tabela vira um ranking de doadores:
+                filtros por porte (o porte é do TOTAL do doador, não do repasse) e
+                ordenação do maior doador para o menor. Sem ele — campanhas acima do
+                orçamento de busca — os filtros nem aparecem e a tabela segue paginada
+                por data, como sempre. */}}
+            <div class="candidato__extract-filters" v-if="extractView" role="group" aria-label='{{ i18n "donorFilterGroup" }}'>
+              <button
+                type="button"
+                class="candidato__pill"
+                :class="{ 'candidato__pill--active': donorFilter === 'all' }"
+                :aria-pressed="donorFilter === 'all'"
+                @click="setDonorFilter('all')">{{ i18n "donorFilterAll" }}</button>
+              <button
+                type="button"
+                class="candidato__pill"
+                :class="{ 'candidato__pill--active': donorFilter === 'super' }"
+                :aria-pressed="donorFilter === 'super'"
+                @click="setDonorFilter('super')">{{ i18n "donorFilterSuper" }}</button>
+              <button
+                type="button"
+                class="candidato__pill"
+                :class="{ 'candidato__pill--active': donorFilter === 'large' }"
+                :aria-pressed="donorFilter === 'large'"
+                @click="setDonorFilter('large')">{{ i18n "donorFilterLarge" }}</button>
+              <button
+                type="button"
+                class="candidato__pill"
+                :class="{ 'candidato__pill--active': donorFilter === 'medium' }"
+                :aria-pressed="donorFilter === 'medium'"
+                @click="setDonorFilter('medium')">{{ i18n "donorFilterMedium" }}</button>
+              <button
+                type="button"
+                class="candidato__pill"
+                :class="{ 'candidato__pill--active': donorFilter === 'small' }"
+                :aria-pressed="donorFilter === 'small'"
+                @click="setDonorFilter('small')">{{ i18n "donorFilterSmall" }}</button>
+            </div>
+            <p class="candidato__extract-summary" v-if="extractView" aria-live="polite">
+              {{ "{{ formatNumeral(extractView.count) }}" }} {{ i18n "transfersShort" }} ·
+              {{ i18n "extractSummarySum" }} <span v-html="formatCurrencyNoAbbr(extractView.sum)"></span> ·
+              {{ i18n "extractRankNote" }}
+            </p>
             <table class="data-table candidato__transfers-table">
               <thead>
                 <tr>
@@ -319,7 +361,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="transfer in transfers" :key="transfer.id">
+                <tr v-for="transfer in (extractView ? extractView.rows : transfers)" :key="transfer.id">
                   <td data-label='{{ i18n "transferDate" }}'>
                     {{ "{{ formatDateBR(transfer.date) }}" }}
                   </td>
@@ -333,7 +375,13 @@
 
             <div class="candidato__table-foot">
               <button
-                v-if="transfersHasMore"
+                v-if="extractView && extractView.hasMore"
+                @click="showMoreExtract"
+                class="button button--ghost">
+                {{ i18n "candidateLoadMoreTransfers" }}
+              </button>
+              <button
+                v-else-if="!extractView && transfersHasMore"
                 @click="loadMoreTransfers"
                 :aria-busy="transfersLoading"
                 class="button button--ghost">

@@ -534,3 +534,19 @@
   translation: "1º turno"
 - id: candidateCapChartLine
   translation: "teto legal de gastos"
+- id: donorFilterGroup
+  translation: "Filtrar repasses por porte do doador"
+- id: donorFilterAll
+  translation: "Todos"
+- id: donorFilterSuper
+  translation: "Super doadores · acima de R$ 100 mil"
+- id: donorFilterLarge
+  translation: "Grandes · R$ 10 mil a R$ 100 mil"
+- id: donorFilterMedium
+  translation: "Médios · R$ 2 mil a R$ 10 mil"
+- id: donorFilterSmall
+  translation: "Pequenos · até R$ 2 mil"
+- id: extractSummarySum
+  translation: "somando"
+- id: extractRankNote
+  translation: "do maior doador para o menor"

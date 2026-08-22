@@ -730,3 +730,29 @@
   color: var(--ink-2);
   text-align: right;
 }
+
+/// Filtros do extrato por porte de doador: os mesmos pills das eleições,
+/// aqui como <button> — só o que o UA acrescenta a botões precisa de reset;
+/// tamanho e peso continuam vindo de .candidato__pill.
+.candidato__extract-filters {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.5rem;
+
+  margin: 0 0 1rem;
+
+  .candidato__pill {
+    font-family: inherit;
+
+    cursor: pointer;
+  }
+}
+
+.candidato__extract-summary {
+  margin: 0 0 0.75rem;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
