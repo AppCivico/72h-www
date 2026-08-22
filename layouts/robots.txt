@@ -1,3 +1,12 @@
 User-agent: *
 
 Sitemap: {{ "sitemap.xml" | absURL }}
+{{- /* Hugo's sitemap can only list pages Hugo generates, and the ~853k
+       /candidato/{slug}-{id}/ pages are all one static shell — so they get
+       their own sitemap index, built from the API before each deploy
+       (scripts/build-candidate-sitemap.mjs). Advertised only when that
+       build actually produced it: pointing Google at a 404 is worse than
+       saying nothing. */}}
+{{- if os.FileExists "static/sitemap-candidatos.xml" }}
+Sitemap: {{ "sitemap-candidatos.xml" | absURL }}
+{{- end }}
