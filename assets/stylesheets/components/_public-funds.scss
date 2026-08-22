@@ -1,29 +1,61 @@
 ////
-/// Bloco "Onde está o dinheiro?" da home: um parágrafo-manchete com os
-/// fundos públicos que já chegaram às candidaturas e a contagem regressiva
-/// do prazo legal dos repasses mínimos de cota.
+/// Bloco "Onde está o dinheiro?" da home: manchete com os fundos públicos
+/// que já chegaram às candidaturas e, ao lado no desktop, o cartão com a
+/// contagem regressiva do prazo legal dos repasses mínimos de cota.
 ///
 /// @group components
 ////
 
+.public-funds__grid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1.5rem;
+
+  align-items: center;
+
+  margin-top: 1.5rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+
+    gap: 3rem;
+  }
+}
+
 .public-funds__lead {
-  max-width: 38rem;
+  margin: 0;
 
   font-size: var(--t-m);
-  line-height: 1.5;
+  line-height: 1.55;
+
+  @media (min-width: 64rem) {
+    font-size: var(--t-l);
+    line-height: 1.45;
+  }
 }
 
 .public-funds__deadline {
-  max-width: 38rem;
-  padding: 0.75rem 1rem;
-  margin-top: 1rem;
+  padding: 1.25rem 1.5rem;
+  margin: 0;
 
   font-size: var(--t-s);
   color: var(--ink-2);
 
+  background: var(--paper-warm);
   border-left: 3px solid var(--accent-warm);
+  border-radius: 0 12px 12px 0;
+
+  strong {
+    color: var(--ink);
+  }
 }
 
 .public-funds__deadline--past {
   border-left-color: var(--ink-3);
+}
+
+.public-funds .chart-source {
+  margin-top: 1.5rem;
 }

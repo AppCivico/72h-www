@@ -295,7 +295,7 @@
 - id: tipAccumulatedValue
   translation: "Soma de todos os repasses de fundos públicos declarados ao TSE e capturados pelo monitor em até 72 horas após a declaração."
 - id: tipCandidatesWhoReceived
-  translation: "Cada candidatura é contada uma única vez, mesmo quando recebe de mais de um fundo — por isso a soma dos recortes pode superar este número."
+  translation: "Cada candidatura é contada uma única vez, mesmo quando recebe de mais de um fundo; por isso a soma dos recortes pode superar este número."
 - id: tipPartyFund
   translation: "Fundo Partidário: verba pública permanente, repartida entre os partidos todos os anos. Pode financiar campanhas e a manutenção das legendas."
 - id: tipFEFC
@@ -405,7 +405,7 @@
 - id: candidateHistoryEyebrow
   translation: "Trajetória"
 - id: candidateComparisonNote
-  translation: "A mediana divide ao meio quem já declarou recursos: metade recebeu menos que ela, metade recebeu mais — é menos sensível a valores extremos do que a média. Candidaturas que ainda não declararam nada ficam fora do cálculo, por isso o grupo comparado é menor que o total."
+  translation: "A mediana divide ao meio quem já declarou recursos: metade recebeu menos que ela, metade recebeu mais. É menos sensível a valores extremos do que a média. Candidaturas que ainda não declararam nada ficam fora do cálculo, por isso o grupo comparado é menor que o total."
 - id: candidateHistoryChartTitle
   translation: "Quanto recebeu em cada eleição"
 - id: candidateHistoryChartSubtitle
@@ -433,7 +433,7 @@
 - id: indifferent
   translation: "Indiferente"
 - id: pendingFilters
-  translation: "Filtros alterados — clique em Aplicar para atualizar os resultados."
+  translation: "Filtros alterados: clique em Aplicar para atualizar os resultados."
 - id: comparisonAllZero
   translation: "Sem mediana ainda: nenhuma candidatura destes grupos declarou recebimento de recursos até o momento."
 - id: methodologyLink
@@ -457,7 +457,7 @@
 - id: declaredVerb
   translation: "declararam"
 - id: noMedianYet
-  translation: "—"
+  translation: "sem dados"
 - id: listOrderedByValue
   translation: "Ordenadas do maior para o menor valor recebido."
 - id: candidateCapEyebrow
@@ -471,7 +471,7 @@
 - id: candidateCapCeiling
   translation: "Teto do 1º turno para este cargo:"
 - id: candidateCapOverNote
-  translation: "A arrecadação superou o teto. Arrecadar mais que o teto não é vedado — gastar acima dele é (multa de 100% do excedente, Lei 9.504/97, art. 18-B)."
+  translation: "A arrecadação superou o teto. Arrecadar mais que o teto não é vedado; gastar acima dele é (multa de 100% do excedente, Lei 9.504/97, art. 18-B)."
 - id: candidateCapSource
   translation: "Limites: Portaria TSE nº 449/2026 (valores mantidos de 2022)."
 - id: candidateSelfFundingLead
@@ -556,10 +556,12 @@
   translation: "Onde está o dinheiro?"
 - id: publicFundsLead1
   translation: "Os partidos têm cerca de"
+- id: publicFundsPot
+  translation: "R$ 4,9 bilhões"
 - id: publicFundsLead2
   translation: "do Fundo Eleitoral (FEFC) para usar nesta eleição. Até agora, as candidaturas declararam"
 - id: publicFundsLead3
-  translation: "recebidos dos fundos públicos —"
+  translation: "recebidos dos fundos públicos, o que representa"
 - id: publicFundsLead4
   translation: "desse total. O dinheiro ainda está, quase todo, nos diretórios dos partidos."
 - id: publicFundsCountdownSingular
@@ -575,4 +577,4 @@
 - id: publicFundsDeadlinePast
   translation: "O prazo legal para os partidos repassarem os valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas terminou em 8 de setembro."
 - id: publicFundsSource
-  translation: "Cota do Fundo Eleitoral 2026: aproximadamente R$ 4,9 bilhões (TSE, jun/2026). No valor recebido, somamos FEFC e Fundo Partidário — nas primeiras entregas, o rótulo de origem declarado ao TSE é impreciso."
+  translation: "Cota do Fundo Eleitoral 2026: aproximadamente R$ 4,9 bilhões (TSE, jun/2026). No valor recebido, somamos FEFC e Fundo Partidário, porque nas primeiras entregas o rótulo de origem declarado ao TSE é impreciso."
