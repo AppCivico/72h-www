@@ -1,0 +1,87 @@
+name: Painel dos partidos
+
+# Atualiza data/partyPanel.json e commita na master. O push é o que dispara o
+# deploy automático do Netlify: este workflow não precisa de build hook, de
+# token do Netlify nem de acesso ao painel de lá. Tudo vive no repositório.
+#
+# Roda 1x/dia às 03:00 UTC (meia-noite em Brasília), depois da última coleta
+# do scraper. O cron do GitHub é UTC e pode atrasar alguns minutos em horários
+# de pico; para o painel isso é irrelevante.
+#
+# Para atualizar AGORA: aba Actions -> "Painel dos partidos" -> "Run workflow".
+
+on:
+  schedule:
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+
+# Só o necessário para commitar de volta na master.
+permissions:
+  contents: write
+
+# Duas execuções simultâneas commitariam em cima uma da outra.
+concurrency:
+  group: painel-partidos
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # O gerador usa só módulos nativos do Node (fs, path, url, fetch), então
+      # não há npm install aqui: o job leva segundos.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Gerar data/partyPanel.json
+        run: node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-party-panel.mjs
+
+      # O gerador é fail-soft: se a API falhar, ele não escreve nada e mantém o
+      # arquivo que já está no repo. Confirmamos aqui que sobrou um JSON válido
+      # antes de commitar qualquer coisa.
+      - name: Validar o JSON
+        run: |
+          node -e "
+            const panel = require('./data/partyPanel.json');
+            if (!Array.isArray(panel.parties) || panel.parties.length === 0) {
+              throw new Error('partyPanel.json sem partidos');
+            }
+            console.log(panel.parties.length + ' partidos, gerado em ' + panel.generated_at);
+          "
+
+      # Sem mudança de dados, sem commit: evita deploy (e build minutes) à toa.
+      # O generated_at muda a cada execução, então a comparação ignora essa
+      # linha e olha só os números.
+      - name: Commitar se os números mudaram
+        run: |
+          if git diff --quiet -- data/partyPanel.json; then
+            echo "Arquivo idêntico; nada a fazer."
+            exit 0
+          fi
+          ATUAL=$(git show HEAD:data/partyPanel.json 2>/dev/null | node -e "
+            let raw=''; process.stdin.on('data', c => raw += c).on('end', () => {
+              try { const p = JSON.parse(raw); delete p.generated_at; console.log(JSON.stringify(p)); }
+              catch { console.log('sem-versao-anterior'); }
+            });
+          ")
+          NOVO=$(node -e "
+            const p = require('./data/partyPanel.json'); delete p.generated_at;
+            console.log(JSON.stringify(p));
+          ")
+          if [ "$ATUAL" = "$NOVO" ]; then
+            echo "Só o generated_at mudou; descartando para não gerar deploy."
+            git checkout -- data/partyPanel.json
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/partyPanel.json
+          git commit \
+            -m "chore(painel): atualiza dados dos partidos" \
+            -m "Gerado por .github/workflows/painel-partidos.yml a partir da API do 72horas (/v1/index por partido, fundos publicos e recorte de raca)."
+          git push
