@@ -56,6 +56,10 @@
                 <strong>{{ "{{ belowCounts.female }}" }} {{ i18n "ofTotal" }} {{ "{{ belowCounts.total }}" }}</strong>
                 {{ i18n "painelBelowFemale" }}
               </p>
+              <p class="painel__urgency-count painel__urgency-count--either" v-if="belowCounts.either">
+                <strong>{{ "{{ belowCounts.either }}" }} {{ i18n "ofTotal" }} {{ "{{ belowCounts.total }}" }}</strong>
+                {{ i18n "painelBelowEither" }}
+              </p>
               <p class="painel__urgency-note">{{ i18n "painelKeyRule" }}</p>
             </div>
           </div>
@@ -84,10 +88,7 @@
               type="button"
               class="candidato__pill"
               :aria-pressed="sortAsc"
-              @click="sortAsc = !sortAsc">
-              <span v-if="sortAsc">{{ i18n "painelSortWorstFirst" }}</span>
-              <span v-else>{{ i18n "painelSortBestFirst" }}</span>
-            </button>
+              @click="sortAsc = !sortAsc">{{ "{{ sortAsc ? sortAxis.asc : sortAxis.desc }}" }}</button>
             <button
               type="button"
               class="candidato__pill painel__pill--filter"
@@ -96,22 +97,27 @@
               @click="onlyBelow = !onlyBelow">{{ i18n "painelOnlyBelow" }}</button>
           </div>
 
+          {{/* Explica o eixo ativo em uma linha: sem isso o leitor não sabe
+              o que "ordenar por candidaturas negras" mede, nem que a cota
+              não tem piso legal. */}}
+          <p class="painel__sort-help">{{ "{{ sortAxis.help }}" }}</p>
+
           <div class="painel__tablewrap">
             <table class="data-table painel__table">
               <thead>
                 <tr>
                   <th>{{ i18n "party" }}</th>
                   <th class="table-cell--numeric">{{ i18n "painelColPublic" }}</th>
-                  <th>{{ i18n "painelColBlack" }}</th>
-                  <th>{{ i18n "painelColWomen" }}</th>
-                  <th class="table-cell--numeric">{{ i18n "painelColBlackWomen" }}</th>
+                  <th>{{ i18n "painelColBlack" }}<small>{{ i18n "painelColFloorNote" }}</small></th>
+                  <th>{{ i18n "painelColWomen" }}<small>{{ i18n "painelColFloorNote" }}</small></th>
+                  <th class="table-cell--numeric">{{ i18n "painelColBlackWomen" }}<small>{{ i18n "painelColNoFloorNote" }}</small></th>
                 </tr>
               </thead>
               <tbody>
                 <tr
                   v-for="row in rankedRows"
                   :key="row.id"
-                  :class="{ 'painel__row--below': row.belowFloor }">
+                  :class="{ 'painel__row--below': row.belowBlack || row.belowFemale }">
                   <td data-label='{{ i18n "party" }}'>
                     {{/* Selo explícito, além da barra âmbar: quem está fora do
                         piso tem de ser identificável numa varredura rápida. O
@@ -119,7 +125,9 @@
                         estreita em vez de vazar. */}}
                     <span class="painel__party">
                       <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
-                      <span class="painel__badge" v-if="row.belowFloor">{{ i18n "painelBadgeBelow" }}</span>
+                      <span class="painel__badge" v-if="row.belowBlack && row.belowFemale">{{ i18n "painelBadgeBoth" }}</span>
+                      <span class="painel__badge" v-else-if="row.belowBlack">{{ i18n "painelBadgeBlack" }}</span>
+                      <span class="painel__badge" v-else-if="row.belowFemale">{{ i18n "painelBadgeFemale" }}</span>
                     </span>
                   </td>
                   <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
@@ -127,7 +135,7 @@
                     <small v-if="row.quotaUsed !== null" class="painel__quota-used">{{ "{{ formatNumeral(row.quotaUsed, 1) }}" }}% {{ i18n "painelOfQuota" }}</small>
                   </td>
                   <td data-label='{{ i18n "painelColBlack" }}'>
-                    <div class="painel__bullet" :class="{ 'painel__bullet--below': row.blackShare < 30 }">
+                    <div class="painel__bullet" :class="{ 'painel__bullet--below': row.belowBlack }">
                       <span class="painel__bullet-track">
                         <span class="painel__bullet-fill" :style="{ width: Math.min(row.blackShare, 100) + '%' }"></span>
                         <span class="painel__bullet-target" aria-hidden="true"></span>
@@ -136,7 +144,7 @@
                     </div>
                   </td>
                   <td data-label='{{ i18n "painelColWomen" }}'>
-                    <div class="painel__bullet" :class="{ 'painel__bullet--below': row.femaleShare < 30 }">
+                    <div class="painel__bullet" :class="{ 'painel__bullet--below': row.belowFemale }">
                       <span class="painel__bullet-track">
                         <span class="painel__bullet-fill" :style="{ width: Math.min(row.femaleShare, 100) + '%' }"></span>
                         <span class="painel__bullet-target" aria-hidden="true"></span>
@@ -419,6 +427,15 @@
     window.appChartCredits = '{{ i18n "chartExportCredits" }}';
     window.appRepresentation = {{ site.Data.representacao2026 | jsonify | safeJS }};
     window.appPanelYear = {{ site.Params.run }};
+    window.appPanelSort = {
+      helpBlack: '{{ i18n "painelHelpBlack" }}',
+      helpFemale: '{{ i18n "painelHelpFemale" }}',
+      helpQuota: '{{ i18n "painelHelpQuota" }}',
+      ascShare: '{{ i18n "painelSortWorstFirst" }}',
+      descShare: '{{ i18n "painelSortBestFirst" }}',
+      ascQuota: '{{ i18n "painelSortLeastMoved" }}',
+      descQuota: '{{ i18n "painelSortMostMoved" }}',
+    }
     window.appPainelCharts = {
       historyTitle: '{{ i18n "painelHistoryChartTitle" }}',
       historySubtitle: '{{ i18n "painelHistoryChartSubtitle" }}',

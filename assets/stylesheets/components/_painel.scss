@@ -774,3 +774,33 @@
 
   align-items: baseline;
 }
+
+/* Explicação do eixo ativo e réguas nos cabeçalhos
+============================================================================ */
+
+.painel__sort-help {
+  max-width: 44rem;
+  margin: 0 0 1rem;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+/// A régua de cada coluna vive no próprio cabeçalho: o leitor não precisa
+/// procurar a nota de metodologia para saber que o piso é 30%.
+.painel__table thead th small {
+  display: block;
+
+  margin-top: 0.15rem;
+
+  font-weight: 400;
+  color: var(--ink-3);
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.painel__urgency-count--either {
+  padding-top: 0.4rem;
+
+  border-top: 1px solid var(--hairline-2);
+}

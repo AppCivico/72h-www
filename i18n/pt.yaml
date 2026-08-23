@@ -828,3 +828,25 @@
   translation: "Só quem está fora do piso"
 - id: painelBadgeBelow
   translation: "fora do piso"
+- id: painelBadgeBlack
+  translation: "fora do piso: raça"
+- id: painelBadgeFemale
+  translation: "fora do piso: mulheres"
+- id: painelBadgeBoth
+  translation: "fora dos dois pisos"
+- id: painelBelowEither
+  translation: "estão abaixo de pelo menos uma das duas réguas"
+- id: painelColFloorNote
+  translation: "piso legal: 30%"
+- id: painelColNoFloorNote
+  translation: "sem piso próprio na lei"
+- id: painelHelpBlack
+  translation: "Ordenando pela fatia do dinheiro público que cada partido repassou a candidaturas de pessoas pretas e pardas. O piso legal é 30% (EC 133/2024)."
+- id: painelHelpFemale
+  translation: "Ordenando pela fatia do dinheiro público que cada partido repassou a candidaturas de mulheres. O piso legal é 30% (Consulta TSE de 2018 e EC 117/2022)."
+- id: painelHelpQuota
+  translation: "Ordenando pela fatia da cota do Fundo Eleitoral que o partido já tirou do diretório e repassou a candidaturas. Aqui não há piso legal: mede ritmo, não equidade. Repassar pouco não é ilegal; é dinheiro público parado."
+- id: painelSortLeastMoved
+  translation: "Quem repassou menos primeiro"
+- id: painelSortMostMoved
+  translation: "Quem repassou mais primeiro"

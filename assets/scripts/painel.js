@@ -84,12 +84,14 @@ window.$vuePainel = Vue.createApp({
           blackShare: total > 0 ? (party.black.total / total) * 100 : null,
           blackFemaleShare: total > 0 ? (party.black.female / total) * 100 : null,
           quotaUsed: total > 0 && party.fefc_quota ? (total / party.fefc_quota) * 100 : null,
-          // Marca a candidatura para o selo e o realce da linha. Um partido
-          // sem dinheiro (share null) NÃO é "fora do piso": é sem dado, e
-          // esses nem entram no placar.
-          belowFloor: total > 0
-            && ((party.black.total / total) * 100 < FLOOR_SHARE
-              || (party.public.female / total) * 100 < FLOOR_SHARE),
+          // Marca a candidatura para o selo e o realce da linha, dizendo QUAL
+          // régua ficou abaixo: a tabela ordena por UMA delas, então um selo
+          // genérico fazia linhas marcadas aparecerem no meio de linhas sem
+          // marca (um partido acima nos 30% de raça pode estar abaixo nos de
+          // gênero) e a lista parecia fora de ordem. Um partido sem dinheiro
+          // (share null) não é "fora do piso": é sem dado, e nem entra aqui.
+          belowBlack: total > 0 && (party.black.total / total) * 100 < FLOOR_SHARE,
+          belowFemale: total > 0 && (party.public.female / total) * 100 < FLOOR_SHARE,
         };
       });
     },
@@ -101,13 +103,14 @@ window.$vuePainel = Vue.createApp({
         .filter((entry) => entry.public.total >= RANKING_FLOOR)
         // "Fora do piso" = abaixo de 30% em QUALQUER uma das duas réguas: é o
         // recorte de fiscalização, não a média das duas.
-        .filter((entry) => !onlyBelow
-          || entry.blackShare < FLOOR_SHARE
-          || entry.femaleShare < FLOOR_SHARE)
+        .filter((entry) => !onlyBelow || entry.belowBlack || entry.belowFemale)
         .sort((a, b) => {
-          const valueA = a[key] === null ? -1 : a[key];
-          const valueB = b[key] === null ? -1 : b[key];
-          if (valueA !== valueB) return sortAsc ? valueA - valueB : valueB - valueA;
+          // Sem dado vai sempre para o fim, nas duas direções: um partido sem
+          // cota casada não é "o pior" da régua, é ausência de régua.
+          if (a[key] === null && b[key] === null) return b.public.total - a.public.total;
+          if (a[key] === null) return 1;
+          if (b[key] === null) return -1;
+          if (a[key] !== b[key]) return sortAsc ? a[key] - b[key] : b[key] - a[key];
           return b.public.total - a.public.total;
         });
     },
@@ -133,13 +136,27 @@ window.$vuePainel = Vue.createApp({
       if (!eligible.length) return null;
       return {
         total: eligible.length,
-        black: eligible.filter((entry) => entry.blackShare < FLOOR_SHARE).length,
-        female: eligible.filter((entry) => entry.femaleShare < FLOOR_SHARE).length,
+        black: eligible.filter((entry) => entry.belowBlack).length,
+        female: eligible.filter((entry) => entry.belowFemale).length,
+        either: eligible.filter((entry) => entry.belowBlack || entry.belowFemale).length,
       };
     },
     boardTotals({ entries } = this) {
       return {
         received: entries.reduce((sum, entry) => sum + entry.public.total, 0),
+      };
+    },
+    // O eixo da cota não tem piso legal: ordenar por ele não é "pior/melhor",
+    // é quem repassou menos. Rótulos e explicação seguem o eixo ativo.
+    sortAxis({ sortBy } = this) {
+      const labels = window.appPanelSort || {};
+      if (sortBy === 'quota') {
+        return { help: labels.helpQuota, asc: labels.ascQuota, desc: labels.descQuota };
+      }
+      return {
+        help: sortBy === 'black' ? labels.helpBlack : labels.helpFemale,
+        asc: labels.ascShare,
+        desc: labels.descShare,
       };
     },
     generatedAtBR({ panel } = this) {
