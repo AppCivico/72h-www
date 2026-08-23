@@ -45,6 +45,12 @@
             <p class="candidato__status" v-if="current.election_status">
               {{ "{{ current.election_status }}" }}
             </p>
+            {{/* Autodeclaração ao TSE da candidatura selecionada — some por
+                inteiro em APIs que ainda não expõem raça/gênero. */}}
+            <p class="candidato__meta candidato__declared" v-if="currentDeclaration">
+              {{ i18n "candidateDeclaredLead" }}
+              <strong v-if="currentDeclaration.race">{{ "{{ currentDeclaration.race }}" }}</strong><template v-if="currentDeclaration.race && currentDeclaration.gender"> · </template><strong v-if="currentDeclaration.gender">{{ "{{ currentDeclaration.gender }}" }}</strong>
+            </p>
 
             <div class="candidato__actions">
               <a v-if="core && core.divulgacand_url" :href="core.divulgacand_url" target="_blank" rel="noopener" class="button button--primary">

@@ -797,7 +797,7 @@
 - id: painelFunnelTitle
   translation: "Em 2022, uma candidatura valia mais para uns do que para outros"
 - id: painelFunnelIntro
-  translation: "De cada grupo que disputou uma vaga de deputado federal em 2022, quantos chegaram a uma das 513 cadeiras? A régua abaixo mostra a taxa de conversão de cada grupo. É essa distância que dinheiro de campanha distribuído cedo, e de verdade, pode encurtar."
+  translation: "De cada grupo que disputou uma vaga de deputado federal em 2022, quantos chegaram a uma das 513 cadeiras? A régua abaixo mostra a taxa de conversão de cada grupo."
 - id: painelFunnelOneIn
   translation: "em cada"
 - id: painelFunnelElected
@@ -812,3 +812,5 @@
   translation: "4,5% dos registros parciais (até 12/08). O trânsito entre branco e pardo domina: 72,5% das mudanças. Mudar pode ser legítimo; desde 2024 a declaração precisa coincidir com o cadastro eleitoral, e quem não responde à notificação fica impedido de receber os recursos das cotas. Nas páginas de candidato deste site, a trajetória mostra como cada pessoa se declarou em cada eleição. Fonte:"
 - id: painelRaceChangeSource
   translation: "levantamento do g1 sobre dados do TSE"
+- id: candidateDeclaredLead
+  translation: "Autodeclaração ao TSE nesta candidatura:"

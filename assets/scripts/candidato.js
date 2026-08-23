@@ -378,6 +378,20 @@ window.$vueCandidato = Vue.createApp({
     hasRaceData({ raceDeclarations } = this) {
       return raceDeclarations.length > 0;
     },
+    // What THIS candidacy declared to the TSE, for the hero line. Gender ids
+    // follow the scraper's mapping (1 = masculino, 2 = feminino); race skips
+    // 'SEM INFORMAÇÃO'. null hides the line entirely -- including on APIs
+    // that don't expose the fields yet.
+    currentDeclaration({ current } = this) {
+      if (!current) return null;
+      const raceName = current.race?.name;
+      const race = raceName && raceName.toUpperCase() !== 'SEM INFORMAÇÃO'
+        ? formatRace(raceName)
+        : null;
+      const gender = { 1: 'homem', 2: 'mulher' }[current.gender_id] || null;
+      if (!race && !gender) return null;
+      return { race, gender };
+    },
     // Same value the address bar itself gets synced to (urlForCandidateId,
     // via syncAddressBar) — reused here so sharing always points at
     // whichever candidacy is currently selected, not just the person's

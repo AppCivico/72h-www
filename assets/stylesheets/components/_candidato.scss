@@ -762,3 +762,9 @@
 .candidato__race-note {
   max-width: 44rem;
 }
+
+/// Autodeclaração ao TSE no cabeçalho: linha discreta abaixo do status.
+.candidato__declared {
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
