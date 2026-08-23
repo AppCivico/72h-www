@@ -1,0 +1,400 @@
+////
+/// Painel dos partidos (/partidos/painel/): a sala de 100 cadeiras, a linha
+/// do tempo da legislação, os cartões da régua de 2026 e a tabela-ranking
+/// com barras contra a marca dos 30%.
+///
+/// @group components
+////
+
+.painel__main {
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.painel__hero {
+  max-width: 44rem;
+  margin-bottom: 1rem;
+}
+
+.painel__title {
+  margin: 0.5rem 0;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-2xl);
+  line-height: 1.1;
+}
+
+.painel__dek {
+  font-size: var(--t-m);
+  color: var(--ink-2);
+}
+
+.painel__section {
+  padding-top: 2.5rem;
+  margin-top: 2.5rem;
+
+  border-top: 1px solid var(--hairline);
+
+  h2 {
+    max-width: 40rem;
+  }
+}
+
+.painel__section-intro {
+  max-width: 40rem;
+
+  color: var(--ink-2);
+}
+
+.painel__prose {
+  max-width: 40rem;
+
+  p + p {
+    margin-top: 0.75rem;
+  }
+}
+
+/* A sala de 100 cadeiras
+============================================================================ */
+
+.painel__waffle-toggle {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.5rem;
+
+  margin: 1rem 0 1.5rem;
+
+  .candidato__pill {
+    font-family: inherit;
+
+    cursor: pointer;
+  }
+}
+
+.painel__waffles {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+
+  gap: 2rem;
+
+  max-width: 44rem;
+}
+
+.painel__waffle {
+  margin: 0;
+
+  figcaption {
+    margin-top: 0.75rem;
+
+    font-size: var(--t-xs);
+    color: var(--ink-2);
+
+    strong {
+      display: block;
+
+      color: var(--ink);
+    }
+  }
+}
+
+.painel__waffle-grid {
+  display: grid;
+
+  grid-template-columns: repeat(10, 1fr);
+
+  gap: 4px;
+
+  aspect-ratio: 1;
+}
+
+/// Cada cadeira é um quadrado; o container decide qual conjunto acende.
+/// A transição de cor é o que dá o efeito lúdico de "a sala mudando" ao
+/// alternar Câmara/População; quem prefere menos movimento vê a troca seca.
+.painel__seat {
+  background: var(--hairline-2);
+  border-radius: 3px;
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: background-color 0.45s ease;
+  }
+}
+
+.painel__waffle-grid--women .painel__seat--now {
+  background: var(--dv-1);
+}
+
+.painel__waffle-grid--women.is-population .painel__seat {
+  background: var(--hairline-2);
+}
+
+.painel__waffle-grid--women.is-population .painel__seat--pop {
+  background: var(--dv-1);
+}
+
+.painel__waffle-grid--black .painel__seat--now {
+  background: var(--dv-2);
+}
+
+.painel__waffle-grid--black.is-population .painel__seat {
+  background: var(--hairline-2);
+}
+
+.painel__waffle-grid--black.is-population .painel__seat--pop {
+  background: var(--dv-2);
+}
+
+/* Linha do tempo + série histórica
+============================================================================ */
+
+.painel__history {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 2rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+
+    align-items: start;
+  }
+}
+
+.painel__timeline {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.9rem;
+
+  padding: 0;
+  margin: 0;
+
+  list-style: none;
+
+  li {
+    display: grid;
+
+    grid-template-columns: 3.5rem 1fr;
+
+    gap: 0.75rem;
+
+    font-size: var(--t-xs);
+    color: var(--ink-2);
+  }
+}
+
+.painel__timeline-year {
+  font-family: var(--font-serif);
+  font-size: var(--t-m);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--brand);
+}
+
+/* Régua de 2026
+============================================================================ */
+
+.painel__rulers {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+
+  gap: 1rem;
+
+  margin-top: 1.5rem;
+}
+
+.painel__ruler-card {
+  padding: 1.25rem 1.5rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+
+  h3 {
+    margin: 0.25rem 0;
+
+    font-size: var(--t-s);
+  }
+
+  p {
+    margin: 0;
+
+    font-size: var(--t-xs);
+    color: var(--ink-2);
+  }
+}
+
+.painel__ruler-number {
+  font-family: var(--font-serif);
+  font-size: var(--t-2xl);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--brand);
+}
+
+.painel__ruler-card--deadline {
+  border-left: 3px solid var(--accent-warm);
+
+  .painel__ruler-number {
+    color: var(--accent-warm);
+  }
+}
+
+/* Tabela-ranking
+============================================================================ */
+
+.painel__sort {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.5rem;
+
+  align-items: center;
+
+  margin: 1.25rem 0 1rem;
+
+  .candidato__pill {
+    font-family: inherit;
+
+    cursor: pointer;
+  }
+}
+
+.painel__sort-label {
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+
+.painel__tablewrap {
+  overflow-x: auto;
+}
+
+.painel__table {
+  min-width: 46rem;
+
+  small {
+    display: block;
+
+    color: var(--ink-3);
+  }
+}
+
+.painel__quota-used {
+  font-variant-numeric: tabular-nums;
+}
+
+.painel__bullet {
+  display: grid;
+
+  grid-template-columns: 1fr 3.5rem;
+
+  gap: 0.5rem;
+
+  align-items: center;
+
+  min-width: 10rem;
+}
+
+.painel__bullet-track {
+  position: relative;
+
+  display: block;
+
+  height: 0.8rem;
+  overflow: hidden;
+
+  background: var(--paper-warm);
+  border-radius: 4px;
+}
+
+.painel__bullet-fill {
+  display: block;
+
+  height: 100%;
+
+  background: var(--dv-2);
+  border-radius: 4px;
+}
+
+/// A marca dos 30%: a mesma régua em todas as linhas, para o olho comparar
+/// de longe quem está aquém do piso sem ler número nenhum.
+.painel__bullet-target {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 30%;
+
+  width: 2px;
+
+  background: var(--ink);
+  opacity: 0.55;
+}
+
+.painel__bullet--below .painel__bullet-fill {
+  background: var(--accent-warm);
+}
+
+.painel__bullet-value {
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.painel__table-note {
+  margin-top: 0.75rem;
+
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+
+.painel__dormant {
+  margin-top: 2rem;
+
+  h3 {
+    margin-bottom: 0.25rem;
+  }
+}
+
+.painel__dormant-list {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.5rem;
+
+  padding: 0;
+  margin: 1rem 0 0;
+
+  list-style: none;
+
+  li {
+    font-size: var(--t-xs);
+    color: var(--ink-2);
+
+    strong {
+      color: var(--ink);
+    }
+  }
+}
+
+.painel__panel {
+  padding: 1.25rem;
+  margin-top: 1rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+}
+
+.painel__method-links {
+  margin-top: 1rem;
+
+  font-size: var(--t-xs);
+}

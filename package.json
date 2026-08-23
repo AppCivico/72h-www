@@ -5,9 +5,10 @@
   "main": "index.html",
   "scripts": {
     "audit-deps": "rimraf -f package-lock.json && synp --source-file yarn.lock && npm audit & rimraf -f package-lock.json",
-    "prebuild": "npm-run-all clean sitemap:candidates",
+    "prebuild": "npm-run-all clean sitemap:candidates panel:parties",
     "build": "cross-env NODE_ENV=production hugo --ignoreCache --cleanDestinationDir --logLevel info",
     "sitemap:candidates": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-candidate-sitemap.mjs",
+    "panel:parties": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/build-party-panel.mjs",
     "clean": "npm-run-all --parallel clean:*",
     "clean:dist": "rimraf ./public/**/*.*",
     "clean:testResults": "rimraf ./testResults/**/*.xml",

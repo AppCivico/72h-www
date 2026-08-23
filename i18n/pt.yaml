@@ -578,3 +578,191 @@
   translation: "O prazo legal para os partidos repassarem os valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas terminou em 8 de setembro."
 - id: publicFundsSource
   translation: "Cota do Fundo Eleitoral 2026: aproximadamente R$ 4,9 bilhões (TSE, jun/2026). No valor recebido, somamos FEFC e Fundo Partidário, porque nas primeiras entregas o rótulo de origem declarado ao TSE é impreciso."
+- id: painelEyebrow
+  translation: "Painel dos partidos"
+- id: painelTitle
+  translation: "Quem distribui o dinheiro com equidade?"
+- id: painelDek
+  translation: "O dinheiro público de campanha passa pelas mãos dos partidos antes de chegar às candidaturas. A lei manda reservar 30% para mulheres e 30% para pessoas pretas e pardas. Esta página acompanha, dia a dia, quem cumpre desde já e quem deixa para a última hora."
+- id: painelWaffleEyebrow
+  translation: "O tamanho do problema"
+- id: painelWaffleTitle
+  translation: "Se a Câmara dos Deputados fosse uma sala de 100 cadeiras"
+- id: painelWaffleIntro
+  translation: "Compare quem ocupa as cadeiras da Câmara eleita em 2022 com o retrato da população brasileira no Censo. É essa distância que as regras de distribuição do dinheiro tentam encurtar."
+- id: painelWaffleToggleLabel
+  translation: "Alternar entre Câmara eleita e população"
+- id: painelWaffleChamber
+  translation: "Câmara eleita em 2022"
+- id: painelWafflePopulation
+  translation: "População do Brasil"
+- id: painelWaffleWomenLabel
+  translation: "Mulheres"
+- id: painelWaffleWomenChamber
+  translation: "18 de 100 cadeiras na Câmara (17,7% das 513 cadeiras, 91 deputadas)."
+- id: painelWaffleWomenPopulation
+  translation: "52 de 100 cadeiras, se a sala espelhasse a população (51,5%, IBGE)."
+- id: painelWaffleWomenAria
+  translation: "Grade de 100 cadeiras mostrando a fatia de mulheres: 18 na Câmara eleita em 2022, 52 na população"
+- id: painelWaffleBlackLabel
+  translation: "Pessoas pretas e pardas"
+- id: painelWaffleBlackChamber
+  translation: "26 de 100 cadeiras na Câmara (26% dos eleitos em 2022 se autodeclararam pretos ou pardos)."
+- id: painelWaffleBlackPopulation
+  translation: "56 de 100 cadeiras, se a sala espelhasse a população (55,5%, IBGE)."
+- id: painelWaffleBlackAria
+  translation: "Grade de 100 cadeiras mostrando a fatia de pessoas pretas e pardas: 26 na Câmara eleita em 2022, 56 na população"
+- id: painelWaffleSource
+  translation: "Fontes: Câmara dos Deputados (bancada eleita em 2022) e IBGE, Censo 2022. Raça por autodeclaração, nos dois casos."
+- id: painelTimelineEyebrow
+  translation: "Como chegamos até aqui"
+- id: painelTimelineTitle
+  translation: "Noventa anos para ir de 1 a 91 deputadas"
+- id: painelTimelineIntro
+  translation: "A sub-representação não é acaso: é história. Cada regra da linha do tempo abaixo nasceu porque a anterior não bastou."
+- id: painelTl1932
+  translation: "O Código Eleitoral garante às mulheres o direito de votar e de ser votadas."
+- id: painelTl1933
+  translation: "Carlota Pereira de Queiroz é eleita a primeira deputada federal do Brasil. Sozinha."
+- id: painelTl1997
+  translation: "A lei passa a exigir um mínimo de candidaturas por sexo: 20% em 1995, 30% em 1997. Mas o verbo era 'reservar': bastava deixar a vaga em aberto."
+- id: painelTl2009
+  translation: "O verbo muda para 'preencher': os 30% de candidaturas viram obrigação de verdade."
+- id: painelTl2018
+  translation: "O TSE decide que no mínimo 30% do dinheiro público e do tempo de rádio e TV devem ir para candidaturas de mulheres."
+- id: painelTl2020
+  translation: "TSE e STF estendem a régua à raça: recursos proporcionais para candidaturas negras, valendo já naquela eleição."
+- id: painelTl2021
+  translation: "Emenda Constitucional 111: votos dados a mulheres e a pessoas negras eleitas para a Câmara contam em dobro na divisão dos fundos, até 2030."
+- id: painelTl2022
+  translation: "Emenda Constitucional 117 leva os 30% para mulheres à Constituição."
+- id: painelTl2024
+  translation: "Emenda Constitucional 133 fixa um piso de 30% dos fundos para candidaturas de pessoas pretas e pardas."
+- id: painelTl2026
+  translation: "O STF confirma a regra ao julgar as ADIs 7706 e 7707. É a régua desta eleição."
+- id: painelHistoryBenchmark
+  translation: "Para espelhar a população, seriam cerca de 264 deputadas (51,5% de 513). O recorde, em 2022, foi 91."
+- id: painelHistorySource
+  translation: "Fontes: Câmara dos Deputados, Senado Federal e TSE. O ano de 1994 foi omitido por falta de série oficial confiável; 1990 usa a contagem por legislatura e pode incluir suplentes."
+- id: painelHistoryChartTitle
+  translation: "Deputadas federais eleitas, de 1933 a 2022"
+- id: painelHistoryChartSubtitle
+  translation: "Número de mulheres eleitas para a Câmara em cada eleição"
+- id: painelHistoryChartSeries
+  translation: "Deputadas eleitas"
+- id: painelWhyEyebrow
+  translation: "Por que vigiar o dinheiro"
+- id: painelWhyTitle
+  translation: "Cota de candidatura sem dinheiro virou candidatura de papel"
+- id: painelWhyP1
+  translation: "Durante duas décadas, a regra brasileira exigia candidatas, mas não exigia que elas tivessem recursos para fazer campanha. O resultado foram as chamadas candidaturas laranja: nomes registrados só para fechar a conta dos 30%, sem campanha, sem dinheiro e quase sem votos."
+- id: painelWhyP2a
+  translation: "Dois casos marcaram a virada: em"
+- id: painelWhyCase1
+  translation: "Valença do Piauí, o TSE cassou uma chapa inteira de vereadores"
+- id: painelWhyP2b
+  translation: " por fraude à cota de gênero (2019); e em 2018, o esquema de "
+- id: painelWhyCase2
+  translation: "candidatas laranja do PSL em Minas Gerais"
+- id: painelWhyP2c
+  translation: " mostrou que até dinheiro público repassado a candidaturas fictícias podia voltar por caminhos suspeitos."
+- id: painelWhyP3
+  translation: "Por isso a lei passou a mirar o dinheiro: não basta registrar candidaturas, é preciso financiá-las. E como quem distribui é o partido, é o partido que esta página observa."
+- id: painelRulerEyebrow
+  translation: "A régua de 2026"
+- id: painelRulerTitle
+  translation: "Duas regras, um prazo"
+- id: painelRulerBlackTitle
+  translation: "para candidaturas de pessoas pretas e pardas"
+- id: painelRulerBlackBody
+  translation: "Piso fixo: no mínimo 30% dos fundos públicos de campanha de cada partido (EC 133/2024, confirmada pelo STF em junho de 2026), independentemente de quantas candidaturas negras o partido tenha."
+- id: painelRulerWomenTitle
+  translation: "para candidaturas de mulheres"
+- id: painelRulerWomenBody
+  translation: "No mínimo 30% dos fundos públicos, e proporcional quando as candidatas passam de 30% das candidaturas do partido (Consulta TSE de 2018; EC 117/2022). Aqui comparamos com o piso."
+- id: painelRulerDeadlineTitle
+  translation: "para o prazo legal dos repasses mínimos"
+- id: painelRulerDeadlineBody
+  translation: "Os partidos têm até 8 de setembro para repassar os valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas. Cumprir só na véspera é legal; esta página mostra quem escolhe esse caminho."
+- id: painelRulerDeadlinePast
+  translation: "O prazo legal terminou em 8 de setembro. Os números abaixo mostram como cada partido chegou (ou não) lá."
+- id: painelBoardEyebrow
+  translation: "Acompanhamento ao vivo"
+- id: painelBoardTitle
+  translation: "O placar dos partidos em 2026"
+- id: painelBoardIntro1
+  translation: "Até a última coleta, os partidos haviam repassado"
+- id: painelBoardIntro2
+  translation: "em dinheiro público a candidaturas, dos"
+- id: painelBoardIntro3
+  translation: " que o Fundo Eleitoral distribuiu a eles. As barras comparam cada partido com a marca dos 30%."
+- id: painelSortLabel
+  translation: "Ordenação do placar"
+- id: painelSortBy
+  translation: "Ordenar por:"
+- id: painelSortBlack
+  translation: "Candidaturas negras"
+- id: painelSortFemale
+  translation: "Mulheres"
+- id: painelSortQuota
+  translation: "% da cota já usada"
+- id: painelSortWorstFirst
+  translation: "Piores primeiro"
+- id: painelSortBestFirst
+  translation: "Melhores primeiro"
+- id: painelColPublic
+  translation: "Dinheiro público repassado"
+- id: painelColBlack
+  translation: "Fatia para candidaturas negras"
+- id: painelColWomen
+  translation: "Fatia para mulheres"
+- id: painelColBlackWomen
+  translation: "Para mulheres negras"
+- id: painelOfQuota
+  translation: "da cota FEFC"
+- id: painelFloorNote
+  translation: "Entram no placar os partidos com pelo menos R$ 250 mil de dinheiro público já repassado: abaixo disso, percentuais viram ruído. A fatia é calculada sobre o total de fundos públicos (FEFC + Fundo Partidário) que cada partido repassou a candidaturas até a última coleta."
+- id: painelDormantTitle
+  translation: "Quase nada distribuído até agora"
+- id: painelDormantIntro
+  translation: "Partidos que ainda repassaram menos de R$ 250 mil dos fundos públicos a candidaturas, ordenados pelo tamanho da cota que receberam. Quanto maior a cota parada, mais o silêncio diz."
+- id: painelDormantQuota
+  translation: "cota de"
+- id: painelDormantMoved
+  translation: "repassado:"
+- id: painelThermoEyebrow
+  translation: "O termômetro do prazo"
+- id: painelThermoTitle
+  translation: "Quem distribui desde já, e quem deixa para setembro"
+- id: painelThermoIntro
+  translation: "A linha de cada partido mostra que fatia do dinheiro público repassado até aquele dia tinha ido ao grupo escolhido. Quem pretende cumprir a lei só no fim aparece rastejando abaixo dos 30% até perto do prazo. Mostramos os cinco partidos com as maiores cotas do Fundo Eleitoral."
+- id: painelThermoToggleLabel
+  translation: "Escolher o recorte do termômetro"
+- id: painelThermoBenchmark
+  translation: "A linha tracejada horizontal marca o piso legal de 30%; as verticais, o início da campanha e o prazo de 8 de setembro."
+- id: painelThermoChartTitle
+  translation: "Fatia acumulada dos fundos públicos, dia a dia"
+- id: painelThermoChartSubtitleBlack
+  translation: "Parcela destinada a candidaturas de pessoas pretas e pardas"
+- id: painelThermoChartSubtitleFemale
+  translation: "Parcela destinada a candidaturas de mulheres"
+- id: painelThermoFloorLabel
+  translation: "piso legal de 30%"
+- id: painelThermoDeadlineLabel
+  translation: "prazo das cotas"
+- id: painelGeneratedAt
+  translation: "Dados coletados em"
+- id: painelNoData
+  translation: "Os dados do placar não puderam ser gerados nesta atualização do site. A parte histórica e as regras acima seguem valendo; o placar volta na próxima atualização."
+- id: painelMethodEyebrow
+  translation: "Como medimos"
+- id: painelMethodTitle
+  translation: "Metodologia, em três parágrafos"
+- id: painelMethodP1
+  translation: "Contamos apenas dinheiro público (Fundo Eleitoral e Fundo Partidário somados), porque é sobre ele que as regras de 30% incidem. Os dois fundos são somados de propósito: nas primeiras entregas ao TSE, o rótulo que separa um do outro é impreciso."
+- id: painelMethodP2
+  translation: "A fatia de cada grupo é calculada sobre o que o partido efetivamente repassou a candidaturas até a última coleta, não sobre a cota que recebeu. Recorte racial por autodeclaração ao TSE (pessoas pretas e pardas, como na EC 133). Partido sem repasse não aparece com 0%: aparece como sem dados, na lista de quem quase nada distribuiu."
+- id: painelMethodP3
+  translation: "Os números mudam todos os dias durante a campanha e podem ser retificados pelos próprios candidatos. Esta página não afirma descumprimento de lei: registra o ritmo e o destino dos repasses declarados. O prazo legal para os mínimos de cota é 8 de setembro; antes disso, estar abaixo de 30% não é infração."
+- id: painelLinkFefc
+  translation: "Cotas do FEFC por partido (TSE)"

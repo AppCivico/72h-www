@@ -15,7 +15,9 @@
 // Years absent from these maps simply don't render the home's public-funds block --
 // municipal cycles would need their own vetted constants, never a guess.
 export const FEFC_TOTALS = {
-  2026: 4900000000,
+  // Exact sum of the TSE's official per-party table (data/fefc2026.json);
+  // the home's copy still says "cerca de R$ 4,9 bilhões", which stays true.
+  2026: 4961519777,
 };
 
 export const QUOTA_DEADLINES = {

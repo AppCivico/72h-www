@@ -1,0 +1,337 @@
+{{ partial "head.html" . }}
+
+<body>
+  {{ partial "siteNav.html" (dict "ctx" . "yearSwitcher" false) }}
+
+  <main class="container painel__main">
+    <div id="vuePainel" v-cloak>
+
+      <header class="painel__hero">
+        <p class="eyebrow">{{ i18n "painelEyebrow" }}</p>
+        <h1 class="painel__title">{{ i18n "painelTitle" }}</h1>
+        <p class="painel__dek">{{ i18n "painelDek" }}</p>
+      </header>
+
+      {{/* ---- 1. A sala de 100 cadeiras ------------------------------------
+           Waffle 10×10 renderizado pelo Hugo (100 <span> por grade, com as
+           classes de preenchimento pré-computadas dos dados do IBGE/Câmara em
+           data/representacao2026.json), animado por uma única troca de classe
+           no container. Lúdico sem biblioteca nenhuma: só grid + transição de
+           cor, e a transição respeita prefers-reduced-motion no SCSS. */}}
+      {{ $rep := site.Data.representacao2026 }}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelWaffleEyebrow" }}</p>
+        <h2>{{ i18n "painelWaffleTitle" }}</h2>
+        <p class="painel__section-intro">{{ i18n "painelWaffleIntro" }}</p>
+
+        <div class="painel__waffle-toggle" role="group" aria-label='{{ i18n "painelWaffleToggleLabel" }}'>
+          <button
+            type="button"
+            class="candidato__pill"
+            :class="{ 'candidato__pill--active': waffleView === 'chamber' }"
+            :aria-pressed="waffleView === 'chamber'"
+            @click="waffleView = 'chamber'">{{ i18n "painelWaffleChamber" }}</button>
+          <button
+            type="button"
+            class="candidato__pill"
+            :class="{ 'candidato__pill--active': waffleView === 'population' }"
+            :aria-pressed="waffleView === 'population'"
+            @click="waffleView = 'population'">{{ i18n "painelWafflePopulation" }}</button>
+        </div>
+
+        <div class="painel__waffles">
+          <figure class="painel__waffle">
+            <div
+              class="painel__waffle-grid painel__waffle-grid--women"
+              :class="{ 'is-population': waffleView === 'population' }"
+              role="img"
+              aria-label='{{ i18n "painelWaffleWomenAria" }}'>
+              {{ range seq 1 100 }}
+                <span class="painel__seat{{ if le . (int $rep.waffle.chamber_women_seats_of_100) }} painel__seat--now{{ end }}{{ if le . (int $rep.waffle.population_women_seats_of_100) }} painel__seat--pop{{ end }}"></span>
+              {{ end }}
+            </div>
+            <figcaption>
+              <strong>{{ i18n "painelWaffleWomenLabel" }}</strong>
+              <span v-if="waffleView === 'chamber'">{{ i18n "painelWaffleWomenChamber" }}</span>
+              <span v-else>{{ i18n "painelWaffleWomenPopulation" }}</span>
+            </figcaption>
+          </figure>
+
+          <figure class="painel__waffle">
+            <div
+              class="painel__waffle-grid painel__waffle-grid--black"
+              :class="{ 'is-population': waffleView === 'population' }"
+              role="img"
+              aria-label='{{ i18n "painelWaffleBlackAria" }}'>
+              {{ range seq 1 100 }}
+                <span class="painel__seat{{ if le . (int $rep.waffle.chamber_black_seats_of_100) }} painel__seat--now{{ end }}{{ if le . (int $rep.waffle.population_black_seats_of_100) }} painel__seat--pop{{ end }}"></span>
+              {{ end }}
+            </div>
+            <figcaption>
+              <strong>{{ i18n "painelWaffleBlackLabel" }}</strong>
+              <span v-if="waffleView === 'chamber'">{{ i18n "painelWaffleBlackChamber" }}</span>
+              <span v-else>{{ i18n "painelWaffleBlackPopulation" }}</span>
+            </figcaption>
+          </figure>
+        </div>
+        <p class="chart-source">{{ i18n "painelWaffleSource" }}</p>
+      </section>
+
+      {{/* ---- 2. Como chegamos até aqui: linha do tempo + série histórica */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelTimelineEyebrow" }}</p>
+        <h2>{{ i18n "painelTimelineTitle" }}</h2>
+        <p class="painel__section-intro">{{ i18n "painelTimelineIntro" }}</p>
+
+        <div class="painel__history">
+          <ol class="painel__timeline">
+            <li><span class="painel__timeline-year">1932</span><span>{{ i18n "painelTl1932" }}</span></li>
+            <li><span class="painel__timeline-year">1933</span><span>{{ i18n "painelTl1933" }}</span></li>
+            <li><span class="painel__timeline-year">1997</span><span>{{ i18n "painelTl1997" }}</span></li>
+            <li><span class="painel__timeline-year">2009</span><span>{{ i18n "painelTl2009" }}</span></li>
+            <li><span class="painel__timeline-year">2018</span><span>{{ i18n "painelTl2018" }}</span></li>
+            <li><span class="painel__timeline-year">2020</span><span>{{ i18n "painelTl2020" }}</span></li>
+            <li><span class="painel__timeline-year">2021</span><span>{{ i18n "painelTl2021" }}</span></li>
+            <li><span class="painel__timeline-year">2022</span><span>{{ i18n "painelTl2022" }}</span></li>
+            <li><span class="painel__timeline-year">2024</span><span>{{ i18n "painelTl2024" }}</span></li>
+            <li><span class="painel__timeline-year">2026</span><span>{{ i18n "painelTl2026" }}</span></li>
+          </ol>
+          <div class="painel__history-chart">
+            <div id="js-painel-history-chart"></div>
+            <p class="chart-benchmark">{{ i18n "painelHistoryBenchmark" }}</p>
+            <p class="chart-source">{{ i18n "painelHistorySource" }}</p>
+          </div>
+        </div>
+      </section>
+
+      {{/* ---- 3. Por que fiscalizar o dinheiro (e não só as candidaturas) */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelWhyEyebrow" }}</p>
+        <h2>{{ i18n "painelWhyTitle" }}</h2>
+        <div class="painel__prose">
+          <p>{{ i18n "painelWhyP1" }}</p>
+          <p>
+            {{ i18n "painelWhyP2a" }}
+            <a href="https://www.tse.jus.br/comunicacao/noticias/2019/Setembro/tse-mantem-cassacao-de-vereadores-envolvidos-em-caso-de-candidaturas-fraudulentas-no-piaui" target="_blank" rel="noopener">{{ i18n "painelWhyCase1" }}</a>{{ i18n "painelWhyP2b" }}
+            <a href="https://exame.com/brasil/pf-indicia-ministro-do-turismo-por-esquema-de-candidaturas-laranjas-no-psl/" target="_blank" rel="noopener">{{ i18n "painelWhyCase2" }}</a>{{ i18n "painelWhyP2c" }}
+          </p>
+          <p>{{ i18n "painelWhyP3" }}</p>
+        </div>
+      </section>
+
+      {{/* ---- 4. A régua de 2026 + contador do prazo ---------------------- */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelRulerEyebrow" }}</p>
+        <h2>{{ i18n "painelRulerTitle" }}</h2>
+        <div class="painel__rulers">
+          <div class="painel__ruler-card">
+            <p class="painel__ruler-number">30%</p>
+            <h3>{{ i18n "painelRulerBlackTitle" }}</h3>
+            <p>{{ i18n "painelRulerBlackBody" }}</p>
+          </div>
+          <div class="painel__ruler-card">
+            <p class="painel__ruler-number">30%</p>
+            <h3>{{ i18n "painelRulerWomenTitle" }}</h3>
+            <p>{{ i18n "painelRulerWomenBody" }}</p>
+          </div>
+          <div class="painel__ruler-card painel__ruler-card--deadline" v-if="countdown">
+            <p class="painel__ruler-number" v-if="!countdown.passed">{{ "{{ countdown.daysLeft }}" }}
+              <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
+              <template v-else>{{ i18n "publicFundsDays" }}</template></p>
+            <p class="painel__ruler-number" v-else>8/9</p>
+            <h3>{{ i18n "painelRulerDeadlineTitle" }}</h3>
+            <p v-if="!countdown.passed">{{ i18n "painelRulerDeadlineBody" }}</p>
+            <p v-else>{{ i18n "painelRulerDeadlinePast" }}</p>
+          </div>
+        </div>
+      </section>
+
+      {{/* ---- 5. O painel ao vivo ----------------------------------------- */}}
+      {{ with site.Data.partyPanel }}
+        <section class="painel__section" v-if="panel">
+          <p class="eyebrow">{{ i18n "painelBoardEyebrow" }}</p>
+          <h2>{{ i18n "painelBoardTitle" }}</h2>
+          <p class="painel__section-intro">
+            {{ i18n "painelBoardIntro1" }}
+            <strong v-html="formatCurrencyNoAbbr(boardTotals.received)"></strong>
+            {{ i18n "painelBoardIntro2" }}
+            <strong v-html="formatCurrencyNoAbbr(panel.fefc_total)"></strong>{{ i18n "painelBoardIntro3" }}
+          </p>
+
+          <div class="painel__sort" role="group" aria-label='{{ i18n "painelSortLabel" }}'>
+            <span class="painel__sort-label">{{ i18n "painelSortBy" }}</span>
+            <button
+              type="button"
+              class="candidato__pill"
+              :class="{ 'candidato__pill--active': sortBy === 'black' }"
+              :aria-pressed="sortBy === 'black'"
+              @click="sortBy = 'black'">{{ i18n "painelSortBlack" }}</button>
+            <button
+              type="button"
+              class="candidato__pill"
+              :class="{ 'candidato__pill--active': sortBy === 'female' }"
+              :aria-pressed="sortBy === 'female'"
+              @click="sortBy = 'female'">{{ i18n "painelSortFemale" }}</button>
+            <button
+              type="button"
+              class="candidato__pill"
+              :class="{ 'candidato__pill--active': sortBy === 'quota' }"
+              :aria-pressed="sortBy === 'quota'"
+              @click="sortBy = 'quota'">{{ i18n "painelSortQuota" }}</button>
+            <button
+              type="button"
+              class="candidato__pill"
+              :aria-pressed="sortAsc"
+              @click="sortAsc = !sortAsc">
+              <span v-if="sortAsc">{{ i18n "painelSortWorstFirst" }}</span>
+              <span v-else>{{ i18n "painelSortBestFirst" }}</span>
+            </button>
+          </div>
+
+          <div class="painel__tablewrap">
+            <table class="data-table painel__table">
+              <thead>
+                <tr>
+                  <th>{{ i18n "party" }}</th>
+                  <th class="table-cell--numeric">{{ i18n "painelColPublic" }}</th>
+                  <th>{{ i18n "painelColBlack" }}</th>
+                  <th>{{ i18n "painelColWomen" }}</th>
+                  <th class="table-cell--numeric">{{ i18n "painelColBlackWomen" }}</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in rankedRows" :key="row.id">
+                  <td data-label='{{ i18n "party" }}'>
+                    <strong>{{ "{{ row.acronym }}" }}</strong>
+                  </td>
+                  <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
+                    <span v-html="formatCurrency(row.public.total)"></span>
+                    <small v-if="row.quotaUsed !== null" class="painel__quota-used">{{ "{{ formatNumeral(row.quotaUsed, 1) }}" }}% {{ i18n "painelOfQuota" }}</small>
+                  </td>
+                  <td data-label='{{ i18n "painelColBlack" }}'>
+                    <div class="painel__bullet" :class="{ 'painel__bullet--below': row.blackShare < 30 }">
+                      <span class="painel__bullet-track">
+                        <span class="painel__bullet-fill" :style="{ width: Math.min(row.blackShare, 100) + '%' }"></span>
+                        <span class="painel__bullet-target" aria-hidden="true"></span>
+                      </span>
+                      <span class="painel__bullet-value">{{ "{{ formatNumeral(row.blackShare, 1) }}" }}%</span>
+                    </div>
+                  </td>
+                  <td data-label='{{ i18n "painelColWomen" }}'>
+                    <div class="painel__bullet" :class="{ 'painel__bullet--below': row.femaleShare < 30 }">
+                      <span class="painel__bullet-track">
+                        <span class="painel__bullet-fill" :style="{ width: Math.min(row.femaleShare, 100) + '%' }"></span>
+                        <span class="painel__bullet-target" aria-hidden="true"></span>
+                      </span>
+                      <span class="painel__bullet-value">{{ "{{ formatNumeral(row.femaleShare, 1) }}" }}%</span>
+                    </div>
+                  </td>
+                  <td data-label='{{ i18n "painelColBlackWomen" }}' class="table-cell--numeric">
+                    {{ "{{ formatNumeral(row.blackFemaleShare, 1) }}" }}%
+                    <small><span v-html="formatCurrency(row.black.female)"></span></small>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="painel__table-note">{{ i18n "painelFloorNote" }}</p>
+
+          <div class="painel__dormant" v-if="dormantRows.length">
+            <h3>{{ i18n "painelDormantTitle" }}</h3>
+            <p class="painel__section-intro">{{ i18n "painelDormantIntro" }}</p>
+            <ul class="painel__dormant-list">
+              <li v-for="row in dormantRows" :key="row.id">
+                <strong>{{ "{{ row.acronym }}" }}</strong>
+                <span v-if="row.fefc_quota">
+                  {{ i18n "painelDormantQuota" }} <span v-html="formatCurrency(row.fefc_quota)"></span>
+                  · {{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.public.total)"></span>
+                </span>
+                <span v-else>{{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.public.total)"></span></span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="painel__section" v-if="panel">
+          <p class="eyebrow">{{ i18n "painelThermoEyebrow" }}</p>
+          <h2>{{ i18n "painelThermoTitle" }}</h2>
+          <p class="painel__section-intro">{{ i18n "painelThermoIntro" }}</p>
+          <div class="painel__waffle-toggle" role="group" aria-label='{{ i18n "painelThermoToggleLabel" }}'>
+            <button
+              type="button"
+              class="candidato__pill"
+              :class="{ 'candidato__pill--active': thermoGroup === 'black' }"
+              :aria-pressed="thermoGroup === 'black'"
+              @click="setThermoGroup('black')">{{ i18n "painelSortBlack" }}</button>
+            <button
+              type="button"
+              class="candidato__pill"
+              :class="{ 'candidato__pill--active': thermoGroup === 'female' }"
+              :aria-pressed="thermoGroup === 'female'"
+              @click="setThermoGroup('female')">{{ i18n "painelSortFemale" }}</button>
+          </div>
+          <div class="painel__panel">
+            <div id="js-painel-thermo-chart"></div>
+            <p class="chart-benchmark">{{ i18n "painelThermoBenchmark" }}</p>
+            <p class="chart-source">{{ i18n "painelGeneratedAt" }} {{ "{{ generatedAtBR }}" }} · {{ i18n "dataSource" }}</p>
+          </div>
+        </section>
+      {{ else }}
+        <section class="painel__section">
+          <p class="eyebrow">{{ i18n "painelBoardEyebrow" }}</p>
+          <h2>{{ i18n "painelBoardTitle" }}</h2>
+          <div class="no-results">
+            <img src="/assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
+            <p>{{ i18n "painelNoData" }}</p>
+          </div>
+        </section>
+      {{ end }}
+
+      {{/* ---- 6. Metodologia ---------------------------------------------- */}}
+      <section class="painel__section painel__section--method">
+        <p class="eyebrow">{{ i18n "painelMethodEyebrow" }}</p>
+        <h2>{{ i18n "painelMethodTitle" }}</h2>
+        <div class="painel__prose">
+          <p>{{ i18n "painelMethodP1" }}</p>
+          <p>{{ i18n "painelMethodP2" }}</p>
+          <p>{{ i18n "painelMethodP3" }}</p>
+        </div>
+        <p class="painel__method-links">
+          <a href="https://www.tse.jus.br/eleicoes/eleicoes-2026-content/prestacao-de-contas/distribuicao-dos-recursos-do-fundo-especial-de-financiamento-de-campanha-fefc-eleicoes-2026" target="_blank" rel="noopener">{{ i18n "painelLinkFefc" }}</a> ·
+          <a href="https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc133.htm" target="_blank" rel="noopener">EC 133/2024</a> ·
+          <a href="https://www.planalto.gov.br/ccivil_03/constituicao/emendas/emc/emc117.htm" target="_blank" rel="noopener">EC 117/2022</a> ·
+          <a href="https://educa.ibge.gov.br/jovens/conheca-o-brasil/populacao/18319-cor-ou-raca.html" target="_blank" rel="noopener">IBGE, Censo 2022</a> ·
+          <a href="/sobre-os-dados/">{{ i18n "methodologyLink" }}</a>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  {{ partial "footer.html" . }}
+
+  <script>
+    {{ with site.Data.partyPanel }}window.appPanel = {{ . | jsonify | safeJS }};{{ end }}
+    window.appChartCredits = '{{ i18n "chartExportCredits" }}';
+    window.appRepresentation = {{ site.Data.representacao2026 | jsonify | safeJS }};
+    window.appPanelYear = {{ site.Params.run }};
+    window.appPainelCharts = {
+      historyTitle: '{{ i18n "painelHistoryChartTitle" }}',
+      historySubtitle: '{{ i18n "painelHistoryChartSubtitle" }}',
+      historySeries: '{{ i18n "painelHistoryChartSeries" }}',
+      thermoTitle: '{{ i18n "painelThermoChartTitle" }}',
+      thermoSubtitleBlack: '{{ i18n "painelThermoChartSubtitleBlack" }}',
+      thermoSubtitleFemale: '{{ i18n "painelThermoChartSubtitleFemale" }}',
+      floorLabel: '{{ i18n "painelThermoFloorLabel" }}',
+      deadlineLabel: '{{ i18n "painelThermoDeadlineLabel" }}',
+      campaignStartLabel: '{{ i18n "campaignStartLabel" }}',
+    }
+  </script>
+  {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.global.prod.js" "vendor/vue.global.js") | resources.Fingerprint "sha512" }}
+  <script src="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}"></script>
+  {{ $highcharts := resources.Get "vendor/highcharts/highcharts.js" | resources.Fingerprint "sha512" }}
+  <script src="{{ $highcharts.RelPermalink }}" integrity="{{ $highcharts.Data.Integrity }}"></script>
+  {{ $painelJS := resources.Get "scripts/painel.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
+  <script type="text/javascript" src="{{ $painelJS.RelPermalink }}" integrity="{{ $painelJS.Data.Integrity }}"></script>
+</body>
+</html>
