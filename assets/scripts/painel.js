@@ -94,9 +94,16 @@ window.$vuePainel = Vue.createApp({
     },
     // Biggest idle pot first: the bigger the quota sitting still, the more
     // newsworthy the stillness.
+    //
+    // Parties with neither a 2026 FEFC quota nor a single transfer are gone
+    // from this election (the API's filter list still carries extinct and
+    // merged ones: PSL, PTB, PSC, PROS, Patriota...). Listing them as
+    // "quase nada distribuído" would blame them for not spending money they
+    // never received.
     dormantRows({ entries } = this) {
       return entries
         .filter((entry) => entry.public.total < RANKING_FLOOR)
+        .filter((entry) => entry.fefc_quota !== null || entry.public.total > 0)
         .sort((a, b) => (b.fefc_quota || 0) - (a.fefc_quota || 0));
     },
     boardTotals({ entries } = this) {

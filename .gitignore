@@ -325,6 +325,3 @@ _to_delete/
 # 72h e um arquivo velho no repo viraria a versão publicada.
 /static/sitemap-candidatos.xml
 /static/sitemap-candidatos-*.xml
-
-# Gerado no prebuild (build-party-panel.mjs); nunca commitar
-data/partyPanel.json
