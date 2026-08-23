@@ -9,7 +9,14 @@
       <header class="painel__hero">
         <p class="eyebrow">{{ i18n "painelEyebrow" }}</p>
         <h1 class="painel__title">{{ i18n "painelTitle" }}</h1>
-        <p class="painel__dek">{{ i18n "painelDek" }}</p>
+        <div class="painel__hero-grid">
+          <p class="painel__dek">{{ i18n "painelDek" }}</p>
+          <aside class="painel__stat-card">
+            <p class="painel__stat-number">{{ i18n "painelIpuStat" }}</p>
+            <p class="painel__stat-title">{{ i18n "painelIpuTitle" }}</p>
+            <p class="painel__stat-body">{{ i18n "painelIpuBody" }}</p>
+          </aside>
+        </div>
       </header>
 
       {{/* ---- 1. A sala de 100 cadeiras ------------------------------------
@@ -22,6 +29,8 @@
       <section class="painel__section">
         <p class="eyebrow">{{ i18n "painelWaffleEyebrow" }}</p>
         <h2>{{ i18n "painelWaffleTitle" }}</h2>
+        <div class="painel__waffle-layout">
+        <div class="painel__waffle-copy">
         <p class="painel__section-intro">{{ i18n "painelWaffleIntro" }}</p>
 
         <div class="painel__waffle-toggle" role="group" aria-label='{{ i18n "painelWaffleToggleLabel" }}'>
@@ -37,6 +46,8 @@
             :class="{ 'candidato__pill--active': waffleView === 'population' }"
             :aria-pressed="waffleView === 'population'"
             @click="waffleView = 'population'">{{ i18n "painelWafflePopulation" }}</button>
+        </div>
+        <p class="chart-source">{{ i18n "painelWaffleSource" }}</p>
         </div>
 
         <div class="painel__waffles">
@@ -74,7 +85,7 @@
             </figcaption>
           </figure>
         </div>
-        <p class="chart-source">{{ i18n "painelWaffleSource" }}</p>
+        </div>
       </section>
 
       {{/* ---- 2. Como chegamos até aqui: linha do tempo + série histórica */}}
@@ -108,6 +119,7 @@
       <section class="painel__section">
         <p class="eyebrow">{{ i18n "painelWhyEyebrow" }}</p>
         <h2>{{ i18n "painelWhyTitle" }}</h2>
+        <div class="painel__why-grid">
         <div class="painel__prose">
           <p>{{ i18n "painelWhyP1" }}</p>
           <p>
@@ -116,6 +128,12 @@
             <a href="https://exame.com/brasil/pf-indicia-ministro-do-turismo-por-esquema-de-candidaturas-laranjas-no-psl/" target="_blank" rel="noopener">{{ i18n "painelWhyCase2" }}</a>{{ i18n "painelWhyP2c" }}
           </p>
           <p>{{ i18n "painelWhyP3" }}</p>
+        </div>
+        <aside class="painel__stat-card painel__stat-card--warm">
+          <p class="painel__stat-number">{{ i18n "painelWhyStatNumber" }}</p>
+          <p class="painel__stat-title">{{ i18n "painelWhyStatTitle" }}</p>
+          <p class="painel__stat-body">{{ i18n "painelWhyStatBody" }} <a href="https://www.generonumero.media/reportagens/eleicoes-2022-mulheres-negrass-recebem-apenas-20-do-recursos-para-homens-brancos/" target="_blank" rel="noopener">Gênero e Número</a>.</p>
+        </aside>
         </div>
       </section>
 
@@ -156,6 +174,10 @@
             <strong v-html="formatCurrencyNoAbbr(boardTotals.received)"></strong>
             {{ i18n "painelBoardIntro2" }}
             <strong v-html="formatCurrencyNoAbbr(panel.fefc_total)"></strong>{{ i18n "painelBoardIntro3" }}
+          </p>
+          <p class="painel__table-note">
+            {{ "{{ rankedRows.length }}" }} {{ i18n "painelCountsRanked" }} ·
+            {{ "{{ dormantRows.length }}" }} {{ i18n "painelCountsDormant" }}
           </p>
 
           <div class="painel__sort" role="group" aria-label='{{ i18n "painelSortLabel" }}'>
@@ -202,7 +224,7 @@
               <tbody>
                 <tr v-for="row in rankedRows" :key="row.id">
                   <td data-label='{{ i18n "party" }}'>
-                    <strong>{{ "{{ row.acronym }}" }}</strong>
+                    <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
                   </td>
                   <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
                     <span v-html="formatCurrency(row.public.total)"></span>
@@ -241,7 +263,7 @@
             <p class="painel__section-intro">{{ i18n "painelDormantIntro" }}</p>
             <ul class="painel__dormant-list">
               <li v-for="row in dormantRows" :key="row.id">
-                <strong>{{ "{{ row.acronym }}" }}</strong>
+                <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
                 <span v-if="row.fefc_quota">
                   {{ i18n "painelDormantQuota" }} <span v-html="formatCurrency(row.fefc_quota)"></span>
                   · {{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.public.total)"></span>
@@ -291,7 +313,7 @@
       <section class="painel__section painel__section--method">
         <p class="eyebrow">{{ i18n "painelMethodEyebrow" }}</p>
         <h2>{{ i18n "painelMethodTitle" }}</h2>
-        <div class="painel__prose">
+        <div class="painel__method-grid">
           <p>{{ i18n "painelMethodP1" }}</p>
           <p>{{ i18n "painelMethodP2" }}</p>
           <p>{{ i18n "painelMethodP3" }}</p>

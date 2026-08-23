@@ -179,7 +179,7 @@ window.$vuePainel = Vue.createApp({
         .slice(0, THERMO_PARTIES);
 
       const series = parties.map((party, index) => ({
-        name: party.acronym,
+        name: party.acronym || party.name,
         color: categorical[index % categorical.length],
         data: this.thermoGroup === 'black'
           ? cumulativeShare(party.public.daily, party.black.daily)

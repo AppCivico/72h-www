@@ -54,6 +54,17 @@ test('quotaFor matches across acronym spelling drift and misses honestly', () =>
   assert.equal(quotaFor('PT', null), null);
 });
 
+test('a null acronym from /filters falls back to the name, for label and quota alike', () => {
+  const entry = buildPartyEntry(
+    { id: 10, acronym: null, name: 'Republicanos' },
+    { big_numbers: { total_amount: 1000 }, chart: {} },
+    { big_numbers: { total_amount: 0 }, chart: {} },
+    { REPUBLICANOS: 348587815.77 },
+  );
+  assert.equal(entry.acronym, 'Republicanos');
+  assert.equal(entry.fefc_quota, 348587815.77);
+});
+
 test('deriveShares computes the three equity shares and quota usage', () => {
   const entry = buildPartyEntry(
     { id: 30, acronym: 'NOVO', name: 'Partido Novo' },

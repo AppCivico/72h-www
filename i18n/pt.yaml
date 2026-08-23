@@ -766,3 +766,19 @@
   translation: "Os números mudam todos os dias durante a campanha e podem ser retificados pelos próprios candidatos. Esta página não afirma descumprimento de lei: registra o ritmo e o destino dos repasses declarados. O prazo legal para os mínimos de cota é 8 de setembro; antes disso, estar abaixo de 30% não é infração."
 - id: painelLinkFefc
   translation: "Cotas do FEFC por partido (TSE)"
+- id: painelIpuStat
+  translation: "133ª"
+- id: painelIpuTitle
+  translation: "posição do Brasil no ranking mundial de mulheres no parlamento"
+- id: painelIpuBody
+  translation: "Levantamento UIP e ONU Mulheres, 2025, entre cerca de 190 países. A média mundial é 27,2% de mulheres nas câmaras baixas; a Câmara brasileira tem 18,1%."
+- id: painelWhyStatNumber
+  translation: "11,2%"
+- id: painelWhyStatTitle
+  translation: "do fundo eleitoral: foi o que as candidaturas de mulheres negras receberam em 2022"
+- id: painelWhyStatBody
+  translation: "Sendo 17,7% das candidaturas. Homens brancos eram 33% das candidaturas e ficaram com 51% do fundo, o único grupo a receber mais que o próprio peso. Dados TSE analisados por"
+- id: painelCountsRanked
+  translation: "partidos no placar"
+- id: painelCountsDormant
+  translation: "abaixo do piso de R$ 250 mil, listados ao fim da seção"

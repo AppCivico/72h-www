@@ -12,7 +12,6 @@
 }
 
 .painel__hero {
-  max-width: 44rem;
   margin-bottom: 1rem;
 }
 
@@ -80,7 +79,6 @@
 
   gap: 2rem;
 
-  max-width: 44rem;
 }
 
 .painel__waffle {
@@ -397,4 +395,105 @@
   margin-top: 1rem;
 
   font-size: var(--t-xs);
+}
+
+/* Preenchimento do desktop: colunas em vez de faixa vazia à direita
+============================================================================ */
+
+.painel__hero-grid,
+.painel__why-grid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1.5rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+
+    gap: 3rem;
+
+    align-items: start;
+  }
+}
+
+.painel__waffle-layout {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1.5rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+
+    gap: 3rem;
+
+    align-items: start;
+  }
+}
+
+.painel__method-grid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    gap: 2rem;
+  }
+
+  p {
+    margin: 0;
+
+    font-size: var(--t-xs);
+    color: var(--ink-2);
+  }
+}
+
+/// Cartão-estatística: um número que carrega a seção, no espaço que antes
+/// ficava vazio no desktop.
+.painel__stat-card {
+  padding: 1.25rem 1.5rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+}
+
+.painel__stat-card--warm {
+  background: var(--paper-warm);
+  border-left: 3px solid var(--accent-warm);
+  box-shadow: none;
+}
+
+.painel__stat-number {
+  margin: 0;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-3xl);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--brand);
+}
+
+.painel__stat-card--warm .painel__stat-number {
+  color: var(--accent-warm);
+}
+
+.painel__stat-title {
+  margin: 0.5rem 0 0.25rem;
+
+  font-weight: 600;
+}
+
+.painel__stat-body {
+  margin: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }

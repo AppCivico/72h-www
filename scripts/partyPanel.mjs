@@ -57,9 +57,12 @@ export function buildPartyEntry(party, publicData, blackData, fefcQuotas) {
   const bigBlack = blackData?.big_numbers || {};
   return {
     id: party.id,
-    acronym: party.acronym,
+    // Five 2026 parties come from /filters with acronym: null (Republicanos,
+    // Cidadania, Solidariedade, Avante, Patriota) -- their name IS the short
+    // form, so it doubles as the display label and the quota-matching key.
+    acronym: party.acronym || party.name,
     name: party.name,
-    fefc_quota: quotaFor(party.acronym, fefcQuotas),
+    fefc_quota: quotaFor(party.acronym, fefcQuotas) ?? quotaFor(party.name, fefcQuotas),
     public: {
       total: Number(bigPublic.total_amount) || 0,
       female: Number(bigPublic.amount_female) || 0,
