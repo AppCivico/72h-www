@@ -814,3 +814,17 @@
   translation: "levantamento do g1 sobre dados do TSE"
 - id: candidateDeclaredLead
   translation: "Autodeclaração ao TSE nesta candidatura:"
+- id: painelKeyRule
+  translation: "O piso de 30% é aferido ao fim do prazo; antes dele, estar abaixo não é infração, é ritmo."
+- id: painelKeyDeadlineTail
+  translation: "para o prazo legal de repasse das cotas (8 de setembro)"
+- id: painelKeyDeadlinePast
+  translation: "O prazo legal de repasse das cotas terminou em 8 de setembro."
+- id: painelBelowBlack
+  translation: "partidos do placar estão abaixo dos 30% para candidaturas de pessoas pretas e pardas"
+- id: painelBelowFemale
+  translation: "estão abaixo dos 30% para candidaturas de mulheres"
+- id: painelOnlyBelow
+  translation: "Só quem está fora do piso"
+- id: painelBadgeBelow
+  translation: "fora do piso"

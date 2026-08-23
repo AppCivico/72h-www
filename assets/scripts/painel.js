@@ -16,6 +16,11 @@ watchHeaderCondense();
 // RANKING_FLOOR in scripts/partyPanel.mjs -- change both together.
 const RANKING_FLOOR = 250000;
 
+// O piso legal, em pontos percentuais: 30% para candidaturas de pessoas
+// pretas e pardas (EC 133/2024) e 30% para mulheres (Consulta TSE 2018 e
+// EC 117/2022).
+const FLOOR_SHARE = 30;
+
 // How many parties the thermometer draws: the five biggest FEFC quotas, one
 // line per categorical color -- more than that turns into spaghetti and the
 // palette (deliberately fixed, never cycled) runs out.
@@ -53,6 +58,7 @@ window.$vuePainel = Vue.createApp({
       // public money that the law earmarks -- the reader can flip it.
       sortBy: 'black',
       sortAsc: true,
+      onlyBelow: false,
       thermoGroup: 'black',
     };
   },
@@ -78,13 +84,26 @@ window.$vuePainel = Vue.createApp({
           blackShare: total > 0 ? (party.black.total / total) * 100 : null,
           blackFemaleShare: total > 0 ? (party.black.female / total) * 100 : null,
           quotaUsed: total > 0 && party.fefc_quota ? (total / party.fefc_quota) * 100 : null,
+          // Marca a candidatura para o selo e o realce da linha. Um partido
+          // sem dinheiro (share null) NÃO é "fora do piso": é sem dado, e
+          // esses nem entram no placar.
+          belowFloor: total > 0
+            && ((party.black.total / total) * 100 < FLOOR_SHARE
+              || (party.public.female / total) * 100 < FLOOR_SHARE),
         };
       });
     },
-    rankedRows({ entries, sortBy, sortAsc } = this) {
+    rankedRows({
+      entries, sortBy, sortAsc, onlyBelow,
+    } = this) {
       const key = { black: 'blackShare', female: 'femaleShare', quota: 'quotaUsed' }[sortBy];
       return entries
         .filter((entry) => entry.public.total >= RANKING_FLOOR)
+        // "Fora do piso" = abaixo de 30% em QUALQUER uma das duas réguas: é o
+        // recorte de fiscalização, não a média das duas.
+        .filter((entry) => !onlyBelow
+          || entry.blackShare < FLOOR_SHARE
+          || entry.femaleShare < FLOOR_SHARE)
         .sort((a, b) => {
           const valueA = a[key] === null ? -1 : a[key];
           const valueB = b[key] === null ? -1 : b[key];
@@ -105,6 +124,18 @@ window.$vuePainel = Vue.createApp({
         .filter((entry) => entry.public.total < RANKING_FLOOR)
         .filter((entry) => entry.fefc_quota !== null || entry.public.total > 0)
         .sort((a, b) => (b.fefc_quota || 0) - (a.fefc_quota || 0));
+    },
+    // Quantos partidos do placar estão abaixo do piso em cada régua. Sempre
+    // sobre TODOS os partidos elegíveis ao placar, nunca sobre a lista já
+    // filtrada -- senão o número mudaria ao ligar o próprio filtro.
+    belowCounts({ entries } = this) {
+      const eligible = entries.filter((entry) => entry.public.total >= RANKING_FLOOR);
+      if (!eligible.length) return null;
+      return {
+        total: eligible.length,
+        black: eligible.filter((entry) => entry.blackShare < FLOOR_SHARE).length,
+        female: eligible.filter((entry) => entry.femaleShare < FLOOR_SHARE).length,
+      };
     },
     boardTotals({ entries } = this) {
       return {

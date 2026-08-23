@@ -9,200 +9,12 @@
       <header class="painel__hero">
         <p class="eyebrow">{{ i18n "painelEyebrow" }}</p>
         <h1 class="painel__title">{{ i18n "painelTitle" }}</h1>
-        <div class="painel__hero-grid">
-          <p class="painel__dek">{{ i18n "painelDek" }}</p>
-          <aside class="painel__stat-card">
-            <p class="painel__stat-number">{{ i18n "painelIpuStat" }}</p>
-            <p class="painel__stat-title">{{ i18n "painelIpuTitle" }}</p>
-            <p class="painel__stat-body">{{ i18n "painelIpuBody" }}</p>
-          </aside>
-        </div>
+        <p class="painel__dek">{{ i18n "painelDek" }}</p>
       </header>
 
-      {{/* ---- 1. A sala de 100 cadeiras ------------------------------------
-           Waffle 10×10 renderizado pelo Hugo (100 <span> por grade, com as
-           classes de preenchimento pré-computadas dos dados do IBGE/Câmara em
-           data/representacao2026.json), animado por uma única troca de classe
-           no container. Lúdico sem biblioteca nenhuma: só grid + transição de
-           cor, e a transição respeita prefers-reduced-motion no SCSS. */}}
-      {{ $rep := site.Data.representacao2026 }}
-      <section class="painel__section">
-        <p class="eyebrow">{{ i18n "painelWaffleEyebrow" }}</p>
-        <h2>{{ i18n "painelWaffleTitle" }}</h2>
-        <div class="painel__waffle-layout">
-        <div class="painel__waffle-copy">
-        <p class="painel__section-intro">{{ i18n "painelWaffleIntro" }}</p>
-
-        <div class="painel__waffle-toggle" role="group" aria-label='{{ i18n "painelWaffleToggleLabel" }}'>
-          <button
-            type="button"
-            class="candidato__pill"
-            :class="{ 'candidato__pill--active': waffleView === 'chamber' }"
-            :aria-pressed="waffleView === 'chamber'"
-            @click="waffleView = 'chamber'">{{ i18n "painelWaffleChamber" }}</button>
-          <button
-            type="button"
-            class="candidato__pill"
-            :class="{ 'candidato__pill--active': waffleView === 'population' }"
-            :aria-pressed="waffleView === 'population'"
-            @click="waffleView = 'population'">{{ i18n "painelWafflePopulation" }}</button>
-        </div>
-        <p class="chart-source">{{ i18n "painelWaffleSource" }}</p>
-        </div>
-
-        <div class="painel__waffles">
-          <figure class="painel__waffle">
-            <div
-              class="painel__waffle-grid painel__waffle-grid--women"
-              :class="{ 'is-population': waffleView === 'population' }"
-              role="img"
-              aria-label='{{ i18n "painelWaffleWomenAria" }}'>
-              {{ range seq 1 100 }}
-                <span class="painel__seat{{ if le . (int $rep.waffle.chamber_women_seats_of_100) }} painel__seat--now{{ end }}{{ if le . (int $rep.waffle.population_women_seats_of_100) }} painel__seat--pop{{ end }}"></span>
-              {{ end }}
-            </div>
-            <figcaption>
-              <strong>{{ i18n "painelWaffleWomenLabel" }}</strong>
-              <span v-if="waffleView === 'chamber'">{{ i18n "painelWaffleWomenChamber" }}</span>
-              <span v-else>{{ i18n "painelWaffleWomenPopulation" }}</span>
-            </figcaption>
-          </figure>
-
-          <figure class="painel__waffle">
-            <div
-              class="painel__waffle-grid painel__waffle-grid--black"
-              :class="{ 'is-population': waffleView === 'population' }"
-              role="img"
-              aria-label='{{ i18n "painelWaffleBlackAria" }}'>
-              {{ range seq 1 100 }}
-                <span class="painel__seat{{ if le . (int $rep.waffle.chamber_black_seats_of_100) }} painel__seat--now{{ end }}{{ if le . (int $rep.waffle.population_black_seats_of_100) }} painel__seat--pop{{ end }}"></span>
-              {{ end }}
-            </div>
-            <figcaption>
-              <strong>{{ i18n "painelWaffleBlackLabel" }}</strong>
-              <span v-if="waffleView === 'chamber'">{{ i18n "painelWaffleBlackChamber" }}</span>
-              <span v-else>{{ i18n "painelWaffleBlackPopulation" }}</span>
-            </figcaption>
-          </figure>
-        </div>
-        </div>
-      </section>
-
-      {{/* ---- 2. Como chegamos até aqui: linha do tempo + série histórica */}}
-      <section class="painel__section">
-        <p class="eyebrow">{{ i18n "painelTimelineEyebrow" }}</p>
-        <h2>{{ i18n "painelTimelineTitle" }}</h2>
-        <p class="painel__section-intro">{{ i18n "painelTimelineIntro" }}</p>
-
-        <div class="painel__history">
-          <ol class="painel__timeline">
-            <li><span class="painel__timeline-year">1932</span><span>{{ i18n "painelTl1932" }}</span></li>
-            <li><span class="painel__timeline-year">1933</span><span>{{ i18n "painelTl1933" }}</span></li>
-            <li><span class="painel__timeline-year">1997</span><span>{{ i18n "painelTl1997" }}</span></li>
-            <li><span class="painel__timeline-year">2009</span><span>{{ i18n "painelTl2009" }}</span></li>
-            <li><span class="painel__timeline-year">2018</span><span>{{ i18n "painelTl2018" }}</span></li>
-            <li><span class="painel__timeline-year">2020</span><span>{{ i18n "painelTl2020" }}</span></li>
-            <li><span class="painel__timeline-year">2021</span><span>{{ i18n "painelTl2021" }}</span></li>
-            <li><span class="painel__timeline-year">2022</span><span>{{ i18n "painelTl2022" }}</span></li>
-            <li><span class="painel__timeline-year">2024</span><span>{{ i18n "painelTl2024" }}</span></li>
-            <li><span class="painel__timeline-year">2026</span><span>{{ i18n "painelTl2026" }}</span></li>
-          </ol>
-          <div class="painel__history-chart">
-            <div id="js-painel-history-chart"></div>
-            <p class="chart-benchmark">{{ i18n "painelHistoryBenchmark" }}</p>
-            <p class="chart-source">{{ i18n "painelHistorySource" }}</p>
-          </div>
-        </div>
-      </section>
-
-      {{/* ---- 3. Por que fiscalizar o dinheiro (e não só as candidaturas) */}}
-      <section class="painel__section">
-        <p class="eyebrow">{{ i18n "painelWhyEyebrow" }}</p>
-        <h2>{{ i18n "painelWhyTitle" }}</h2>
-        <div class="painel__why-grid">
-        <div class="painel__prose">
-          <p>{{ i18n "painelWhyP1" }}</p>
-          <p>
-            {{ i18n "painelWhyP2a" }}
-            <a href="https://www.tse.jus.br/comunicacao/noticias/2019/Setembro/tse-mantem-cassacao-de-vereadores-envolvidos-em-caso-de-candidaturas-fraudulentas-no-piaui" target="_blank" rel="noopener">{{ i18n "painelWhyCase1" }}</a>{{ i18n "painelWhyP2b" }}
-            <a href="https://exame.com/brasil/pf-indicia-ministro-do-turismo-por-esquema-de-candidaturas-laranjas-no-psl/" target="_blank" rel="noopener">{{ i18n "painelWhyCase2" }}</a>{{ i18n "painelWhyP2c" }}
-          </p>
-          <p>{{ i18n "painelWhyP3" }}</p>
-        </div>
-        <aside class="painel__stat-card painel__stat-card--warm">
-          <p class="painel__stat-number">{{ i18n "painelWhyStatNumber" }}</p>
-          <p class="painel__stat-title">{{ i18n "painelWhyStatTitle" }}</p>
-          <p class="painel__stat-body">{{ i18n "painelWhyStatBody" }} <a href="https://www.generonumero.media/reportagens/eleicoes-2022-mulheres-negrass-recebem-apenas-20-do-recursos-para-homens-brancos/" target="_blank" rel="noopener">Gênero e Número</a>.</p>
-        </aside>
-        </div>
-      </section>
-
-      {{/* ---- 3b. As chances na urna + autodeclaração ----------------------
-           Funil de 2022 (dep. federal): candidatura virou cadeira em que
-           proporção, por grupo. Números verificados em data/representacao2026
-           (Revista EJE/TSE + Agência Câmara/Poder360); as barras são relativas
-           à maior taxa, e o número que o eleitor leva é o "1 em cada N". Ao
-           lado, o cartão das 786 mudanças de autodeclaração de 2026 — o
-           contexto que liga identidade declarada a dinheiro de cota. */}}
-      <section class="painel__section">
-        <p class="eyebrow">{{ i18n "painelFunnelEyebrow" }}</p>
-        <h2>{{ i18n "painelFunnelTitle" }}</h2>
-        <p class="painel__section-intro">{{ i18n "painelFunnelIntro" }}</p>
-        <div class="painel__why-grid">
-          <div class="painel__funnel">
-            {{ range $rep.funnel_2022_chamber.groups }}
-              <div class="painel__funnel-row">
-                <span class="painel__funnel-label">{{ .label }}</span>
-                <span class="painel__funnel-track">
-                  <span class="painel__funnel-fill painel__funnel-fill--{{ .key }}" style="width: {{ .bar_pct }}%"></span>
-                </span>
-                <span class="painel__funnel-value">
-                  <strong>1 {{ i18n "painelFunnelOneIn" }} {{ .one_in }}</strong>
-                  <small>{{ .elected }} {{ i18n "painelFunnelElected" }} {{ lang.FormatNumberCustom 0 .candidacies "- , ." }} {{ i18n "painelFunnelCandidacies" }}</small>
-                </span>
-              </div>
-            {{ end }}
-            <p class="chart-source">{{ i18n "painelFunnelSource" }}</p>
-          </div>
-          <aside class="painel__stat-card painel__stat-card--warm">
-            <p class="painel__stat-number">786</p>
-            <p class="painel__stat-title">{{ i18n "painelRaceChangeTitle" }}</p>
-            <p class="painel__stat-body">{{ i18n "painelRaceChangeBody" }}
-              <a href="https://g1.globo.com/politica/eleicoes/2026/noticia/2026/08/23/eleicoes-2026-tse-candidatos-mudanca-cor-raca.ghtml" target="_blank" rel="noopener">{{ i18n "painelRaceChangeSource" }}</a>.</p>
-          </aside>
-        </div>
-      </section>
-
-      {{/* ---- 4. A régua de 2026 + contador do prazo ---------------------- */}}
-      <section class="painel__section">
-        <p class="eyebrow">{{ i18n "painelRulerEyebrow" }}</p>
-        <h2>{{ i18n "painelRulerTitle" }}</h2>
-        <div class="painel__rulers">
-          <div class="painel__ruler-card">
-            <p class="painel__ruler-number">30%</p>
-            <h3>{{ i18n "painelRulerBlackTitle" }}</h3>
-            <p>{{ i18n "painelRulerBlackBody" }}</p>
-          </div>
-          <div class="painel__ruler-card">
-            <p class="painel__ruler-number">30%</p>
-            <h3>{{ i18n "painelRulerWomenTitle" }}</h3>
-            <p>{{ i18n "painelRulerWomenBody" }}</p>
-          </div>
-          <div class="painel__ruler-card painel__ruler-card--deadline" v-if="countdown">
-            <p class="painel__ruler-number" v-if="!countdown.passed">{{ "{{ countdown.daysLeft }}" }}
-              <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
-              <template v-else>{{ i18n "publicFundsDays" }}</template></p>
-            <p class="painel__ruler-number" v-else>8/9</p>
-            <h3>{{ i18n "painelRulerDeadlineTitle" }}</h3>
-            <p v-if="!countdown.passed">{{ i18n "painelRulerDeadlineBody" }}</p>
-            <p v-else>{{ i18n "painelRulerDeadlinePast" }}</p>
-          </div>
-        </div>
-      </section>
-
-      {{/* ---- 5. O painel ao vivo ----------------------------------------- */}}
+      {{/* ---- 1. O placar ao vivo + o termômetro do prazo ----------------------------------------- */}}
       {{ with site.Data.partyPanel }}
-        <section class="painel__section" v-if="panel">
+        <section class="painel__section painel__section--lead" v-if="panel">
           <p class="eyebrow">{{ i18n "painelBoardEyebrow" }}</p>
           <h2>{{ i18n "painelBoardTitle" }}</h2>
           <p class="painel__section-intro">
@@ -215,6 +27,38 @@
             {{ "{{ rankedRows.length }}" }} {{ i18n "painelCountsRanked" }} ·
             {{ "{{ dormantRows.length }}" }} {{ i18n "painelCountsDormant" }}
           </p>
+
+          {{/* Faixa de urgência: o placar abriu a página, então aqui vêm o
+              relógio e a régua antes da tabela. Os contadores de "fora do
+              piso" saem de TODOS os partidos elegíveis ao placar, nunca da
+              lista filtrada. O relógio depende só da data, não do JSON. */}}
+          <div class="painel__urgency">
+            <div class="painel__urgency-clock" v-if="countdown">
+              <template v-if="!countdown.passed">
+                <p class="painel__urgency-number">{{ "{{ countdown.daysLeft }}" }}</p>
+                <p class="painel__urgency-unit">
+                  <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
+                  <template v-else>{{ i18n "publicFundsDays" }}</template>
+                </p>
+                <p class="painel__urgency-caption">{{ i18n "painelKeyDeadlineTail" }}</p>
+              </template>
+              <template v-else>
+                <p class="painel__urgency-number">8/9</p>
+                <p class="painel__urgency-caption">{{ i18n "painelKeyDeadlinePast" }}</p>
+              </template>
+            </div>
+            <div class="painel__urgency-counts" v-if="belowCounts">
+              <p class="painel__urgency-count">
+                <strong>{{ "{{ belowCounts.black }}" }} {{ i18n "ofTotal" }} {{ "{{ belowCounts.total }}" }}</strong>
+                {{ i18n "painelBelowBlack" }}
+              </p>
+              <p class="painel__urgency-count">
+                <strong>{{ "{{ belowCounts.female }}" }} {{ i18n "ofTotal" }} {{ "{{ belowCounts.total }}" }}</strong>
+                {{ i18n "painelBelowFemale" }}
+              </p>
+              <p class="painel__urgency-note">{{ i18n "painelKeyRule" }}</p>
+            </div>
+          </div>
 
           <div class="painel__sort" role="group" aria-label='{{ i18n "painelSortLabel" }}'>
             <span class="painel__sort-label">{{ i18n "painelSortBy" }}</span>
@@ -244,6 +88,12 @@
               <span v-if="sortAsc">{{ i18n "painelSortWorstFirst" }}</span>
               <span v-else>{{ i18n "painelSortBestFirst" }}</span>
             </button>
+            <button
+              type="button"
+              class="candidato__pill painel__pill--filter"
+              :class="{ 'candidato__pill--active': onlyBelow }"
+              :aria-pressed="onlyBelow"
+              @click="onlyBelow = !onlyBelow">{{ i18n "painelOnlyBelow" }}</button>
           </div>
 
           <div class="painel__tablewrap">
@@ -258,9 +108,15 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="row in rankedRows" :key="row.id">
+                <tr
+                  v-for="row in rankedRows"
+                  :key="row.id"
+                  :class="{ 'painel__row--below': row.belowFloor }">
                   <td data-label='{{ i18n "party" }}'>
                     <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
+                    {{/* Selo explícito, além da barra âmbar: quem está fora do
+                        piso tem de ser identificável numa varredura rápida. */}}
+                    <span class="painel__badge" v-if="row.belowFloor">{{ i18n "painelBadgeBelow" }}</span>
                   </td>
                   <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
                     <span v-html="formatCurrency(row.public.total)"></span>
@@ -335,7 +191,7 @@
           </div>
         </section>
       {{ else }}
-        <section class="painel__section">
+        <section class="painel__section painel__section--lead">
           <p class="eyebrow">{{ i18n "painelBoardEyebrow" }}</p>
           <h2>{{ i18n "painelBoardTitle" }}</h2>
           <div class="no-results">
@@ -345,7 +201,193 @@
         </section>
       {{ end }}
 
-      {{/* ---- 6. Metodologia ---------------------------------------------- */}}
+      {{/* ---- 2. A régua de 2026, por extenso ---------------------- */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelRulerEyebrow" }}</p>
+        <h2>{{ i18n "painelRulerTitle" }}</h2>
+        <div class="painel__rulers">
+          <div class="painel__ruler-card">
+            <p class="painel__ruler-number">30%</p>
+            <h3>{{ i18n "painelRulerBlackTitle" }}</h3>
+            <p>{{ i18n "painelRulerBlackBody" }}</p>
+          </div>
+          <div class="painel__ruler-card">
+            <p class="painel__ruler-number">30%</p>
+            <h3>{{ i18n "painelRulerWomenTitle" }}</h3>
+            <p>{{ i18n "painelRulerWomenBody" }}</p>
+          </div>
+          <div class="painel__ruler-card painel__ruler-card--deadline" v-if="countdown">
+            <p class="painel__ruler-number" v-if="!countdown.passed">{{ "{{ countdown.daysLeft }}" }}
+              <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
+              <template v-else>{{ i18n "publicFundsDays" }}</template></p>
+            <p class="painel__ruler-number" v-else>8/9</p>
+            <h3>{{ i18n "painelRulerDeadlineTitle" }}</h3>
+            <p v-if="!countdown.passed">{{ i18n "painelRulerDeadlineBody" }}</p>
+            <p v-else>{{ i18n "painelRulerDeadlinePast" }}</p>
+          </div>
+        </div>
+      </section>
+
+      {{/* ---- 3. A sala de 100 cadeiras ------------------------------------
+           Waffle 10×10 renderizado pelo Hugo (100 <span> por grade, com as
+           classes de preenchimento pré-computadas dos dados do IBGE/Câmara em
+           data/representacao2026.json), animado por uma única troca de classe
+           no container. Lúdico sem biblioteca nenhuma: só grid + transição de
+           cor, e a transição respeita prefers-reduced-motion no SCSS. */}}
+      {{ $rep := site.Data.representacao2026 }}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelWaffleEyebrow" }}</p>
+        <h2>{{ i18n "painelWaffleTitle" }}</h2>
+        <div class="painel__waffle-layout">
+        <div class="painel__waffle-copy">
+        <p class="painel__section-intro">{{ i18n "painelWaffleIntro" }}</p>
+
+        <div class="painel__waffle-toggle" role="group" aria-label='{{ i18n "painelWaffleToggleLabel" }}'>
+          <button
+            type="button"
+            class="candidato__pill"
+            :class="{ 'candidato__pill--active': waffleView === 'chamber' }"
+            :aria-pressed="waffleView === 'chamber'"
+            @click="waffleView = 'chamber'">{{ i18n "painelWaffleChamber" }}</button>
+          <button
+            type="button"
+            class="candidato__pill"
+            :class="{ 'candidato__pill--active': waffleView === 'population' }"
+            :aria-pressed="waffleView === 'population'"
+            @click="waffleView = 'population'">{{ i18n "painelWafflePopulation" }}</button>
+        </div>
+        <p class="chart-source">{{ i18n "painelWaffleSource" }}</p>
+          <aside class="painel__stat-card">
+            <p class="painel__stat-number">{{ i18n "painelIpuStat" }}</p>
+            <p class="painel__stat-title">{{ i18n "painelIpuTitle" }}</p>
+            <p class="painel__stat-body">{{ i18n "painelIpuBody" }}</p>
+          </aside>
+        </div>
+
+        <div class="painel__waffles">
+          <figure class="painel__waffle">
+            <div
+              class="painel__waffle-grid painel__waffle-grid--women"
+              :class="{ 'is-population': waffleView === 'population' }"
+              role="img"
+              aria-label='{{ i18n "painelWaffleWomenAria" }}'>
+              {{ range seq 1 100 }}
+                <span class="painel__seat{{ if le . (int $rep.waffle.chamber_women_seats_of_100) }} painel__seat--now{{ end }}{{ if le . (int $rep.waffle.population_women_seats_of_100) }} painel__seat--pop{{ end }}"></span>
+              {{ end }}
+            </div>
+            <figcaption>
+              <strong>{{ i18n "painelWaffleWomenLabel" }}</strong>
+              <span v-if="waffleView === 'chamber'">{{ i18n "painelWaffleWomenChamber" }}</span>
+              <span v-else>{{ i18n "painelWaffleWomenPopulation" }}</span>
+            </figcaption>
+          </figure>
+
+          <figure class="painel__waffle">
+            <div
+              class="painel__waffle-grid painel__waffle-grid--black"
+              :class="{ 'is-population': waffleView === 'population' }"
+              role="img"
+              aria-label='{{ i18n "painelWaffleBlackAria" }}'>
+              {{ range seq 1 100 }}
+                <span class="painel__seat{{ if le . (int $rep.waffle.chamber_black_seats_of_100) }} painel__seat--now{{ end }}{{ if le . (int $rep.waffle.population_black_seats_of_100) }} painel__seat--pop{{ end }}"></span>
+              {{ end }}
+            </div>
+            <figcaption>
+              <strong>{{ i18n "painelWaffleBlackLabel" }}</strong>
+              <span v-if="waffleView === 'chamber'">{{ i18n "painelWaffleBlackChamber" }}</span>
+              <span v-else>{{ i18n "painelWaffleBlackPopulation" }}</span>
+            </figcaption>
+          </figure>
+        </div>
+        </div>
+      </section>
+
+      {{/* ---- 4. Como chegamos até aqui: linha do tempo + série histórica */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelTimelineEyebrow" }}</p>
+        <h2>{{ i18n "painelTimelineTitle" }}</h2>
+        <p class="painel__section-intro">{{ i18n "painelTimelineIntro" }}</p>
+
+        <div class="painel__history">
+          <ol class="painel__timeline">
+            <li><span class="painel__timeline-year">1932</span><span>{{ i18n "painelTl1932" }}</span></li>
+            <li><span class="painel__timeline-year">1933</span><span>{{ i18n "painelTl1933" }}</span></li>
+            <li><span class="painel__timeline-year">1997</span><span>{{ i18n "painelTl1997" }}</span></li>
+            <li><span class="painel__timeline-year">2009</span><span>{{ i18n "painelTl2009" }}</span></li>
+            <li><span class="painel__timeline-year">2018</span><span>{{ i18n "painelTl2018" }}</span></li>
+            <li><span class="painel__timeline-year">2020</span><span>{{ i18n "painelTl2020" }}</span></li>
+            <li><span class="painel__timeline-year">2021</span><span>{{ i18n "painelTl2021" }}</span></li>
+            <li><span class="painel__timeline-year">2022</span><span>{{ i18n "painelTl2022" }}</span></li>
+            <li><span class="painel__timeline-year">2024</span><span>{{ i18n "painelTl2024" }}</span></li>
+            <li><span class="painel__timeline-year">2026</span><span>{{ i18n "painelTl2026" }}</span></li>
+          </ol>
+          <div class="painel__history-chart">
+            <div id="js-painel-history-chart"></div>
+            <p class="chart-benchmark">{{ i18n "painelHistoryBenchmark" }}</p>
+            <p class="chart-source">{{ i18n "painelHistorySource" }}</p>
+          </div>
+        </div>
+      </section>
+
+      {{/* ---- 5. Por que fiscalizar o dinheiro (e não só as candidaturas) */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelWhyEyebrow" }}</p>
+        <h2>{{ i18n "painelWhyTitle" }}</h2>
+        <div class="painel__why-grid">
+        <div class="painel__prose">
+          <p>{{ i18n "painelWhyP1" }}</p>
+          <p>
+            {{ i18n "painelWhyP2a" }}
+            <a href="https://www.tse.jus.br/comunicacao/noticias/2019/Setembro/tse-mantem-cassacao-de-vereadores-envolvidos-em-caso-de-candidaturas-fraudulentas-no-piaui" target="_blank" rel="noopener">{{ i18n "painelWhyCase1" }}</a>{{ i18n "painelWhyP2b" }}
+            <a href="https://exame.com/brasil/pf-indicia-ministro-do-turismo-por-esquema-de-candidaturas-laranjas-no-psl/" target="_blank" rel="noopener">{{ i18n "painelWhyCase2" }}</a>{{ i18n "painelWhyP2c" }}
+          </p>
+          <p>{{ i18n "painelWhyP3" }}</p>
+        </div>
+        <aside class="painel__stat-card painel__stat-card--warm">
+          <p class="painel__stat-number">{{ i18n "painelWhyStatNumber" }}</p>
+          <p class="painel__stat-title">{{ i18n "painelWhyStatTitle" }}</p>
+          <p class="painel__stat-body">{{ i18n "painelWhyStatBody" }} <a href="https://www.generonumero.media/reportagens/eleicoes-2022-mulheres-negrass-recebem-apenas-20-do-recursos-para-homens-brancos/" target="_blank" rel="noopener">Gênero e Número</a>.</p>
+        </aside>
+        </div>
+      </section>
+
+      {{/* ---- 6. As chances na urna + autodeclaração ----------------------
+           Funil de 2022 (dep. federal): candidatura virou cadeira em que
+           proporção, por grupo. Números verificados em data/representacao2026
+           (Revista EJE/TSE + Agência Câmara/Poder360); as barras são relativas
+           à maior taxa, e o número que o eleitor leva é o "1 em cada N". Ao
+           lado, o cartão das 786 mudanças de autodeclaração de 2026 — o
+           contexto que liga identidade declarada a dinheiro de cota. */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelFunnelEyebrow" }}</p>
+        <h2>{{ i18n "painelFunnelTitle" }}</h2>
+        <p class="painel__section-intro">{{ i18n "painelFunnelIntro" }}</p>
+        <div class="painel__why-grid">
+          <div class="painel__funnel">
+            {{ range $rep.funnel_2022_chamber.groups }}
+              <div class="painel__funnel-row">
+                <span class="painel__funnel-label">{{ .label }}</span>
+                <span class="painel__funnel-track">
+                  <span class="painel__funnel-fill painel__funnel-fill--{{ .key }}" style="width: {{ .bar_pct }}%"></span>
+                </span>
+                <span class="painel__funnel-value">
+                  <strong>1 {{ i18n "painelFunnelOneIn" }} {{ .one_in }}</strong>
+                  <small>{{ .elected }} {{ i18n "painelFunnelElected" }} {{ lang.FormatNumberCustom 0 .candidacies "- , ." }} {{ i18n "painelFunnelCandidacies" }}</small>
+                </span>
+              </div>
+            {{ end }}
+            <p class="chart-source">{{ i18n "painelFunnelSource" }}</p>
+          </div>
+          <aside class="painel__stat-card painel__stat-card--warm">
+            <p class="painel__stat-number">786</p>
+            <p class="painel__stat-title">{{ i18n "painelRaceChangeTitle" }}</p>
+            <p class="painel__stat-body">{{ i18n "painelRaceChangeBody" }}
+              <a href="https://g1.globo.com/politica/eleicoes/2026/noticia/2026/08/23/eleicoes-2026-tse-candidatos-mudanca-cor-raca.ghtml" target="_blank" rel="noopener">{{ i18n "painelRaceChangeSource" }}</a>.</p>
+          </aside>
+        </div>
+      </section>
+
+      {{/* ---- 7. Metodologia ---------------------------------------------- */}}
       <section class="painel__section painel__section--method">
         <p class="eyebrow">{{ i18n "painelMethodEyebrow" }}</p>
         <h2>{{ i18n "painelMethodTitle" }}</h2>

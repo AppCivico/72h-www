@@ -612,3 +612,131 @@
     color: var(--ink-3);
   }
 }
+
+/* Abertura do bloco, faixa de urgência e marcação de quem está fora do piso
+============================================================================ */
+
+/// A primeira seção da página não leva borda de topo: ela abre o bloco.
+.painel__section--lead {
+  padding-top: 0;
+  margin-top: 1.5rem;
+
+  border-top: 0;
+}
+
+/// Relógio + placar de quem está fora, acima da tabela. É o gancho da
+/// página: prazo curto e nomes fora da régua.
+.painel__urgency {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1.25rem;
+
+  padding: 1.25rem 1.5rem;
+  margin: 1.25rem 0;
+
+  background: var(--paper-warm);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: 0 12px 12px 0;
+
+  @media (min-width: functions.breakpoint('toggle-menu')) {
+    grid-template-columns: auto minmax(0, 1fr);
+
+    gap: 2.5rem;
+
+    align-items: center;
+  }
+}
+
+.painel__urgency-clock {
+  text-align: center;
+
+  @media (min-width: functions.breakpoint('toggle-menu')) {
+    padding-right: 2.5rem;
+
+    border-right: 1px solid var(--hairline-2);
+  }
+}
+
+.painel__urgency-number {
+  margin: 0;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-3xl);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+  color: var(--accent-warm);
+}
+
+.painel__urgency-unit {
+  margin: 0;
+
+  font-size: var(--t-s);
+  font-weight: 600;
+  color: var(--accent-warm);
+}
+
+.painel__urgency-caption {
+  max-width: 12rem;
+  margin: 0.35rem auto 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+.painel__urgency-counts {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.4rem;
+}
+
+.painel__urgency-count {
+  margin: 0;
+
+  font-size: var(--t-s);
+  color: var(--ink-2);
+
+  strong {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+}
+
+.painel__urgency-note {
+  margin: 0.35rem 0 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+
+.painel__pill--filter {
+  margin-left: auto;
+}
+
+/// Quem está fora do piso: selo no nome e um filete âmbar na linha. No
+/// modo cartão (mobile) a linha já é um bloco, então o filete aparece nos
+/// dois layouts sem regra extra.
+.painel__badge {
+  display: inline-block;
+
+  padding: 0.1rem 0.4rem;
+  margin-left: 0.4rem;
+
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: functions.palette('white');
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+
+  background: var(--accent-warm);
+  border-radius: 999px;
+}
+
+.painel__row--below {
+  box-shadow: inset 3px 0 0 var(--accent-warm);
+}
