@@ -113,10 +113,14 @@
                   :key="row.id"
                   :class="{ 'painel__row--below': row.belowFloor }">
                   <td data-label='{{ i18n "party" }}'>
-                    <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
                     {{/* Selo explícito, além da barra âmbar: quem está fora do
-                        piso tem de ser identificável numa varredura rápida. */}}
-                    <span class="painel__badge" v-if="row.belowFloor">{{ i18n "painelBadgeBelow" }}</span>
+                        piso tem de ser identificável numa varredura rápida. O
+                        wrapper flex deixa o selo quebrar linha em coluna
+                        estreita em vez de vazar. */}}
+                    <span class="painel__party">
+                      <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
+                      <span class="painel__badge" v-if="row.belowFloor">{{ i18n "painelBadgeBelow" }}</span>
+                    </span>
                   </td>
                   <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
                     <span v-html="formatCurrency(row.public.total)"></span>

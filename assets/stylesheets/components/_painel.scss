@@ -312,6 +312,16 @@
     flex-wrap: wrap;
   }
 
+  // No modo cartão o _data-table zera o padding lateral de TODAS as células
+  // (não só das de borda), então o respiro precisa vir de novo aqui, senão o
+  // filete âmbar da linha volta a encostar no conteúdo.
+  .painel__table td,
+  .painel__table td:first-child,
+  .painel__table td:last-child {
+    padding-right: 0.85rem;
+    padding-left: 0.85rem;
+  }
+
   .painel__bullet {
     grid-template-columns: 1fr 3.5rem;
 
@@ -724,7 +734,6 @@
   display: inline-block;
 
   padding: 0.1rem 0.4rem;
-  margin-left: 0.4rem;
 
   font-size: 0.6875rem;
   font-weight: 600;
@@ -739,4 +748,29 @@
 
 .painel__row--below {
   box-shadow: inset 3px 0 0 var(--accent-warm);
+}
+
+/// O .data-table zera o padding-left da primeira célula (no resto do site a
+/// coluna nasce na margem), mas aqui o filete âmbar de quem está fora do
+/// piso é desenhado DENTRO dessa célula: sem respiro, a sigla encosta nele.
+.painel__table td:first-child,
+.painel__table th:first-child {
+  padding-left: 0.85rem;
+}
+
+.painel__table td:last-child,
+.painel__table th:last-child {
+  padding-right: 0.85rem;
+}
+
+/// Sigla e selo na mesma célula: flex com wrap, para o selo cair para a
+/// linha de baixo em coluna estreita em vez de vazar a tabela.
+.painel__party {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.35rem 0.5rem;
+
+  align-items: baseline;
 }
