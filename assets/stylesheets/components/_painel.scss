@@ -538,3 +538,77 @@
   font-size: var(--t-xs);
   color: var(--ink-2);
 }
+
+/* O funil de 2022: candidatura virou cadeira em que proporção
+============================================================================ */
+
+.painel__funnel {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.9rem;
+}
+
+.painel__funnel-row {
+  display: grid;
+
+  grid-template-columns: minmax(7rem, 11rem) 1fr minmax(10rem, auto);
+
+  gap: 0.35rem 0.75rem;
+
+  align-items: center;
+
+  @media (max-width: 40rem) {
+    grid-template-columns: 1fr auto;
+
+    .painel__funnel-track {
+      grid-column: 1 / -1;
+    }
+  }
+}
+
+.painel__funnel-label {
+  font-size: var(--t-xs);
+  font-weight: 600;
+}
+
+.painel__funnel-track {
+  height: 0.9rem;
+  overflow: hidden;
+
+  background: var(--paper-warm);
+  border-radius: 5px;
+}
+
+.painel__funnel-fill {
+  display: block;
+
+  height: 100%;
+
+  border-radius: 5px;
+}
+
+/// Mesmo pareamento de cores do waffle: gênero em dv-1, raça em dv-2 —
+/// a página inteira usa um código só.
+.painel__funnel-fill--men,
+.painel__funnel-fill--women {
+  background: var(--dv-1);
+}
+
+.painel__funnel-fill--white,
+.painel__funnel-fill--black {
+  background: var(--dv-2);
+}
+
+.painel__funnel-value {
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+
+  small {
+    display: block;
+
+    color: var(--ink-3);
+  }
+}

@@ -782,3 +782,33 @@
   translation: "partidos no placar"
 - id: painelCountsDormant
   translation: "abaixo do piso de R$ 250 mil, listados ao fim da seção"
+- id: candidateRaceCol
+  translation: "Cor/raça declarada"
+- id: candidateRaceChangeLead
+  translation: "A autodeclaração de cor/raça desta pessoa ao TSE variou entre eleições:"
+- id: candidateRaceChangeIn
+  translation: "em"
+- id: candidateRaceChangeContext
+  translation: "Mudar a autodeclaração pode ser legítimo e refletir revisão da própria identificação. Desde 2024, a declaração precisa coincidir com o cadastro eleitoral; divergências geram notificação, e quem não responde fica impedido de receber os recursos reservados às cotas (Res. TSE 23.729/2024). Em 2026, 786 candidaturas mudaram a declaração em relação a 2022, segundo"
+- id: candidateRaceChangeSource
+  translation: "levantamento do g1 sobre dados parciais do TSE"
+- id: painelFunnelEyebrow
+  translation: "As chances na urna"
+- id: painelFunnelTitle
+  translation: "Em 2022, uma candidatura valia mais para uns do que para outros"
+- id: painelFunnelIntro
+  translation: "De cada grupo que disputou uma vaga de deputado federal em 2022, quantos chegaram a uma das 513 cadeiras? A régua abaixo mostra a taxa de conversão de cada grupo. É essa distância que dinheiro de campanha distribuído cedo, e de verdade, pode encurtar."
+- id: painelFunnelOneIn
+  translation: "em cada"
+- id: painelFunnelElected
+  translation: "eleitos entre"
+- id: painelFunnelCandidacies
+  translation: "candidaturas"
+- id: painelFunnelSource
+  translation: "Fontes: candidaturas registradas por sexo e cor/raça, Revista Estudos Eleitorais (EJE/TSE); eleitos, Agência Câmara e Poder360 (as fontes divergem entre 134 e 135 eleitos pretos e pardos; usamos 135). Taxas sobre candidaturas registradas, incluindo as indeferidas depois."
+- id: painelRaceChangeTitle
+  translation: "candidaturas de 2026 mudaram a declaração de cor/raça em relação a 2022"
+- id: painelRaceChangeBody
+  translation: "4,5% dos registros parciais (até 12/08). O trânsito entre branco e pardo domina: 72,5% das mudanças. Mudar pode ser legítimo; desde 2024 a declaração precisa coincidir com o cadastro eleitoral, e quem não responde à notificação fica impedido de receber os recursos das cotas. Nas páginas de candidato deste site, a trajetória mostra como cada pessoa se declarou em cada eleição. Fonte:"
+- id: painelRaceChangeSource
+  translation: "levantamento do g1 sobre dados do TSE"

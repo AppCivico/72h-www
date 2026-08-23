@@ -77,6 +77,13 @@ function mondayOfWeek(isoDate) {
   return date.toISOString().slice(0, 10);
 }
 
+// TSE race labels arrive UPPERCASE ('PARDA', 'SEM INFORMAÇÃO'); the page
+// speaks lowercase. 'SEM INFORMAÇÃO' is treated as absence by the callers,
+// never as a declaration (and never as a "change").
+function formatRace(name) {
+  return (name || '').toLowerCase();
+}
+
 // "YYYY-MM-DD" -> "DD/MM/YYYY". Transfer dates are date-only, no time
 // component — a small string split avoids pulling in dayjs (unlike
 // home.js, this bundle stays lean) for something this simple.
@@ -339,6 +346,38 @@ window.$vueCandidato = Vue.createApp({
         hasMore: rows.length > extractVisible,
       };
     },
+    // Self-declared color/race per candidacy, oldest first, ignoring entries
+    // without the field (API not yet updated) and 'SEM INFORMAÇÃO' (absence,
+    // not a declaration). Drives the trajectory table column and the
+    // change note below.
+    raceDeclarations({ elections } = this) {
+      return [...elections]
+        .filter((election) => {
+          const name = election.race?.name;
+          return name && name.toUpperCase() !== 'SEM INFORMAÇÃO';
+        })
+        .sort((a, b) => a.year - b.year)
+        .map((election) => ({ year: election.year, race: formatRace(election.race.name) }));
+    },
+    // Oldest vs newest declaration, when they differ. Rendered descriptively
+    // ("parda em 2022, preta em 2026") -- changing a self-declaration is
+    // often legitimate, and the note's copy carries that framing; this
+    // computed only states the two endpoints.
+    raceChange({ raceDeclarations } = this) {
+      if (raceDeclarations.length < 2) return null;
+      const first = raceDeclarations[0];
+      const last = raceDeclarations[raceDeclarations.length - 1];
+      if (first.race === last.race) return null;
+      return {
+        fromRace: first.race,
+        fromYear: first.year,
+        toRace: last.race,
+        toYear: last.year,
+      };
+    },
+    hasRaceData({ raceDeclarations } = this) {
+      return raceDeclarations.length > 0;
+    },
     // Same value the address bar itself gets synced to (urlForCandidateId,
     // via syncAddressBar) — reused here so sharing always points at
     // whichever candidacy is currently selected, not just the person's
@@ -449,6 +488,7 @@ window.$vueCandidato = Vue.createApp({
     formatCurrencyNoAbbr,
     formatNumeral,
     formatDateBR,
+    formatRace,
     personUrl,
     // The real, working URL for viewing a specific candidacy — used both
     // for the pills' :href (so they're genuine links: middle/ctrl-click

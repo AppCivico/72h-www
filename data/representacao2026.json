@@ -1,49 +1,169 @@
 {
-  "_sources": {
-    "camara_mulheres_2022": "https://www2.camara.leg.br/a-camara/estruturaadm/secretarias/secretaria-da-mulher/noticias/bancada-feminina-alcanca-91-deputadas-federais-1",
-    "serie_historica": "https://www12.senado.leg.br/noticias/materias/2010/09/28/evolucao-do-numero-de-mulheres-no-legislativo e https://www.poder360.com.br/poder-congresso/maior-da-historia-bancada-feminina-ainda-e-so-18-do-congresso/",
-    "negros_camara": "https://www.poder360.com.br/eleicoes/numero-de-deputados-negros-cresce-10-em-2022/",
-    "ibge_censo_2022": "https://educa.ibge.gov.br/jovens/conheca-o-brasil/populacao/18319-cor-ou-raca.html e https://educa.ibge.gov.br/jovens/conheca-o-brasil/populacao/18320-quantidade-de-homens-e-mulheres.html",
-    "ipu_ranking": "https://brasil.unwomen.org/pt-br/stories/noticia/2025/04/brasil-ocupa-a-133a-posicao-no-ranking-global-de-representacao-parlamentar-de-mulheres"
+ "_sources": {
+  "camara_mulheres_2022": "https://www2.camara.leg.br/a-camara/estruturaadm/secretarias/secretaria-da-mulher/noticias/bancada-feminina-alcanca-91-deputadas-federais-1",
+  "serie_historica": "https://www12.senado.leg.br/noticias/materias/2010/09/28/evolucao-do-numero-de-mulheres-no-legislativo e https://www.poder360.com.br/poder-congresso/maior-da-historia-bancada-feminina-ainda-e-so-18-do-congresso/",
+  "negros_camara": "https://www.poder360.com.br/eleicoes/numero-de-deputados-negros-cresce-10-em-2022/",
+  "ibge_censo_2022": "https://educa.ibge.gov.br/jovens/conheca-o-brasil/populacao/18319-cor-ou-raca.html e https://educa.ibge.gov.br/jovens/conheca-o-brasil/populacao/18320-quantidade-de-homens-e-mulheres.html",
+  "ipu_ranking": "https://brasil.unwomen.org/pt-br/stories/noticia/2025/04/brasil-ocupa-a-133a-posicao-no-ranking-global-de-representacao-parlamentar-de-mulheres"
+ },
+ "waffle": {
+  "chamber_women_pct": 17.7,
+  "chamber_women_seats_of_100": 18,
+  "population_women_pct": 51.5,
+  "population_women_seats_of_100": 52,
+  "chamber_black_pct": 26,
+  "chamber_black_seats_of_100": 26,
+  "population_black_pct": 55.5,
+  "population_black_seats_of_100": 56
+ },
+ "ipu": {
+  "brazil_rank": 133,
+  "world_average_pct": 27.2,
+  "as_of": "2025"
+ },
+ "women_elected_chamber": {
+  "_notes": "Deputadas federais eleitas por eleição. 1990 vem da contagem por legislatura do Senado e pode incluir suplentes; 1994 foi omitido por falta de dado confiável (a própria série do TSE é incompleta). A Câmara tem 513 cadeiras desde 1994; antes, a base varia.",
+  "series": [
+   {
+    "year": 1933,
+    "count": 1
+   },
+   {
+    "year": 1945,
+    "count": 0
+   },
+   {
+    "year": 1950,
+    "count": 1
+   },
+   {
+    "year": 1954,
+    "count": 1
+   },
+   {
+    "year": 1962,
+    "count": 1
+   },
+   {
+    "year": 1966,
+    "count": 6
+   },
+   {
+    "year": 1970,
+    "count": 1
+   },
+   {
+    "year": 1974,
+    "count": 1
+   },
+   {
+    "year": 1978,
+    "count": 4
+   },
+   {
+    "year": 1982,
+    "count": 8
+   },
+   {
+    "year": 1986,
+    "count": 26
+   },
+   {
+    "year": 1990,
+    "count": 30
+   },
+   {
+    "year": 1998,
+    "count": 29
+   },
+   {
+    "year": 2002,
+    "count": 42
+   },
+   {
+    "year": 2006,
+    "count": 45
+   },
+   {
+    "year": 2010,
+    "count": 45
+   },
+   {
+    "year": 2014,
+    "count": 51
+   },
+   {
+    "year": 2018,
+    "count": 77
+   },
+   {
+    "year": 2022,
+    "count": 91
+   }
+  ]
+ },
+ "black_elected_chamber": [
+  {
+   "year": 2018,
+   "count": 123,
+   "pct": 24
   },
-  "waffle": {
-    "chamber_women_pct": 17.7,
-    "chamber_women_seats_of_100": 18,
-    "population_women_pct": 51.5,
-    "population_women_seats_of_100": 52,
-    "chamber_black_pct": 26,
-    "chamber_black_seats_of_100": 26,
-    "population_black_pct": 55.5,
-    "population_black_seats_of_100": 56
-  },
-  "ipu": { "brazil_rank": 133, "world_average_pct": 27.2, "as_of": "2025" },
-  "women_elected_chamber": {
-    "_notes": "Deputadas federais eleitas por eleição. 1990 vem da contagem por legislatura do Senado e pode incluir suplentes; 1994 foi omitido por falta de dado confiável (a própria série do TSE é incompleta). A Câmara tem 513 cadeiras desde 1994; antes, a base varia.",
-    "series": [
-      { "year": 1933, "count": 1 },
-      { "year": 1945, "count": 0 },
-      { "year": 1950, "count": 1 },
-      { "year": 1954, "count": 1 },
-      { "year": 1962, "count": 1 },
-      { "year": 1966, "count": 6 },
-      { "year": 1970, "count": 1 },
-      { "year": 1974, "count": 1 },
-      { "year": 1978, "count": 4 },
-      { "year": 1982, "count": 8 },
-      { "year": 1986, "count": 26 },
-      { "year": 1990, "count": 30 },
-      { "year": 1998, "count": 29 },
-      { "year": 2002, "count": 42 },
-      { "year": 2006, "count": 45 },
-      { "year": 2010, "count": 45 },
-      { "year": 2014, "count": 51 },
-      { "year": 2018, "count": 77 },
-      { "year": 2022, "count": 91 }
-    ]
-  },
-  "black_elected_chamber": [
-    { "year": 2018, "count": 123, "pct": 24 },
-    { "year": 2022, "count": 135, "pct": 26 }
-  ],
-  "black_candidacies_pct": { "y2022": 50.3, "y2026": 49.8 }
+  {
+   "year": 2022,
+   "count": 135,
+   "pct": 26
+  }
+ ],
+ "black_candidacies_pct": {
+  "y2022": 50.3,
+  "y2026": 49.8
+ },
+ "funnel_2022_chamber": {
+  "_source": "Candidaturas registradas a deputado federal em 2022, por sexo e cor/raça: Revista Estudos Eleitorais (EJE/TSE), art. 310 (https://revistaeje.tse.jus.br/estudoseleitorais/article/download/310/294/730). Eleitas(os): Agência Câmara e Poder360; as fontes divergem entre 134 e 135 eleitos pretos+pardos e usamos 135 (Poder360). Taxas sobre candidaturas registradas (inclui indeferidas depois).",
+  "groups": [
+   {
+    "key": "men",
+    "label": "Homens",
+    "candidacies": 6905,
+    "elected": 422,
+    "rate_pct": 6.1,
+    "one_in": 16,
+    "bar_pct": 88
+   },
+   {
+    "key": "white",
+    "label": "Pessoas brancas",
+    "candidacies": 5327,
+    "elected": 370,
+    "rate_pct": 6.9,
+    "one_in": 14,
+    "bar_pct": 100
+   },
+   {
+    "key": "black",
+    "label": "Pessoas pretas e pardas",
+    "candidacies": 5132,
+    "elected": 135,
+    "rate_pct": 2.6,
+    "one_in": 38,
+    "bar_pct": 38
+   },
+   {
+    "key": "women",
+    "label": "Mulheres",
+    "candidacies": 3717,
+    "elected": 91,
+    "rate_pct": 2.4,
+    "one_in": 41,
+    "bar_pct": 35
+   }
+  ]
+ },
+ "race_change_2026": {
+  "_source": "Levantamento do g1 com dados parciais do TSE (registros até 12/08/2026), reconstruído por republicações (Portal AZ, Notícia Preta, Brasil 247). URL da matéria: https://g1.globo.com/politica/eleicoes/2026/noticia/2026/08/23/eleicoes-2026-tse-candidatos-mudanca-cor-raca.ghtml",
+  "changed": 786,
+  "universe": 17413,
+  "pct": 4.5,
+  "white_pardo_share_pct": 72.5
+ }
 }

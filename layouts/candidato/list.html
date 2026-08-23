@@ -396,6 +396,18 @@
           <p class="eyebrow">{{ i18n "candidateHistoryEyebrow" }}</p>
           <h2>{{ i18n "candidateElectionHistory" }}</h2>
 
+          {{/* Mudança de autodeclaração é fato descritivo, nunca acusação: a
+              nota diz as duas pontas, lembra que mudar pode ser legítimo e
+              aponta a regra que passou a valer em 2024. O contexto numérico
+              (786 em 2026) vem de levantamento do g1 sobre dados do TSE. */}}
+          <p class="candidato__compare-note candidato__race-note" v-if="raceChange">
+            {{ i18n "candidateRaceChangeLead" }}
+            <strong>{{ "{{ raceChange.fromRace }}" }} {{ i18n "candidateRaceChangeIn" }} {{ "{{ raceChange.fromYear }}" }}</strong>;
+            <strong>{{ "{{ raceChange.toRace }}" }} {{ i18n "candidateRaceChangeIn" }} {{ "{{ raceChange.toYear }}" }}</strong>.
+            {{ i18n "candidateRaceChangeContext" }}
+            <a href="https://g1.globo.com/politica/eleicoes/2026/noticia/2026/08/23/eleicoes-2026-tse-candidatos-mudanca-cor-raca.ghtml" target="_blank" rel="noopener">{{ i18n "candidateRaceChangeSource" }}</a>.
+          </p>
+
           <div class="candidato__panel">
             <div id="js-candidato-history-chart"></div>
 
@@ -406,6 +418,7 @@
                   <th>{{ i18n "office" }}</th>
                   <th>{{ i18n "state" }}</th>
                   <th>{{ i18n "party" }}</th>
+                  <th v-if="hasRaceData">{{ i18n "candidateRaceCol" }}</th>
                   <th>{{ i18n "electionStatuses" }}</th>
                   <th class="table-cell--numeric">{{ i18n "amount" }}</th>
                 </tr>
@@ -423,6 +436,9 @@
                   </td>
                   <td data-label='{{ i18n "party" }}'>
                     {{ "{{ election.party.acronym }}" }}
+                  </td>
+                  <td v-if="hasRaceData" data-label='{{ i18n "candidateRaceCol" }}'>
+                    {{ "{{ election.race && election.race.name ? formatRace(election.race.name) : '' }}" }}
                   </td>
                   <td data-label='{{ i18n "electionStatuses" }}'>
                     {{ "{{ election.election_status }}" }}

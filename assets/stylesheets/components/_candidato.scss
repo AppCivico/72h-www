@@ -756,3 +756,9 @@
   font-size: var(--t-xs);
   color: var(--ink-2);
 }
+
+/// Nota descritiva de mudança na autodeclaração de cor/raça, acima da
+/// tabela de trajetória.
+.candidato__race-note {
+  max-width: 44rem;
+}

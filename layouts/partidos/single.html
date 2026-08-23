@@ -137,6 +137,42 @@
         </div>
       </section>
 
+      {{/* ---- 3b. As chances na urna + autodeclaração ----------------------
+           Funil de 2022 (dep. federal): candidatura virou cadeira em que
+           proporção, por grupo. Números verificados em data/representacao2026
+           (Revista EJE/TSE + Agência Câmara/Poder360); as barras são relativas
+           à maior taxa, e o número que o eleitor leva é o "1 em cada N". Ao
+           lado, o cartão das 786 mudanças de autodeclaração de 2026 — o
+           contexto que liga identidade declarada a dinheiro de cota. */}}
+      <section class="painel__section">
+        <p class="eyebrow">{{ i18n "painelFunnelEyebrow" }}</p>
+        <h2>{{ i18n "painelFunnelTitle" }}</h2>
+        <p class="painel__section-intro">{{ i18n "painelFunnelIntro" }}</p>
+        <div class="painel__why-grid">
+          <div class="painel__funnel">
+            {{ range $rep.funnel_2022_chamber.groups }}
+              <div class="painel__funnel-row">
+                <span class="painel__funnel-label">{{ .label }}</span>
+                <span class="painel__funnel-track">
+                  <span class="painel__funnel-fill painel__funnel-fill--{{ .key }}" style="width: {{ .bar_pct }}%"></span>
+                </span>
+                <span class="painel__funnel-value">
+                  <strong>1 {{ i18n "painelFunnelOneIn" }} {{ .one_in }}</strong>
+                  <small>{{ .elected }} {{ i18n "painelFunnelElected" }} {{ lang.FormatNumberCustom 0 .candidacies "- , ." }} {{ i18n "painelFunnelCandidacies" }}</small>
+                </span>
+              </div>
+            {{ end }}
+            <p class="chart-source">{{ i18n "painelFunnelSource" }}</p>
+          </div>
+          <aside class="painel__stat-card painel__stat-card--warm">
+            <p class="painel__stat-number">786</p>
+            <p class="painel__stat-title">{{ i18n "painelRaceChangeTitle" }}</p>
+            <p class="painel__stat-body">{{ i18n "painelRaceChangeBody" }}
+              <a href="https://g1.globo.com/politica/eleicoes/2026/noticia/2026/08/23/eleicoes-2026-tse-candidatos-mudanca-cor-raca.ghtml" target="_blank" rel="noopener">{{ i18n "painelRaceChangeSource" }}</a>.</p>
+          </aside>
+        </div>
+      </section>
+
       {{/* ---- 4. A régua de 2026 + contador do prazo ---------------------- */}}
       <section class="painel__section">
         <p class="eyebrow">{{ i18n "painelRulerEyebrow" }}</p>
