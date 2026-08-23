@@ -763,7 +763,7 @@
 - id: painelMethodP2
   translation: "A fatia de cada grupo é calculada sobre o que o partido efetivamente repassou a candidaturas até a última coleta, não sobre a cota que recebeu. Recorte racial por autodeclaração ao TSE (pessoas pretas e pardas, como na EC 133). Partido sem repasse não aparece com 0%: aparece como sem dados, na lista de quem quase nada distribuiu."
 - id: painelMethodP3
-  translation: "Os números mudam todos os dias durante a campanha e podem ser retificados pelos próprios candidatos. Esta página não afirma descumprimento de lei: registra o ritmo e o destino dos repasses declarados. O prazo legal para os mínimos de cota é 8 de setembro; antes disso, estar abaixo de 30% não é infração."
+  translation: "Três limites que valem dizer alto. Primeiro, a unidade de medida: contamos o que as CANDIDATURAS declararam ter recebido, não o que os diretórios afirmam ter pagado. Como há prazo para declarar, um repasse feito hoje pode aparecer aqui só depois, e o ritmo de um partido depende também do ritmo de quem recebeu. Segundo, as federações: os percentuais são por partido, como manda a regra dos fundos, mesmo quando as candidaturas disputam sob federação. Terceiro, o piso: ele é aferido no fim do prazo, sobre o total que o partido tem de aplicar, e não sobre o que já saiu. Esta página registra ritmo e destino dos repasses declarados; ela não declara descumprimento de lei."
 - id: painelLinkFefc
   translation: "Cotas do FEFC por partido (TSE)"
 - id: painelIpuStat
@@ -805,7 +805,7 @@
 - id: painelFunnelCandidacies
   translation: "candidaturas"
 - id: painelFunnelSource
-  translation: "Fontes: candidaturas registradas por sexo e cor/raça, Revista Estudos Eleitorais (EJE/TSE); eleitos, Agência Câmara e Poder360 (as fontes divergem entre 134 e 135 eleitos pretos e pardos; usamos 135). Taxas sobre candidaturas registradas, incluindo as indeferidas depois."
+  translation: "Fontes: candidaturas registradas por sexo e cor/raça, Revista Estudos Eleitorais (EJE/TSE); eleitos, Agência Câmara e Poder360 (as fontes divergem entre 134 e 135 eleitos pretos e pardos; usamos 135). Taxas sobre candidaturas registradas, incluindo as indeferidas depois. São taxas descritivas, sem controlar por partido, estado, reeleição ou tamanho da bancada: mostram o resultado do funil, não a causa dele."
 - id: painelRaceChangeTitle
   translation: "candidaturas de 2026 mudaram a declaração de cor/raça em relação a 2022"
 - id: painelRaceChangeBody
@@ -843,10 +843,22 @@
 - id: painelHelpBlack
   translation: "Ordenando pela fatia do dinheiro público que cada partido repassou a candidaturas de pessoas pretas e pardas. O piso legal é 30% (EC 133/2024)."
 - id: painelHelpFemale
-  translation: "Ordenando pela fatia do dinheiro público que cada partido repassou a candidaturas de mulheres. O piso legal é 30% (Consulta TSE de 2018 e EC 117/2022)."
+  translation: "Ordenando pela fatia do dinheiro público que cada partido repassou a candidaturas de mulheres. Comparamos com o piso de 30% (Consulta TSE de 2018 e EC 117/2022), mas a regra real é proporcional: quando as candidatas passam de 30% das candidaturas do partido, o mínimo sobe para essa proporção. Ou seja, esta coluna é generosa com os partidos, e pode mostrar como cumprindo quem já deveria estar repassando mais."
 - id: painelHelpQuota
-  translation: "Ordenando pela fatia da cota do Fundo Eleitoral que o partido já tirou do diretório e repassou a candidaturas. Aqui não há piso legal: mede ritmo, não equidade. Repassar pouco não é ilegal; é dinheiro público parado."
+  translation: "Ordenando pela fatia da cota do Fundo Eleitoral que o partido já tirou do diretório e repassou a candidaturas. Aqui não há piso legal: mede ritmo, não equidade. Repassar pouco não é ilegal; é dinheiro público parado. Uma imprecisão a registrar: o valor repassado soma Fundo Eleitoral e Fundo Partidário, mas a cota no denominador é só a do Fundo Eleitoral, então este percentual é um teto, não uma medida exata."
 - id: painelSortLeastMoved
   translation: "Quem repassou menos primeiro"
 - id: painelSortMostMoved
   translation: "Quem repassou mais primeiro"
+- id: painelBadgeBeforeBlack
+  translation: "até agora abaixo de 30%: raça"
+- id: painelBadgeBeforeFemale
+  translation: "até agora abaixo de 30%: mulheres"
+- id: painelBadgeBeforeBoth
+  translation: "até agora abaixo nos dois"
+- id: painelBaseWarnLead
+  translation: "Leia as fatias com cuidado: até agora nenhum partido repassou mais de"
+- id: painelBaseWarnTail
+  translation: "da própria cota do Fundo Eleitoral. As fatias abaixo são calculadas sobre esse pedaço já repassado, não sobre a cota inteira, e um único repasse grande pode virá-las de cabeça para baixo."
+- id: painelColQuotaNote
+  translation: "e quanto isso representa da cota do FEFC"

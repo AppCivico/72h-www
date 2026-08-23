@@ -159,6 +159,17 @@ window.$vuePainel = Vue.createApp({
         desc: labels.descShare,
       };
     },
+    // O tamanho da base sobre a qual as fatias são calculadas. Enquanto os
+    // partidos repassaram ~1% das próprias cotas, um único repasse grande
+    // vira a fatia de cabeça para baixo -- dizer isso é obrigação, e o número
+    // se atualiza sozinho em vez de envelhecer no texto.
+    baseWarning({ entries } = this) {
+      const used = entries
+        .filter((entry) => entry.public.total >= RANKING_FLOOR && entry.quotaUsed !== null)
+        .map((entry) => entry.quotaUsed);
+      if (!used.length) return null;
+      return { maxUsed: Math.max(...used) };
+    },
     generatedAtBR({ panel } = this) {
       if (!panel?.generated_at) return '';
       const date = new Date(panel.generated_at);
@@ -176,6 +187,17 @@ window.$vuePainel = Vue.createApp({
     formatNumeral,
     formatCurrency(value) {
       return compactCurrency(value, 1);
+    },
+    // Antes de 8/09 estar abaixo de 30% é ritmo, não infração: o selo diz
+    // "abaixo de 30% até agora". Depois do prazo, a mesma condição passa a
+    // ser descumprimento do piso e o selo endurece. A troca é automática.
+    badgeFor(row) {
+      const labels = window.appPanelBadges || {};
+      const phase = this.countdown && this.countdown.passed ? 'after' : 'before';
+      if (row.belowBlack && row.belowFemale) return labels[`${phase}Both`];
+      if (row.belowBlack) return labels[`${phase}Black`];
+      if (row.belowFemale) return labels[`${phase}Female`];
+      return '';
     },
     setThermoGroup(group) {
       if (group === this.thermoGroup) return;

@@ -804,3 +804,11 @@
 
   border-top: 1px solid var(--hairline-2);
 }
+
+/// A ressalva do tamanho da base fica com o mesmo tom de alerta da faixa de
+/// urgência: é a nota que muda a leitura de todos os percentuais abaixo.
+.painel__sort-help--warn {
+  padding-left: 0.75rem;
+
+  border-left: 2px solid var(--accent-warm);
+}

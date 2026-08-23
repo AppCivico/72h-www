@@ -102,12 +102,22 @@
               não tem piso legal. */}}
           <p class="painel__sort-help">{{ "{{ sortAxis.help }}" }}</p>
 
+          {{/* A ressalva estatística mais importante da tela, e a que um
+              especialista cobraria primeiro: as fatias são calculadas sobre
+              o que já foi repassado, que hoje é uma fração pequena da cota.
+              O número se atualiza sozinho em vez de envelhecer no texto. */}}
+          <p class="painel__sort-help painel__sort-help--warn" v-if="baseWarning">
+            {{ i18n "painelBaseWarnLead" }}
+            <strong>{{ "{{ formatNumeral(baseWarning.maxUsed, 1) }}" }}%</strong>
+            {{ i18n "painelBaseWarnTail" }}
+          </p>
+
           <div class="painel__tablewrap">
             <table class="data-table painel__table">
               <thead>
                 <tr>
                   <th>{{ i18n "party" }}</th>
-                  <th class="table-cell--numeric">{{ i18n "painelColPublic" }}</th>
+                  <th class="table-cell--numeric">{{ i18n "painelColPublic" }}<small>{{ i18n "painelColQuotaNote" }}</small></th>
                   <th>{{ i18n "painelColBlack" }}<small>{{ i18n "painelColFloorNote" }}</small></th>
                   <th>{{ i18n "painelColWomen" }}<small>{{ i18n "painelColFloorNote" }}</small></th>
                   <th class="table-cell--numeric">{{ i18n "painelColBlackWomen" }}<small>{{ i18n "painelColNoFloorNote" }}</small></th>
@@ -125,9 +135,7 @@
                         estreita em vez de vazar. */}}
                     <span class="painel__party">
                       <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
-                      <span class="painel__badge" v-if="row.belowBlack && row.belowFemale">{{ i18n "painelBadgeBoth" }}</span>
-                      <span class="painel__badge" v-else-if="row.belowBlack">{{ i18n "painelBadgeBlack" }}</span>
-                      <span class="painel__badge" v-else-if="row.belowFemale">{{ i18n "painelBadgeFemale" }}</span>
+                      <span class="painel__badge" v-if="row.belowBlack || row.belowFemale">{{ "{{ badgeFor(row) }}" }}</span>
                     </span>
                   </td>
                   <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
@@ -427,6 +435,14 @@
     window.appChartCredits = '{{ i18n "chartExportCredits" }}';
     window.appRepresentation = {{ site.Data.representacao2026 | jsonify | safeJS }};
     window.appPanelYear = {{ site.Params.run }};
+    window.appPanelBadges = {
+      beforeBlack: '{{ i18n "painelBadgeBeforeBlack" }}',
+      beforeFemale: '{{ i18n "painelBadgeBeforeFemale" }}',
+      beforeBoth: '{{ i18n "painelBadgeBeforeBoth" }}',
+      afterBlack: '{{ i18n "painelBadgeBlack" }}',
+      afterFemale: '{{ i18n "painelBadgeFemale" }}',
+      afterBoth: '{{ i18n "painelBadgeBoth" }}',
+    }
     window.appPanelSort = {
       helpBlack: '{{ i18n "painelHelpBlack" }}',
       helpFemale: '{{ i18n "painelHelpFemale" }}',
