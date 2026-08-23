@@ -135,6 +135,10 @@ window.$vuePainel = Vue.createApp({
       const series = window.appRepresentation?.women_elected_chamber?.series;
       if (!container || !series?.length) return;
 
+      // 19 eleições não cabem legíveis num eixo de 360px: em telas estreitas
+      // mostramos um rótulo a cada três, e o tooltip segue dando o ano exato.
+      const labelStep = container.offsetWidth < 480 ? 3 : 1;
+
       Highcharts.setOptions(chartTheme);
       this.historyChart = Highcharts.chart('js-painel-history-chart', {
         chart: {
@@ -147,7 +151,10 @@ window.$vuePainel = Vue.createApp({
         title: { text: window.appPainelCharts?.historyTitle || '' },
         subtitle: { text: window.appPainelCharts?.historySubtitle || '' },
         legend: { enabled: false },
-        xAxis: { categories: series.map((point) => String(point.year)) },
+        xAxis: {
+          categories: series.map((point) => String(point.year)),
+          labels: { step: labelStep },
+        },
         yAxis: { title: { text: null }, allowDecimals: false },
         tooltip: {
           // eslint-disable-next-line object-shorthand, func-names
