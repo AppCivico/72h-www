@@ -1,18 +1,20 @@
 {
  "generated_at": "2026-08-24T03:19:54.172Z",
  "year": 2026,
+ "basis": "legacy-public-funds",
  "fefc_total": 4961519777,
+ "party_fund_declared": null,
  "parties": [
   {
    "id": 10,
    "acronym": "Republicanos",
    "name": "Republicanos",
    "fefc_quota": 348587815.77,
-   "public": {
-    "total": 4167521.68,
-    "female": 1245000,
-    "count_all": 42,
-    "count_female": 20,
+   "fefc": {
+    "total": 3111521.68,
+    "female": 970000,
+    "count_all": 27,
+    "count_female": 11,
     "daily": [
      {
       "d": "2026-08-04",
@@ -89,43 +91,12 @@
    "acronym": "PP",
    "name": "Progressistas",
    "fefc_quota": 417067738.4,
-   "public": {
-    "total": 10321472.2,
-    "female": 5163500,
-    "count_all": 21,
-    "count_female": 11,
-    "daily": [
-     {
-      "d": "2026-08-16",
-      "f": 0,
-      "m": 1608000
-     },
-     {
-      "d": "2026-08-18",
-      "f": 1029000,
-      "m": 500000
-     },
-     {
-      "d": "2026-08-19",
-      "f": 0,
-      "m": 500000
-     },
-     {
-      "d": "2026-08-20",
-      "f": 0,
-      "m": 500000
-     },
-     {
-      "d": "2026-08-21",
-      "f": 0,
-      "m": 12472.2
-     },
-     {
-      "d": "2026-08-22",
-      "f": 4134500,
-      "m": 2037500
-     }
-    ]
+   "fefc": {
+    "total": 0,
+    "female": 0,
+    "count_all": 0,
+    "count_female": 0,
+    "daily": []
    },
    "black": {
     "total": 3309000,
@@ -155,7 +126,7 @@
    "acronym": "PDT",
    "name": "Partido Democrático Trabalhista",
    "fefc_quota": 169285643.92,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -174,11 +145,11 @@
    "acronym": "PT",
    "name": "Partido dos Trabalhadores",
    "fefc_quota": 615367980.2,
-   "public": {
-    "total": 317499.99,
-    "female": 17499.99,
-    "count_all": 5,
-    "count_female": 1,
+   "fefc": {
+    "total": 150000,
+    "female": 0,
+    "count_all": 3,
+    "count_female": 0,
     "daily": [
      {
       "d": "2026-08-16",
@@ -215,7 +186,7 @@
    "acronym": "PTB",
    "name": "Partido Trabalhista Brasileiro",
    "fefc_quota": null,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -234,11 +205,11 @@
    "acronym": "MDB",
    "name": "Movimento Democrático Brasileiro",
    "fefc_quota": 400000239.99,
-   "public": {
-    "total": 442500,
-    "female": 100000,
-    "count_all": 7,
-    "count_female": 1,
+   "fefc": {
+    "total": 47500,
+    "female": 0,
+    "count_all": 1,
+    "count_female": 0,
     "daily": [
      {
       "d": "2026-08-17",
@@ -274,7 +245,7 @@
    "acronym": "PSTU",
    "name": "Partido Socialista dos Trabalhadores Unificado",
    "fefc_quota": 3307679.85,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -293,7 +264,7 @@
    "acronym": "PSL",
    "name": "Partido Social Liberal",
    "fefc_quota": null,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -312,7 +283,7 @@
    "acronym": "REDE",
    "name": "Rede Sustentabilidade",
    "fefc_quota": 35803821.03,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -331,7 +302,7 @@
    "acronym": "PODE",
    "name": "Podemos",
    "fefc_quota": 245969763.68,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -346,67 +317,11 @@
    }
   },
   {
-   "id": 20,
-   "acronym": "PSC",
-   "name": "Partido Social Cristão",
-   "fefc_quota": null,
-   "public": {
-    "total": 2213600,
-    "female": 1070000,
-    "count_all": 7,
-    "count_female": 3,
-    "daily": [
-     {
-      "d": "2026-08-16",
-      "f": 0,
-      "m": 3600
-     },
-     {
-      "d": "2026-08-19",
-      "f": 70000,
-      "m": 0
-     },
-     {
-      "d": "2026-08-20",
-      "f": 0,
-      "m": 40000
-     },
-     {
-      "d": "2026-08-21",
-      "f": 1000000,
-      "m": 0
-     },
-     {
-      "d": "2026-08-22",
-      "f": 0,
-      "m": 1100000
-     }
-    ]
-   },
-   "black": {
-    "total": 2100000,
-    "female": 1000000,
-    "count_all": 3,
-    "daily": [
-     {
-      "d": "2026-08-21",
-      "f": 1000000,
-      "m": 0
-     },
-     {
-      "d": "2026-08-22",
-      "f": 0,
-      "m": 1100000
-     }
-    ]
-   }
-  },
-  {
    "id": 21,
    "acronym": "PCB",
    "name": "Partido Comunista Brasileiro",
    "fefc_quota": 3307679.85,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -425,11 +340,11 @@
    "acronym": "PL",
    "name": "Partido Liberal",
    "fefc_quota": 881657477.34,
-   "public": {
-    "total": 12215000,
-    "female": 1200000,
-    "count_all": 16,
-    "count_female": 6,
+   "fefc": {
+    "total": 130000,
+    "female": 120000,
+    "count_all": 2,
+    "count_female": 1,
     "daily": [
      {
       "d": "2026-08-14",
@@ -491,7 +406,7 @@
    "acronym": "Cidadania",
    "name": "Cidadania",
    "fefc_quota": 60174157.11,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -510,33 +425,12 @@
    "acronym": "PRD",
    "name": "Partido Renovação Democrática",
    "fefc_quota": 71819227.37,
-   "public": {
-    "total": 79870,
-    "female": 13855,
-    "count_all": 30,
-    "count_female": 8,
-    "daily": [
-     {
-      "d": "2026-08-18",
-      "f": 0,
-      "m": 12225
-     },
-     {
-      "d": "2026-08-19",
-      "f": 11817.5,
-      "m": 49715
-     },
-     {
-      "d": "2026-08-20",
-      "f": 2037.5,
-      "m": 0
-     },
-     {
-      "d": "2026-09-19",
-      "f": 0,
-      "m": 4075
-     }
-    ]
+   "fefc": {
+    "total": 0,
+    "female": 0,
+    "count_all": 0,
+    "count_female": 0,
+    "daily": []
    },
    "black": {
     "total": 15077.5,
@@ -556,7 +450,7 @@
    "acronym": "DC",
    "name": "Democracia Cristã",
    "fefc_quota": 3307679.85,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -575,7 +469,7 @@
    "acronym": "PRTB",
    "name": "Partido Renovador Trabalhista Brasileiro",
    "fefc_quota": 3307679.85,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -594,7 +488,7 @@
    "acronym": "PCO",
    "name": "Partido da Causa Operária",
    "fefc_quota": 3307679.85,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -613,11 +507,11 @@
    "acronym": "NOVO",
    "name": "Partido Novo",
    "fefc_quota": 37044203.26,
-   "public": {
-    "total": 22668322.82,
-    "female": 5935214.35,
-    "count_all": 465,
-    "count_female": 168,
+   "fefc": {
+    "total": 6906000,
+    "female": 2504000,
+    "count_all": 76,
+    "count_female": 24,
     "daily": [
      {
       "d": "2026-08-10",
@@ -694,7 +588,7 @@
    "acronym": "PMN",
    "name": "Partido da Mobilização Nacional",
    "fefc_quota": null,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -713,7 +607,7 @@
    "acronym": "PMB",
    "name": "Partido da Mulher Brasileira",
    "fefc_quota": null,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -732,7 +626,7 @@
    "acronym": "AGIR",
    "name": "AGIR",
    "fefc_quota": 3307679.85,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -751,11 +645,11 @@
    "acronym": "PSB",
    "name": "Partido Socialista Brasileiro",
    "fefc_quota": 152252956.07,
-   "public": {
-    "total": 1402200,
-    "female": 68200,
-    "count_all": 8,
-    "count_female": 4,
+   "fefc": {
+    "total": 74000,
+    "female": 0,
+    "count_all": 2,
+    "count_female": 0,
     "daily": [
      {
       "d": "2026-08-14",
@@ -822,7 +716,7 @@
    "acronym": "PV",
    "name": "Partido Verde",
    "fefc_quota": 45183873.26,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -841,11 +735,11 @@
    "acronym": "UNIÃO",
    "name": "UNIÃO BRASIL",
    "fefc_quota": 526242858.11,
-   "public": {
-    "total": 3631000,
-    "female": 1950000,
-    "count_all": 17,
-    "count_female": 5,
+   "fefc": {
+    "total": 181000,
+    "female": 0,
+    "count_all": 1,
+    "count_female": 0,
     "daily": [
      {
       "d": "2026-08-04",
@@ -897,8 +791,8 @@
    "acronym": "PSDB",
    "name": "Partido da Social Democracia Brasileira",
    "fefc_quota": 147895172.4,
-   "public": {
-    "total": 21500,
+   "fefc": {
+    "total": 0,
     "female": 0,
     "count_all": 1,
     "count_female": 0,
@@ -922,18 +816,12 @@
    "acronym": "PSOL",
    "name": "Partido Socialismo e Liberdade",
    "fefc_quota": 131506284.42,
-   "public": {
-    "total": 5000,
-    "female": 5000,
-    "count_all": 1,
-    "count_female": 1,
-    "daily": [
-     {
-      "d": "2026-08-21",
-      "f": 5000,
-      "m": 0
-     }
-    ]
+   "fefc": {
+    "total": 0,
+    "female": 0,
+    "count_all": 0,
+    "count_female": 0,
+    "daily": []
    },
    "black": {
     "total": 5000,
@@ -953,7 +841,7 @@
    "acronym": "Patriota",
    "name": "Patriota",
    "fefc_quota": null,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -972,11 +860,11 @@
    "acronym": "PSD",
    "name": "Partido Social Democrático",
    "fefc_quota": 421008404.89,
-   "public": {
-    "total": 253000,
-    "female": 178000,
-    "count_all": 9,
-    "count_female": 7,
+   "fefc": {
+    "total": 37500,
+    "female": 0,
+    "count_all": 1,
+    "count_female": 0,
     "daily": [
      {
       "d": "2026-08-18",
@@ -1002,11 +890,11 @@
    "acronym": "PCdoB",
    "name": "Partido Comunista do Brasil",
    "fefc_quota": 60531914.25,
-   "public": {
-    "total": 9431171,
-    "female": 4442201,
-    "count_all": 45,
-    "count_female": 23,
+   "fefc": {
+    "total": 38111,
+    "female": 20111,
+    "count_all": 3,
+    "count_female": 2,
     "daily": [
      {
       "d": "2026-08-14",
@@ -1078,7 +966,7 @@
    "acronym": "Avante",
    "name": "Avante",
    "fefc_quota": 72516777.19,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -1097,7 +985,7 @@
    "acronym": "Solidariedade",
    "name": "Solidariedade",
    "fefc_quota": 88526669.83,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -1116,7 +1004,7 @@
    "acronym": "UP",
    "name": "Unidade Popular",
    "fefc_quota": 3307679.85,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,
@@ -1135,7 +1023,7 @@
    "acronym": "PROS",
    "name": "Partido Republicano da Ordem Social",
    "fefc_quota": null,
-   "public": {
+   "fefc": {
     "total": 0,
     "female": 0,
     "count_all": 0,

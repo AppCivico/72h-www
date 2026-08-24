@@ -3,8 +3,10 @@ import { test } from 'node:test';
 
 import {
   BLACK_RACE_IDS,
+  buildFundTotalUrl,
   buildIndexUrl,
   buildPartyEntry,
+  isPanelParty,
   cumulativeFemaleShareSeries,
   cumulativeShareSeries,
   deriveShares,
@@ -15,13 +17,30 @@ import {
 
 const API = 'https://h72-api.appcivico.com/v1/';
 
-test('buildIndexUrl carries year, party and both public fund types', () => {
+test('buildIndexUrl carries year, party and the Fundo Eleitoral alone', () => {
   const url = new URL(buildIndexUrl(API, 2026, 30));
   assert.equal(url.pathname, '/v1/index');
   assert.equal(url.searchParams.get('year'), '2026');
   assert.deepEqual(url.searchParams.getAll('party_id[]'), ['30']);
-  assert.deepEqual(url.searchParams.getAll('fund_type_id[]'), ['1', '2']);
+  // The whole point of the FEFC-only basis: fund_type 1 (Fundo Partidario)
+  // must never reach a number the panel divides by an FEFC quota.
+  assert.deepEqual(url.searchParams.getAll('fund_type_id[]'), ['2']);
   assert.deepEqual(url.searchParams.getAll('race_id[]'), []);
+});
+
+test('buildFundTotalUrl asks for one fund across every party', () => {
+  const url = new URL(buildFundTotalUrl(API, 2026, 1));
+  assert.equal(url.searchParams.get('year'), '2026');
+  assert.deepEqual(url.searchParams.getAll('fund_type_id[]'), ['1']);
+  assert.deepEqual(url.searchParams.getAll('party_id[]'), []);
+});
+
+test('isPanelParty keeps live parties and drops the extinct PSC record', () => {
+  assert.equal(isPanelParty({ id: 13, acronym: 'PT', name: 'Partido dos Trabalhadores' }), true);
+  assert.equal(isPanelParty({ id: 19, acronym: null, name: 'Podemos' }), true);
+  assert.equal(isPanelParty({ id: 20, acronym: 'PSC', name: 'Partido Social Cristao' }), false);
+  // Acronym drift must not smuggle it back in through the name fallback.
+  assert.equal(isPanelParty({ id: 20, acronym: null, name: 'psc' }), false);
 });
 
 test('buildIndexUrl adds both Black race ids when asked', () => {
@@ -99,9 +118,9 @@ test('deriveShares yields nulls, never zeros, for a party without money', () => 
   });
 });
 
-test('splitForRanking applies the floor and sorts the dormant by pot size', () => {
+test('splitForRanking applies the floor and sorts the dormant by quota size', () => {
   const make = (acronym, total, quota) => ({
-    acronym, public: { total }, fefc_quota: quota,
+    acronym, fefc: { total }, fefc_quota: quota,
   });
   const { ranked, dormant } = splitForRanking([
     make('A', 5000000, 100),
@@ -114,7 +133,7 @@ test('splitForRanking applies the floor and sorts the dormant by pot size', () =
 });
 
 test('cumulativeShareSeries tracks the running share of the group', () => {
-  const publicDaily = [
+  const fefcDaily = [
     { d: '2026-08-10', f: 0, m: 100 },
     { d: '2026-08-11', f: 0, m: 100 },
     { d: '2026-08-12', f: 0, m: 200 },
@@ -122,7 +141,7 @@ test('cumulativeShareSeries tracks the running share of the group', () => {
   const blackDaily = [
     { d: '2026-08-11', f: 0, m: 100 },
   ];
-  const series = cumulativeShareSeries(publicDaily, blackDaily);
+  const series = cumulativeShareSeries(fefcDaily, blackDaily);
   assert.deepEqual(series.map((point) => Math.round(point.share)), [0, 50, 25]);
 });
 

@@ -11,19 +11,23 @@ import watchHeaderCondense from './components/headerCondense';
 watchMainMenu();
 watchHeaderCondense();
 
-// Below this much public money moved, percentage rankings are noise, so those
-// parties go to the "quase nada distribuído" list instead. Mirrors
-// RANKING_FLOOR in scripts/partyPanel.mjs -- change both together.
+// Below this much Fundo Eleitoral declared as received, the percentages still
+// reflect a handful of transfers and may not represent how the party will
+// distribute money over the campaign, so those parties go to the "quase nada
+// distribuído" list instead. Mirrors RANKING_FLOOR in scripts/partyPanel.mjs
+// -- change both together.
 const RANKING_FLOOR = 250000;
 
-// O piso legal, em pontos percentuais: 30% para candidaturas de pessoas
-// pretas e pardas (EC 133/2024) e 30% para mulheres (Consulta TSE 2018 e
-// EC 117/2022).
+// A referência mínima, em pontos percentuais: 30% do Fundo Eleitoral para
+// candidaturas de pessoas pretas e pardas (piso fixo, art. 17, § 9º, da
+// Constituição) e 30% para candidaturas femininas (art. 17, § 8º), onde 30%
+// é o mínimo e a obrigação pode ser maior, proporcional à fatia de
+// candidatas do partido. A régua desenhada aqui é sempre o mínimo.
 const FLOOR_SHARE = 30;
 
-// How many parties the thermometer draws: the five biggest FEFC quotas, one
-// line per categorical color -- more than that turns into spaghetti and the
-// palette (deliberately fixed, never cycled) runs out.
+// How many parties the thermometer draws: the five biggest Fundo Eleitoral
+// quotas, one line per categorical color -- more than that turns into
+// spaghetti and the palette (deliberately fixed, never cycled) runs out.
 const THERMO_PARTIES = 5;
 
 const CAMPAIGN_START = '2026-08-16';
@@ -33,16 +37,16 @@ function parseDay(iso) {
   return Date.parse(`${iso}T12:00:00Z`);
 }
 
-// Cumulative share of a group in a party's public money, day by day -- the
+// Cumulative share of a group in a party's Fundo Eleitoral, day by day -- the
 // JSON carries raw daily deltas so this stays a display concern. `groupDaily`
 // is null when tracking women, whose split already lives in the F/M fields.
-function cumulativeShare(publicDaily, groupDaily) {
+function cumulativeShare(fefcDaily, groupDaily) {
   const groupByDate = groupDaily
     ? new Map(groupDaily.map((day) => [day.d, day.f + day.m]))
     : null;
   let total = 0;
   let group = 0;
-  return publicDaily.map((day) => {
+  return fefcDaily.map((day) => {
     total += day.f + day.m;
     group += groupByDate ? (groupByDate.get(day.d) || 0) : day.f;
     return [parseDay(day.d), total > 0 ? (group / total) * 100 : null];
@@ -54,8 +58,8 @@ window.$vuePainel = Vue.createApp({
     return {
       panel: window.appPanel || null,
       waffleView: 'chamber',
-      // Worst first by default: the page exists to show who is sitting on
-      // public money that the law earmarks -- the reader can flip it.
+      // Lowest share first by default: the page exists to show where the
+      // earmarked money has not arrived yet -- the reader can flip it.
       sortBy: 'black',
       sortAsc: true,
       onlyBelow: false,
@@ -77,10 +81,10 @@ window.$vuePainel = Vue.createApp({
     entries({ panel } = this) {
       if (!panel?.parties) return [];
       return panel.parties.map((party) => {
-        const { total } = party.public;
+        const { total } = party.fefc;
         return {
           ...party,
-          femaleShare: total > 0 ? (party.public.female / total) * 100 : null,
+          femaleShare: total > 0 ? (party.fefc.female / total) * 100 : null,
           blackShare: total > 0 ? (party.black.total / total) * 100 : null,
           blackFemaleShare: total > 0 ? (party.black.female / total) * 100 : null,
           quotaUsed: total > 0 && party.fefc_quota ? (total / party.fefc_quota) * 100 : null,
@@ -91,7 +95,7 @@ window.$vuePainel = Vue.createApp({
           // gênero) e a lista parecia fora de ordem. Um partido sem dinheiro
           // (share null) não é "fora do piso": é sem dado, e nem entra aqui.
           belowBlack: total > 0 && (party.black.total / total) * 100 < FLOOR_SHARE,
-          belowFemale: total > 0 && (party.public.female / total) * 100 < FLOOR_SHARE,
+          belowFemale: total > 0 && (party.fefc.female / total) * 100 < FLOOR_SHARE,
         };
       });
     },
@@ -100,18 +104,18 @@ window.$vuePainel = Vue.createApp({
     } = this) {
       const key = { black: 'blackShare', female: 'femaleShare', quota: 'quotaUsed' }[sortBy];
       return entries
-        .filter((entry) => entry.public.total >= RANKING_FLOOR)
-        // "Fora do piso" = abaixo de 30% em QUALQUER uma das duas réguas: é o
-        // recorte de fiscalização, não a média das duas.
+        .filter((entry) => entry.fefc.total >= RANKING_FLOOR)
+        // O filtro pega quem está abaixo de 30% em QUALQUER uma das duas
+        // réguas: é o recorte de fiscalização, não a média das duas.
         .filter((entry) => !onlyBelow || entry.belowBlack || entry.belowFemale)
         .sort((a, b) => {
           // Sem dado vai sempre para o fim, nas duas direções: um partido sem
           // cota casada não é "o pior" da régua, é ausência de régua.
-          if (a[key] === null && b[key] === null) return b.public.total - a.public.total;
+          if (a[key] === null && b[key] === null) return b.fefc.total - a.fefc.total;
           if (a[key] === null) return 1;
           if (b[key] === null) return -1;
           if (a[key] !== b[key]) return sortAsc ? a[key] - b[key] : b[key] - a[key];
-          return b.public.total - a.public.total;
+          return b.fefc.total - a.fefc.total;
         });
     },
     // Biggest idle pot first: the bigger the quota sitting still, the more
@@ -124,15 +128,15 @@ window.$vuePainel = Vue.createApp({
     // never received.
     dormantRows({ entries } = this) {
       return entries
-        .filter((entry) => entry.public.total < RANKING_FLOOR)
-        .filter((entry) => entry.fefc_quota !== null || entry.public.total > 0)
+        .filter((entry) => entry.fefc.total < RANKING_FLOOR)
+        .filter((entry) => entry.fefc_quota !== null || entry.fefc.total > 0)
         .sort((a, b) => (b.fefc_quota || 0) - (a.fefc_quota || 0));
     },
     // Quantos partidos do placar estão abaixo do piso em cada régua. Sempre
     // sobre TODOS os partidos elegíveis ao placar, nunca sobre a lista já
     // filtrada -- senão o número mudaria ao ligar o próprio filtro.
     belowCounts({ entries } = this) {
-      const eligible = entries.filter((entry) => entry.public.total >= RANKING_FLOOR);
+      const eligible = entries.filter((entry) => entry.fefc.total >= RANKING_FLOOR);
       if (!eligible.length) return null;
       return {
         total: eligible.length,
@@ -143,7 +147,7 @@ window.$vuePainel = Vue.createApp({
     },
     boardTotals({ entries } = this) {
       return {
-        received: entries.reduce((sum, entry) => sum + entry.public.total, 0),
+        received: entries.reduce((sum, entry) => sum + entry.fefc.total, 0),
       };
     },
     // O eixo da cota não tem piso legal: ordenar por ele não é "pior/melhor",
@@ -165,10 +169,24 @@ window.$vuePainel = Vue.createApp({
     // se atualiza sozinho em vez de envelhecer no texto.
     baseWarning({ entries } = this) {
       const used = entries
-        .filter((entry) => entry.public.total >= RANKING_FLOOR && entry.quotaUsed !== null)
+        .filter((entry) => entry.fefc.total >= RANKING_FLOOR && entry.quotaUsed !== null)
         .map((entry) => entry.quotaUsed);
       if (!used.length) return null;
       return { maxUsed: Math.max(...used) };
+    },
+    // Um arquivo de dados gerado antes da migração para Fundo Eleitoral puro
+    // somava os dois fundos públicos. Se ele estiver no ar (a API caiu e o
+    // gerador manteve a última cópia), a página tem de dizer isso em vez de
+    // rotular a soma como Fundo Eleitoral.
+    legacyBasis({ panel } = this) {
+      return Boolean(panel) && panel.basis !== 'fefc';
+    },
+    // Quanto de Fundo Partidário as candidaturas declararam receber. Não
+    // entra em nenhuma conta desta página: serve para dizer, em reais, o que
+    // a escolha de acompanhar só o Fundo Eleitoral deixa de fora.
+    partyFundDeclared({ panel } = this) {
+      const value = panel?.party_fund_declared;
+      return typeof value === 'number' && value > 0 ? value : null;
     },
     generatedAtBR({ panel } = this) {
       if (!panel?.generated_at) return '';
@@ -258,7 +276,7 @@ window.$vuePainel = Vue.createApp({
       if (!container || !this.entries.length) return;
 
       const parties = [...this.entries]
-        .filter((entry) => entry.public.daily.length)
+        .filter((entry) => entry.fefc.daily.length)
         .sort((a, b) => (b.fefc_quota || 0) - (a.fefc_quota || 0))
         .slice(0, THERMO_PARTIES);
 
@@ -266,8 +284,8 @@ window.$vuePainel = Vue.createApp({
         name: party.acronym || party.name,
         color: categorical[index % categorical.length],
         data: this.thermoGroup === 'black'
-          ? cumulativeShare(party.public.daily, party.black.daily)
-          : cumulativeShare(party.public.daily, null),
+          ? cumulativeShare(party.fefc.daily, party.black.daily)
+          : cumulativeShare(party.fefc.daily, null),
         step: 'right',
         lineWidth: 2,
         marker: { enabled: false },

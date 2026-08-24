@@ -9,7 +9,22 @@
       <header class="painel__hero">
         <p class="eyebrow">{{ i18n "painelEyebrow" }}</p>
         <h1 class="painel__title">{{ i18n "painelTitle" }}</h1>
+        <p class="painel__subtitle">{{ i18n "painelSubtitle" }}</p>
         <p class="painel__dek">{{ i18n "painelDek" }}</p>
+
+        {{/* As três regras são diferentes entre si, e a página acompanha
+            duas delas. Dizer isso na abertura, num <details> nativo (sem
+            JS, sem tooltip que o dedo não alcança no celular), evita a
+            leitura de que mulheres e pessoas negras são as únicas cotas. */}}
+        <details class="painel__more">
+          <summary>{{ i18n "painelQuotasSummary" }}</summary>
+          <ul>
+            <li>{{ i18n "painelQuotasWomen" }}</li>
+            <li>{{ i18n "painelQuotasBlack" }}</li>
+            <li>{{ i18n "painelQuotasIndigenous" }}</li>
+          </ul>
+          <p class="painel__more-legal">{{ i18n "painelQuotasLegal" }}</p>
+        </details>
       </header>
 
       {{/* ---- 1. O placar ao vivo + o termômetro do prazo ----------------------------------------- */}}
@@ -22,6 +37,15 @@
             <strong v-html="formatCurrencyNoAbbr(boardTotals.received)"></strong>
             {{ i18n "painelBoardIntro2" }}
             <strong v-html="formatCurrencyNoAbbr(panel.fefc_total)"></strong>{{ i18n "painelBoardIntro3" }}
+          </p>
+          {{/* O arquivo de dados carrega a base em que foi gerado. Se for a
+              antiga (Fundo Eleitoral + Fundo Partidário somados), a página
+              diz isso em vez de rotular a soma como Fundo Eleitoral. */}}
+          <p class="painel__sort-help painel__sort-help--warn" v-if="legacyBasis">{{ i18n "painelLegacyBasis" }}</p>
+          <p class="painel__table-note" v-if="partyFundDeclared">
+            {{ i18n "painelPartyFundLead" }}
+            <strong v-html="formatCurrencyNoAbbr(partyFundDeclared)"></strong>
+            {{ i18n "painelPartyFundTail" }}
           </p>
           <p class="painel__table-note">
             {{ "{{ rankedRows.length }}" }} {{ i18n "painelCountsRanked" }} ·
@@ -60,6 +84,7 @@
                 <strong>{{ "{{ belowCounts.either }}" }} {{ i18n "ofTotal" }} {{ "{{ belowCounts.total }}" }}</strong>
                 {{ i18n "painelBelowEither" }}
               </p>
+              <p class="painel__urgency-note">{{ i18n "painelWomenProportionNote" }}</p>
               <p class="painel__urgency-note">{{ i18n "painelKeyRule" }}</p>
             </div>
           </div>
@@ -118,8 +143,8 @@
                 <tr>
                   <th>{{ i18n "party" }}</th>
                   <th class="table-cell--numeric">{{ i18n "painelColPublic" }}<small>{{ i18n "painelColQuotaNote" }}</small></th>
-                  <th>{{ i18n "painelColBlack" }}<small>{{ i18n "painelColFloorNote" }}</small></th>
-                  <th>{{ i18n "painelColWomen" }}<small>{{ i18n "painelColFloorNote" }}</small></th>
+                  <th>{{ i18n "painelColBlack" }}<small>{{ i18n "painelColBlackFloorNote" }}</small></th>
+                  <th>{{ i18n "painelColWomen" }}<small>{{ i18n "painelColWomenFloorNote" }}</small></th>
                   <th class="table-cell--numeric">{{ i18n "painelColBlackWomen" }}<small>{{ i18n "painelColNoFloorNote" }}</small></th>
                 </tr>
               </thead>
@@ -168,6 +193,7 @@
               </tbody>
             </table>
           </div>
+          <p class="painel__table-note">{{ i18n "painelWomenFootnote" }}</p>
           <p class="painel__table-note">{{ i18n "painelFloorNote" }}</p>
 
           <div class="painel__dormant" v-if="dormantRows.length">
@@ -225,16 +251,19 @@
       <section class="painel__section">
         <p class="eyebrow">{{ i18n "painelRulerEyebrow" }}</p>
         <h2>{{ i18n "painelRulerTitle" }}</h2>
+        <p class="painel__section-intro">{{ i18n "painelRulerIntro" }}</p>
         <div class="painel__rulers">
           <div class="painel__ruler-card">
             <p class="painel__ruler-number">30%</p>
             <h3>{{ i18n "painelRulerBlackTitle" }}</h3>
             <p>{{ i18n "painelRulerBlackBody" }}</p>
+            <p class="painel__ruler-legal">{{ i18n "painelRulerBlackLegal" }}</p>
           </div>
           <div class="painel__ruler-card">
             <p class="painel__ruler-number">30%</p>
             <h3>{{ i18n "painelRulerWomenTitle" }}</h3>
             <p>{{ i18n "painelRulerWomenBody" }}</p>
+            <p class="painel__ruler-legal">{{ i18n "painelRulerWomenLegal" }}</p>
           </div>
           <div class="painel__ruler-card painel__ruler-card--deadline" v-if="countdown">
             <p class="painel__ruler-number" v-if="!countdown.passed">{{ "{{ countdown.daysLeft }}" }}
@@ -244,8 +273,21 @@
             <h3>{{ i18n "painelRulerDeadlineTitle" }}</h3>
             <p v-if="!countdown.passed">{{ i18n "painelRulerDeadlineBody" }}</p>
             <p v-else>{{ i18n "painelRulerDeadlinePast" }}</p>
+            <p class="painel__ruler-legal">{{ i18n "painelRulerDeadlineLegal" }}</p>
           </div>
         </div>
+
+        {{/* O que a régua NÃO garante: piso não é teto, e a lei olha o
+            conjunto de cada grupo, não candidatura por candidatura. Vem
+            logo depois das regras porque é a leitura que evita ler
+            "cumpriu os 30%" como "distribuiu bem". */}}
+        <aside class="painel__matters">
+          <p class="eyebrow">{{ i18n "painelWhyMattersEyebrow" }}</p>
+          <h3>{{ i18n "painelWhyMattersTitle" }}</h3>
+          <p>{{ i18n "painelWhyMattersP1" }}</p>
+          <p>{{ i18n "painelWhyMattersP2" }}</p>
+          <p>{{ i18n "painelWhyMattersP3" }}</p>
+        </aside>
       </section>
 
       {{/* ---- 3. A sala de 100 cadeiras ------------------------------------
@@ -332,7 +374,7 @@
           <ol class="painel__timeline">
             <li><span class="painel__timeline-year">1932</span><span>{{ i18n "painelTl1932" }}</span></li>
             <li><span class="painel__timeline-year">1933</span><span>{{ i18n "painelTl1933" }}</span></li>
-            <li><span class="painel__timeline-year">1997</span><span>{{ i18n "painelTl1997" }}</span></li>
+            <li><span class="painel__timeline-year">1995</span><span>{{ i18n "painelTl1995" }}</span></li>
             <li><span class="painel__timeline-year">2009</span><span>{{ i18n "painelTl2009" }}</span></li>
             <li><span class="painel__timeline-year">2018</span><span>{{ i18n "painelTl2018" }}</span></li>
             <li><span class="painel__timeline-year">2020</span><span>{{ i18n "painelTl2020" }}</span></li>
@@ -359,9 +401,16 @@
           <p>
             {{ i18n "painelWhyP2a" }}
             <a href="https://www.tse.jus.br/comunicacao/noticias/2019/Setembro/tse-mantem-cassacao-de-vereadores-envolvidos-em-caso-de-candidaturas-fraudulentas-no-piaui" target="_blank" rel="noopener">{{ i18n "painelWhyCase1" }}</a>{{ i18n "painelWhyP2b" }}
-            <a href="https://exame.com/brasil/pf-indicia-ministro-do-turismo-por-esquema-de-candidaturas-laranjas-no-psl/" target="_blank" rel="noopener">{{ i18n "painelWhyCase2" }}</a>{{ i18n "painelWhyP2c" }}
+            <a href="https://www.tse.jus.br/comunicacao/noticias/2023/Novembro/reconhecida-fraude-a-cota-de-genero-praticada-pelo-psl-nas-eleicoes-2020-em-divinopolis-mg" target="_blank" rel="noopener">{{ i18n "painelWhyCase2" }}</a>{{ i18n "painelWhyP2c" }}
           </p>
           <p>{{ i18n "painelWhyP3" }}</p>
+          <details class="painel__more">
+            <summary>{{ i18n "painelWhySumulaSummary" }}</summary>
+            <p>{{ i18n "painelWhySumulaBody" }}</p>
+            <p class="painel__more-legal">
+              <a href="https://www.tse.jus.br/legislacao/codigo-eleitoral/sumulas/sumulas-do-tse/sumula-tse-n-73" target="_blank" rel="noopener">Súmula-TSE nº 73</a>
+            </p>
+          </details>
         </div>
         <aside class="painel__stat-card painel__stat-card--warm">
           <p class="painel__stat-number">{{ i18n "painelWhyStatNumber" }}</p>
@@ -415,6 +464,20 @@
           <p>{{ i18n "painelMethodP1" }}</p>
           <p>{{ i18n "painelMethodP2" }}</p>
           <p>{{ i18n "painelMethodP3" }}</p>
+        </div>
+        <div class="painel__legal">
+          <h3>{{ i18n "painelLegalTitle" }}</h3>
+          <ul>
+            <li>Constituição Federal, art. 17, §§ 8º e 9º</li>
+            <li>Lei nº 9.504/1997, Lei das Eleições</li>
+            <li>Emenda Constitucional nº 111/2021</li>
+            <li>Emenda Constitucional nº 117/2022</li>
+            <li>Emenda Constitucional nº 133/2024</li>
+            <li>Resolução TSE nº 23.607/2019, atualizada para as Eleições 2026</li>
+            <li>Resolução TSE nº 23.752/2026</li>
+            <li>Resolução TSE nº 23.771/2026, prazo de 8 de setembro</li>
+            <li>Resolução TSE nº 23.609/2019, com alterações da Resolução nº 23.754/2026, registro e autodeclaração de cor/raça e pertencimento indígena</li>
+          </ul>
         </div>
         <p class="painel__method-links">
           <a href="https://www.tse.jus.br/eleicoes/eleicoes-2026-content/prestacao-de-contas/distribuicao-dos-recursos-do-fundo-especial-de-financiamento-de-campanha-fefc-eleicoes-2026" target="_blank" rel="noopener">{{ i18n "painelLinkFefc" }}</a> ·

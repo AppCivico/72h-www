@@ -383,7 +383,7 @@
 - id: footerTagline
   translation: "Monitor independente do financiamento de campanhas eleitorais no Brasil."
 - id: footerMethod
-  translation: "Todos os números vêm dos repasses declarados ao TSE e são atualizados em até 72 horas após a declaração. Os dados dependem da disponibilidade do DivulgaCandContas e podem ser revisados pela Justiça Eleitoral."
+  translation: "Os dados de financiamento apresentados no site têm origem nas informações disponibilizadas pela Justiça Eleitoral e são processados pelo 72horas em até 72 horas após sua disponibilização. Outros indicadores têm suas fontes identificadas junto a cada informação."
 - id: footerNavTitle
   translation: "Navegue"
 - id: footerDataTitle
@@ -581,15 +581,15 @@
 - id: painelEyebrow
   translation: "Painel dos partidos"
 - id: painelTitle
-  translation: "Quem distribui o dinheiro com equidade?"
+  translation: "Seguindo o dinheiro"
 - id: painelDek
-  translation: "O dinheiro público de campanha passa pelas mãos dos partidos antes de chegar às candidaturas. A lei manda reservar 30% para mulheres e 30% para pessoas pretas e pardas. Esta página acompanha, dia a dia, quem cumpre desde já e quem deixa para a última hora."
+  translation: "O Fundo Especial de Financiamento de Campanha (FEFC), conhecido como Fundo Eleitoral, passa pelos partidos antes de chegar às candidaturas. Em 2026, existem regras específicas para a destinação desses recursos a candidaturas de mulheres, pessoas pretas e pardas e pessoas indígenas. Esta página acompanha, dia a dia, como os partidos estão distribuindo esse dinheiro."
 - id: painelWaffleEyebrow
   translation: "O tamanho do problema"
 - id: painelWaffleTitle
   translation: "Se a Câmara dos Deputados fosse uma sala de 100 cadeiras"
 - id: painelWaffleIntro
-  translation: "Compare quem ocupa as cadeiras da Câmara eleita em 2022 com o retrato da população brasileira no Censo. É essa distância que as regras de distribuição do dinheiro tentam encurtar."
+  translation: "Compare quem ocupa as cadeiras da Câmara eleita em 2022 com o retrato da população brasileira no Censo. As políticas afirmativas de candidaturas e de financiamento buscam ampliar a participação política de grupos historicamente sub-representados."
 - id: painelWaffleToggleLabel
   translation: "Alternar entre Câmara eleita e população"
 - id: painelWaffleChamber
@@ -624,22 +624,22 @@
   translation: "O Código Eleitoral garante às mulheres o direito de votar e de ser votadas."
 - id: painelTl1933
   translation: "Carlota Pereira de Queiroz é eleita a primeira deputada federal do Brasil. Sozinha."
-- id: painelTl1997
-  translation: "A lei passa a exigir um mínimo de candidaturas por sexo: 20% em 1995, 30% em 1997. Mas o verbo era 'reservar': bastava deixar a vaga em aberto."
+- id: painelTl1995
+  translation: "Surgem as cotas de candidaturas. Em 1995, a lei estabeleceu pelo menos 20% das vagas para candidaturas de mulheres nas eleições municipais de 1996. Em 1997, a Lei das Eleições criou a regra geral por sexo, com percentual de transição de 25% para as eleições de 1998 e 30% nas eleições seguintes."
 - id: painelTl2009
-  translation: "O verbo muda para 'preencher': os 30% de candidaturas viram obrigação de verdade."
+  translation: "A lei troca 'reservar' por 'preencher'. Os partidos passam a ter de preencher efetivamente o mínimo de 30% e o máximo de 70% das candidaturas de cada sexo."
 - id: painelTl2018
-  translation: "O TSE decide que no mínimo 30% do dinheiro público e do tempo de rádio e TV devem ir para candidaturas de mulheres."
+  translation: "O STF determina que os recursos do Fundo Partidário destinados às campanhas de mulheres acompanhem a proporção de candidaturas femininas do partido, observado o piso mínimo de 30%. Em seguida, o TSE aplica a mesma regra ao Fundo Eleitoral e ao tempo de propaganda gratuita no rádio e na televisão."
 - id: painelTl2020
-  translation: "TSE e STF estendem a régua à raça: recursos proporcionais para candidaturas negras, valendo já naquela eleição."
+  translation: "O TSE estende às candidaturas de pessoas negras a regra da distribuição proporcional de recursos públicos de campanha e do tempo de propaganda. O STF confirma sua aplicação já nas eleições daquele ano. Essa regra seria alterada em 2024 pela Emenda Constitucional 133, que passou a estabelecer um piso mínimo de 30%."
 - id: painelTl2021
-  translation: "Emenda Constitucional 111: votos dados a mulheres e a pessoas negras eleitas para a Câmara contam em dobro na divisão dos fundos, até 2030."
+  translation: "A Emenda Constitucional 111 determina que, nas eleições de 2022 a 2030, os votos dados a candidaturas de mulheres e de pessoas negras para a Câmara dos Deputados sejam contados em dobro para fins de distribuição do Fundo Partidário e do Fundo Eleitoral entre os partidos."
 - id: painelTl2022
-  translation: "Emenda Constitucional 117 leva os 30% para mulheres à Constituição."
+  translation: "A Emenda Constitucional 117 incorpora à Constituição a garantia de pelo menos 30% dos recursos públicos de campanha para candidaturas femininas, proporcionalmente ao número de candidatas."
 - id: painelTl2024
-  translation: "Emenda Constitucional 133 fixa um piso de 30% dos fundos para candidaturas de pessoas pretas e pardas."
+  translation: "A Emenda Constitucional 133 estabelece na Constituição que 30% dos recursos públicos destinados às campanhas devem ser aplicados em candidaturas de pessoas pretas e pardas."
 - id: painelTl2026
-  translation: "O STF confirma a regra ao julgar as ADIs 7706 e 7707. É a régua desta eleição."
+  translation: "O STF mantém a validade da EC 133 ao julgar improcedentes as ADIs 7.706 e 7.707. O piso de 30% vale nas eleições deste ano."
 - id: painelHistoryBenchmark
   translation: "Para espelhar a população, seriam cerca de 264 deputadas (51,5% de 513). O recorde, em 2022, foi 91."
 - id: painelHistorySource
@@ -655,99 +655,99 @@
 - id: painelWhyTitle
   translation: "Cota de candidatura sem dinheiro virou candidatura de papel"
 - id: painelWhyP1
-  translation: "Durante duas décadas, a regra brasileira exigia candidatas, mas não exigia que elas tivessem recursos para fazer campanha. O resultado foram as chamadas candidaturas laranja: nomes registrados só para fechar a conta dos 30%, sem campanha, sem dinheiro e quase sem votos."
+  translation: "Durante anos, a legislação estabeleceu cotas de candidaturas sem prever uma destinação mínima de recursos para essas campanhas. Nesse contexto, foram identificados muitos casos de candidaturas femininas registradas apenas formalmente para atingir o percentual exigido, as chamadas candidaturas fictícias ou 'laranja'."
 - id: painelWhyP2a
-  translation: "Dois casos marcaram a virada: em"
+  translation: "Dois casos julgados pela Justiça Eleitoral ajudam a entender: em"
 - id: painelWhyCase1
-  translation: "Valença do Piauí, o TSE cassou uma chapa inteira de vereadores"
+  translation: "Valença do Piauí, o TSE manteve a cassação de vereadores por fraude à cota de gênero"
 - id: painelWhyP2b
-  translation: " por fraude à cota de gênero (2019); e em 2018, o esquema de "
+  translation: " (2019); e em Divinópolis, em Minas Gerais, o TSE reconheceu "
 - id: painelWhyCase2
-  translation: "candidatas laranja do PSL em Minas Gerais"
+  translation: "fraude à cota de gênero praticada pelo PSL nas eleições de 2020"
 - id: painelWhyP2c
-  translation: " mostrou que até dinheiro público repassado a candidaturas fictícias podia voltar por caminhos suspeitos."
+  translation: "."
 - id: painelWhyP3
-  translation: "Por isso a lei passou a mirar o dinheiro: não basta registrar candidaturas, é preciso financiá-las. E como quem distribui é o partido, é o partido que esta página observa."
+  translation: "A partir de 2018, as políticas afirmativas passaram a alcançar também o financiamento das campanhas. Além das cotas de candidatura, parte dos recursos públicos passou a ter destinação obrigatória para esses grupos. E como quem distribui é o partido, é o partido que esta página observa."
 - id: painelRulerEyebrow
-  translation: "A régua de 2026"
+  translation: "Como funcionam os pisos mínimos"
 - id: painelRulerTitle
-  translation: "Duas regras, um prazo"
+  translation: "As regras de distribuição do Fundo Eleitoral"
 - id: painelRulerBlackTitle
   translation: "para candidaturas de pessoas pretas e pardas"
 - id: painelRulerBlackBody
-  translation: "Piso fixo: no mínimo 30% dos fundos públicos de campanha de cada partido (EC 133/2024, confirmada pelo STF em junho de 2026), independentemente de quantas candidaturas negras o partido tenha."
+  translation: "Piso mínimo de 30%: pelo menos 30% do Fundo Eleitoral recebido pelo partido deve ser destinado a candidaturas de pessoas pretas e pardas, independentemente da proporção dessas candidaturas."
 - id: painelRulerWomenTitle
   translation: "para candidaturas de mulheres"
 - id: painelRulerWomenBody
-  translation: "No mínimo 30% dos fundos públicos, e proporcional quando as candidatas passam de 30% das candidaturas do partido (Consulta TSE de 2018; EC 117/2022). Aqui comparamos com o piso."
+  translation: "O percentual do Fundo Eleitoral destinado às mulheres deve acompanhar a proporção de candidaturas femininas do partido e nunca pode ser inferior a 30%. Neste painel, a linha de referência mostra o mínimo de 30%."
 - id: painelRulerDeadlineTitle
-  translation: "para o prazo legal dos repasses mínimos"
+  translation: "para o prazo final de distribuição dos recursos das cotas"
 - id: painelRulerDeadlineBody
-  translation: "Os partidos têm até 8 de setembro para repassar os valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas. Cumprir só na véspera é legal; esta página mostra quem escolhe esse caminho."
+  translation: "Os partidos têm até 8 de setembro para concluir a distribuição dos recursos destinados às candidaturas de mulheres, pessoas pretas e pardas e indígenas. A lei permite que os repasses sejam feitos até essa data. Este painel mostra quando eles acontecem, porque o momento da distribuição também importa: recursos que chegam mais tarde deixam menos tempo para que as candidaturas possam utilizá-los durante a campanha."
 - id: painelRulerDeadlinePast
-  translation: "O prazo legal terminou em 8 de setembro. Os números abaixo mostram como cada partido chegou (ou não) lá."
+  translation: "O prazo final de distribuição dos recursos das cotas terminou em 8 de setembro. Os números abaixo mostram como esses recursos apareceram nas declarações até lá."
 - id: painelBoardEyebrow
-  translation: "Acompanhamento ao vivo"
+  translation: "Acompanhe a distribuição do Fundo Eleitoral"
 - id: painelBoardTitle
-  translation: "O placar dos partidos em 2026"
+  translation: "Como os partidos estão distribuindo o Fundo Eleitoral em 2026"
 - id: painelBoardIntro1
-  translation: "Até a última coleta, os partidos haviam repassado"
+  translation: "Até a última coleta, as candidaturas haviam declarado o recebimento de"
 - id: painelBoardIntro2
-  translation: "em dinheiro público a candidaturas, dos"
+  translation: "do Fundo Eleitoral. Em 2026, aproximadamente"
 - id: painelBoardIntro3
-  translation: " que o Fundo Eleitoral distribuiu a eles. As barras comparam cada partido com a marca dos 30%."
+  translation: " do Fundo Eleitoral foram distribuídos aos partidos. As barras mostram como o dinheiro já declarado como recebido está sendo distribuído entre os grupos acompanhados."
 - id: painelSortLabel
   translation: "Ordenação do placar"
 - id: painelSortBy
   translation: "Ordenar por:"
 - id: painelSortBlack
-  translation: "Candidaturas negras"
+  translation: "Candidaturas pretas e pardas"
 - id: painelSortFemale
   translation: "Mulheres"
 - id: painelSortQuota
-  translation: "% da cota já usada"
+  translation: "% da cota já distribuída"
 - id: painelSortWorstFirst
-  translation: "Piores primeiro"
+  translation: "Menores fatias primeiro"
 - id: painelSortBestFirst
-  translation: "Melhores primeiro"
+  translation: "Maiores fatias primeiro"
 - id: painelColPublic
-  translation: "Dinheiro público repassado"
+  translation: "Fundo Eleitoral repassado"
 - id: painelColBlack
-  translation: "Fatia para candidaturas negras"
+  translation: "Fatia do Fundo Eleitoral para candidaturas pretas e pardas"
 - id: painelColWomen
-  translation: "Fatia para mulheres"
+  translation: "Fatia do Fundo Eleitoral para mulheres"
 - id: painelColBlackWomen
-  translation: "Para mulheres negras"
+  translation: "Fatia do Fundo Eleitoral para mulheres pretas e pardas"
 - id: painelOfQuota
-  translation: "da cota FEFC"
+  translation: "da cota do Fundo Eleitoral"
 - id: painelFloorNote
-  translation: "Entram no placar os partidos com pelo menos R$ 250 mil de dinheiro público já repassado: abaixo disso, percentuais viram ruído. A fatia é calculada sobre o total de fundos públicos (FEFC + Fundo Partidário) que cada partido repassou a candidaturas até a última coleta."
+  translation: "Entram no placar os partidos com pelo menos R$ 250 mil do Fundo Eleitoral já declarado como recebido pelas candidaturas. Abaixo desse valor, os percentuais ainda refletem poucos repasses e podem não representar o padrão de distribuição de recursos do partido ao longo da campanha. A fatia é calculada exclusivamente sobre os recursos do Fundo Eleitoral declarados como recebidos pelas candidaturas até a última coleta."
 - id: painelDormantTitle
   translation: "Quase nada distribuído até agora"
 - id: painelDormantIntro
-  translation: "Partidos que ainda repassaram menos de R$ 250 mil dos fundos públicos a candidaturas, ordenados pelo tamanho da cota que receberam. Quanto maior a cota parada, mais o silêncio diz."
+  translation: "Partidos com menos de R$ 250 mil do Fundo Eleitoral declarados como recebidos pelas candidaturas até a última coleta, ordenados pelo tamanho da cota recebida."
 - id: painelDormantQuota
   translation: "cota de"
 - id: painelDormantMoved
-  translation: "repassado:"
+  translation: "declarado:"
 - id: painelThermoEyebrow
-  translation: "O termômetro do prazo"
+  translation: "Quando o dinheiro chega às candidaturas"
 - id: painelThermoTitle
-  translation: "Quem distribui desde já, e quem deixa para setembro"
+  translation: "O tempo também importa"
 - id: painelThermoIntro
-  translation: "A linha de cada partido mostra que fatia do dinheiro público repassado até aquele dia tinha ido ao grupo escolhido. Quem pretende cumprir a lei só no fim aparece rastejando abaixo dos 30% até perto do prazo. Mostramos os cinco partidos com as maiores cotas do Fundo Eleitoral."
+  translation: "A linha mostra como evolui, ao longo da campanha, a parcela do Fundo Eleitoral destinada às candidaturas exibidas no filtro selecionado. Quanto mais tarde o partido concentra seus repasses, mais tempo tende a permanecer abaixo do piso mínimo exigido para aquele grupo. O gráfico reúne os cinco partidos com as maiores cotas do Fundo Eleitoral."
 - id: painelThermoToggleLabel
   translation: "Escolher o recorte do termômetro"
 - id: painelThermoBenchmark
-  translation: "A linha tracejada horizontal marca o piso legal de 30%; as verticais, o início da campanha e o prazo de 8 de setembro."
+  translation: "A linha tracejada horizontal marca o piso mínimo de 30%; as verticais, o início da campanha e o prazo de 8 de setembro. Para mulheres, esse piso pode ser maior, conforme a proporção de candidaturas femininas do partido."
 - id: painelThermoChartTitle
-  translation: "Fatia acumulada dos fundos públicos, dia a dia"
+  translation: "Fatia acumulada do Fundo Eleitoral, dia a dia"
 - id: painelThermoChartSubtitleBlack
   translation: "Parcela destinada a candidaturas de pessoas pretas e pardas"
 - id: painelThermoChartSubtitleFemale
   translation: "Parcela destinada a candidaturas de mulheres"
 - id: painelThermoFloorLabel
-  translation: "piso legal de 30%"
+  translation: "piso mínimo de 30%"
 - id: painelThermoDeadlineLabel
   translation: "prazo das cotas"
 - id: painelGeneratedAt
@@ -757,15 +757,15 @@
 - id: painelMethodEyebrow
   translation: "Como medimos"
 - id: painelMethodTitle
-  translation: "Metodologia, em três parágrafos"
+  translation: "Metodologia"
 - id: painelMethodP1
-  translation: "Contamos apenas dinheiro público (Fundo Eleitoral e Fundo Partidário somados), porque é sobre ele que as regras de 30% incidem. Os dois fundos são somados de propósito: nas primeiras entregas ao TSE, o rótulo que separa um do outro é impreciso."
+  translation: "Este painel acompanha exclusivamente a distribuição do Fundo Eleitoral (FEFC). Os valores e percentuais apresentados são calculados a partir dos recursos do Fundo Eleitoral declarados pelas candidaturas como recebidos. Embora regras semelhantes também se apliquem aos recursos do Fundo Partidário utilizados em campanhas, optamos por acompanhar apenas o Fundo Eleitoral para permitir comparações mais claras e consistentes entre os partidos."
 - id: painelMethodP2
-  translation: "A fatia de cada grupo é calculada sobre o que o partido efetivamente repassou a candidaturas até a última coleta, não sobre a cota que recebeu. Recorte racial por autodeclaração ao TSE (pessoas pretas e pardas, como na EC 133). Partido sem repasse não aparece com 0%: aparece como sem dados, na lista de quem quase nada distribuiu."
+  translation: "A fatia de cada grupo é calculada sobre o Fundo Eleitoral declarado pelas candidaturas como recebido até a última coleta, e não sobre a cota total recebida pelo partido. Os percentuais mostram como os recursos já distribuídos estão sendo divididos entre os grupos analisados. O recorte racial considera a autodeclaração informada à Justiça Eleitoral (pessoas pretas e pardas). Partidos que ainda não atingiram R$ 250 mil em repasses do Fundo Eleitoral aparecem na seção 'Quase nada distribuído até agora', pois, abaixo desse valor, os percentuais ainda podem não representar o padrão de distribuição de recursos do partido ao longo da campanha."
 - id: painelMethodP3
-  translation: "Três limites que valem dizer alto. Primeiro, a unidade de medida: contamos o que as CANDIDATURAS declararam ter recebido, não o que os diretórios afirmam ter pagado. Como há prazo para declarar, um repasse feito hoje pode aparecer aqui só depois, e o ritmo de um partido depende também do ritmo de quem recebeu. Segundo, as federações: os percentuais são por partido, como manda a regra dos fundos, mesmo quando as candidaturas disputam sob federação. Terceiro, o piso: ele é aferido no fim do prazo, sobre o total que o partido tem de aplicar, e não sobre o que já saiu. Esta página registra ritmo e destino dos repasses declarados; ela não declara descumprimento de lei."
+  translation: "Todos os dados de financiamento utilizados pelo 72horas são baseados exclusivamente nas informações declaradas pelas candidaturas à Justiça Eleitoral. Declarações feitas por partidos ou diretórios não são utilizadas como base para os indicadores da plataforma. Como existe prazo para atualização das prestações de contas, um repasse realizado hoje pode aparecer apenas nas próximas coletas. Mesmo nas federações, os recursos são atribuídos ao partido responsável pelo repasse. Os percentuais apresentados nesta página acompanham o ritmo e a distribuição dos recursos ao longo da campanha e não representam, antes do prazo legal e da análise da prestação de contas pela Justiça Eleitoral, uma conclusão sobre o cumprimento ou descumprimento da legislação eleitoral."
 - id: painelLinkFefc
-  translation: "Cotas do FEFC por partido (TSE)"
+  translation: "Cotas do Fundo Eleitoral por partido (TSE)"
 - id: painelIpuStat
   translation: "133ª"
 - id: painelIpuTitle
@@ -781,7 +781,7 @@
 - id: painelCountsRanked
   translation: "partidos no placar"
 - id: painelCountsDormant
-  translation: "abaixo do piso de R$ 250 mil, listados ao fim da seção"
+  translation: "abaixo de R$ 250 mil, listados ao fim da seção"
 - id: candidateRaceCol
   translation: "Cor/raça declarada"
 - id: candidateRaceChangeLead
@@ -789,13 +789,13 @@
 - id: candidateRaceChangeIn
   translation: "em"
 - id: candidateRaceChangeContext
-  translation: "Mudar a autodeclaração pode ser legítimo e refletir revisão da própria identificação. Desde 2024, a declaração precisa coincidir com o cadastro eleitoral; divergências geram notificação, e quem não responde fica impedido de receber os recursos reservados às cotas (Res. TSE 23.729/2024). Em 2026, 786 candidaturas mudaram a declaração em relação a 2022, segundo"
+  translation: "Mudar a autodeclaração pode ser legítimo e refletir revisão da própria identificação. Quando a informação de cor/raça ou pertencimento indígena diverge do Cadastro Eleitoral ou de registro anterior, a Justiça Eleitoral exige confirmação; se houver reconhecimento de erro ou não houver resposta à intimação, o dado é ajustado e a candidatura não pode receber os recursos públicos reservados àquela cota (Resolução TSE nº 23.609/2019, art. 24, §§ 5º e 6º, com redação da Resolução TSE nº 23.754/2026). Em 2026, 786 candidaturas mudaram a declaração em relação a 2022, segundo"
 - id: candidateRaceChangeSource
   translation: "levantamento do g1 sobre dados parciais do TSE"
 - id: painelFunnelEyebrow
   translation: "As chances na urna"
 - id: painelFunnelTitle
-  translation: "Em 2022, uma candidatura valia mais para uns do que para outros"
+  translation: "Em 2022, as taxas de eleição foram muito diferentes entre os grupos"
 - id: painelFunnelIntro
   translation: "De cada grupo que disputou uma vaga de deputado federal em 2022, quantos chegaram a uma das 513 cadeiras? A régua abaixo mostra a taxa de conversão de cada grupo."
 - id: painelFunnelOneIn
@@ -809,56 +809,102 @@
 - id: painelRaceChangeTitle
   translation: "candidaturas de 2026 mudaram a declaração de cor/raça em relação a 2022"
 - id: painelRaceChangeBody
-  translation: "4,5% dos registros parciais (até 12/08). O trânsito entre branco e pardo domina: 72,5% das mudanças. Mudar pode ser legítimo; desde 2024 a declaração precisa coincidir com o cadastro eleitoral, e quem não responde à notificação fica impedido de receber os recursos das cotas. Nas páginas de candidato deste site, a trajetória mostra como cada pessoa se declarou em cada eleição. Fonte:"
+  translation: "4,5% dos registros parciais (até 12/08). O trânsito entre branco e pardo domina: 72,5% das mudanças. Mudar a autodeclaração pode ser legítimo. Quando a informação de cor/raça ou pertencimento indígena diverge do Cadastro Eleitoral ou de registro anterior, a Justiça Eleitoral exige confirmação; se houver reconhecimento de erro ou não houver resposta à intimação, o dado é ajustado e a candidatura não pode receber os recursos públicos reservados àquela cota. Nas páginas de candidato deste site, a trajetória mostra como cada pessoa se declarou em cada eleição. Fonte:"
 - id: painelRaceChangeSource
   translation: "levantamento do g1 sobre dados do TSE"
 - id: candidateDeclaredLead
   translation: "Autodeclaração ao TSE nesta candidatura:"
 - id: painelKeyRule
-  translation: "O piso de 30% é aferido ao fim do prazo; antes dele, estar abaixo não é infração, é ritmo."
+  translation: "Antes de 8 de setembro, estar abaixo da referência de 30% não significa, por si só, descumprimento da regra. O painel acompanha o ritmo dos repasses declarados."
 - id: painelKeyDeadlineTail
-  translation: "para o prazo legal de repasse das cotas (8 de setembro)"
+  translation: "para o prazo final de distribuição dos recursos das cotas, em 8 de setembro"
 - id: painelKeyDeadlinePast
-  translation: "O prazo legal de repasse das cotas terminou em 8 de setembro."
+  translation: "O prazo final de distribuição dos recursos das cotas terminou em 8 de setembro."
 - id: painelBelowBlack
-  translation: "partidos do placar estão abaixo dos 30% para candidaturas de pessoas pretas e pardas"
+  translation: "partidos do placar estão abaixo da referência mínima de 30% para candidaturas de pessoas pretas e pardas"
 - id: painelBelowFemale
-  translation: "estão abaixo dos 30% para candidaturas de mulheres"
+  translation: "estão abaixo da referência mínima de 30% para candidaturas de mulheres"
 - id: painelOnlyBelow
-  translation: "Só quem está fora do piso"
-- id: painelBadgeBelow
-  translation: "fora do piso"
+  translation: "Só quem está abaixo de 30%"
 - id: painelBadgeBlack
-  translation: "fora do piso: raça"
+  translation: "após o prazo, abaixo de 30%: pretas e pardas"
 - id: painelBadgeFemale
-  translation: "fora do piso: mulheres"
+  translation: "após o prazo, abaixo de 30%: mulheres"
 - id: painelBadgeBoth
-  translation: "fora dos dois pisos"
+  translation: "após o prazo, abaixo de 30% nas duas regras"
 - id: painelBelowEither
-  translation: "estão abaixo de pelo menos uma das duas réguas"
-- id: painelColFloorNote
-  translation: "piso legal: 30%"
+  translation: "estão abaixo da referência mínima em pelo menos uma das duas regras"
 - id: painelColNoFloorNote
-  translation: "sem piso próprio na lei"
+  translation: "sem percentual mínimo específico"
 - id: painelHelpBlack
-  translation: "Ordenando pela fatia do dinheiro público que cada partido repassou a candidaturas de pessoas pretas e pardas. O piso legal é 30% (EC 133/2024)."
+  translation: "Ordenando pela fatia do Fundo Eleitoral já declarado como recebido por candidaturas de pessoas pretas e pardas. O piso constitucional é de 30%."
 - id: painelHelpFemale
-  translation: "Ordenando pela fatia do dinheiro público que cada partido repassou a candidaturas de mulheres. Comparamos com o piso de 30% (Consulta TSE de 2018 e EC 117/2022), mas a regra real é proporcional: quando as candidatas passam de 30% das candidaturas do partido, o mínimo sobe para essa proporção. Ou seja, esta coluna é generosa com os partidos, e pode mostrar como cumprindo quem já deveria estar repassando mais."
+  translation: "Ordenando pela fatia do Fundo Eleitoral já declarado como recebido por candidaturas de mulheres. A referência desta tabela é o mínimo de 30%, mas o percentual obrigatório pode ser maior: ele acompanha a proporção de candidaturas femininas do partido. Ou seja, a coluna compara com o mínimo, e não com a obrigação final de cada partido."
 - id: painelHelpQuota
-  translation: "Ordenando pela fatia da cota do Fundo Eleitoral que o partido já tirou do diretório e repassou a candidaturas. Aqui não há piso legal: mede ritmo, não equidade. Repassar pouco não é ilegal; é dinheiro público parado. Uma imprecisão a registrar: o valor repassado soma Fundo Eleitoral e Fundo Partidário, mas a cota no denominador é só a do Fundo Eleitoral, então este percentual é um teto, não uma medida exata."
+  translation: "Ordenando pela fatia da cota do Fundo Eleitoral que já aparece nas declarações das candidaturas do partido. Aqui não há percentual mínimo: mede o ritmo da distribuição, não a equidade. Como existe prazo para atualizar as prestações de contas, um repasse recente pode ainda não estar contado."
 - id: painelSortLeastMoved
-  translation: "Quem repassou menos primeiro"
+  translation: "Quem distribuiu menos primeiro"
 - id: painelSortMostMoved
-  translation: "Quem repassou mais primeiro"
+  translation: "Quem distribuiu mais primeiro"
 - id: painelBadgeBeforeBlack
-  translation: "até agora abaixo de 30%: raça"
+  translation: "abaixo de 30%: pretas e pardas"
 - id: painelBadgeBeforeFemale
-  translation: "até agora abaixo de 30%: mulheres"
+  translation: "abaixo de 30%: mulheres"
 - id: painelBadgeBeforeBoth
-  translation: "até agora abaixo nos dois"
+  translation: "abaixo de 30% nas duas regras"
 - id: painelBaseWarnLead
-  translation: "Leia as fatias com cuidado: até agora nenhum partido repassou mais de"
+  translation: "Leia as fatias com cuidado: até agora nenhum partido aparece com mais de"
 - id: painelBaseWarnTail
-  translation: "da própria cota do Fundo Eleitoral. As fatias abaixo são calculadas sobre esse pedaço já repassado, não sobre a cota inteira, e um único repasse grande pode virá-las de cabeça para baixo."
+  translation: "da própria cota do Fundo Eleitoral nas declarações. As fatias abaixo são calculadas sobre esse pedaço já declarado, não sobre a cota inteira, e um único repasse grande pode mudá-las bastante."
 - id: painelColQuotaNote
-  translation: "e quanto isso representa da cota do FEFC"
+  translation: "e quanto isso representa da cota do partido"
+- id: painelSubtitle
+  translation: "Como, quanto e quando o Fundo Eleitoral chega às candidaturas"
+- id: painelQuotasSummary
+  translation: "Saiba mais: como funcionam as cotas do Fundo Eleitoral?"
+- id: painelQuotasWomen
+  translation: "Mulheres: o percentual acompanha a proporção de candidaturas femininas do partido e nunca pode ser inferior a 30%."
+- id: painelQuotasBlack
+  translation: "Pessoas pretas e pardas: pelo menos 30% do Fundo Eleitoral deve ser destinado a essas candidaturas, independentemente da proporção de candidaturas negras."
+- id: painelQuotasIndigenous
+  translation: "Pessoas indígenas: o percentual mínimo é calculado proporcionalmente às candidaturas indígenas, conforme os critérios definidos pelo TSE."
+- id: painelQuotasLegal
+  translation: "Base legal: Constituição Federal, art. 17, §§ 8º e 9º; Resolução TSE nº 23.607/2019, art. 17, § 4º, com redação da Resolução TSE nº 23.752/2026."
+- id: painelWomenProportionNote
+  translation: "Para mulheres, 30% é o percentual mínimo. Se elas representarem mais de 30% das candidaturas do partido, o percentual obrigatório de recursos aumenta na mesma proporção."
+- id: painelColBlackFloorNote
+  translation: "mínimo: 30%"
+- id: painelColWomenFloorNote
+  translation: "mínimo: 30%*"
+- id: painelWomenFootnote
+  translation: "* Para mulheres, o percentual obrigatório pode ser superior a 30%, conforme a proporção de candidaturas femininas do partido."
+- id: painelPartyFundLead
+  translation: "As candidaturas declararam ter recebido, além disso,"
+- id: painelPartyFundTail
+  translation: "em Fundo Partidário. Esse valor não entra em nenhum número desta página."
+- id: painelLegacyBasis
+  translation: "Os números abaixo vêm de uma coleta anterior, feita quando o painel somava Fundo Eleitoral e Fundo Partidário. A próxima atualização recalcula tudo somente com o Fundo Eleitoral."
+- id: painelRulerIntro
+  translation: "Em 2026, o Fundo Eleitoral também tem regra específica de destinação para candidaturas indígenas. Este painel compara, neste momento, as regras relativas a mulheres e a pessoas pretas e pardas."
+- id: painelRulerBlackLegal
+  translation: "Constituição Federal, art. 17, § 9º, incluído pela EC 133/2024; Resolução TSE nº 23.607/2019, art. 17, § 4º, II, com redação da Resolução nº 23.752/2026."
+- id: painelRulerWomenLegal
+  translation: "Constituição Federal, art. 17, § 8º; Resolução TSE nº 23.607/2019, art. 17, § 4º, I."
+- id: painelRulerDeadlineLegal
+  translation: "Resolução TSE nº 23.771/2026."
+- id: painelWhySumulaSummary
+  translation: "Saiba mais: como a Justiça Eleitoral identifica uma candidatura fictícia"
+- id: painelWhySumulaBody
+  translation: "A Súmula 73 do TSE reúne elementos que podem caracterizar fraude à cota de gênero, como votação zerada ou inexpressiva, prestação de contas zerada ou padronizada, ausência de movimentação financeira relevante e ausência de atos efetivos de campanha, de divulgação ou de promoção da candidatura."
+- id: painelWhyMattersEyebrow
+  translation: "Por que isso importa?"
+- id: painelWhyMattersTitle
+  translation: "Piso mínimo não é teto, e cumprir a regra não é o mesmo que distribuir bem"
+- id: painelWhyMattersP1
+  translation: "A legislação estabelece percentuais mínimos para a destinação de recursos públicos a determinados grupos sub-representados de candidaturas. Esses percentuais representam pisos mínimos, e não limites máximos."
+- id: painelWhyMattersP2
+  translation: "Além disso, a lei verifica a distribuição considerando o conjunto das candidaturas de cada grupo, e não quanto recebe cada candidatura individualmente. Isso significa que um partido pode cumprir formalmente a legislação e, ainda assim, concentrar grande parte dos recursos em poucas candidaturas."
+- id: painelWhyMattersP3
+  translation: "Por isso, acompanhar como o dinheiro é distribuído é tão importante quanto verificar quanto foi destinado a cada grupo. A forma de distribuição influencia as condições reais de competição eleitoral e amplia o debate sobre igualdade de oportunidades na democracia."
+- id: painelLegalTitle
+  translation: "Base legal, Eleições 2026"

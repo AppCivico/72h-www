@@ -11,11 +11,13 @@
  * and an empty page. Only when there is no committed file at all does the
  * page fall back to its honest "dados indisponíveis" state.
  *
- * Two requests per party (public money; public money to Black candidacies),
- * the second skipped when the first came back empty. ~43 parties in 2026
- * means at most ~87 requests, run CONCURRENCY at a time: the API allows 120
- * GET/min per IP, so a handful in flight stays well inside it while cutting
- * the job from minutes to seconds.
+ * Two requests per party (Fundo Eleitoral; Fundo Eleitoral to Black
+ * candidacies), the second skipped when the first came back empty, plus one
+ * whole-election request for the Fundo Partidário total, which exists only
+ * to disclose what this page leaves out. ~43 parties in 2026 means at most
+ * ~88 requests, run CONCURRENCY at a time: the API allows 120 GET/min per
+ * IP, so a handful in flight stays well inside it while cutting the job
+ * from minutes to seconds.
  *
  * Env:
  *   PANEL_YEAR       election year (default: `run` in params.yaml)
@@ -27,7 +29,9 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { buildIndexUrl, buildPartyEntry } from './partyPanel.mjs';
+import {
+  buildFundTotalUrl, buildIndexUrl, buildPartyEntry, isPanelParty, PARTY_FUND_TYPE,
+} from './partyPanel.mjs';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
 const outputPath = join(projectRoot, 'data', 'partyPanel.json');
@@ -71,18 +75,19 @@ async function main() {
   const filtersUrl = new URL('filters', apiBase);
   filtersUrl.searchParams.set('year', String(year));
   const filters = await fetchJson(filtersUrl.toString(), deadline);
-  const parties = filters?.filters?.parties || [];
-  if (!parties.length) throw new Error('filters returned no parties');
+  const allParties = filters?.filters?.parties || [];
+  if (!allParties.length) throw new Error('filters returned no parties');
+  const parties = allParties.filter(isPanelParty);
 
   // One party's two requests, in order: the second is skipped when the
-  // first shows no public money at all.
+  // first shows no Fundo Eleitoral at all.
   const fetchParty = async (party) => {
-    const publicData = await fetchJson(buildIndexUrl(apiBase, year, party.id), deadline);
-    const hasMoney = Number(publicData?.big_numbers?.total_amount) > 0;
+    const fefcData = await fetchJson(buildIndexUrl(apiBase, year, party.id), deadline);
+    const hasMoney = Number(fefcData?.big_numbers?.total_amount) > 0;
     const blackData = hasMoney
       ? await fetchJson(buildIndexUrl(apiBase, year, party.id, { black: true }), deadline)
       : { big_numbers: {}, chart: {} };
-    return buildPartyEntry(party, publicData, blackData, fefc.quotas);
+    return buildPartyEntry(party, fefcData, blackData, fefc.quotas);
   };
 
   // Fixed-size batches rather than a full fan-out: bounded concurrency keeps
@@ -98,10 +103,30 @@ async function main() {
   // explicit so the committed file's diff stays minimal day to day.
   entries.sort((a, b) => a.id - b.id);
 
+  // How much Fundo Partidário the candidacies declared receiving. It is not
+  // part of any number on the page: it exists so the methodology can say, in
+  // reais, what choosing the Fundo Eleitoral alone leaves out. A failure here
+  // must not cost the whole panel, so it degrades to null and the page hides
+  // the sentence.
+  let partyFundDeclared = null;
+  try {
+    const partyFund = await fetchJson(
+      buildFundTotalUrl(apiBase, year, PARTY_FUND_TYPE), deadline,
+    );
+    partyFundDeclared = Number(partyFund?.big_numbers?.total_amount) || 0;
+  } catch (err) {
+    process.stderr.write(`party panel: party-fund total unavailable (${err.message})\n`);
+  }
+
   const panel = {
     generated_at: new Date().toISOString(),
     year,
+    // Which fund every number below is made of. The page reads it so a
+    // legacy file generated on the old FEFC + Fundo Partidário basis can
+    // never be presented as if it were Fundo Eleitoral only.
+    basis: 'fefc',
     fefc_total: fefc.total,
+    party_fund_declared: partyFundDeclared,
     parties: entries,
   };
 

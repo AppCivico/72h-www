@@ -4,32 +4,63 @@
  * is deterministic and covered by partyPanel.test.mjs; the I/O shell lives
  * in build-party-panel.mjs, mirroring the candidateSitemap split.
  *
- * The panel measures PUBLIC money only (fund_type 1 = Fundo Partidário,
- * 2 = FEFC), because that is the money the quota rules regulate. The two
- * are always summed: the origin label in early deliveries is unreliable
- * (FEFC money arrives tagged as party fund), so the sum is the conservative
- * reading. Race ids 4 (parda) and 5 (preta) follow the TSE's own buckets
- * and EC 133/2024's "pessoas pretas e pardas".
+ * The panel measures the Fundo Eleitoral (FEFC, fund_type 2) and ONLY it.
+ * The quota rules of art. 17, §§ 8º e 9º of the Constitution also reach the
+ * Fundo Partidário, but the table's denominator is each party's FEFC quota,
+ * so keeping the numerator on the same fund is what makes the percentage
+ * mean what it says. Fundo Partidário (fund_type 1) is fetched once, as a
+ * whole-election total, purely to disclose how much money this page leaves
+ * out -- it never enters a share, a ranking or the R$ 250 mil cut.
+ *
+ * Race ids 4 (parda) and 5 (preta) follow the TSE's own buckets and EC
+ * 133/2024's "pessoas pretas e pardas".
  */
 
-export const PUBLIC_FUND_TYPES = [1, 2];
+export const FEFC_FUND_TYPE = 2;
+export const PARTY_FUND_TYPE = 1;
 export const BLACK_RACE_IDS = [4, 5];
 
-// Below this much public money transferred, percentage rankings are noise
-// (a party at R$ 50k with one female candidate would "lead" with 100%), so
-// the page lists these parties separately as "quase nada distribuído" --
-// which, early in the campaign, is itself the finding.
+// Below this much Fundo Eleitoral declared as received, the percentages still
+// reflect a handful of transfers and may not represent how the party will
+// distribute money over the campaign, so the page lists these parties
+// separately as "quase nada distribuído" -- which, early on, is the finding.
 export const RANKING_FLOOR = 250000;
 
-/** /v1/index URL for one party, optionally restricted to Black candidacies. */
+/**
+ * Parties the panel must not score. The API's /filters list is historical:
+ * it still carries legends that no longer exist in 2026, and a 2026 record
+ * attached to one of them points at a classification or party-history
+ * problem in the source data rather than at a real party.
+ *
+ * PSC was incorporated into Podemos on 15 June 2023 (TSE decision) and does
+ * not run in 2026. Its handful of 2026 transfers is deliberately NOT moved
+ * to Podemos: the origin of those records has to be identified first.
+ */
+export const EXCLUDED_ACRONYMS = ['PSC'];
+
+/** False for parties that must stay out of the panel entirely. */
+export function isPanelParty(party) {
+  const label = foldAcronym(party?.acronym || party?.name || '');
+  return !EXCLUDED_ACRONYMS.some((acronym) => foldAcronym(acronym) === label);
+}
+
+/** /v1/index URL for one party's Fundo Eleitoral, optionally Black-only. */
 export function buildIndexUrl(apiBase, year, partyId, { black = false } = {}) {
   const url = new URL('index', apiBase);
   url.searchParams.set('year', String(year));
   url.searchParams.append('party_id[]', String(partyId));
-  PUBLIC_FUND_TYPES.forEach((id) => url.searchParams.append('fund_type_id[]', String(id)));
+  url.searchParams.append('fund_type_id[]', String(FEFC_FUND_TYPE));
   if (black) {
     BLACK_RACE_IDS.forEach((id) => url.searchParams.append('race_id[]', String(id)));
   }
+  return url.toString();
+}
+
+/** /v1/index URL for one fund's whole-election total, across all parties. */
+export function buildFundTotalUrl(apiBase, year, fundTypeId) {
+  const url = new URL('index', apiBase);
+  url.searchParams.set('year', String(year));
+  url.searchParams.append('fund_type_id[]', String(fundTypeId));
   return url.toString();
 }
 
@@ -52,8 +83,8 @@ export function toDailySeries(chart) {
 }
 
 /** One party's panel entry from its two /index responses. */
-export function buildPartyEntry(party, publicData, blackData, fefcQuotas) {
-  const bigPublic = publicData?.big_numbers || {};
+export function buildPartyEntry(party, fefcData, blackData, fefcQuotas) {
+  const bigFefc = fefcData?.big_numbers || {};
   const bigBlack = blackData?.big_numbers || {};
   return {
     id: party.id,
@@ -63,12 +94,12 @@ export function buildPartyEntry(party, publicData, blackData, fefcQuotas) {
     acronym: party.acronym || party.name,
     name: party.name,
     fefc_quota: quotaFor(party.acronym, fefcQuotas) ?? quotaFor(party.name, fefcQuotas),
-    public: {
-      total: Number(bigPublic.total_amount) || 0,
-      female: Number(bigPublic.amount_female) || 0,
-      count_all: Number(bigPublic.count_all) || 0,
-      count_female: Number(bigPublic.count_female) || 0,
-      daily: toDailySeries(publicData?.chart),
+    fefc: {
+      total: Number(bigFefc.total_amount) || 0,
+      female: Number(bigFefc.amount_female) || 0,
+      count_all: Number(bigFefc.count_all) || 0,
+      count_female: Number(bigFefc.count_female) || 0,
+      daily: toDailySeries(fefcData?.chart),
     },
     black: {
       total: Number(bigBlack.total_amount) || 0,
@@ -102,18 +133,18 @@ function foldAcronym(value) {
 
 /**
  * Derived, display-ready numbers for one entry. Shares are null (not 0)
- * when the party has no public money yet -- "no data" must never render
- * as "0%", which would read as a measured violation.
+ * when the party has no Fundo Eleitoral declared yet -- "no data" must never
+ * render as "0%", which would read as a measured violation.
  */
 export function deriveShares(entry) {
-  const { total } = entry.public;
+  const { total } = entry.fefc;
   if (!(total > 0)) {
     return {
       femaleShare: null, blackShare: null, blackFemaleShare: null, quotaUsed: null,
     };
   }
   return {
-    femaleShare: (entry.public.female / total) * 100,
+    femaleShare: (entry.fefc.female / total) * 100,
     blackShare: (entry.black.total / total) * 100,
     blackFemaleShare: (entry.black.female / total) * 100,
     quotaUsed: entry.fefc_quota ? (total / entry.fefc_quota) * 100 : null,
@@ -121,16 +152,15 @@ export function deriveShares(entry) {
 }
 
 /**
- * Splits entries into the ranked list (>= floor of public money, sorted by
+ * Splits entries into the ranked list (>= floor of Fundo Eleitoral, sorted by
  * the chosen share, best first) and the "quase nada distribuído" list
- * (sorted by FEFC quota, biggest pot first -- the bigger the pot sitting
- * still, the more newsworthy the stillness).
+ * (sorted by FEFC quota, biggest quota first).
  */
 export function splitForRanking(entries, { floor = RANKING_FLOOR } = {}) {
   const ranked = [];
   const dormant = [];
   entries.forEach((entry) => {
-    (entry.public.total >= floor ? ranked : dormant).push(entry);
+    (entry.fefc.total >= floor ? ranked : dormant).push(entry);
   });
   dormant.sort((a, b) => (b.fefc_quota || 0) - (a.fefc_quota || 0));
   return { ranked, dormant };
@@ -138,15 +168,15 @@ export function splitForRanking(entries, { floor = RANKING_FLOOR } = {}) {
 
 /**
  * Cumulative share-over-time for the thermometer chart: for each day the
- * party moved money, the share of its cumulative public total that had
- * gone to the tracked group by then. A party planning to comply only at
- * the deadline draws a line crawling under 30% until September.
+ * party moved money, the share of its cumulative Fundo Eleitoral that had
+ * reached the tracked group by then. The later a party concentrates its
+ * transfers, the longer its line stays under the 30% reference.
  */
-export function cumulativeShareSeries(publicDaily, groupDaily) {
+export function cumulativeShareSeries(fefcDaily, groupDaily) {
   const groupByDate = new Map(groupDaily.map((day) => [day.d, day.f + day.m]));
   let total = 0;
   let group = 0;
-  return publicDaily.map((day) => {
+  return fefcDaily.map((day) => {
     total += day.f + day.m;
     group += groupByDate.get(day.d) || 0;
     return { d: day.d, share: total > 0 ? (group / total) * 100 : null };
@@ -154,10 +184,10 @@ export function cumulativeShareSeries(publicDaily, groupDaily) {
 }
 
 /** Same shape, but tracking the female share directly from the F/M split. */
-export function cumulativeFemaleShareSeries(publicDaily) {
+export function cumulativeFemaleShareSeries(fefcDaily) {
   let total = 0;
   let female = 0;
-  return publicDaily.map((day) => {
+  return fefcDaily.map((day) => {
     total += day.f + day.m;
     female += day.f;
     return { d: day.d, share: total > 0 ? (female / total) * 100 : null };
