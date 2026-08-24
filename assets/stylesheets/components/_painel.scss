@@ -381,6 +381,17 @@
   opacity: 0.55;
 }
 
+/// A segunda marca da barra de mulheres: o piso proporcional daquele
+/// partido, que fica sempre à direita do mínimo de 30%. Traço claro e mais
+/// fino de propósito, para não competir com a régua comum que o olho usa
+/// para varrer a coluna inteira.
+.painel__bullet-target--party {
+  width: 3px;
+
+  background: var(--brand);
+  opacity: 0.9;
+}
+
 .painel__bullet--below .painel__bullet-fill {
   background: var(--accent-warm);
 }
@@ -389,6 +400,13 @@
   font-size: var(--t-xs);
   font-variant-numeric: tabular-nums;
   text-align: right;
+
+  small {
+    display: block;
+
+    font-size: 0.85em;
+    color: var(--ink-3);
+  }
 }
 
 .painel__table-note {

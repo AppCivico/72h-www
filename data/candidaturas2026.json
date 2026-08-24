@@ -1,0 +1,285 @@
+{
+ "source": "TSE, Resumo Candidatos 2026 por partido (planilha 'Percentuais_Candidatos_2026_Partido_UF'), divulgada em 21/08/2026",
+ "cutoff": "2026-08-18",
+ "note": "Percentuais calculados por nós a partir dos números absolutos da aba 'Partido'. O TSE publica, naquela planilha, a composição racial dentro de cada sexo; a proporção de candidaturas femininas sobre o total do partido, que é a base do piso do art. 17, § 4º, I, sai da divisão Feminino Total / Total Geral.",
+ "totals": {
+  "candidacies": 20560,
+  "female": 7165,
+  "female_share": 34.85,
+  "black_share": 49.64,
+  "indigenous_share": 0.93
+ },
+ "parties": [
+  {
+   "acronym": "AGIR",
+   "candidacies": 457,
+   "female": 147,
+   "female_share": 32.17,
+   "female_floor": 32.17,
+   "black_share": 57.99,
+   "indigenous_share": 1.09
+  },
+  {
+   "acronym": "AVANTE",
+   "candidacies": 959,
+   "female": 316,
+   "female_share": 32.95,
+   "female_floor": 32.95,
+   "black_share": 60.06,
+   "indigenous_share": 0.21
+  },
+  {
+   "acronym": "CIDADANIA",
+   "candidacies": 147,
+   "female": 63,
+   "female_share": 42.86,
+   "female_floor": 42.86,
+   "black_share": 53.74,
+   "indigenous_share": 0.0
+  },
+  {
+   "acronym": "DC",
+   "candidacies": 753,
+   "female": 234,
+   "female_share": 31.08,
+   "female_floor": 31.08,
+   "black_share": 51.26,
+   "indigenous_share": 1.33
+  },
+  {
+   "acronym": "DEMOCRATA",
+   "candidacies": 445,
+   "female": 154,
+   "female_share": 34.61,
+   "female_floor": 34.61,
+   "black_share": 57.98,
+   "indigenous_share": 0.45
+  },
+  {
+   "acronym": "MDB",
+   "candidacies": 1390,
+   "female": 491,
+   "female_share": 35.32,
+   "female_floor": 35.32,
+   "black_share": 45.18,
+   "indigenous_share": 0.86
+  },
+  {
+   "acronym": "MISSÃO",
+   "candidacies": 541,
+   "female": 179,
+   "female_share": 33.09,
+   "female_floor": 33.09,
+   "black_share": 37.89,
+   "indigenous_share": 0.18
+  },
+  {
+   "acronym": "MOBILIZA",
+   "candidacies": 569,
+   "female": 184,
+   "female_share": 32.34,
+   "female_floor": 32.34,
+   "black_share": 63.62,
+   "indigenous_share": 0.7
+  },
+  {
+   "acronym": "NOVO",
+   "candidacies": 1290,
+   "female": 419,
+   "female_share": 32.48,
+   "female_floor": 32.48,
+   "black_share": 43.02,
+   "indigenous_share": 0.78
+  },
+  {
+   "acronym": "PCB",
+   "candidacies": 23,
+   "female": 5,
+   "female_share": 21.74,
+   "female_floor": 30.0,
+   "black_share": 65.22,
+   "indigenous_share": 0.0
+  },
+  {
+   "acronym": "PCDOB",
+   "candidacies": 146,
+   "female": 65,
+   "female_share": 44.52,
+   "female_floor": 44.52,
+   "black_share": 58.9,
+   "indigenous_share": 0.0
+  },
+  {
+   "acronym": "PCO",
+   "candidacies": 146,
+   "female": 47,
+   "female_share": 32.19,
+   "female_floor": 32.19,
+   "black_share": 50.68,
+   "indigenous_share": 6.85
+  },
+  {
+   "acronym": "PDT",
+   "candidacies": 1098,
+   "female": 380,
+   "female_share": 34.61,
+   "female_floor": 34.61,
+   "black_share": 55.92,
+   "indigenous_share": 1.64
+  },
+  {
+   "acronym": "PL",
+   "candidacies": 1620,
+   "female": 533,
+   "female_share": 32.9,
+   "female_floor": 32.9,
+   "black_share": 37.65,
+   "indigenous_share": 0.49
+  },
+  {
+   "acronym": "PODE",
+   "candidacies": 1221,
+   "female": 426,
+   "female_share": 34.89,
+   "female_floor": 34.89,
+   "black_share": 48.57,
+   "indigenous_share": 0.08
+  },
+  {
+   "acronym": "PP",
+   "candidacies": 707,
+   "female": 246,
+   "female_share": 34.79,
+   "female_floor": 34.79,
+   "black_share": 39.46,
+   "indigenous_share": 0.28
+  },
+  {
+   "acronym": "PRD",
+   "candidacies": 488,
+   "female": 179,
+   "female_share": 36.68,
+   "female_floor": 36.68,
+   "black_share": 52.25,
+   "indigenous_share": 0.0
+  },
+  {
+   "acronym": "PRTB",
+   "candidacies": 10,
+   "female": 1,
+   "female_share": 10.0,
+   "female_floor": 30.0,
+   "black_share": 50.0,
+   "indigenous_share": 0.0
+  },
+  {
+   "acronym": "PSB",
+   "candidacies": 955,
+   "female": 333,
+   "female_share": 34.87,
+   "female_floor": 34.87,
+   "black_share": 50.47,
+   "indigenous_share": 1.05
+  },
+  {
+   "acronym": "PSD",
+   "candidacies": 1123,
+   "female": 385,
+   "female_share": 34.28,
+   "female_floor": 34.28,
+   "black_share": 42.83,
+   "indigenous_share": 0.62
+  },
+  {
+   "acronym": "PSDB",
+   "candidacies": 1065,
+   "female": 371,
+   "female_share": 34.84,
+   "female_floor": 34.84,
+   "black_share": 47.79,
+   "indigenous_share": 0.28
+  },
+  {
+   "acronym": "PSOL",
+   "candidacies": 787,
+   "female": 315,
+   "female_share": 40.03,
+   "female_floor": 40.03,
+   "black_share": 61.75,
+   "indigenous_share": 2.54
+  },
+  {
+   "acronym": "PSTU",
+   "candidacies": 126,
+   "female": 51,
+   "female_share": 40.48,
+   "female_floor": 40.48,
+   "black_share": 47.62,
+   "indigenous_share": 1.59
+  },
+  {
+   "acronym": "PT",
+   "candidacies": 1095,
+   "female": 403,
+   "female_share": 36.8,
+   "female_floor": 36.8,
+   "black_share": 49.5,
+   "indigenous_share": 3.38
+  },
+  {
+   "acronym": "PV",
+   "candidacies": 232,
+   "female": 91,
+   "female_share": 39.22,
+   "female_floor": 39.22,
+   "black_share": 53.02,
+   "indigenous_share": 1.72
+  },
+  {
+   "acronym": "REDE",
+   "candidacies": 349,
+   "female": 133,
+   "female_share": 38.11,
+   "female_floor": 38.11,
+   "black_share": 62.46,
+   "indigenous_share": 5.44
+  },
+  {
+   "acronym": "REPUBLICANOS",
+   "candidacies": 1292,
+   "female": 429,
+   "female_share": 33.2,
+   "female_floor": 33.2,
+   "black_share": 48.3,
+   "indigenous_share": 0.08
+  },
+  {
+   "acronym": "SOLIDARIEDADE",
+   "candidacies": 513,
+   "female": 179,
+   "female_share": 34.89,
+   "female_floor": 34.89,
+   "black_share": 61.4,
+   "indigenous_share": 0.39
+  },
+  {
+   "acronym": "UNIÃO",
+   "candidacies": 827,
+   "female": 306,
+   "female_share": 37.0,
+   "female_floor": 37.0,
+   "black_share": 50.67,
+   "indigenous_share": 0.0
+  },
+  {
+   "acronym": "UP",
+   "candidacies": 186,
+   "female": 100,
+   "female_share": 53.76,
+   "female_floor": 53.76,
+   "black_share": 54.84,
+   "indigenous_share": 0.54
+  }
+ ],
+ "source_url": "https://www.tse.jus.br/eleicoes/copy_of_percentuais-de-candidaturas-de-femininas-e-de-pessoas-negras-por-partido-politico"
+}

@@ -177,12 +177,26 @@
                     </div>
                   </td>
                   <td data-label='{{ i18n "painelColWomen" }}'>
+                    {{/* Duas marcas na mesma barra: a escura é o mínimo de
+                        30%, igual em todas as linhas (é o que o olho compara
+                        de longe); a clara é o piso proporcional deste
+                        partido, que é a régua que vale de verdade. Quando o
+                        partido não está na tabela do TSE, só a primeira
+                        aparece e o número do piso é omitido. */}}
                     <div class="painel__bullet" :class="{ 'painel__bullet--below': row.belowFemale }">
                       <span class="painel__bullet-track">
                         <span class="painel__bullet-fill" :style="{ width: Math.min(row.femaleShare, 100) + '%' }"></span>
                         <span class="painel__bullet-target" aria-hidden="true"></span>
+                        <span
+                          class="painel__bullet-target painel__bullet-target--party"
+                          v-if="row.femaleFloorKnown && row.femaleFloor > 30"
+                          :style="{ left: Math.min(row.femaleFloor, 100) + '%' }"
+                          aria-hidden="true"></span>
                       </span>
-                      <span class="painel__bullet-value">{{ "{{ formatNumeral(row.femaleShare, 1) }}" }}%</span>
+                      <span class="painel__bullet-value">
+                        {{ "{{ formatNumeral(row.femaleShare, 1) }}" }}%
+                        <small v-if="row.femaleFloorKnown">{{ i18n "painelFloorOf" }} {{ "{{ formatNumeral(row.femaleFloor, 1) }}" }}%</small>
+                      </span>
                     </div>
                   </td>
                   <td data-label='{{ i18n "painelColBlackWomen" }}' class="table-cell--numeric">
@@ -194,6 +208,7 @@
             </table>
           </div>
           <p class="painel__table-note">{{ i18n "painelWomenFootnote" }}</p>
+          <p class="painel__table-note">{{ i18n "painelCandidaciesSource" }}</p>
           <p class="painel__table-note">{{ i18n "painelFloorNote" }}</p>
 
           <div class="painel__dormant" v-if="dormantRows.length">
@@ -497,6 +512,7 @@
     {{ with site.Data.partyPanel }}window.appPanel = {{ . | jsonify | safeJS }};{{ end }}
     window.appChartCredits = '{{ i18n "chartExportCredits" }}';
     window.appRepresentation = {{ site.Data.representacao2026 | jsonify | safeJS }};
+    {{ with site.Data.candidaturas2026 }}window.appCandidacies = {{ . | jsonify | safeJS }};{{ end }}
     window.appPanelYear = {{ site.Params.run }};
     window.appPanelBadges = {
       beforeBlack: '{{ i18n "painelBadgeBeforeBlack" }}',

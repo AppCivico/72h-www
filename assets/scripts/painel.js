@@ -18,12 +18,32 @@ watchHeaderCondense();
 // -- change both together.
 const RANKING_FLOOR = 250000;
 
-// A referência mínima, em pontos percentuais: 30% do Fundo Eleitoral para
-// candidaturas de pessoas pretas e pardas (piso fixo, art. 17, § 9º, da
-// Constituição) e 30% para candidaturas femininas (art. 17, § 8º), onde 30%
-// é o mínimo e a obrigação pode ser maior, proporcional à fatia de
-// candidatas do partido. A régua desenhada aqui é sempre o mínimo.
+// O piso fixo, em pontos percentuais: 30% do Fundo Eleitoral para
+// candidaturas de pessoas pretas e pardas (art. 17, § 9º, da Constituição),
+// independentemente de quantas candidaturas negras o partido tenha. Para
+// mulheres, 30% é só o mínimo: a obrigação acompanha a proporção de
+// candidatas do partido (art. 17, § 8º), e é ela que vale abaixo.
 const FLOOR_SHARE = 30;
+
+// Normaliza sigla para casar nossa tabela de partidos com a do TSE
+// ("PC do B" vs "PCDOB", caixa, acento). Gêmeo de foldAcronym em
+// scripts/partyPanel.mjs -- se um mudar, mude o outro.
+function foldAcronym(value) {
+  return String(value || '')
+    .normalize('NFD')
+    .replace(/\p{M}/gu, '')
+    .replace(/[^a-z0-9]/gi, '')
+    .toLowerCase();
+}
+
+// Piso proporcional de mulheres por partido, calculado das candidaturas
+// registradas e divulgadas pelo TSE. Ausente = partido fora daquela tabela
+// (extinto, ou sem candidatura aceita), e aí a régua volta a ser o mínimo.
+const femaleFloors = new Map(
+  (window.appCandidacies?.parties || []).map((party) => [
+    foldAcronym(party.acronym), party,
+  ]),
+);
 
 // How many parties the thermometer draws: the five biggest Fundo Eleitoral
 // quotas, one line per categorical color -- more than that turns into
@@ -82,6 +102,9 @@ window.$vuePainel = Vue.createApp({
       if (!panel?.parties) return [];
       return panel.parties.map((party) => {
         const { total } = party.fefc;
+        const candidacies = femaleFloors.get(foldAcronym(party.acronym))
+          || femaleFloors.get(foldAcronym(party.name));
+        const floor = candidacies ? candidacies.female_floor : FLOOR_SHARE;
         return {
           ...party,
           femaleShare: total > 0 ? (party.fefc.female / total) * 100 : null,
@@ -95,7 +118,14 @@ window.$vuePainel = Vue.createApp({
           // gênero) e a lista parecia fora de ordem. Um partido sem dinheiro
           // (share null) não é "fora do piso": é sem dado, e nem entra aqui.
           belowBlack: total > 0 && (party.black.total / total) * 100 < FLOOR_SHARE,
-          belowFemale: total > 0 && (party.fefc.female / total) * 100 < FLOOR_SHARE,
+          // Aqui a régua é a do próprio partido, não os 30% de todo mundo:
+          // um partido com 40% de candidatas deve 40% do Fundo Eleitoral, e
+          // comparar com 30% mostraria como cumprindo quem já deveria estar
+          // repassando mais.
+          belowFemale: total > 0 && (party.fefc.female / total) * 100 < floor,
+          femaleFloor: floor,
+          femaleFloorKnown: Boolean(candidacies),
+          candidacies: candidacies || null,
         };
       });
     },

@@ -679,7 +679,7 @@
 - id: painelRulerWomenTitle
   translation: "para candidaturas de mulheres"
 - id: painelRulerWomenBody
-  translation: "O percentual do Fundo Eleitoral destinado às mulheres deve acompanhar a proporção de candidaturas femininas do partido e nunca pode ser inferior a 30%. Neste painel, a linha de referência mostra o mínimo de 30%."
+  translation: "O percentual do Fundo Eleitoral destinado às mulheres deve acompanhar a proporção de candidaturas femininas do partido e nunca pode ser inferior a 30%. Na tabela deste painel, cada partido é comparado com o seu próprio piso; no gráfico de tempo, a linha de referência é o mínimo de 30%."
 - id: painelRulerDeadlineTitle
   translation: "para o prazo final de distribuição dos recursos das cotas"
 - id: painelRulerDeadlineBody
@@ -823,23 +823,23 @@
 - id: painelBelowBlack
   translation: "partidos do placar estão abaixo da referência mínima de 30% para candidaturas de pessoas pretas e pardas"
 - id: painelBelowFemale
-  translation: "estão abaixo da referência mínima de 30% para candidaturas de mulheres"
+  translation: "estão abaixo do piso do próprio partido para candidaturas de mulheres"
 - id: painelOnlyBelow
   translation: "Só quem está abaixo de 30%"
 - id: painelBadgeBlack
   translation: "após o prazo, abaixo de 30%: pretas e pardas"
 - id: painelBadgeFemale
-  translation: "após o prazo, abaixo de 30%: mulheres"
+  translation: "após o prazo, abaixo do piso: mulheres"
 - id: painelBadgeBoth
-  translation: "após o prazo, abaixo de 30% nas duas regras"
+  translation: "após o prazo, abaixo dos dois pisos"
 - id: painelBelowEither
-  translation: "estão abaixo da referência mínima em pelo menos uma das duas regras"
+  translation: "estão abaixo do piso em pelo menos uma das duas regras"
 - id: painelColNoFloorNote
   translation: "sem percentual mínimo específico"
 - id: painelHelpBlack
   translation: "Ordenando pela fatia do Fundo Eleitoral já declarado como recebido por candidaturas de pessoas pretas e pardas. O piso constitucional é de 30%."
 - id: painelHelpFemale
-  translation: "Ordenando pela fatia do Fundo Eleitoral já declarado como recebido por candidaturas de mulheres. A referência desta tabela é o mínimo de 30%, mas o percentual obrigatório pode ser maior: ele acompanha a proporção de candidaturas femininas do partido. Ou seja, a coluna compara com o mínimo, e não com a obrigação final de cada partido."
+  translation: "Ordenando pela fatia do Fundo Eleitoral já declarado como recebido por candidaturas de mulheres. A comparação é com o piso de cada partido, que acompanha a proporção de candidaturas femininas dele e nunca é inferior a 30%, e não com uma régua única de 30%."
 - id: painelHelpQuota
   translation: "Ordenando pela fatia da cota do Fundo Eleitoral que já aparece nas declarações das candidaturas do partido. Aqui não há percentual mínimo: mede o ritmo da distribuição, não a equidade. Como existe prazo para atualizar as prestações de contas, um repasse recente pode ainda não estar contado."
 - id: painelSortLeastMoved
@@ -849,9 +849,9 @@
 - id: painelBadgeBeforeBlack
   translation: "abaixo de 30%: pretas e pardas"
 - id: painelBadgeBeforeFemale
-  translation: "abaixo de 30%: mulheres"
+  translation: "abaixo do piso: mulheres"
 - id: painelBadgeBeforeBoth
-  translation: "abaixo de 30% nas duas regras"
+  translation: "abaixo dos dois pisos"
 - id: painelBaseWarnLead
   translation: "Leia as fatias com cuidado: até agora nenhum partido aparece com mais de"
 - id: painelBaseWarnTail
@@ -871,13 +871,13 @@
 - id: painelQuotasLegal
   translation: "Base legal: Constituição Federal, art. 17, §§ 8º e 9º; Resolução TSE nº 23.607/2019, art. 17, § 4º, com redação da Resolução TSE nº 23.752/2026."
 - id: painelWomenProportionNote
-  translation: "Para mulheres, 30% é o percentual mínimo. Se elas representarem mais de 30% das candidaturas do partido, o percentual obrigatório de recursos aumenta na mesma proporção."
+  translation: "Para mulheres, 30% é só o mínimo: o piso acompanha a proporção de candidaturas femininas de cada partido. Nesta tabela usamos o piso de cada um, calculado a partir das candidaturas registradas até 18 de agosto e divulgadas pelo TSE. Em 2026, nenhum partido com candidaturas aceitas tem piso de exatamente 30%."
 - id: painelColBlackFloorNote
   translation: "mínimo: 30%"
 - id: painelColWomenFloorNote
-  translation: "mínimo: 30%*"
+  translation: "piso do partido, nunca abaixo de 30%*"
 - id: painelWomenFootnote
-  translation: "* Para mulheres, o percentual obrigatório pode ser superior a 30%, conforme a proporção de candidaturas femininas do partido."
+  translation: "* O piso de mulheres acompanha a proporção de candidaturas femininas de cada partido e nunca é inferior a 30% (Constituição, art. 17, § 8º). Na barra, a marca escura é o mínimo de 30%, igual para todos; a marca clara é o piso deste partido. Onde o partido não aparece na tabela de candidaturas do TSE, a régua volta a ser 30%."
 - id: painelPartyFundLead
   translation: "As candidaturas declararam ter recebido, além disso,"
 - id: painelPartyFundTail
@@ -908,3 +908,7 @@
   translation: "Por isso, acompanhar como o dinheiro é distribuído é tão importante quanto verificar quanto foi destinado a cada grupo. A forma de distribuição influencia as condições reais de competição eleitoral e amplia o debate sobre igualdade de oportunidades na democracia."
 - id: painelLegalTitle
   translation: "Base legal, Eleições 2026"
+- id: painelFloorOf
+  translation: "piso:"
+- id: painelCandidaciesSource
+  translation: "Piso de cada partido calculado a partir das candidaturas registradas por sexo, divulgadas pelo TSE em 21 de agosto de 2026 (posição de 18 de agosto). Como candidaturas ainda podem ser indeferidas até o fim do registro, o piso de um partido pode mudar."
