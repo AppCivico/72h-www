@@ -1,5 +1,5 @@
 {
- "generated_at": "2026-08-24T23:06:29.767Z",
+ "generated_at": "2026-08-24T23:49:42.561Z",
  "year": 2026,
  "basis": "fefc",
  "fefc_total": 4961519777,
@@ -310,16 +310,10 @@
     "daily": []
    },
    "black": {
-    "total": 15077.5,
-    "female": 2852.5,
-    "count_all": 7,
-    "daily": [
-     {
-      "d": "2026-08-19",
-      "f": 2852.5,
-      "m": 12225
-     }
-    ]
+    "total": 0,
+    "female": 0,
+    "count_all": 0,
+    "daily": []
    }
   },
   {
@@ -535,26 +529,10 @@
     "daily": []
    },
    "black": {
-    "total": 1400000,
-    "female": 900000,
-    "count_all": 5,
-    "daily": [
-     {
-      "d": "2026-08-18",
-      "f": 0,
-      "m": 100000
-     },
-     {
-      "d": "2026-08-19",
-      "f": 0,
-      "m": 100000
-     },
-     {
-      "d": "2026-08-20",
-      "f": 900000,
-      "m": 300000
-     }
-    ]
+    "total": 0,
+    "female": 0,
+    "count_all": 0,
+    "daily": []
    }
   },
   {
@@ -565,15 +543,9 @@
    "fefc": {
     "total": 0,
     "female": 0,
-    "count_all": 1,
+    "count_all": 0,
     "count_female": 0,
-    "daily": [
-     {
-      "d": "2026-08-17",
-      "f": 0,
-      "m": 21500
-     }
-    ]
+    "daily": []
    },
    "black": {
     "total": 0,
@@ -595,16 +567,10 @@
     "daily": []
    },
    "black": {
-    "total": 5000,
-    "female": 5000,
-    "count_all": 1,
-    "daily": [
-     {
-      "d": "2026-08-21",
-      "f": 5000,
-      "m": 0
-     }
-    ]
+    "total": 0,
+    "female": 0,
+    "count_all": 0,
+    "daily": []
    }
   },
   {
