@@ -14,19 +14,20 @@
           <p class="painel__dek">{{ i18n "painelDek" }}</p>
         </div>
 
-        {{/* As três regras são diferentes entre si, e a página acompanha
-            duas delas. Dizer isso na abertura, num <details> nativo (sem
-            JS, sem tooltip que o dedo não alcança no celular), evita a
-            leitura de que mulheres e pessoas negras são as únicas cotas. */}}
-        <details class="painel__more">
-          <summary>{{ i18n "painelQuotasSummary" }}</summary>
-          <ul>
-            <li>{{ i18n "painelQuotasWomen" }}</li>
-            <li>{{ i18n "painelQuotasBlack" }}</li>
-            <li>{{ i18n "painelQuotasIndigenous" }}</li>
-          </ul>
-          <p class="painel__more-legal">{{ i18n "painelQuotasLegal" }}</p>
-        </details>
+        <aside class="painel__clock" v-if="countdown">
+          <template v-if="!countdown.passed">
+            <p class="painel__clock-number">{{ "{{ countdown.daysLeft }}" }}</p>
+            <p class="painel__clock-unit">
+              <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
+              <template v-else>{{ i18n "publicFundsDays" }}</template>
+            </p>
+            <p class="painel__clock-caption">{{ i18n "painelKeyDeadlineTail" }}</p>
+          </template>
+          <template v-else>
+            <p class="painel__clock-number">8/9</p>
+            <p class="painel__clock-caption">{{ i18n "painelKeyDeadlinePast" }}</p>
+          </template>
+        </aside>
       </header>
 
       {{/* ---- 1. O placar ao vivo + o termômetro do prazo ----------------------------------------- */}}
@@ -44,35 +45,12 @@
               antiga (Fundo Eleitoral + Fundo Partidário somados), a página
               diz isso em vez de rotular a soma como Fundo Eleitoral. */}}
           <p class="painel__sort-help painel__sort-help--warn" v-if="legacyBasis">{{ i18n "painelLegacyBasis" }}</p>
-          <p class="painel__table-note" v-if="partyFundDeclared">
-            {{ i18n "painelPartyFundLead" }}
-            <strong v-html="formatCurrencyNoAbbr(partyFundDeclared)"></strong>
-            {{ i18n "painelPartyFundTail" }}
-          </p>
-          <p class="painel__table-note">
-            {{ "{{ rankedRows.length }}" }} {{ i18n "painelCountsRanked" }} ·
-            {{ "{{ dormantRows.length }}" }} {{ i18n "painelCountsDormant" }}
-          </p>
 
           {{/* Faixa de urgência: o placar abriu a página, então aqui vêm o
               relógio e a régua antes da tabela. Os contadores de "fora do
               piso" saem de TODOS os partidos elegíveis ao placar, nunca da
               lista filtrada. O relógio depende só da data, não do JSON. */}}
           <div class="painel__urgency">
-            <div class="painel__urgency-clock" v-if="countdown">
-              <template v-if="!countdown.passed">
-                <p class="painel__urgency-number">{{ "{{ countdown.daysLeft }}" }}</p>
-                <p class="painel__urgency-unit">
-                  <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
-                  <template v-else>{{ i18n "publicFundsDays" }}</template>
-                </p>
-                <p class="painel__urgency-caption">{{ i18n "painelKeyDeadlineTail" }}</p>
-              </template>
-              <template v-else>
-                <p class="painel__urgency-number">8/9</p>
-                <p class="painel__urgency-caption">{{ i18n "painelKeyDeadlinePast" }}</p>
-              </template>
-            </div>
             <div class="painel__urgency-counts" v-if="belowCounts">
               <p class="painel__urgency-count">
                 <strong>{{ "{{ belowCounts.black }}" }} {{ i18n "ofTotal" }} {{ "{{ belowCounts.total }}" }}</strong>
@@ -86,7 +64,6 @@
                 <strong>{{ "{{ belowCounts.either }}" }} {{ i18n "ofTotal" }} {{ "{{ belowCounts.total }}" }}</strong>
                 {{ i18n "painelBelowEither" }}
               </p>
-              <p class="painel__urgency-note">{{ i18n "painelWomenProportionNote" }}</p>
               <p class="painel__urgency-note">{{ i18n "painelKeyRule" }}</p>
             </div>
           </div>
@@ -160,6 +137,10 @@
                         piso tem de ser identificável numa varredura rápida. O
                         wrapper flex deixa o selo quebrar linha em coluna
                         estreita em vez de vazar. */}}
+                    {{/* Nome e selo em linhas próprias: com wrap, o selo caía
+                        ao lado em umas linhas e embaixo em outras, e a altura
+                        das linhas ficava desigual. Qual das duas réguas ficou
+                        abaixo é a barra âmbar da coluna que diz. */}}
                     <span class="painel__party">
                       <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
                       <span class="painel__badge" v-if="row.belowBlack || row.belowFemale">{{ "{{ badgeFor(row) }}" }}</span>
@@ -188,10 +169,8 @@
                     <div class="painel__bullet" :class="{ 'painel__bullet--below': row.belowFemale }">
                       <span class="painel__bullet-track">
                         <span class="painel__bullet-fill" :style="{ width: Math.min(row.femaleShare, 100) + '%' }"></span>
-                        <span class="painel__bullet-target" aria-hidden="true"></span>
                         <span
-                          class="painel__bullet-target painel__bullet-target--party"
-                          v-if="row.femaleFloorKnown && row.femaleFloor > 30"
+                          class="painel__bullet-target"
                           :style="{ left: Math.min(row.femaleFloor, 100) + '%' }"
                           aria-hidden="true"></span>
                       </span>
@@ -216,19 +195,34 @@
             <p class="painel__table-note">{{ i18n "painelWomenFootnote" }}</p>
             <p class="painel__table-note">{{ i18n "painelCandidaciesSource" }}</p>
             <p class="painel__table-note">{{ i18n "painelFloorNote" }}</p>
+            <p class="painel__table-note" v-if="partyFundDeclared">
+              {{ i18n "painelPartyFundLead" }}
+              <strong v-html="formatCurrencyNoAbbr(partyFundDeclared)"></strong>
+              {{ i18n "painelPartyFundTail" }}
+            </p>
           </div>
 
           <div class="painel__dormant" v-if="dormantRows.length">
-            <h3>{{ i18n "painelDormantTitle" }}</h3>
+            <h3>{{ "{{ dormantRows.length }}" }} {{ i18n "painelDormantCount" }}: {{ i18n "painelDormantTitle" }}</h3>
             <p class="painel__section-intro">{{ i18n "painelDormantIntro" }}</p>
+            {{/* Vinte e dois partidos em linhas de texto com "cota de" e
+                "declarado:" repetidos viravam ruído. Como quase todos
+                declararam zero, a variável que interessa é o tamanho da cota
+                parada: ela vira barra, e só quem declarou algo ganha número. */}}
             <ul class="painel__dormant-list">
-              <li v-for="row in dormantRows" :key="row.id">
-                <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
-                <span v-if="row.fefc_quota">
-                  {{ i18n "painelDormantQuota" }} <span v-html="formatCurrency(row.fefc_quota)"></span>
-                  · {{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.fefc.total)"></span>
+              <li v-for="row in dormantRows" :key="row.id" class="painel__dormant-row">
+                <span class="painel__dormant-party">{{ "{{ row.acronym || row.name }}" }}</span>
+                <span class="painel__dormant-track">
+                  <span
+                    class="painel__dormant-fill"
+                    :style="{ width: dormantBarWidth(row) + '%' }"></span>
                 </span>
-                <span v-else>{{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.fefc.total)"></span></span>
+                <span class="painel__dormant-value">
+                  <span v-if="row.fefc_quota" v-html="formatCurrency(row.fefc_quota)"></span>
+                  <small v-if="row.fefc.total > 0">
+                    <span v-html="formatCurrency(row.fefc.total)"></span> {{ i18n "painelDormantMoved" }}
+                  </small>
+                </span>
               </li>
             </ul>
           </div>
@@ -274,6 +268,18 @@
         <p class="eyebrow">{{ i18n "painelRulerEyebrow" }}</p>
         <h2>{{ i18n "painelRulerTitle" }}</h2>
         <p class="painel__section-intro">{{ i18n "painelRulerIntro" }}</p>
+        {{/* As três regras são diferentes entre si, e a página acompanha duas
+            delas. Num <details> nativo: sem JS e sem tooltip que o dedo não
+            alcança no celular. */}}
+        <details class="painel__more">
+          <summary>{{ i18n "painelQuotasSummary" }}</summary>
+          <ul>
+            <li>{{ i18n "painelQuotasWomen" }}</li>
+            <li>{{ i18n "painelQuotasBlack" }}</li>
+            <li>{{ i18n "painelQuotasIndigenous" }}</li>
+          </ul>
+          <p class="painel__more-legal">{{ i18n "painelQuotasLegal" }}</p>
+        </details>
         <div class="painel__rulers">
           <div class="painel__ruler-card">
             <p class="painel__ruler-number">30%</p>
@@ -288,10 +294,7 @@
             <p class="painel__ruler-legal">{{ i18n "painelRulerWomenLegal" }}</p>
           </div>
           <div class="painel__ruler-card painel__ruler-card--deadline" v-if="countdown">
-            <p class="painel__ruler-number" v-if="!countdown.passed">{{ "{{ countdown.daysLeft }}" }}
-              <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
-              <template v-else>{{ i18n "publicFundsDays" }}</template></p>
-            <p class="painel__ruler-number" v-else>8/9</p>
+            <p class="painel__ruler-number">8/9</p>
             <h3>{{ i18n "painelRulerDeadlineTitle" }}</h3>
             <p v-if="!countdown.passed">{{ i18n "painelRulerDeadlineBody" }}</p>
             <p v-else>{{ i18n "painelRulerDeadlinePast" }}</p>
@@ -524,12 +527,8 @@
     {{ with site.Data.candidaturas2026 }}window.appCandidacies = {{ . | jsonify | safeJS }};{{ end }}
     window.appPanelYear = {{ site.Params.run }};
     window.appPanelBadges = {
-      beforeBlack: '{{ i18n "painelBadgeBeforeBlack" }}',
-      beforeFemale: '{{ i18n "painelBadgeBeforeFemale" }}',
-      beforeBoth: '{{ i18n "painelBadgeBeforeBoth" }}',
-      afterBlack: '{{ i18n "painelBadgeBlack" }}',
-      afterFemale: '{{ i18n "painelBadgeFemale" }}',
-      afterBoth: '{{ i18n "painelBadgeBoth" }}',
+      before: '{{ i18n "painelBadgeBefore" }}',
+      after: '{{ i18n "painelBadgeAfter" }}',
     }
     window.appPanelSort = {
       helpBlack: '{{ i18n "painelHelpBlack" }}',

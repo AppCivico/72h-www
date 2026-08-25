@@ -583,7 +583,7 @@
 - id: painelTitle
   translation: "Seguindo o dinheiro"
 - id: painelDek
-  translation: "O Fundo Especial de Financiamento de Campanha (FEFC), conhecido como Fundo Eleitoral, passa pelos partidos antes de chegar às candidaturas. Em 2026, existem regras específicas para a destinação desses recursos a candidaturas de mulheres, pessoas pretas e pardas e pessoas indígenas. Esta página acompanha, dia a dia, como os partidos estão distribuindo esse dinheiro."
+  translation: "O Fundo Especial de Financiamento de Campanha (FEFC), conhecido como Fundo Eleitoral, passa pelos partidos antes de chegar às candidaturas. Em 2026, existem regras específicas para a destinação desses recursos a candidaturas de mulheres, pessoas pretas e pardas e pessoas indígenas."
 - id: painelWaffleEyebrow
   translation: "O tamanho do problema"
 - id: painelWaffleTitle
@@ -687,7 +687,7 @@
 - id: painelRulerDeadlinePast
   translation: "O prazo final de distribuição dos recursos das cotas terminou em 8 de setembro. Os números abaixo mostram como esses recursos apareceram nas declarações até lá."
 - id: painelBoardEyebrow
-  translation: "Acompanhe a distribuição do Fundo Eleitoral"
+  translation: "Acompanhamento diário"
 - id: painelBoardTitle
   translation: "Como os partidos estão distribuindo o Fundo Eleitoral em 2026"
 - id: painelBoardIntro1
@@ -713,23 +713,21 @@
 - id: painelColPublic
   translation: "Fundo Eleitoral repassado"
 - id: painelColBlack
-  translation: "Fatia do Fundo Eleitoral para candidaturas pretas e pardas"
+  translation: "Pretas e pardas"
 - id: painelColWomen
-  translation: "Fatia do Fundo Eleitoral para mulheres"
+  translation: "Mulheres"
 - id: painelColBlackWomen
-  translation: "Fatia do Fundo Eleitoral para mulheres pretas e pardas"
+  translation: "Mulheres pretas e pardas"
 - id: painelOfQuota
-  translation: "da cota do Fundo Eleitoral"
+  translation: "da cota"
 - id: painelFloorNote
   translation: "Entram no placar os partidos com pelo menos R$ 250 mil do Fundo Eleitoral já declarado como recebido pelas candidaturas. Abaixo desse valor, os percentuais ainda refletem poucos repasses e podem não representar o padrão de distribuição de recursos do partido ao longo da campanha. A fatia é calculada exclusivamente sobre os recursos do Fundo Eleitoral declarados como recebidos pelas candidaturas até a última coleta."
 - id: painelDormantTitle
   translation: "Quase nada distribuído até agora"
 - id: painelDormantIntro
-  translation: "Partidos com menos de R$ 250 mil do Fundo Eleitoral declarados como recebidos pelas candidaturas até a última coleta, ordenados pelo tamanho da cota recebida."
-- id: painelDormantQuota
-  translation: "cota de"
+  translation: "Partidos com menos de R$ 250 mil do Fundo Eleitoral declarados como recebidos pelas candidaturas. A barra é o tamanho da cota que cada um recebeu: quanto mais longa, mais dinheiro público ainda não apareceu nas declarações."
 - id: painelDormantMoved
-  translation: "declarado:"
+  translation: "declarados"
 - id: painelThermoEyebrow
   translation: "Quando o dinheiro chega às candidaturas"
 - id: painelThermoTitle
@@ -778,10 +776,6 @@
   translation: "do fundo eleitoral: foi o que as candidaturas de mulheres negras receberam em 2022"
 - id: painelWhyStatBody
   translation: "Sendo 17,7% das candidaturas. Homens brancos eram 33% das candidaturas e ficaram com 51% do fundo, o único grupo a receber mais que o próprio peso. Dados TSE analisados por"
-- id: painelCountsRanked
-  translation: "partidos no placar"
-- id: painelCountsDormant
-  translation: "abaixo de R$ 250 mil, listados ao fim da seção"
 - id: candidateRaceCol
   translation: "Cor/raça declarada"
 - id: candidateRaceChangeLead
@@ -815,23 +809,17 @@
 - id: candidateDeclaredLead
   translation: "Autodeclaração ao TSE nesta candidatura:"
 - id: painelKeyRule
-  translation: "Antes de 8 de setembro, estar abaixo da referência de 30% não significa, por si só, descumprimento da regra. O painel acompanha o ritmo dos repasses declarados."
+  translation: "Antes de 8 de setembro, estar abaixo do piso não é, por si só, descumprimento: o painel acompanha o ritmo dos repasses declarados."
 - id: painelKeyDeadlineTail
   translation: "para o prazo final de distribuição dos recursos das cotas, em 8 de setembro"
 - id: painelKeyDeadlinePast
   translation: "O prazo final de distribuição dos recursos das cotas terminou em 8 de setembro."
 - id: painelBelowBlack
-  translation: "partidos do placar estão abaixo da referência mínima de 30% para candidaturas de pessoas pretas e pardas"
+  translation: "partidos do placar estão abaixo do piso de 30% para candidaturas de pessoas pretas e pardas"
 - id: painelBelowFemale
   translation: "estão abaixo do piso do próprio partido para candidaturas de mulheres"
 - id: painelOnlyBelow
-  translation: "Só quem está abaixo de 30%"
-- id: painelBadgeBlack
-  translation: "após o prazo, abaixo de 30%: pretas e pardas"
-- id: painelBadgeFemale
-  translation: "após o prazo, abaixo do piso: mulheres"
-- id: painelBadgeBoth
-  translation: "após o prazo, abaixo dos dois pisos"
+  translation: "Só quem está abaixo do piso"
 - id: painelBelowEither
   translation: "estão abaixo do piso em pelo menos uma das duas regras"
 - id: painelColNoFloorNote
@@ -846,16 +834,10 @@
   translation: "Quem distribuiu menos primeiro"
 - id: painelSortMostMoved
   translation: "Quem distribuiu mais primeiro"
-- id: painelBadgeBeforeBlack
-  translation: "abaixo de 30%: pretas e pardas"
-- id: painelBadgeBeforeFemale
-  translation: "abaixo do piso: mulheres"
-- id: painelBadgeBeforeBoth
-  translation: "abaixo dos dois pisos"
 - id: painelBaseWarnLead
   translation: "Leia as fatias com cuidado: até agora nenhum partido aparece com mais de"
 - id: painelBaseWarnTail
-  translation: "da própria cota do Fundo Eleitoral nas declarações. As fatias abaixo são calculadas sobre esse pedaço já declarado, não sobre a cota inteira, e um único repasse grande pode mudá-las bastante."
+  translation: "da própria cota do Fundo Eleitoral nas declarações. As fatias são calculadas sobre esse pedaço, não sobre a cota inteira, e um repasse grande pode mudá-las bastante."
 - id: painelColQuotaNote
   translation: "e quanto isso representa da cota do partido"
 - id: painelSubtitle
@@ -870,14 +852,12 @@
   translation: "Pessoas indígenas: o percentual mínimo é calculado proporcionalmente às candidaturas indígenas, conforme os critérios definidos pelo TSE."
 - id: painelQuotasLegal
   translation: "Base legal: Constituição Federal, art. 17, §§ 8º e 9º; Resolução TSE nº 23.607/2019, art. 17, § 4º, com redação da Resolução TSE nº 23.752/2026."
-- id: painelWomenProportionNote
-  translation: "Para mulheres, 30% é só o mínimo: o piso acompanha a proporção de candidaturas femininas de cada partido. Nesta tabela usamos o piso de cada um, calculado a partir das candidaturas registradas até 18 de agosto e divulgadas pelo TSE. Em 2026, nenhum partido com candidaturas aceitas tem piso de exatamente 30%."
 - id: painelColBlackFloorNote
   translation: "mínimo: 30%"
 - id: painelColWomenFloorNote
   translation: "piso do partido, nunca abaixo de 30%*"
 - id: painelWomenFootnote
-  translation: "* O piso de mulheres acompanha a proporção de candidaturas femininas de cada partido e nunca é inferior a 30% (Constituição, art. 17, § 8º). Na barra, a marca escura é o mínimo de 30%, igual para todos; a marca clara é o piso deste partido. Onde o partido não aparece na tabela de candidaturas do TSE, a régua volta a ser 30%."
+  translation: "* O piso de mulheres acompanha a proporção de candidaturas femininas de cada partido e nunca é inferior a 30% (Constituição, art. 17, § 8º). A marca na barra é o piso deste partido, não a régua de 30%. Onde o partido não aparece na tabela de candidaturas do TSE, a régua volta a ser 30%."
 - id: painelPartyFundLead
   translation: "As candidaturas declararam ter recebido, além disso,"
 - id: painelPartyFundTail
@@ -920,3 +900,9 @@
   translation: "Mulheres"
 - id: painelColBlackWomenShort
   translation: "Mulheres pretas e pardas"
+- id: painelBadgeBefore
+  translation: "abaixo do piso"
+- id: painelBadgeAfter
+  translation: "fora do piso"
+- id: painelDormantCount
+  translation: "partidos"

@@ -244,14 +244,16 @@
     font-size: var(--t-xs);
     color: var(--ink-2);
   }
-}
 
-.painel__ruler-number {
-  font-family: var(--font-serif);
-  font-size: var(--t-2xl);
-  font-weight: 600;
-  line-height: 1;
-  color: var(--brand);
+  // Dentro do bloco de propósito: solta, a classe perdia para a regra `p`
+  // acima e o número saía do tamanho do corpo do texto.
+  .painel__ruler-number {
+    font-family: var(--font-serif);
+    font-size: var(--t-xl);
+    font-weight: 600;
+    line-height: 1;
+    color: var(--brand);
+  }
 }
 
 .painel__ruler-card--deadline {
@@ -458,9 +460,9 @@
 .painel__dormant-list {
   display: grid;
 
-  grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(19rem, 1fr));
 
-  gap: 0.5rem 2rem;
+  gap: 0.4rem 2.5rem;
 
   padding: 0;
   margin: 1rem 0 0;
@@ -782,16 +784,15 @@
 .painel__badge {
   display: inline-block;
 
-  padding: 0.1rem 0.4rem;
+  padding: 0.05rem 0.4rem;
 
   font-size: 0.6875rem;
   font-weight: 600;
-  color: functions.palette('white');
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+  color: var(--accent-warm);
+  letter-spacing: 0.01em;
   white-space: nowrap;
 
-  background: var(--accent-warm);
+  border: 1px solid var(--accent-warm);
   border-radius: 999px;
 }
 
@@ -814,14 +815,17 @@
 
 /// Sigla e selo na mesma célula: flex com wrap, para o selo cair para a
 /// linha de baixo em coluna estreita em vez de vazar a tabela.
+/// Nome numa linha, selo na seguinte, sempre. Em flex com wrap o selo caía
+/// ao lado em algumas linhas e embaixo em outras, dependendo do comprimento
+/// do rótulo, e as alturas das linhas ficavam desiguais.
 .painel__party {
   display: flex;
 
-  flex-wrap: wrap;
+  flex-direction: column;
 
-  gap: 0.35rem 0.5rem;
+  gap: 0.3rem;
 
-  align-items: baseline;
+  align-items: flex-start;
 }
 
 /* Explicação do eixo ativo e réguas nos cabeçalhos
@@ -865,12 +869,15 @@
 /* Abertura: subtítulo e caixas "Saiba mais"
 ============================================================================ */
 
+/// Linha de apoio, não segundo título: em serifada e no corpo grande ela
+/// disputava a atenção com o h1 e a abertura parecia dizer a mesma coisa três
+/// vezes.
 .painel__subtitle {
-  margin: 0 0 0.5rem;
+  margin: 0 0 0.75rem;
 
-  font-family: var(--font-serif);
-  font-size: var(--t-l, var(--t-m));
-  line-height: 1.2;
+  font-size: var(--t-m);
+  font-weight: 600;
+  line-height: 1.3;
   color: var(--ink-2);
 }
 
@@ -887,7 +894,12 @@
   border: 1px solid var(--hairline);
   border-radius: 12px;
 
+  // O reset do site não alcança `summary`, que fica em content-box: sem isto
+  // o padding de 1rem vaza 2rem para fora da caixa arredondada, em qualquer
+  // largura de tela.
   summary {
+    box-sizing: border-box;
+
     padding: 0.75rem 1rem;
 
     font-size: var(--t-s);
@@ -924,10 +936,14 @@
 ============================================================================ */
 
 .painel__ruler-legal {
-  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  margin-top: 0.75rem;
 
-  font-size: var(--t-2xs, var(--t-xs));
+  font-size: 0.8125rem;
+  line-height: 1.4;
   color: var(--ink-3);
+
+  border-top: 1px solid var(--hairline);
 }
 
 .painel__legal {
@@ -974,7 +990,7 @@
     margin: 0.25rem 0 0.75rem;
 
     font-family: var(--font-serif);
-    font-size: var(--t-l, var(--t-m));
+    font-size: var(--t-l);
     line-height: 1.2;
   }
 
@@ -1000,4 +1016,113 @@
 
     gap: 2rem;
   }
+}
+
+/* Dormentes: ranking do que ainda não apareceu nas declarações
+============================================================================ */
+
+/// Cada linha é sigla, barra e valor. A barra é o tamanho da cota recebida,
+/// proporcional à maior da lista, porque com quase todos declarando zero é o
+/// tamanho da cota parada que diferencia um partido do outro.
+.painel__dormant-row {
+  display: grid;
+
+  grid-template-columns: minmax(0, 6.5rem) minmax(2rem, 1fr) auto;
+
+  gap: 0.6rem;
+
+  align-items: center;
+}
+
+.painel__dormant-party {
+  overflow: hidden;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.painel__dormant-track {
+  display: block;
+
+  height: 0.45rem;
+
+  background: var(--paper-warm);
+  border-radius: 3px;
+}
+
+.painel__dormant-fill {
+  display: block;
+
+  height: 100%;
+
+  background: var(--ink-3);
+  border-radius: 3px;
+  opacity: 0.45;
+}
+
+.painel__dormant-value {
+  font-size: var(--t-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  text-align: right;
+
+  small {
+    display: block;
+
+    color: var(--brand);
+  }
+}
+
+/* O relógio do prazo, no alto da página
+============================================================================ */
+
+/// Ocupa a coluna da direita do cabeçalho. Ele vivia dentro da faixa acima da
+/// tabela e havia um segundo, no cartão da régua: agora aparece uma vez só, e
+/// no lugar onde urgência se lê primeiro.
+.painel__clock {
+  padding: 1.25rem 1.5rem;
+
+  text-align: center;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+
+  @media (min-width: 64rem) {
+    justify-self: end;
+
+    max-width: 18rem;
+  }
+}
+
+.painel__clock-number {
+  margin: 0;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-2xl);
+  font-weight: 600;
+  line-height: 1;
+  color: var(--accent-warm);
+}
+
+.painel__clock-unit {
+  margin: 0;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--accent-warm);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.painel__clock-caption {
+  margin: 0.5rem 0 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
 }

@@ -175,6 +175,9 @@ window.$vuePainel = Vue.createApp({
         either: eligible.filter((entry) => entry.belowBlack || entry.belowFemale).length,
       };
     },
+    maxDormantQuota({ dormantRows } = this) {
+      return dormantRows.reduce((max, row) => Math.max(max, row.fefc_quota || 0), 0);
+    },
     boardTotals({ entries } = this) {
       return {
         received: entries.reduce((sum, entry) => sum + entry.fefc.total, 0),
@@ -236,16 +239,22 @@ window.$vuePainel = Vue.createApp({
     formatCurrency(value) {
       return compactCurrency(value, 1);
     },
-    // Antes de 8/09 estar abaixo de 30% é ritmo, não infração: o selo diz
-    // "abaixo de 30% até agora". Depois do prazo, a mesma condição passa a
-    // ser descumprimento do piso e o selo endurece. A troca é automática.
+    // Antes de 8/09 estar abaixo do piso é ritmo, não infração, e o selo diz
+    // "abaixo do piso"; depois do prazo ele endurece para "fora do piso". A
+    // troca é automática. QUAL das duas réguas ficou abaixo não vai no selo:
+    // é a barra âmbar da coluna que diz, e um selo que precisava nomear a
+    // régua ficava comprido e quebrava linha no meio da tabela.
     badgeFor(row) {
       const labels = window.appPanelBadges || {};
-      const phase = this.countdown && this.countdown.passed ? 'after' : 'before';
-      if (row.belowBlack && row.belowFemale) return labels[`${phase}Both`];
-      if (row.belowBlack) return labels[`${phase}Black`];
-      if (row.belowFemale) return labels[`${phase}Female`];
-      return '';
+      if (!(row.belowBlack || row.belowFemale)) return '';
+      return this.countdown && this.countdown.passed ? labels.after : labels.before;
+    },
+    // Barra proporcional à maior cota parada da lista, com um mínimo visível
+    // para que os partidos pequenos não desapareçam.
+    dormantBarWidth(row) {
+      const max = this.maxDormantQuota;
+      if (!max || !row.fefc_quota) return 0;
+      return Math.max(1.5, (row.fefc_quota / max) * 100);
     },
     setThermoGroup(group) {
       if (group === this.thermoGroup) return;
@@ -349,7 +358,11 @@ window.$vuePainel = Vue.createApp({
         xAxis: {
           type: 'datetime',
           softMin: parseDay(CAMPAIGN_START),
-          softMax: parseDay(FIRST_ROUND),
+          // Termina alguns dias depois do prazo das cotas, não no 1º turno:
+          // esticar até outubro deixava mais de um mês de gráfico vazio à
+          // direita, e o prazo é o que este gráfico existe para mostrar.
+          softMax: parseDay(QUOTA_DEADLINES[window.appPanelYear] || FIRST_ROUND)
+            + (3 * 86400000),
           plotLines: [
             verticalLine(CAMPAIGN_START, window.appPainelCharts?.campaignStartLabel || ''),
             verticalLine(QUOTA_DEADLINES[window.appPanelYear] || '2026-09-08', window.appPainelCharts?.deadlineLabel || ''),
@@ -358,6 +371,10 @@ window.$vuePainel = Vue.createApp({
         yAxis: {
           title: { text: null },
           min: 0,
+          // Uma fatia é no máximo 100%. Sem o teto, um partido que no
+          // primeiro dia repassou tudo a um único grupo levava o eixo a 150%
+          // e achatava todas as outras linhas contra o zero.
+          max: 100,
           softMax: 60,
           labels: {
             // eslint-disable-next-line object-shorthand, func-names
