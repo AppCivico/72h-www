@@ -164,7 +164,7 @@
                     </span>
                   </td>
                   <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
-                    <span v-html="formatCurrency(row.public.total)"></span>
+                    <span v-html="formatCurrency(row.fefc.total)"></span>
                     <small v-if="row.quotaUsed !== null" class="painel__quota-used">{{ "{{ formatNumeral(row.quotaUsed, 1) }}" }}% {{ i18n "painelOfQuota" }}</small>
                   </td>
                   <td data-label='{{ i18n "painelColBlack" }}'>
@@ -219,9 +219,9 @@
                 <strong>{{ "{{ row.acronym || row.name }}" }}</strong>
                 <span v-if="row.fefc_quota">
                   {{ i18n "painelDormantQuota" }} <span v-html="formatCurrency(row.fefc_quota)"></span>
-                  · {{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.public.total)"></span>
+                  · {{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.fefc.total)"></span>
                 </span>
-                <span v-else>{{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.public.total)"></span></span>
+                <span v-else>{{ i18n "painelDormantMoved" }} <span v-html="formatCurrency(row.fefc.total)"></span></span>
               </li>
             </ul>
           </div>
