@@ -108,16 +108,15 @@
             </div>
           </div>
 
-          {{/* Onde está o dinheiro: fundos públicos que já chegaram às candidaturas
-               contra a cota total do Fundo Eleitoral do ciclo (constante externa em
+          {{/* Onde está o dinheiro: Fundo Eleitoral que já chegou às candidaturas
+               contra a cota total do ciclo (constante externa em
                utilities/electoralFund.js) + contagem regressiva do prazo legal dos
                repasses MÍNIMOS de cota — não do fundo inteiro; o texto das chaves
-               i18n carrega essa distinção e ela não pode se perder. FEFC e Fundo
-               Partidário somados de propósito: o rótulo de origem nas primeiras
-               entregas é impreciso (fundo chega marcado como partidário), então
-               soma-dos-dois vs cota-do-FEFC é a comparação conservadora. Só
-               renderiza nos anos com constante definida — nunca um número errado
-               para as municipais. */}}
+               i18n carrega essa distinção e ela não pode se perder. Só FEFC nos
+               dois lados da divisão, a MESMA base do /partidos/painel/: as duas
+               páginas nunca podem mostrar percentuais diferentes para a mesma
+               pergunta. Só renderiza nos anos com constante definida — nunca um
+               número errado para as municipais. */}}
           <section class="home-section public-funds" v-if="publicFunds" v-cloak>
             <div class="container">
               <p class="eyebrow">{{ i18n "publicFundsEyebrow" }}</p>

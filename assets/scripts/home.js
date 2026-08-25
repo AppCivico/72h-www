@@ -263,22 +263,23 @@ if (window.location.href.indexOf('/') > -1) {
       countMale({ mainData } = this) {
         return Number.parseInt(mainData?.big_numbers?.count_male, 10) || 0;
       },
-      // The home's "Onde está o dinheiro?" block: public-fund money that has reached
-      // candidacies vs the cycle's FEFC pot, plus the countdown to the legal deadline
-      // for the quota minimums. FEFC and Fundo Partidário are summed on purpose -- the
-      // origin label in early deliveries is unreliable (fund money arrives tagged as
-      // party fund), so two-funds-received vs FEFC-pot is the conservative comparison:
-      // it can only overstate, never understate, how much has arrived. `accumulated`
-      // is election-wide and ignores the page's filters, so the block holds still
-      // while the list below is filtered. null (no constants for the selected year,
-      // or data not in yet) hides the block entirely.
+      // The home's "Onde está o dinheiro?" block: Fundo Eleitoral money that has
+      // reached candidacies vs the cycle's FEFC pot, plus the countdown to the
+      // legal deadline for the quota minimums. FEFC ONLY, on both sides of the
+      // division -- the same basis as /partidos/painel/, so the two pages can
+      // never show different percentages for the same question. (This replaced
+      // an earlier sum of both public funds; the Fundo Partidário is a
+      // different pot with its own total, and mixing it into a percentage of
+      // the FEFC quota made the number a ceiling, not a measure.)
+      // `accumulated` is election-wide and ignores the page's filters, so the
+      // block holds still while the list below is filtered. null (no constants
+      // for the selected year, or data not in yet) hides the block entirely.
       publicFunds({ mainData, selectedYear } = this) {
         const fefcTotal = FEFC_TOTALS[selectedYear];
         const accumulated = mainData?.accumulated;
         if (!fefcTotal || !accumulated) return null;
 
-        const received = (Number.parseFloat(accumulated.value_party_fund) || 0)
-          + (Number.parseFloat(accumulated.value_special_fund) || 0);
+        const received = Number.parseFloat(accumulated.value_special_fund) || 0;
 
         // End of the deadline day in Brasília time; visitors ahead of or behind BRT by
         // a few hours still see the flip within the right day.

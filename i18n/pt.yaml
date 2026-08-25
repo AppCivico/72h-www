@@ -551,19 +551,19 @@
 - id: extractRankNote
   translation: "do maior doador para o menor"
 - id: publicFundsEyebrow
-  translation: "Dinheiro público"
+  translation: "Fundo Eleitoral"
 - id: publicFundsTitle
   translation: "Onde está o dinheiro?"
 - id: publicFundsLead1
-  translation: "Os partidos têm cerca de"
+  translation: "Os partidos receberam cerca de"
 - id: publicFundsPot
   translation: "R$ 4,9 bilhões"
 - id: publicFundsLead2
-  translation: "do Fundo Eleitoral (FEFC) para usar nesta eleição. Até agora, as candidaturas declararam"
+  translation: "do Fundo Eleitoral (FEFC) para financiar as campanhas de 2026. Até agora, as candidaturas declararam ter recebido"
 - id: publicFundsLead3
-  translation: "recebidos dos fundos públicos, o que representa"
+  translation: "desse total. Isso representa"
 - id: publicFundsLead4
-  translation: "desse total. O dinheiro ainda está, quase todo, nos diretórios dos partidos."
+  translation: "do Fundo Eleitoral já distribuído pelos partidos às candidaturas. A maior parte dos recursos ainda permanece nos diretórios partidários."
 - id: publicFundsCountdownSingular
   translation: "Falta"
 - id: publicFundsCountdownPlural
@@ -573,11 +573,11 @@
 - id: publicFundsDays
   translation: "dias"
 - id: publicFundsCountdownTail
-  translation: "para o fim do prazo legal (8 de setembro) de repasse, pelos partidos, dos valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas."
+  translation: "para o fim do prazo legal (8 de setembro) para que os partidos distribuam os recursos mínimos destinados às candidaturas de mulheres, pessoas pretas e pardas e indígenas."
 - id: publicFundsDeadlinePast
-  translation: "O prazo legal para os partidos repassarem os valores mínimos reservados a candidaturas de mulheres e de pessoas negras e indígenas terminou em 8 de setembro."
+  translation: "O prazo legal para que os partidos distribuíssem os recursos mínimos destinados às candidaturas de mulheres, pessoas pretas e pardas e indígenas terminou em 8 de setembro."
 - id: publicFundsSource
-  translation: "Cota do Fundo Eleitoral 2026: aproximadamente R$ 4,9 bilhões (TSE, jun/2026). No valor recebido, somamos FEFC e Fundo Partidário, porque nas primeiras entregas o rótulo de origem declarado ao TSE é impreciso."
+  translation: "Fundo Eleitoral (FEFC) 2026: aproximadamente R$ 4,9 bilhões (TSE, jun/2026). Todos os valores apresentados nesta seção referem-se exclusivamente ao Fundo Eleitoral."
 - id: painelEyebrow
   translation: "Painel dos partidos"
 - id: painelTitle
