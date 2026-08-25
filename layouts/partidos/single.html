@@ -12,8 +12,18 @@
           <h1 class="painel__title">{{ i18n "painelTitle" }}</h1>
           <p class="painel__subtitle">{{ i18n "painelSubtitle" }}</p>
           <p class="painel__dek">{{ i18n "painelDek" }}</p>
+
+          {{/* O porquê da página, na capa: o 133º lugar veio da seção das
+              100 cadeiras, onde era um aparte. Deitado, com o número à
+              esquerda, ele fecha a altura da coluna com a do relógio. */}}
+          <aside class="painel__stat-card painel__stat-card--hero">
+            <p class="painel__stat-number">{{ i18n "painelIpuStat" }}</p>
+            <p class="painel__stat-title">{{ i18n "painelIpuTitle" }}</p>
+            <p class="painel__stat-body">{{ i18n "painelIpuBody" }}</p>
+          </aside>
         </div>
 
+        <div class="painel__hero-side">
         <aside class="painel__clock" v-if="countdown || fundShare">
           <template v-if="countdown && !countdown.passed">
             <p class="painel__clock-number">{{ "{{ countdown.daysLeft }}" }}</p>
@@ -44,6 +54,7 @@
             </p>
           </div>
         </aside>
+        </div>
       </header>
 
       {{/* ---- 1. O placar ao vivo + o termômetro do prazo ----------------------------------------- */}}
@@ -364,11 +375,6 @@
             @click="waffleView = 'population'">{{ i18n "painelWafflePopulation" }}</button>
         </div>
         <p class="chart-source">{{ i18n "painelWaffleSource" }}</p>
-          <aside class="painel__stat-card">
-            <p class="painel__stat-number">{{ i18n "painelIpuStat" }}</p>
-            <p class="painel__stat-title">{{ i18n "painelIpuTitle" }}</p>
-            <p class="painel__stat-body">{{ i18n "painelIpuBody" }}</p>
-          </aside>
         </div>
 
         <div class="painel__waffles">

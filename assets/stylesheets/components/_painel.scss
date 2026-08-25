@@ -42,7 +42,7 @@
 }
 
 .painel__dek {
-  font-size: var(--t-m);
+  font-size: var(--t-s);
   color: var(--ink-2);
 }
 
@@ -573,6 +573,44 @@
   box-shadow: var(--shadow);
 }
 
+/// Versão da capa, deitada: número à esquerda, texto à direita. O cartão em
+/// pé pedia o tamanho de pôster; deitado, o número desce um degrau e o
+/// conjunto fecha a altura da coluna de abertura com a do relógio ao lado.
+.painel__stat-card--hero {
+  display: grid;
+
+  grid-template-columns: auto minmax(0, 1fr);
+
+  gap: 0.25rem 1.25rem;
+
+  align-items: center;
+
+  max-width: 44rem;
+  margin-top: 1.5rem;
+
+  .painel__stat-number {
+    grid-row: 1 / 3;
+
+    font-size: var(--t-2xl);
+
+    @media (min-width: functions.breakpoint('toggle-table-layout')) {
+      font-size: var(--t-2xl);
+    }
+  }
+
+  .painel__stat-title {
+    align-self: end;
+
+    margin: 0;
+  }
+
+  .painel__stat-body {
+    align-self: start;
+
+    font-size: var(--t-xs);
+  }
+}
+
 .painel__stat-card--warm {
   background: var(--paper-warm);
   border-left: 3px solid var(--accent-warm);
@@ -890,9 +928,9 @@
 .painel__subtitle {
   margin: 0 0 0.75rem;
 
-  font-size: var(--t-m);
+  font-size: var(--t-s);
   font-weight: 600;
-  line-height: 1.3;
+  line-height: 1.4;
   color: var(--ink-2);
 }
 
@@ -1097,6 +1135,23 @@
 /// Ocupa a coluna da direita do cabeçalho. Ele vivia dentro da faixa acima da
 /// tabela e havia um segundo, no cartão da régua: agora aparece uma vez só, e
 /// no lugar onde urgência se lê primeiro.
+/// A pilha da capa: o relógio (quando) e o ranking mundial (por quê), um
+/// embaixo do outro, ocupando a coluna que antes terminava no relógio.
+.painel__hero-side {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1rem;
+
+  @media (min-width: 64rem) {
+    justify-self: end;
+
+    width: 100%;
+    max-width: 19rem;
+  }
+}
+
 .painel__clock {
   padding: 1.25rem 1.5rem;
 
@@ -1107,12 +1162,6 @@
   border-left: 3px solid var(--accent-warm);
   border-radius: 12px;
   box-shadow: var(--shadow);
-
-  @media (min-width: 64rem) {
-    justify-self: end;
-
-    max-width: 18rem;
-  }
 }
 
 .painel__clock-number {
