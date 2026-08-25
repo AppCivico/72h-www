@@ -906,3 +906,9 @@
   translation: "fora do piso"
 - id: painelDormantCount
   translation: "partidos"
+- id: painelHeroDeclared
+  translation: "já declarados como recebidos pelas candidaturas"
+- id: painelHeroOf
+  translation: "de"
+- id: painelHeroDistributed
+  translation: "distribuídos aos partidos pelo TSE"

@@ -14,8 +14,8 @@
           <p class="painel__dek">{{ i18n "painelDek" }}</p>
         </div>
 
-        <aside class="painel__clock" v-if="countdown">
-          <template v-if="!countdown.passed">
+        <aside class="painel__clock" v-if="countdown || fundShare">
+          <template v-if="countdown && !countdown.passed">
             <p class="painel__clock-number">{{ "{{ countdown.daysLeft }}" }}</p>
             <p class="painel__clock-unit">
               <template v-if="countdown.daysLeft === 1">{{ i18n "publicFundsDay" }}</template>
@@ -23,10 +23,26 @@
             </p>
             <p class="painel__clock-caption">{{ i18n "painelKeyDeadlineTail" }}</p>
           </template>
-          <template v-else>
+          <template v-else-if="countdown">
             <p class="painel__clock-number">8/9</p>
             <p class="painel__clock-caption">{{ i18n "painelKeyDeadlinePast" }}</p>
           </template>
+          {{/* A outra metade do cartão: quanto do fundo já apareceu nas
+              declarações. É o número que resume a página, e morava a sete
+              parágrafos de distância dele. */}}
+          <div class="painel__clock-fund" v-if="fundShare">
+            <p class="painel__clock-fund-value">
+              <strong v-html="formatCurrency(boardTotals.received)"></strong>
+              {{ i18n "painelHeroDeclared" }}
+            </p>
+            <span class="painel__clock-bar" aria-hidden="true">
+              <span class="painel__clock-bar-fill" :style="{ width: Math.max(1, fundShare) + '%' }"></span>
+            </span>
+            <p class="painel__clock-fund-note">
+              {{ i18n "painelHeroOf" }} <strong v-html="formatCurrencyBig(panel.fefc_total)"></strong>
+              {{ i18n "painelHeroDistributed" }} · <strong>{{ "{{ formatNumeral(fundShare, 1) }}" }}%</strong>
+            </p>
+          </div>
         </aside>
       </header>
 
@@ -68,6 +84,7 @@
             </div>
           </div>
 
+          <div class="painel__controls">
           <div class="painel__sort" role="group" aria-label='{{ i18n "painelSortLabel" }}'>
             <span class="painel__sort-label">{{ i18n "painelSortBy" }}</span>
             <button
@@ -115,6 +132,7 @@
             <strong>{{ "{{ formatNumeral(baseWarning.maxUsed, 1) }}" }}%</strong>
             {{ i18n "painelBaseWarnTail" }}
           </p>
+          </div>
 
           <div class="painel__tablewrap">
             <table class="data-table painel__table">

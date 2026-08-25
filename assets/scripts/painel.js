@@ -183,6 +183,12 @@ window.$vuePainel = Vue.createApp({
         received: entries.reduce((sum, entry) => sum + entry.fefc.total, 0),
       };
     },
+    // Que fração do fundo inteiro já apareceu nas declarações. É o número que
+    // resume a página, então mora no cartão de abertura.
+    fundShare({ panel, boardTotals } = this) {
+      if (!panel?.fefc_total || !boardTotals.received) return null;
+      return (boardTotals.received / panel.fefc_total) * 100;
+    },
     // O eixo da cota não tem piso legal: ordenar por ele não é "pior/melhor",
     // é quem repassou menos. Rótulos e explicação seguem o eixo ativo.
     sortAxis({ sortBy } = this) {
@@ -238,6 +244,11 @@ window.$vuePainel = Vue.createApp({
     formatNumeral,
     formatCurrency(value) {
       return compactCurrency(value, 1);
+    },
+    // Duas casas para os bilhões do fundo: com uma, R$ 4,96 bi arredondaria
+    // para "R$ 5 bi" e o cartão de abertura mentiria por R$ 40 milhões.
+    formatCurrencyBig(value) {
+      return compactCurrency(value, 2);
     },
     // Antes de 8/09 estar abaixo do piso é ritmo, não infração, e o selo diz
     // "abaixo do piso"; depois do prazo ele endurece para "fora do piso". A

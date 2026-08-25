@@ -267,6 +267,17 @@
 /* Tabela-ranking
 ============================================================================ */
 
+/// Pílulas de ordenação, explicação do eixo e aviso de base num contêiner
+/// só: soltos, eram três camadas de texto flutuando entre o título e a
+/// tabela, cada uma terminando numa largura diferente.
+.painel__controls {
+  padding: 1rem 1.25rem;
+  margin: 1.5rem 0 1.25rem;
+
+  background: var(--paper-warm);
+  border-radius: 12px;
+}
+
 .painel__sort {
   display: flex;
 
@@ -276,7 +287,7 @@
 
   align-items: center;
 
-  margin: 1.25rem 0 1rem;
+  margin: 0 0 0.75rem;
 
   .candidato__pill {
     font-family: inherit;
@@ -832,11 +843,15 @@
 ============================================================================ */
 
 .painel__sort-help {
-  max-width: 44rem;
-  margin: 0 0 1rem;
+  max-width: 54rem;
+  margin: 0 0 0.75rem;
 
   font-size: var(--t-xs);
   color: var(--ink-2);
+
+  &:last-child {
+    margin-bottom: 0;
+  }
 }
 
 /// A régua de cada coluna vive no próprio cabeçalho: o leitor não precisa
@@ -1125,4 +1140,67 @@
 
   font-size: var(--t-xs);
   color: var(--ink-2);
+}
+
+/* A segunda metade do cartão de abertura: quanto do fundo já chegou
+============================================================================ */
+
+.painel__clock-fund {
+  padding-top: 0.85rem;
+  margin-top: 0.85rem;
+
+  text-align: left;
+
+  border-top: 1px solid var(--hairline);
+}
+
+.painel__clock-fund-value {
+  margin: 0 0 0.5rem;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+
+  strong {
+    display: block;
+
+    font-family: var(--font-serif);
+    font-size: var(--t-l);
+    font-weight: 600;
+    line-height: 1.1;
+    color: var(--ink);
+  }
+}
+
+/// A barra que faz o 1% ser VISTO: R$ 53 milhões parecem muito até aparecerem
+/// ao lado dos R$ 4,96 bilhões que o fundo distribuiu.
+.painel__clock-bar {
+  position: relative;
+
+  display: block;
+
+  height: 0.5rem;
+  overflow: hidden;
+
+  background: var(--paper-warm);
+  border-radius: 3px;
+}
+
+.painel__clock-bar-fill {
+  display: block;
+
+  height: 100%;
+
+  background: var(--brand);
+  border-radius: 3px;
+}
+
+.painel__clock-fund-note {
+  margin: 0.5rem 0 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+
+  strong {
+    color: var(--ink-2);
+  }
 }
