@@ -736,27 +736,31 @@
 
 /// Relógio + placar de quem está fora, acima da tabela. É o gancho da
 /// página: prazo curto e nomes fora da régua.
-.painel__urgency {
+/// Introdução à esquerda, contadores à direita: mesma proporção da capa.
+.painel__board-lead {
   display: grid;
 
   grid-template-columns: minmax(0, 1fr);
 
-  gap: 1.25rem;
+  gap: 1rem;
 
-  padding: 1.25rem 1.5rem;
-  margin: 1.25rem 0;
+  margin: 1rem 0 1.25rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+
+    gap: 3rem;
+
+    align-items: start;
+  }
+}
+
+.painel__urgency {
+  padding: 1.1rem 1.35rem;
 
   background: var(--paper-warm);
   border-left: 3px solid var(--accent-warm);
   border-radius: 0 12px 12px 0;
-
-  @media (min-width: functions.breakpoint('toggle-menu')) {
-    grid-template-columns: auto minmax(0, 1fr);
-
-    gap: 2.5rem;
-
-    align-items: center;
-  }
 }
 
 .painel__urgency-clock {
@@ -807,7 +811,7 @@
 .painel__urgency-count {
   margin: 0;
 
-  font-size: var(--t-s);
+  font-size: var(--t-xs);
   color: var(--ink-2);
 
   strong {

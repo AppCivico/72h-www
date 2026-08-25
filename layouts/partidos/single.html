@@ -62,6 +62,13 @@
         <section class="painel__section painel__section--lead" v-if="panel">
           <p class="eyebrow">{{ i18n "painelBoardEyebrow" }}</p>
           <h2>{{ i18n "painelBoardTitle" }}</h2>
+          {{/* Introdução e contadores lado a lado: o parágrafo esticado até
+              a borda daria linhas de 130 caracteres, e empilhados os dois
+              deixavam um vão branco à direita do texto. Os contadores de
+              "abaixo do piso" saem de TODOS os partidos elegíveis ao placar,
+              nunca da lista filtrada. */}}
+          <div class="painel__board-lead">
+          <div class="painel__board-copy">
           <p class="painel__section-intro">
             {{ i18n "painelBoardIntro1" }}
             <strong v-html="formatCurrencyNoAbbr(boardTotals.received)"></strong>
@@ -72,11 +79,8 @@
               antiga (Fundo Eleitoral + Fundo Partidário somados), a página
               diz isso em vez de rotular a soma como Fundo Eleitoral. */}}
           <p class="painel__sort-help painel__sort-help--warn" v-if="legacyBasis">{{ i18n "painelLegacyBasis" }}</p>
+          </div>
 
-          {{/* Faixa de urgência: o placar abriu a página, então aqui vêm o
-              relógio e a régua antes da tabela. Os contadores de "fora do
-              piso" saem de TODOS os partidos elegíveis ao placar, nunca da
-              lista filtrada. O relógio depende só da data, não do JSON. */}}
           <div class="painel__urgency">
             <div class="painel__urgency-counts" v-if="belowCounts">
               <p class="painel__urgency-count">
@@ -93,6 +97,7 @@
               </p>
               <p class="painel__urgency-note">{{ i18n "painelKeyRule" }}</p>
             </div>
+          </div>
           </div>
 
           <div class="painel__controls">
