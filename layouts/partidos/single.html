@@ -6,11 +6,13 @@
   <main class="container painel__main">
     <div id="vuePainel" v-cloak>
 
-      <header class="painel__hero">
-        <p class="eyebrow">{{ i18n "painelEyebrow" }}</p>
-        <h1 class="painel__title">{{ i18n "painelTitle" }}</h1>
-        <p class="painel__subtitle">{{ i18n "painelSubtitle" }}</p>
-        <p class="painel__dek">{{ i18n "painelDek" }}</p>
+      <header class="painel__hero painel__hero-grid">
+        <div class="painel__hero-copy">
+          <p class="eyebrow">{{ i18n "painelEyebrow" }}</p>
+          <h1 class="painel__title">{{ i18n "painelTitle" }}</h1>
+          <p class="painel__subtitle">{{ i18n "painelSubtitle" }}</p>
+          <p class="painel__dek">{{ i18n "painelDek" }}</p>
+        </div>
 
         {{/* As três regras são diferentes entre si, e a página acompanha
             duas delas. Dizer isso na abertura, num <details> nativo (sem
@@ -163,11 +165,11 @@
                       <span class="painel__badge" v-if="row.belowBlack || row.belowFemale">{{ "{{ badgeFor(row) }}" }}</span>
                     </span>
                   </td>
-                  <td data-label='{{ i18n "painelColPublic" }}' class="table-cell--numeric">
+                  <td data-label='{{ i18n "painelColPublicShort" }}' class="table-cell--numeric">
                     <span v-html="formatCurrency(row.fefc.total)"></span>
                     <small v-if="row.quotaUsed !== null" class="painel__quota-used">{{ "{{ formatNumeral(row.quotaUsed, 1) }}" }}% {{ i18n "painelOfQuota" }}</small>
                   </td>
-                  <td data-label='{{ i18n "painelColBlack" }}'>
+                  <td data-label='{{ i18n "painelColBlackShort" }}'>
                     <div class="painel__bullet" :class="{ 'painel__bullet--below': row.belowBlack }">
                       <span class="painel__bullet-track">
                         <span class="painel__bullet-fill" :style="{ width: Math.min(row.blackShare, 100) + '%' }"></span>
@@ -176,7 +178,7 @@
                       <span class="painel__bullet-value">{{ "{{ formatNumeral(row.blackShare, 1) }}" }}%</span>
                     </div>
                   </td>
-                  <td data-label='{{ i18n "painelColWomen" }}'>
+                  <td data-label='{{ i18n "painelColWomenShort" }}'>
                     {{/* Duas marcas na mesma barra: a escura é o mínimo de
                         30%, igual em todas as linhas (é o que o olho compara
                         de longe); a clara é o piso proporcional deste
@@ -199,7 +201,7 @@
                       </span>
                     </div>
                   </td>
-                  <td data-label='{{ i18n "painelColBlackWomen" }}' class="table-cell--numeric">
+                  <td data-label='{{ i18n "painelColBlackWomenShort" }}' class="table-cell--numeric">
                     {{ "{{ formatNumeral(row.blackFemaleShare, 1) }}" }}%
                     <small><span v-html="formatCurrency(row.black.female)"></span></small>
                   </td>
@@ -207,9 +209,14 @@
               </tbody>
             </table>
           </div>
-          <p class="painel__table-note">{{ i18n "painelWomenFootnote" }}</p>
-          <p class="painel__table-note">{{ i18n "painelCandidaciesSource" }}</p>
-          <p class="painel__table-note">{{ i18n "painelFloorNote" }}</p>
+          {{/* Três notas independentes: empilhadas ocupavam a largura toda
+              numa linha cada, com muito branco à direita. Em grade elas se
+              acomodam lado a lado no desktop e viram pilha no celular. */}}
+          <div class="painel__table-notes">
+            <p class="painel__table-note">{{ i18n "painelWomenFootnote" }}</p>
+            <p class="painel__table-note">{{ i18n "painelCandidaciesSource" }}</p>
+            <p class="painel__table-note">{{ i18n "painelFloorNote" }}</p>
+          </div>
 
           <div class="painel__dormant" v-if="dormantRows.length">
             <h3>{{ i18n "painelDormantTitle" }}</h3>
@@ -299,9 +306,11 @@
         <aside class="painel__matters">
           <p class="eyebrow">{{ i18n "painelWhyMattersEyebrow" }}</p>
           <h3>{{ i18n "painelWhyMattersTitle" }}</h3>
-          <p>{{ i18n "painelWhyMattersP1" }}</p>
-          <p>{{ i18n "painelWhyMattersP2" }}</p>
-          <p>{{ i18n "painelWhyMattersP3" }}</p>
+          <div class="painel__matters-body">
+            <p>{{ i18n "painelWhyMattersP1" }}</p>
+            <p>{{ i18n "painelWhyMattersP2" }}</p>
+            <p>{{ i18n "painelWhyMattersP3" }}</p>
+          </div>
         </aside>
       </section>
 

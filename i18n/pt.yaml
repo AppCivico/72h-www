@@ -912,3 +912,11 @@
   translation: "piso:"
 - id: painelCandidaciesSource
   translation: "Piso de cada partido calculado a partir das candidaturas registradas por sexo, divulgadas pelo TSE em 21 de agosto de 2026 (posição de 18 de agosto). Como candidaturas ainda podem ser indeferidas até o fim do registro, o piso de um partido pode mudar."
+- id: painelColPublicShort
+  translation: "Fundo Eleitoral"
+- id: painelColBlackShort
+  translation: "Pretas e pardas"
+- id: painelColWomenShort
+  translation: "Mulheres"
+- id: painelColBlackWomenShort
+  translation: "Mulheres pretas e pardas"
