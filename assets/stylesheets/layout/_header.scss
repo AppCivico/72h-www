@@ -258,6 +258,26 @@ $mark-size-desktop: 3rem;
   }
 }
 
+/// O ponto de novidade no item do painel. Vive num ::after em vez de num
+/// elemento próprio para não mexer no HTML do menu, e sai sozinho quando o
+/// visitante está na página (o siteNav.html não põe a classe ali).
+.main-header__link--new {
+  gap: 0.4rem;
+
+  font-weight: 600;
+  color: var(--ink);
+
+  &::after {
+    width: 0.4rem;
+    height: 0.4rem;
+
+    content: '';
+
+    background: var(--accent-warm);
+    border-radius: 50%;
+  }
+}
+
 /* election switcher — same Vue model as the hero's, so both stay in sync
 ============================================================================ */
 .main-header__year {

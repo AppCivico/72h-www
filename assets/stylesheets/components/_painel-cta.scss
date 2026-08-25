@@ -1,0 +1,143 @@
+@use '../abstracts/functions';
+
+////
+/// A isca fixa do Painel dos partidos: canto inferior direito no desktop,
+/// faixa colada no rodapé da tela no celular. Fica no ar em toda página
+/// menos a própria, e o visitante pode fechar de vez.
+///
+/// @group components
+////
+
+.painel-cta {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 40;
+
+  display: flex;
+
+  gap: 0.25rem;
+
+  align-items: stretch;
+
+  overflow: hidden;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: 12px;
+  /// Sombra mais presente que a dos cartões do conteúdo: este flutua sobre a
+  /// página e precisa se separar de qualquer fundo que passe por baixo.
+  box-shadow: 0 6px 24px rgb(0 0 0 / 14%);
+
+  /// Respeita a área segura do iPhone, senão a faixa fica embaixo da barra
+  /// de gestos do Safari.
+  @supports (padding: env(safe-area-inset-bottom)) {
+    bottom: calc(1rem + env(safe-area-inset-bottom));
+  }
+
+  @media (min-width: functions.breakpoint('toggle-table-layout')) {
+    right: 1.5rem;
+    bottom: 1.5rem;
+    left: auto;
+
+    width: 21rem;
+  }
+
+  &[hidden] {
+    display: none;
+  }
+}
+
+.painel-cta__link {
+  display: flex;
+
+  flex: 1 1 auto;
+
+  gap: 0.75rem;
+
+  align-items: center;
+
+  padding: 0.85rem 0.5rem 0.85rem 1rem;
+
+  text-decoration: none;
+
+  &:hover .painel-cta__arrow,
+  &:focus-visible .painel-cta__arrow {
+    transform: translateX(3px);
+  }
+}
+
+/// A etiqueta de novidade. Em caixa alta e pequena: quem já conhece a página
+/// ignora, quem não conhece entende que apareceu algo.
+.painel-cta__tag {
+  flex: none;
+
+  padding: 0.1rem 0.4rem;
+
+  font-size: 0.625rem;
+  font-weight: 700;
+  color: functions.palette('white');
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+
+  background: var(--accent-warm);
+  border-radius: 999px;
+}
+
+.painel-cta__body {
+  flex: 1 1 auto;
+
+  min-width: 0;
+}
+
+.painel-cta__title {
+  display: block;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+/// A linha que dá o motivo de clicar agora: a contagem para o prazo das
+/// cotas, escrita pelo painelCta.js.
+.painel-cta__line {
+  display: block;
+
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--ink-2);
+}
+
+.painel-cta__arrow {
+  flex: none;
+
+  font-size: var(--t-s);
+  color: var(--accent-warm);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 0.2s ease;
+  }
+}
+
+.painel-cta__close {
+  flex: 0 0 auto;
+
+  padding: 0 0.75rem 0 0.5rem;
+
+  font-size: var(--t-m);
+  line-height: 1;
+  color: var(--ink-3);
+
+  cursor: pointer;
+
+  background: none;
+  border: 0;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--ink);
+  }
+}

@@ -88,6 +88,41 @@
   </div>
 </footer>
 
+{{/* A isca do painel: fixa no canto, em toda página menos a própria, e some
+     de vez quando o visitante fecha (localStorage, com versão na chave para
+     podermos chamar de novo numa próxima novidade). Nasce hidden e só o JS
+     a revela, para quem já fechou não ver um flash a cada navegação. A
+     contagem é calculada no cliente porque o build não roda todo dia. */}}
+{{ if not (hasPrefix .RelPermalink "/partidos/painel") }}
+  <aside
+    class="painel-cta"
+    id="js-painel-cta"
+    aria-label="{{ i18n "painelCtaTitle" }}"
+    {{/* Passa o ANO, não a data: o prazo legal vive em
+        utilities/electoralFund.js, de onde o painel também o lê, e assim não
+        há uma segunda cópia da data para envelhecer sozinha. */}}
+    data-year="{{ site.Params.run }}"
+    data-day="{{ i18n "publicFundsDay" }}"
+    data-days="{{ i18n "publicFundsDays" }}"
+    data-tail="{{ i18n "painelCtaDeadlineTail" }}"
+    data-past="{{ i18n "painelCtaPast" }}"
+    hidden>
+    <a class="painel-cta__link" href="/partidos/painel/">
+      <span class="painel-cta__tag">{{ i18n "painelCtaTag" }}</span>
+      <span class="painel-cta__body">
+        <strong class="painel-cta__title">{{ i18n "painelCtaTitle" }}</strong>
+        <span class="painel-cta__line" data-cta-line>{{ i18n "painelCtaDefault" }}</span>
+      </span>
+      <span class="painel-cta__arrow" aria-hidden="true">&rarr;</span>
+    </a>
+    <button class="painel-cta__close" type="button" data-cta-close aria-label="{{ i18n "painelCtaClose" }}">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </aside>
+  {{ $ctaJS := resources.Get "scripts/painelCta.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
+  <script src="{{ $ctaJS.RelPermalink }}" integrity="{{ $ctaJS.Data.Integrity }}" defer></script>
+{{ end }}
+
 <div id="copy-warning" class="copy-warning" hidden>
   <div class="container">
     <p class="pay-attention-to__danger">

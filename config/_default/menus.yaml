@@ -1,4 +1,10 @@
 header:
+# Peso 1 para abrir o menu: é a página nova, e a que tem prazo correndo.
+# O identifier é lido pelo siteNav.html, que marca este item com um ponto.
+- identifier: "partyPanel"
+  name: "Painel dos partidos"
+  url: "/partidos/painel/"
+  weight: 1
 - identifier: "aboutData"
   name: "Sobre os dados"
   url: "/sobre-os-dados/"
@@ -12,15 +18,19 @@ footer:
   name: "Página inicial"
   url: "/"
   weight: 1
+- identifier: "partyPanel"
+  name: "Painel dos partidos"
+  url: "/partidos/painel/"
+  weight: 2
 - identifier: "aboutData"
   name: "Sobre os dados"
   url: "/sobre-os-dados/"
-  weight: 2
+  weight: 3
 - identifier: "press"
   name: "Imprensa"
   url: "/imprensa/"
-  weight: 3
+  weight: 4
 - identifier: "whoWeAre"
   name: "Quem somos"
   url: "/quem-somos/"
-  weight: 4
+  weight: 5

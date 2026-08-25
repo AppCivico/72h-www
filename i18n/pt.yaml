@@ -912,3 +912,15 @@
   translation: "de"
 - id: painelHeroDistributed
   translation: "distribuídos aos partidos pelo TSE"
+- id: painelCtaTag
+  translation: "Novo"
+- id: painelCtaTitle
+  translation: "Painel dos partidos"
+- id: painelCtaDefault
+  translation: "Quem está distribuindo o Fundo Eleitoral"
+- id: painelCtaDeadlineTail
+  translation: "para o prazo das cotas"
+- id: painelCtaPast
+  translation: "Como cada partido chegou ao prazo"
+- id: painelCtaClose
+  translation: "Fechar este aviso"
