@@ -17,6 +17,7 @@ import { liveHtml, liveText } from './directives/liveValue';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 import { FEFC_TOTALS, QUOTA_DEADLINES } from './utilities/electoralFund';
+import { implausibleValue } from './utilities/implausibleValue';
 import personUrl from './utilities/personUrl';
 
 dayjs.extend(duration);
@@ -86,12 +87,11 @@ if (window.location.href.indexOf('/') > -1) {
         filterOpen: true,
 
         chart: null,
-        totalArray: [],
-        femaleArray: [],
-        maleArray: [],
-        // Valor de cada dia, ao lado do acumulado: alimenta a segunda linha
-        // do tooltip.
-        dailyArray: [],
+        // Série DIÁRIA crua, como a API entrega, depois de cortar o rabo de
+        // dias vazios e a entrada sem movimento. O acumulado e o desconto dos
+        // valores implausíveis são computed em cima dela: o /candidates chega
+        // em outra requisição, então a correção tem de poder acontecer depois.
+        rawDaily: [],
         chartDates: [],
 
         mainData: null,
@@ -299,14 +299,79 @@ if (window.location.href.indexOf('/') > -1) {
         };
       },
 
+      // Candidaturas cujo valor declarado passa de três vezes o teto legal de
+      // gastos do cargo. A listagem vem ordenada do maior para o menor valor,
+      // então um valor implausível está sempre na primeira página: é por isso
+      // que olhar só a página carregada basta para achá-los.
+      flaggedCandidates({ candidates, selectedYear } = this) {
+        const list = Array.isArray(candidates?.candidates) ? candidates.candidates : [];
+        return list
+          .map((candidate) => {
+            const flag = implausibleValue(candidate, selectedYear);
+            return flag ? { ...flag, id: candidate.id, name: candidate.name } : null;
+          })
+          .filter(Boolean);
+      },
+      // O acumulado do gráfico, com os valores implausíveis descontados.
+      //
+      // O gráfico soma todas as candidaturas por dia, sem quebra por
+      // candidatura, então não há como subtrair um valor de "sua" linha. O que
+      // dá para fazer com segurança: achar o dia em que aquele valor caiu (o
+      // único dia cujo movimento, em um dos dois sexos, é grande o bastante
+      // para contê-lo) e descontar dali. Descontar do sexo certo, e não do
+      // total, é o que mantém Total = Mulheres + Homens.
+      //
+      // Quando o dia não é encontrado, nada é descontado e `located` fica
+      // false: a tela então avisa que existe um valor implausível na série sem
+      // alegar que o corrigiu.
+      chartSeries({ rawDaily, flaggedCandidates } = this) {
+        const days = rawDaily.map((day) => ({ ...day }));
+        let discounted = 0;
+        let located = true;
+
+        flaggedCandidates.forEach(({ value }) => {
+          const day = days.find((entry) => entry.m >= value || entry.f >= value);
+          if (!day) {
+            located = false;
+            return;
+          }
+          if (day.m >= value) day.m -= value; else day.f -= value;
+          discounted += value;
+        });
+
+        const total = [];
+        const male = [];
+        const female = [];
+        let sumTotal = 0;
+        let sumMale = 0;
+        let sumFemale = 0;
+        days.forEach((day) => {
+          sumMale += day.m;
+          sumFemale += day.f;
+          sumTotal += day.m + day.f;
+          total.push(sumTotal);
+          male.push(sumMale);
+          female.push(sumFemale);
+        });
+
+        return {
+          total,
+          male,
+          female,
+          daily: days.map((day) => day.m + day.f),
+          discounted,
+          located,
+        };
+      },
       formatChartSeries() {
         // Colour follows the entity, never its rank: Total keeps the brand
         // hue, and the gender split reuses the same pair as the pie.
         // O último ponto ganha rótulo: é o "quanto já chegou" de hoje, e sem
         // ele o leitor tem de passar o mouse na ponta da curva para saber
         // onde ela chegou.
-        const lastIndex = this.totalArray.length - 1;
-        const totalData = this.totalArray.map((value, index) => (
+        const { total, male, female } = this.chartSeries;
+        const lastIndex = total.length - 1;
+        const totalData = total.map((value, index) => (
           index === lastIndex
             ? { y: value, dataLabels: { enabled: true }, marker: { enabled: true, radius: 4 } }
             : value
@@ -330,12 +395,12 @@ if (window.location.href.indexOf('/') > -1) {
           zIndex: 3,
         }, {
           name: 'Mulheres',
-          data: this.femaleArray,
+          data: female,
           color: binary[0],
           zIndex: 2,
         }, {
           name: 'Homens',
-          data: this.maleArray,
+          data: male,
           color: binary[1],
           zIndex: 1,
         }];
@@ -417,6 +482,13 @@ if (window.location.href.indexOf('/') > -1) {
         await this.handleData();
         await this.generateChart();
         await this.generateIntroCharts();
+      },
+      // O /candidates chega em outra requisição, quase sempre depois do
+      // /index. Sem isto, um valor implausível só sairia do gráfico na
+      // próxima troca de filtro: a série é desenhada antes de sabermos que
+      // ele existe.
+      async flaggedCandidates() {
+        if (this.chart) await this.generateChart();
       },
       selectedState() {
         // when a state is unselected, we need to remove its cities from selection
@@ -591,6 +663,12 @@ if (window.location.href.indexOf('/') > -1) {
       // três colunas no corpo cheio. Os cortes saem da medida real: com a
       // Fraunces bold em --t-l, 13 caracteres é o que a coluna aguenta, e
       // acima de 16 nem --t-m serve.
+      // O selo do card: devolve o diagnóstico daquela candidatura, ou null.
+      // Método, e não uma marca gravada na lista, para o dado da API seguir
+      // intocado — a sinalização é leitura nossa, não campo do TSE.
+      flagFor(candidate) {
+        return this.flaggedCandidates.find((flag) => flag.id === candidate.id) || null;
+      },
       valueLengthClass(value) {
         const { length } = String(this.formatCurrencyNoAbbr(value) || '');
         if (length > 16) return 'candidates__total-value--xs';
@@ -641,25 +719,10 @@ if (window.location.href.indexOf('/') > -1) {
         });
         const end = lastMove + 1;
 
-        // Daily values are kept beside the running total: the tooltip shows
-        // both, so "quanto já chegou" and "quanto chegou nesse dia" stay
-        // available without a second chart.
-        const daily = totalArray.slice(0, end);
-        const runningTotal = [];
-        const runningMale = [];
-        const runningFemale = [];
-        let sumTotal = 0;
-        let sumMale = 0;
-        let sumFemale = 0;
-        for (let i = 0; i < end; i += 1) {
-          sumTotal += totalArray[i];
-          sumMale += maleArray[i];
-          sumFemale += femaleArray[i];
-          runningTotal.push(sumTotal);
-          runningMale.push(sumMale);
-          runningFemale.push(sumFemale);
-        }
-
+        // A série crua, sem acumular: o acumulado, o desconto dos valores
+        // implausíveis e o corte da entrada viraram computed, porque dependem
+        // da listagem de candidaturas, que chega em outra requisição.
+        //
         // Start on the first day that declared anything. The old rule was a
         // share of the period's peak, which a running total cannot use: one
         // huge late transfer makes 1% of the final total bigger than every
@@ -668,17 +731,18 @@ if (window.location.href.indexOf('/') > -1) {
         // out with a single point. First-movement is outlier-proof, and the
         // flat stretch it keeps is true: it is the period before the money
         // started arriving.
-        const firstMove = daily.findIndex((value) => value > 0);
+        const firstMove = totalArray.slice(0, end).findIndex((value) => value > 0);
         // -1 means nothing was declared in the period (e.g. an election with
         // no data yet) — empties every array, and the chart renders with no
         // series instead of a flat zero line.
-        const start = firstMove === -1 ? runningTotal.length : firstMove;
+        const start = firstMove === -1 ? end : firstMove;
 
-        this.totalArray = runningTotal.slice(start);
-        this.maleArray = runningMale.slice(start);
-        this.femaleArray = runningFemale.slice(start);
-        this.dailyArray = daily.slice(start);
-        this.chartDates = dates.slice(0, end).slice(start)
+        this.rawDaily = dates.slice(start, end).map((date, index) => ({
+          d: date,
+          f: femaleArray[start + index],
+          m: maleArray[start + index],
+        }));
+        this.chartDates = dates.slice(start, end)
           .map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       handleColumnData(item) {
@@ -1256,7 +1320,7 @@ if (window.location.href.indexOf('/') > -1) {
               // O acumulado responde "quanto já chegou"; sem o valor do dia,
               // não há como saber se aquele degrau na curva foi um repasse
               // grande ou muitos pequenos.
-              const dayValue = window.$vueHome.dailyArray[this.points[0].point.index];
+              const dayValue = window.$vueHome.chartSeries.daily[this.points[0].point.index];
               const dayRow = dayValue > 0
                 ? `<div style="margin-top:.35rem;padding-top:.35rem;border-top:1px solid rgba(255,255,255,.18);color:#CFC9DE;display:flex;gap:.75rem;justify-content:space-between">
                     <span>declarado nesse dia</span>

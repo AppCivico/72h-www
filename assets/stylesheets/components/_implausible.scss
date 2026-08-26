@@ -1,0 +1,78 @@
+@use '../abstracts/functions';
+
+////
+/// Sinalização de valor declarado implausível: o aviso abaixo do gráfico e o
+/// selo no card da candidatura. Âmbar, nunca vermelho — a mensagem é
+/// "provável erro de preenchimento", não irregularidade.
+///
+/// @group components
+////
+
+.implausible-note {
+  padding: 0.85rem 1rem;
+  margin: 0.75rem 0 0;
+
+  font-size: var(--t-xs);
+  line-height: 1.5;
+  color: var(--ink-2);
+
+  background: var(--paper-warm);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: 0 8px 8px 0;
+
+  strong {
+    color: var(--accent-warm);
+  }
+}
+
+/// No card: selo em cima, explicação embaixo. A explicação fica visível, e não
+/// atrás de um tooltip, porque é ela que impede a leitura de "o site acusou
+/// esta candidatura de algo".
+.implausible-flag {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.3rem;
+
+  padding: 0.6rem 0.7rem;
+  margin-top: 0.6rem;
+
+  background: var(--paper-warm);
+  border-left: 3px solid var(--accent-warm);
+  border-radius: 0 8px 8px 0;
+}
+
+.implausible-flag__badge {
+  align-self: flex-start;
+
+  padding: 0.1rem 0.45rem;
+
+  font-size: 0.6875rem;
+  font-weight: 700;
+  color: functions.palette('white');
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  background: var(--accent-warm);
+  border-radius: 999px;
+}
+
+.implausible-flag__body {
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--ink-2);
+
+  strong {
+    color: var(--ink);
+  }
+}
+
+/// O valor sinalizado perde o peso de manchete: com o selo ao lado, um número
+/// gigante em corpo cheio ainda leria como recorde de arrecadação.
+.candidates__candidate:has(.implausible-flag) .candidates__total-value {
+  color: var(--ink-2);
+  text-decoration: line-through;
+  text-decoration-thickness: 2px;
+  text-decoration-color: var(--accent-warm);
+}

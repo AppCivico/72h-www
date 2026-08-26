@@ -926,3 +926,17 @@
   translation: "Como cada partido chegou ao prazo"
 - id: painelCtaClose
   translation: "Fechar este aviso"
+- id: implausibleChartLead
+  translation: "Detectamos um provável erro de preenchimento."
+- id: implausibleChartMid
+  translation: "foi descontado deste gráfico: é um valor declarado acima de três vezes o teto legal de gastos do cargo, o que costuma indicar um dígito a mais. Prestação de contas é declaração, e o 72horas mostra o que foi declarado e sinaliza o que não fecha. Os números grandes acima seguem como o TSE os publica, sem desconto."
+- id: implausibleChartUnlocated
+  translation: "Detectamos um valor declarado acima de três vezes o teto legal de gastos do cargo, provável erro de preenchimento na prestação de contas. Não foi possível localizar o dia em que ele entrou, então ele segue no gráfico."
+- id: implausibleCardBadge
+  translation: "provável erro"
+- id: implausibleCardLead
+  translation: "Valor declarado equivale a"
+- id: implausibleCardMid
+  translation: "vezes o teto legal de gastos do cargo"
+- id: implausibleCardTail
+  translation: "Provável dígito a mais na prestação de contas."

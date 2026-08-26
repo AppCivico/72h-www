@@ -362,6 +362,21 @@
               </div>
 
               <div id="js-main-chart" class="main-chart" :class="isFilterableChartOutdated ? 'outdated-chart' : 'updated-chart'" :aria-busy="loadingChartData"></div>
+              {{/* Prestação de contas é declaração, e declaração tem dígito
+                   errado. Quando um valor passa de três vezes o teto legal de
+                   gastos do cargo, ele sai da escala do gráfico e o visitante
+                   é avisado do desconto — nunca calado. Os big numbers logo
+                   abaixo seguem como o TSE publica, e o aviso diz isso, senão
+                   a diferença entre os dois números viraria um mistério. */}}
+              <p class="implausible-note" v-if="chartSeries.discounted > 0" v-cloak>
+                <strong>{{ i18n "implausibleChartLead" }}</strong>
+                <span v-html="formatCurrencyNoAbbr(chartSeries.discounted)"></span>
+                {{ i18n "implausibleChartMid" }}
+              </p>
+              <p class="implausible-note" v-else-if="!chartSeries.located" v-cloak>
+                {{ i18n "implausibleChartUnlocated" }}
+              </p>
+
               <div class="main-chart__note">
                 {{ partial "filterText" }}
                 <p class="chart-source">{{ i18n "dataSource" }}</p>
@@ -453,6 +468,23 @@
                               class="candidates__total-value"
                               :class="valueLengthClass(candidate.total_value)"
                               v-html="formatCurrencyNoAbbr(candidate.total_value)"></strong>
+                          </p>
+
+                          {{/* O card fica, e fica marcado: esconder a
+                               candidatura esconderia a detecção, que é
+                               justamente o que o leitor precisa ver. A
+                               palavra é "provável erro de preenchimento",
+                               nunca irregularidade: o teto é de gasto, não
+                               de arrecadação. */}}
+                          <p class="implausible-flag" v-if="flagFor(candidate)" v-cloak>
+                            <span class="implausible-flag__badge">{{ i18n "implausibleCardBadge" }}</span>
+                            <span class="implausible-flag__body">
+                              {{ i18n "implausibleCardLead" }}
+                              <strong>{{ "{{ formatNumeral(flagFor(candidate).times, 0) }}" }}</strong>
+                              {{ i18n "implausibleCardMid" }}
+                              (<strong v-html="formatCurrencyNoAbbr(flagFor(candidate).cap)"></strong>).
+                              {{ i18n "implausibleCardTail" }}
+                            </span>
                           </p>
 
                           <p class="candidates__info" v-if="candidate.votes_first_round">
