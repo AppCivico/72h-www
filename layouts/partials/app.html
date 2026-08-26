@@ -410,6 +410,16 @@
                     "countVar" "countMale"
                     "candidateLabel" "candidateMale"
                     "lowerLabel" true) }}
+
+                  {{/* Os big numbers seguem como o TSE publica: alterá-los
+                       seria inventar um total. O que o site pode fazer é
+                       dizer quanto deles vem de valor implausível, para o
+                       leitor saber o que está olhando. */}}
+                  <p class="implausible-note implausible-note--inline" v-if="flaggedTotal > 0" v-cloak>
+                    {{ i18n "implausibleBigNumberLead" }}
+                    <strong v-html="formatCurrencyNoAbbr(flaggedTotal)"></strong>
+                    {{ i18n "implausibleBigNumberTail" }}
+                  </p>
                 </div>
               </transition-expand>
 

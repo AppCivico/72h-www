@@ -940,3 +940,15 @@
   translation: "vezes o teto legal de gastos do cargo"
 - id: implausibleCardTail
   translation: "Provável dígito a mais na prestação de contas."
+- id: implausibleCandidateLead
+  translation: "O valor declarado por esta candidatura equivale a"
+- id: implausibleCandidateTail
+  translation: "Prestação de contas é declaração, e um dígito a mais explica números como este. O 72horas mostra o que o TSE publica e sinaliza o que não fecha, sem alterar o dado."
+- id: implausibleBigNumberLead
+  translation: "Inclui"
+- id: implausibleBigNumberTail
+  translation: "de valor declarado acima de três vezes o teto legal de gastos do cargo, provável erro de preenchimento. O total segue como o TSE publica."
+- id: painelOverQuotaLead
+  translation: "Estes partidos aparecem declarando mais Fundo Eleitoral do que a cota que receberam, o que é impossível:"
+- id: painelOverQuotaTail
+  translation: "Provável erro de preenchimento na prestação de contas de alguma candidatura. As fatias destes partidos devem ser lidas com reserva até a correção."

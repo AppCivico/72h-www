@@ -80,10 +80,23 @@
           </div>
         </div>
 
+        {{/* O aviso vem ANTES dos números, não depois: quem chega nesta
+             página vê primeiro o total, e um total implausível sem ressalva ao
+             lado já informou errado. A palavra é "provável erro de
+             preenchimento", nunca irregularidade. */}}
+        <p class="implausible-note" v-if="implausible" v-cloak>
+          <strong>{{ i18n "implausibleChartLead" }}</strong>
+          {{ i18n "implausibleCandidateLead" }}
+          <strong>{{ "{{ formatNumeral(implausible.times, 0) }}" }}</strong>
+          {{ i18n "implausibleCardMid" }}
+          (<strong v-html="formatCurrencyNoAbbr(implausible.cap)"></strong>).
+          {{ i18n "implausibleCandidateTail" }}
+        </p>
+
         <div class="big-numbers big-numbers--candidate">
-          <div class="big-number__box big-number__box--border big-number__box--border-primary">
+          <div class="big-number__box big-number__box--border big-number__box--border-primary" :class="{ 'big-number__box--flagged': implausible }">
             <h3>{{ i18n "total" }}</h3>
-            <p class="big-number__number" v-html="formatCurrencyNoAbbr(current.total_value)"></p>
+            <p class="big-number__number" :class="{ 'big-number__number--flagged': implausible }" v-html="formatCurrencyNoAbbr(current.total_value)"></p>
             <p class="big-number__context">
               {{ "{{ formatNumeral(current.total_transfers) }}" }} {{ i18n "transfersShort" }}
               <template v-if="core && core.first_transfer_date">{{ i18n "since" }} {{ "{{ formatDateBR(core.first_transfer_date) }}" }}</template>

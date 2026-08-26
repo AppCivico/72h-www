@@ -6,6 +6,7 @@ import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 import personUrl, { slugify } from './utilities/personUrl';
 import spendingLimit, { SELF_FUNDING_FRACTION } from './utilities/spendingLimits';
+import { IMPLAUSIBLE_FACTOR } from './utilities/implausibleValue';
 import watchMainMenu from './menuToggle';
 import watchHeaderCondense from './components/headerCondense';
 
@@ -282,6 +283,22 @@ window.$vueCandidato = Vue.createApp({
         selfPercent: (selfValue / selfLimit) * 100,
         selfOverLimit: selfValue > selfLimit,
       };
+    },
+    // Valor declarado implausível para o cargo: acima de três vezes o teto
+    // legal de gastos. Prestação de contas é declaração, e um dígito a mais
+    // transforma R$ 1.000.093 em R$ 1.000.093.000 — foi assim que uma
+    // candidatura a deputado federal apareceu no site com R$ 1.000.009.300,
+    // 315 vezes o teto do cargo.
+    //
+    // Mesma régua e mesmo fator do detector da home
+    // (utilities/implausibleValue.js), em cima do teto que o spendingCap já
+    // resolveu para esta candidatura. Nada é afirmado sobre legalidade: o
+    // teto é de GASTO, não de arrecadação.
+    implausible({ spendingCap } = this) {
+      if (!spendingCap) return null;
+      const { limit, raised } = spendingCap;
+      if (raised <= limit * IMPLAUSIBLE_FACTOR) return null;
+      return { cap: limit, value: raised, times: raised / limit };
     },
     // "Among the top X% of the party's candidates in the state" -- derived from the rank
     // the comparison endpoint already returns (rank = strictly-richer candidates + 1, so

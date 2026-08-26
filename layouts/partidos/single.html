@@ -150,6 +150,17 @@
           </p>
           </div>
 
+          {{/* Guarda de sanidade: partido declarando mais que a própria cota
+              é impossível, e denuncia erro de preenchimento na prestação de
+              contas de alguma candidatura dele. Em dia normal não aparece
+              nada — é para o dia em que aparecer. */}}
+          <p class="implausible-note" v-if="overQuota.length" v-cloak>
+            <strong>{{ i18n "implausibleChartLead" }}</strong>
+            {{ i18n "painelOverQuotaLead" }}
+            <strong>{{ "{{ overQuota.map((row) => row.acronym || row.name).join(', ') }}" }}</strong>.
+            {{ i18n "painelOverQuotaTail" }}
+          </p>
+
           <div class="painel__tablewrap">
             <table class="data-table painel__table">
               <thead>

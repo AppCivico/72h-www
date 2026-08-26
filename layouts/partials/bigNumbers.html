@@ -76,6 +76,17 @@
       "candidatesField" "total_candidates_other_resources"
       "acc" $acc
       "election" $election) }}
+
+  {{/* Este é o bloco mais visível da home, e é onde o valor implausível
+       aparece com mais peso: um dígito a mais numa doação vai direto para
+       "outros recursos" e para o total acumulado. O número segue como o TSE
+       publica; a nota diz quanto dele é suspeito. Só o Vue sabe disso (a
+       detecção depende da listagem), então ela nasce oculta no HTML servido. */}}
+  <p class="implausible-note implausible-note--inline" v-if="flaggedTotal > 0" v-cloak>
+    {{ i18n "implausibleBigNumberLead" }}
+    <strong v-html="formatCurrencyNoAbbr(flaggedTotal)"></strong>
+    {{ i18n "implausibleBigNumberTail" }}
+  </p>
 </div>
 
 {{/* The methodological caveats used to sit loose under the cards as three

@@ -312,6 +312,14 @@ if (window.location.href.indexOf('/') > -1) {
           })
           .filter(Boolean);
       },
+      // Quanto dos números grandes vem de valor implausível. Os big numbers
+      // filtrados (amountAll e companhia) e a listagem respondem aos MESMOS
+      // filtros, e a listagem vem ordenada do maior para o menor valor: então
+      // um valor implausível dentro daquele recorte está sempre na página
+      // carregada, e esta soma não subestima.
+      flaggedTotal({ flaggedCandidates } = this) {
+        return flaggedCandidates.reduce((sum, flag) => sum + flag.value, 0);
+      },
       // O acumulado do gráfico, com os valores implausíveis descontados.
       //
       // O gráfico soma todas as candidaturas por dia, sem quebra por

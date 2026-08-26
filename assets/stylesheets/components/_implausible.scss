@@ -76,3 +76,23 @@
   text-decoration-thickness: 2px;
   text-decoration-color: var(--accent-warm);
 }
+
+/// Dentro da grade dos big numbers: atravessa as colunas em vez de virar um
+/// quarto card, que leria como se fosse outro indicador.
+.implausible-note--inline {
+  grid-column: 1 / -1;
+
+  margin-top: 0.5rem;
+}
+
+/// Na página do candidato, o total sinalizado perde o peso de manchete. Riscar
+/// como no card da listagem não serve aqui: este é O número da página, e
+/// riscado ele viraria ilegível. Em âmbar, com o aviso logo acima, ele diz
+/// "olhe com cuidado" sem desaparecer.
+.big-number__number--flagged {
+  color: var(--accent-warm);
+}
+
+.big-number__box--flagged {
+  border-color: var(--accent-warm);
+}

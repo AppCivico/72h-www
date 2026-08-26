@@ -175,6 +175,20 @@ window.$vuePainel = Vue.createApp({
         either: eligible.filter((entry) => entry.belowBlack || entry.belowFemale).length,
       };
     },
+    // Partidos que aparecem declarando MAIS Fundo Eleitoral do que a cota que
+    // receberam. Isso é impossível, não é interpretação: a cota é o teto do
+    // que existe para repassar. Quando acontece, é erro de preenchimento na
+    // prestação de contas de alguma candidatura daquele partido.
+    //
+    // Esta é a guarda certa para o painel. Aqui não há dado por candidatura
+    // para comparar com o teto de gastos do cargo, como a home faz — mas há a
+    // cota, que é um teto mais duro. E o risco é concreto: um erro de um
+    // dígito numa única candidatura (dez vezes o teto de deputado federal, ou
+    // R$ 31,7 milhões) já estouraria a cota de sete dos 27 partidos que têm
+    // cota em 2026.
+    overQuota({ entries } = this) {
+      return entries.filter((entry) => entry.fefc_quota && entry.fefc.total > entry.fefc_quota);
+    },
     maxDormantQuota({ dormantRows } = this) {
       return dormantRows.reduce((max, row) => Math.max(max, row.fefc_quota || 0), 0);
     },
