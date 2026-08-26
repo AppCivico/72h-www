@@ -164,6 +164,17 @@
   letter-spacing: -0.01em;
 }
 
+/// Degraus para números longos. A classe vem do Vue (valueLengthClass), que é
+/// quem consegue medir o comprimento da string: um valor na casa do bilhão
+/// estourava a borda do card no corpo cheio.
+.candidates__total-value--sm {
+  font-size: var(--t-m);
+}
+
+.candidates__total-value--xs {
+  font-size: var(--t-s);
+}
+
 .candidates__history {
   width: 100%;
   min-height: 12rem;

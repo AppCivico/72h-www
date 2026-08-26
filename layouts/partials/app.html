@@ -444,7 +444,15 @@
 
                           <p class="candidates__total">
                             <span class="candidates__total-label">{{ i18n "total" }} · {{ "{{ candidate.total_transfers }}" }} {{ i18n "transfers" }}</span>
-                            <strong class="candidates__total-value">{{ "{{ formatCurrencyNoAbbr(candidate.total_value) }}" }}</strong>
+                            {{/* O valor cai um degrau de corpo quando a string
+                                é longa: "R$ 1.000.009.300" tem 16 caracteres e
+                                estourava a borda do card no grid de três
+                                colunas. CSS não mede comprimento de texto, então
+                                quem decide é o Vue. */}}
+                            <strong
+                              class="candidates__total-value"
+                              :class="valueLengthClass(candidate.total_value)"
+                              v-html="formatCurrencyNoAbbr(candidate.total_value)"></strong>
                           </p>
 
                           <p class="candidates__info" v-if="candidate.votes_first_round">

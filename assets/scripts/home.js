@@ -89,6 +89,9 @@ if (window.location.href.indexOf('/') > -1) {
         totalArray: [],
         femaleArray: [],
         maleArray: [],
+        // Valor de cada dia, ao lado do acumulado: alimenta a segunda linha
+        // do tooltip.
+        dailyArray: [],
         chartDates: [],
 
         mainData: null,
@@ -299,10 +302,31 @@ if (window.location.href.indexOf('/') > -1) {
       formatChartSeries() {
         // Colour follows the entity, never its rank: Total keeps the brand
         // hue, and the gender split reuses the same pair as the pie.
+        // O último ponto ganha rótulo: é o "quanto já chegou" de hoje, e sem
+        // ele o leitor tem de passar o mouse na ponta da curva para saber
+        // onde ela chegou.
+        const lastIndex = this.totalArray.length - 1;
+        const totalData = this.totalArray.map((value, index) => (
+          index === lastIndex
+            ? { y: value, dataLabels: { enabled: true }, marker: { enabled: true, radius: 4 } }
+            : value
+        ));
+
         return [{
           name: 'Total',
-          data: this.totalArray,
+          // Área só no Total: acumulação se lê como área preenchida, e o
+          // preenchimento separa o total dos dois recortes, que seguem
+          // linhas.
+          type: 'areaspline',
+          data: totalData,
           color: categorical[0],
+          fillColor: {
+            linearGradient: {
+              x1: 0, y1: 0, x2: 0, y2: 1,
+            },
+            stops: [[0, 'rgba(109, 40, 217, 0.22)'], [1, 'rgba(109, 40, 217, 0)']],
+          },
+          lineWidth: 2.5,
           zIndex: 3,
         }, {
           name: 'Mulheres',
@@ -563,6 +587,16 @@ if (window.location.href.indexOf('/') > -1) {
         document.execCommand('copy');
         this.shareURLCopied = true;
       },
+      // "R$ 1.000.009.300" tem 16 caracteres e não cabe no card do grid de
+      // três colunas no corpo cheio. Os cortes saem da medida real: com a
+      // Fraunces bold em --t-l, 13 caracteres é o que a coluna aguenta, e
+      // acima de 16 nem --t-m serve.
+      valueLengthClass(value) {
+        const { length } = String(this.formatCurrencyNoAbbr(value) || '');
+        if (length > 16) return 'candidates__total-value--xs';
+        if (length > 13) return 'candidates__total-value--sm';
+        return '';
+      },
       epochToHuman(date) {
         return dayjs.unix(date).format('DD [de] MMMM [de] YYYY [às] hh[h]mm[m]ss[s]');
       },
@@ -588,32 +622,63 @@ if (window.location.href.indexOf('/') > -1) {
           dates.push(date);
         });
 
-        // The series is an accumulated total (not a daily delta), so the
-        // first days of the period are usually near-zero until spending
-        // ramps up — trim that leading flat stretch so the chart starts
-        // where there's actually something to show. All four arrays are
-        // trimmed together, by the same index, so they stay aligned
-        // (plano-de-execucao.md item 11).
-        // Real bug found: trimming at the first value strictly > 0 doesn't
-        // work — real data has tiny non-zero entries (a single R$500
-        // donation) from day one, against an eventual peak in the tens of
-        // millions, so the line still reads as flat for months. Trim
-        // against a threshold relative to the period's own peak instead —
-        // 1% of the max was checked against three real years (2020, 2022,
-        // 2024) and lands right where the visible ramp-up actually starts
-        // in all three, not just past a technical zero.
-        const maxTotal = Math.max(...totalArray, 0);
-        const threshold = maxTotal * 0.01;
-        const firstMeaningful = totalArray.findIndex((value) => value > threshold);
-        // maxTotal === 0 means every value is zero (e.g. an election with
-        // no data yet) — empties all four arrays, and the chart renders
-        // with no series instead of a flat zero line.
-        const start = firstMeaningful === -1 ? totalArray.length : firstMeaningful;
+        // The API's `chart` is a DAILY series, not a running total. Proven
+        // on real data: PP declares R$ 11.103.555 on 22/08 and R$ 100.000 on
+        // 24/08, and PCdoB drops from R$ 12.047.320 to R$ 1.376.590 the next
+        // day — an accumulated series cannot go down. The chart's subtitle
+        // has always promised "valor acumulado", so we accumulate here
+        // instead of plotting the deltas under the wrong label. It is also
+        // the readable shape: one big transfer used to draw a spike that
+        // crushed every other day against the zero line.
+        //
+        // The API pads the range to the end of the cycle with empty days, so
+        // the tail is cut at the last day that actually moved money —
+        // otherwise the line ran flat into November, two thirds of the plot
+        // showing nothing.
+        let lastMove = -1;
+        totalArray.forEach((value, index) => {
+          if (value > 0) lastMove = index;
+        });
+        const end = lastMove + 1;
 
-        this.totalArray = totalArray.slice(start);
-        this.maleArray = maleArray.slice(start);
-        this.femaleArray = femaleArray.slice(start);
-        this.chartDates = dates.slice(start)
+        // Daily values are kept beside the running total: the tooltip shows
+        // both, so "quanto já chegou" and "quanto chegou nesse dia" stay
+        // available without a second chart.
+        const daily = totalArray.slice(0, end);
+        const runningTotal = [];
+        const runningMale = [];
+        const runningFemale = [];
+        let sumTotal = 0;
+        let sumMale = 0;
+        let sumFemale = 0;
+        for (let i = 0; i < end; i += 1) {
+          sumTotal += totalArray[i];
+          sumMale += maleArray[i];
+          sumFemale += femaleArray[i];
+          runningTotal.push(sumTotal);
+          runningMale.push(sumMale);
+          runningFemale.push(sumFemale);
+        }
+
+        // Start on the first day that declared anything. The old rule was a
+        // share of the period's peak, which a running total cannot use: one
+        // huge late transfer makes 1% of the final total bigger than every
+        // earlier day, and the whole early history gets trimmed away.
+        // Verified with a fixture carrying a R$ 1 bi outlier — the chart came
+        // out with a single point. First-movement is outlier-proof, and the
+        // flat stretch it keeps is true: it is the period before the money
+        // started arriving.
+        const firstMove = daily.findIndex((value) => value > 0);
+        // -1 means nothing was declared in the period (e.g. an election with
+        // no data yet) — empties every array, and the chart renders with no
+        // series instead of a flat zero line.
+        const start = firstMove === -1 ? runningTotal.length : firstMove;
+
+        this.totalArray = runningTotal.slice(start);
+        this.maleArray = runningMale.slice(start);
+        this.femaleArray = runningFemale.slice(start);
+        this.dailyArray = daily.slice(start);
+        this.chartDates = dates.slice(0, end).slice(start)
           .map((date) => dayjs(`${date} 10:00`).format('DD [de] MMM'));
       },
       handleColumnData(item) {
@@ -1166,6 +1231,10 @@ if (window.location.href.indexOf('/') > -1) {
           },
           yAxis: {
             title: { text: null },
+            // Sem isto o eixo arredonda para a marca de cima e sobra metade
+            // da altura vazia: com pico em R$ 1,04 bi ele ia até R$ 2 bi.
+            endOnTick: false,
+            maxPadding: 0.1,
             labels: {
               // eslint-disable-next-line object-shorthand, func-names
               formatter: function () {
@@ -1184,10 +1253,38 @@ if (window.location.href.indexOf('/') > -1) {
                   <b>${window.$vueHome.formatCurrencyNoAbbr(point.y)}</b>
                 </div>`).join('');
 
-              return `<div style="min-width:11rem"><div style="margin-bottom:.35rem;font-weight:600">${this.x}</div>${rows}</div>`;
+              // O acumulado responde "quanto já chegou"; sem o valor do dia,
+              // não há como saber se aquele degrau na curva foi um repasse
+              // grande ou muitos pequenos.
+              const dayValue = window.$vueHome.dailyArray[this.points[0].point.index];
+              const dayRow = dayValue > 0
+                ? `<div style="margin-top:.35rem;padding-top:.35rem;border-top:1px solid rgba(255,255,255,.18);color:#CFC9DE;display:flex;gap:.75rem;justify-content:space-between">
+                    <span>declarado nesse dia</span>
+                    <b>${window.$vueHome.formatCurrencyNoAbbr(dayValue)}</b>
+                  </div>`
+                : '';
+
+              return `<div style="min-width:11rem"><div style="margin-bottom:.35rem;font-weight:600">${this.x}</div>${rows}${dayRow}</div>`;
             },
           },
           plotOptions: {
+            areaspline: {
+              marker: { enabled: false },
+              states: { hover: { lineWidthPlus: 0.5 } },
+              dataLabels: {
+                enabled: false,
+                align: 'right',
+                verticalAlign: 'bottom',
+                y: -12,
+                style: {
+                  fontSize: '13px', fontWeight: '600', textOutline: '2px #FAF8F3',
+                },
+                // eslint-disable-next-line object-shorthand, func-names
+                formatter: function () {
+                  return compactCurrency(this.y, 1);
+                },
+              },
+            },
             spline: {
               marker: {
                 enabled: false,
