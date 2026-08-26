@@ -239,4 +239,24 @@
   color: #8e86a6;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+
+  /// O link cai só na marca, não na frase inteira: herda tamanho e
+  /// espacejamento do rótulo, mas em branco e sublinhado, senão no cinza da
+  /// tarja ele não se anuncia como link.
+  ///
+  /// Descendente, e não uma classe solta, porque o reset traz
+  /// `a:link { text-decoration: inherit }` — especificidade (0,1,1), que
+  /// vence qualquer classe sozinha. Sublinhado nenhum aparecia, embora a
+  /// regra estivesse no CSS. É também o padrão que `.footer__menu a` já usa.
+  a {
+    color: functions.palette('white');
+    text-decoration: underline;
+    text-decoration-color: rgba(255, 255, 255, 0.4);
+    text-underline-offset: 2px;
+  }
+
+  a:hover,
+  a:focus-visible {
+    text-decoration-color: functions.palette('white');
+  }
 }

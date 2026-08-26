@@ -121,7 +121,9 @@
 - id: days
   translation: "Dias"
 - id: developedBy
-  translation: "Desenvolvido por AppCívico"
+  translation: "Desenvolvido por"
+- id: developedByOrg
+  translation: "AppCívico"
 - id: donate
   translation: "Doe"
 - id: electionStatuses
