@@ -497,6 +497,11 @@ if (window.location.href.indexOf('/') > -1) {
       // ele existe.
       async flaggedCandidates() {
         if (this.chart) await this.generateChart();
+        // As manchetes das roscas também dependem disto: sem redesenhá-las, a
+        // primeira renderização (feita antes do /candidates responder) deixaria
+        // a porcentagem afirmada na tela, ao lado de uma ressalva dizendo que
+        // ela não fecha.
+        await this.generateIntroCharts();
       },
       selectedState() {
         // when a state is unselected, we need to remove its cities from selection
@@ -871,10 +876,21 @@ if (window.location.href.indexOf('/') > -1) {
           return fallback;
         }
 
-        const template = templates[chart.type];
+        // Com valor implausível dentro do recorte, a manchete nomeia a maior
+        // fatia mas não crava a porcentagem. Quem está no topo resiste ao
+        // desconto (o PL lidera com ou sem o valor); o número não resiste, e
+        // era ele que a frase afirmava. A ressalva acima do bloco diz por quê.
+        const flagged = this.flaggedTotal > 0;
+        const template = flagged
+          ? (templates.flagged || {})[chart.type]
+          : templates[chart.type];
 
         if (!template) {
           return fallback;
+        }
+
+        if (flagged) {
+          return template.replace('%s', top.name);
         }
 
         const share = `${((top.y / total) * 100).toFixed(0)}%`;

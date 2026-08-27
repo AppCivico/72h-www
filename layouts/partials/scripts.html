@@ -82,6 +82,14 @@
     "state": '{{ i18n "chartTitleState" }}',
     "fallback": '{{ i18n "chartTitleFallback" }}',
     "subtitle": '{{ i18n "chartSubtitleValue" }}',
+    // Usadas quando há valor implausível dentro do recorte: nomeiam a maior
+    // fatia sem cravar a porcentagem, que é a parte que o provável erro move.
+    "flagged": {
+      "ethnicity": '{{ i18n "chartTitleEthnicityFlagged" }}',
+      "gender": '{{ i18n "chartTitleGenderFlagged" }}',
+      "party": '{{ i18n "chartTitlePartyFlagged" }}',
+      "state": '{{ i18n "chartTitleStateFlagged" }}',
+    },
   }
 </script>
 

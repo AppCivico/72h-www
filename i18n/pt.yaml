@@ -368,6 +368,17 @@
   translation: "%s concentra %s do valor total"
 - id: chartTitleFallback
   translation: "Declaração de recebimento de recursos por %s"
+# Variantes usadas enquanto houver valor implausível somado a estas fatias.
+# Qual fatia é a maior resiste ao desconto; a porcentagem não, então ela sai
+# da manchete e a ressalva acima do bloco explica por quê.
+- id: chartTitleEthnicityFlagged
+  translation: "Candidaturas de cor/raça %s concentram a maior fatia do valor total"
+- id: chartTitleGenderFlagged
+  translation: "Candidaturas do gênero %s concentram a maior fatia do valor total"
+- id: chartTitlePartyFlagged
+  translation: "%s lidera a declaração de recebimento de recursos"
+- id: chartTitleStateFlagged
+  translation: "%s concentra a maior fatia do valor total"
 - id: chartSubtitleValue
   translation: "Valor acumulado declarado ao TSE"
 - id: ethnicityBenchmark
@@ -946,6 +957,8 @@
   translation: "Prestação de contas é declaração, e um dígito a mais explica números como este. O 72horas mostra o que o TSE publica e sinaliza o que não fecha, sem alterar o dado."
 - id: implausibleBigNumberLead
   translation: "Inclui"
+- id: implausibleIntroChartsTail
+  translation: "segue somado nestes gráficos. É um valor declarado acima de três vezes o teto legal de gastos do cargo, provável dígito a mais na prestação de contas. A listagem não informa a cor/raça nem o gênero de quem declarou, então não dá para descontá-lo da fatia certa: enquanto ele estiver no total, infla a maior fatia de cada recorte. Leia as porcentagens abaixo com essa ressalva."
 - id: implausibleBigNumberTail
   translation: "de valor declarado acima de três vezes o teto legal de gastos do cargo, provável erro de preenchimento. O total segue como o TSE publica."
 - id: painelOverQuotaLead
