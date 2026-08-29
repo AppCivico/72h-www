@@ -239,6 +239,21 @@
   border-top: 1px solid var(--hairline);
 }
 
+/// A composition line reading as a continuation of the footnote above it,
+/// not as a second card section: no rule, no auto push to the bottom (the
+/// footnote it follows already did that), and quieter than the figure.
+.big-numbers .big-number__footnote--note {
+  padding-top: 0;
+  margin-top: 0.35rem;
+
+  font-size: var(--t-xxs, var(--t-xs));
+  line-height: 1.4;
+  color: var(--ink-3, var(--ink-2));
+  text-wrap: pretty;
+
+  border-top: 0;
+}
+
 .big-numbers .big-number__not-so-big {
   margin-top: 0.35rem;
 

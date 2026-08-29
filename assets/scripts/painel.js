@@ -60,13 +60,19 @@ function parseDay(iso) {
 // Cumulative share of a group in a party's Fundo Eleitoral, day by day -- the
 // JSON carries raw daily deltas so this stays a display concern. `groupDaily`
 // is null when tracking women, whose split already lives in the F/M fields.
-function cumulativeShare(fefcDaily, groupDaily) {
+//
+// `until` is the panel's collection date. build-party-panel.mjs already trims
+// days declared after it, so this is the guard for a JSON generated before
+// that rule existed: without it, four typo-dated declarations stretched the
+// axis to 24/11 and squeezed three real weeks of campaign into a corner.
+function cumulativeShare(fefcDaily, groupDaily, until) {
+  const days = until ? fefcDaily.filter((day) => day.d <= until) : fefcDaily;
   const groupByDate = groupDaily
     ? new Map(groupDaily.map((day) => [day.d, day.f + day.m]))
     : null;
   let total = 0;
   let group = 0;
-  return fefcDaily.map((day) => {
+  return days.map((day) => {
     total += day.f + day.m;
     group += groupByDate ? (groupByDate.get(day.d) || 0) : day.f;
     return [parseDay(day.d), total > 0 ? (group / total) * 100 : null];
@@ -247,6 +253,27 @@ window.$vuePainel = Vue.createApp({
       const pad = (part) => String(part).padStart(2, '0');
       return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()}`;
     },
+    // Data de corte da série do gráfico. Vem do próprio arquivo; num arquivo
+    // gerado antes desse campo existir, cai para a data de geração, que é a
+    // mesma coisa com outro nome.
+    collectedUntil({ panel } = this) {
+      return panel?.collected_until || (panel?.generated_at || '').slice(0, 10) || null;
+    },
+    // Declarações postas de lado por trazerem data posterior à coleta. Nunca
+    // saem dos totais da tabela, só do gráfico, e a nota diz quantas e quanto.
+    futureDated({ panel } = this) {
+      const late = panel?.future_dated;
+      return late && late.count > 0 ? late : null;
+    },
+    // O que o painel soma de Fundo Eleitoral e o que a eleição inteira
+    // declarou no mesmo fundo. A diferença é o dinheiro fora dos partidos
+    // pontuados aqui, e existe para ser declarada, não descoberta.
+    fefcOutsidePanel({ panel } = this) {
+      const measured = panel?.fefc_declared_panel;
+      const declared = panel?.fefc_declared_total;
+      if (!(measured > 0) || !(declared > 0) || declared <= measured) return null;
+      return { measured, declared, difference: declared - measured };
+    },
   },
   async mounted() {
     await this.$nextTick();
@@ -348,8 +375,8 @@ window.$vuePainel = Vue.createApp({
         name: party.acronym || party.name,
         color: categorical[index % categorical.length],
         data: this.thermoGroup === 'black'
-          ? cumulativeShare(party.fefc.daily, party.black.daily)
-          : cumulativeShare(party.fefc.daily, null),
+          ? cumulativeShare(party.fefc.daily, party.black.daily, this.collectedUntil)
+          : cumulativeShare(party.fefc.daily, null, this.collectedUntil),
         step: 'right',
         lineWidth: 2,
         marker: { enabled: false },

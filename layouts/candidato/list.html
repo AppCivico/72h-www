@@ -89,7 +89,7 @@
           {{ i18n "implausibleCandidateLead" }}
           <strong>{{ "{{ formatNumeral(implausible.times, 0) }}" }}</strong>
           {{ i18n "implausibleCardMid" }}
-          (<strong v-html="formatCurrencyNoAbbr(implausible.cap)"></strong>).
+          (<strong v-html="formatCurrencyExact(implausible.cap)"></strong>).
           {{ i18n "implausibleCandidateTail" }}
         </p>
 
@@ -162,7 +162,7 @@
             </div>
             <p class="candidato__cap-meta">
               {{ i18n "candidateCapCeiling" }}
-              <span v-html="formatCurrencyNoAbbr(spendingCap.limit)"></span>
+              <span v-html="formatCurrencyExact(spendingCap.limit)"></span>
             </p>
             <p class="candidato__cap-meta" v-if="spendingCap.overLimit">
               {{ i18n "candidateCapOverNote" }}
@@ -171,7 +171,7 @@
               {{ i18n "candidateSelfFundingLead" }}
               <span v-html="formatCurrencyNoAbbr(spendingCap.selfValue)"></span>
               ({{ "{{ formatNumeral(spendingCap.selfPercent, 1) }}" }}% {{ i18n "candidateSelfFundingOf" }},
-              <span v-html="formatCurrencyNoAbbr(spendingCap.selfLimit)"></span>)
+              <span v-html="formatCurrencyExact(spendingCap.selfLimit)"></span>)
             </p>
             <p class="chart-source">{{ i18n "candidateCapSource" }}</p>
           </div>

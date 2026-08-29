@@ -69,8 +69,17 @@ export function buildFundTotalUrl(apiBase, year, fundTypeId) {
  * carrying that day's transfers split as {F, M}. Normalize to a sorted,
  * compact array of daily deltas; zero-only days are dropped (the API pads
  * the range with empty days).
+ *
+ * `until` (ISO date) drops days after the collection date. Declarations do
+ * carry dates in the future: on 29/08/2026 the panel held four of them, in
+ * 26/09, 24/10, 26/10 and 24/11, the largest R$ 90 mil. They are almost
+ * certainly typos, and the effect on the thermometer chart is out of all
+ * proportion to the money involved, since the axis stretches three months
+ * past the last real transfer and the lines get squeezed into a corner. The
+ * totals on the table do NOT come from this series (they come from
+ * big_numbers), so dropping the day here never moves a party's share.
  */
-export function toDailySeries(chart) {
+export function toDailySeries(chart, { until = null } = {}) {
   if (!chart || typeof chart !== 'object') return [];
   return Object.entries(chart)
     .map(([date, split]) => ({
@@ -79,11 +88,33 @@ export function toDailySeries(chart) {
       m: Number(split?.M) || 0,
     }))
     .filter((day) => day.f > 0 || day.m > 0)
+    .filter((day) => !until || day.d <= until)
     .sort((a, b) => (a.d < b.d ? -1 : 1));
 }
 
-/** One party's panel entry from its two /index responses. */
-export function buildPartyEntry(party, fefcData, blackData, fefcQuotas) {
+/**
+ * The declarations `toDailySeries` left out for carrying a date after the
+ * collection: how many and how much. The panel publishes this instead of
+ * silently dropping them, so "the chart stops on the 27th" has a stated
+ * reason and the size of what was set aside is on the record.
+ */
+export function futureDatedDays(chart, until) {
+  if (!chart || typeof chart !== 'object' || !until) return { count: 0, value: 0 };
+  return Object.entries(chart)
+    .filter(([date]) => date > until)
+    .reduce((acc, [, split]) => {
+      const value = (Number(split?.F) || 0) + (Number(split?.M) || 0);
+      return value > 0 ? { count: acc.count + 1, value: acc.value + value } : acc;
+    }, { count: 0, value: 0 });
+}
+
+/**
+ * One party's panel entry from its two /index responses. `until` is the
+ * collection date: days declared after it stay out of the plotted series
+ * (see toDailySeries) but remain inside the totals, which come from
+ * big_numbers.
+ */
+export function buildPartyEntry(party, fefcData, blackData, fefcQuotas, { until = null } = {}) {
   const bigFefc = fefcData?.big_numbers || {};
   const bigBlack = blackData?.big_numbers || {};
   return {
@@ -99,13 +130,13 @@ export function buildPartyEntry(party, fefcData, blackData, fefcQuotas) {
       female: Number(bigFefc.amount_female) || 0,
       count_all: Number(bigFefc.count_all) || 0,
       count_female: Number(bigFefc.count_female) || 0,
-      daily: toDailySeries(fefcData?.chart),
+      daily: toDailySeries(fefcData?.chart, { until }),
     },
     black: {
       total: Number(bigBlack.total_amount) || 0,
       female: Number(bigBlack.amount_female) || 0,
       count_all: Number(bigBlack.count_all) || 0,
-      daily: toDailySeries(blackData?.chart),
+      daily: toDailySeries(blackData?.chart, { until }),
     },
   };
 }

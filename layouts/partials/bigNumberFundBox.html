@@ -10,7 +10,8 @@
        "valueField" "value_x_fund"
        "candidatesField" "total_candidates_x_fund"
        "acc" $acc
-       "election" $election) }} */}}
+       "election" $election
+       "note" i18nKey (opcional)) }} */}}
 {{ $acc := .acc }}
 {{ $election := .election }}
 {{ $transfersField := .transfersField }}
@@ -37,5 +38,12 @@
       <strong v-text="{{ printf "formatPercent(mainData?.accumulated?.%s / mainData?.election?.candidate_count * 100)" $candidatesField }}">{{ partial "formatPercentBR.html" (dict "numerator" (index $acc $candidatesField) "denominator" $election.candidate_count) }}</strong>
       {{ i18n "ofCandidates" | lower }}
     </p>
+    {{/* Linha opcional de composição, para a caixa cujo rótulo não diz o que
+         tem dentro. Estava só no tooltip, que é hover: no celular ninguém
+         abre, e quem passa os olhos também não. Texto fixo em i18n, nenhum
+         número escrito à mão. */}}
+    {{- with .note }}
+    <p class="big-number__footnote big-number__footnote--note">{{ i18n . }}</p>
+    {{- end }}
   </div>
 </transition-expand>

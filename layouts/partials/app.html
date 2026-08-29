@@ -180,6 +180,19 @@
                 <strong>{{ i18n "implausibleChartLead" }}</strong> <span v-html="formatCurrencyNoAbbr(flaggedTotal)"></span>
                 {{ i18n "implausibleIntroChartsTail" }}
               </p>
+              {{/* Segunda ressalva, mesma família e mesmo lugar: quando a soma
+                   das fatias não fecha com o total que a API declara para o
+                   recorte, a página está com duas divisões do mesmo dinheiro
+                   ao mesmo tempo (o bloco de grandes números usa o total; os
+                   gráficos, a soma das fatias). Enquanto for assim, a manchete
+                   deixa de cravar porcentagem, e esta nota mostra os dois
+                   números em vez de pedir confiança. Só o Vue sabe disso, e a
+                   nota nasce oculta no HTML servido. */}}
+              <p class="implausible-note" v-if="chartsTotalMismatch" v-cloak>
+                <strong>{{ i18n "chartMismatchLead" }}</strong> <span v-html="formatCurrencyNoAbbr(chartsTotalMismatch.summed)"></span>
+                {{ i18n "chartMismatchMiddle" }} <span v-html="formatCurrencyNoAbbr(chartsTotalMismatch.declared)"></span>
+                {{ i18n "chartMismatchTail" }}
+              </p>
               {{/* Kept mounted while new data loads: unmounting on
                    `loadingIntroCharts` tore ~800px out of the page and put
                    it back a moment later, which is what made the page
@@ -511,7 +524,7 @@
                               {{ i18n "implausibleCardLead" }}
                               <strong>{{ "{{ formatNumeral(flagFor(candidate).times, 0) }}" }}</strong>
                               {{ i18n "implausibleCardMid" }}
-                              (<strong v-html="formatCurrencyNoAbbr(flagFor(candidate).cap)"></strong>).
+                              (<strong v-html="formatCurrencyExact(flagFor(candidate).cap)"></strong>).
                               {{ i18n "implausibleCardTail" }}
                             </span>
                           </p>

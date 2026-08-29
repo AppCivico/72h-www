@@ -294,6 +294,12 @@
           <div class="painel__panel">
             <div id="js-painel-thermo-chart"></div>
             <p class="chart-benchmark">{{ i18n "painelThermoBenchmark" }}</p>
+            {{/* Declarações com data posterior à coleta ficam fora do eixo e
+                 dentro dos totais. A nota existe para o leitor não precisar
+                 descobrir sozinho por que a linha para antes do fim do mês. */}}
+            <p class="chart-benchmark" v-if="futureDated" v-cloak>
+              {{ i18n "painelFutureDatedLead" }} <strong>{{ "{{ futureDated.count }}" }}</strong>{{ i18n "painelFutureDatedTail" }}
+            </p>
             <p class="chart-source">{{ i18n "painelGeneratedAt" }} {{ "{{ generatedAtBR }}" }} · {{ i18n "dataSource" }}</p>
           </div>
         </section>
@@ -530,7 +536,27 @@
         <div class="painel__method-grid">
           <p>{{ i18n "painelMethodP1" }}</p>
           <p>{{ i18n "painelMethodP2" }}</p>
+          {{/* O piso feminino de cada partido sai dos percentuais de
+               candidatura que o TSE congelou no corte de 18/08/2026. As
+               estatísticas gerais de candidatura seguem mudando conforme os
+               registros são julgados; estes percentuais, não. Está escrito
+               aqui para ninguém "atualizar" o data file achando que ficou
+               velho. A data vem do próprio arquivo. */}}
+          <p>
+            {{ i18n "painelMethodFloors" }}
+            {{ with site.Data.candidaturas2026.cutoff }}<strong>{{ dateFormat "02/01/2006" . }}</strong>.{{ end }}
+            {{ i18n "painelMethodFloorsTail" }}
+          </p>
           <p>{{ i18n "painelMethodP3" }}</p>
+          {{/* O painel pontua só os partidos que sobrevivem ao filtro de
+               isPanelParty, então soma menos Fundo Eleitoral do que a home,
+               que é a eleição inteira. A diferença é declarada aqui em reais
+               em vez de ficar para o leitor achar comparando as duas páginas. */}}
+          <p v-if="fefcOutsidePanel" v-cloak>
+            {{ i18n "painelMethodReconcileLead" }}
+            <strong v-html="formatCurrencyNoAbbr(fefcOutsidePanel.difference)"></strong>
+            {{ i18n "painelMethodReconcileTail" }}
+          </p>
         </div>
         <div class="painel__legal">
           <h3>{{ i18n "painelLegalTitle" }}</h3>

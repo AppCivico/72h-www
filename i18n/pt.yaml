@@ -304,6 +304,10 @@
   translation: "FEFC (Fundo Especial de Financiamento de Campanha): verba pública liberada apenas em anos eleitorais, distribuída conforme o tamanho das bancadas no Congresso."
 - id: tipOtherResources
   translation: "Recursos declarados que não vêm do Fundo Partidário nem do FEFC, como doações de pessoas físicas e autofinanciamento."
+# Mesma informação do tooltip acima, visível sem hover: é a caixa cujo rótulo
+# não diz o que tem dentro, e é onde a doação de pessoa física aparece.
+- id: otherResourcesNote
+  translation: "Inclui doação de pessoa física, autofinanciamento e financiamento coletivo."
 - id: outOf
   translation: "de"
 - id: transfersShort
@@ -381,6 +385,15 @@
   translation: "%s concentra a maior fatia do valor total"
 - id: chartSubtitleValue
   translation: "Valor acumulado declarado ao TSE"
+# Ressalva usada quando a soma das fatias não fecha com o total declarado pela
+# API para o mesmo recorte. Mostra os dois valores e explica por que a manchete
+# parou de cravar porcentagem. Os números vêm da API, nunca escritos aqui.
+- id: chartMismatchLead
+  translation: "Conferência em andamento:"
+- id: chartMismatchMiddle
+  translation: "é a soma das fatias destes recortes, contra"
+- id: chartMismatchTail
+  translation: "de valor total declarado no mesmo período. Enquanto a diferença não for esclarecida na origem do dado, as manchetes abaixo nomeiam a maior fatia sem afirmar a porcentagem, e o bloco de grandes números acima segue como o TSE publica."
 - id: ethnicityBenchmark
   translation: "Para comparar: no Censo 2022 do IBGE, a população brasileira se declarou 45,3% parda, 43,5% branca, 10,2% preta, 0,8% indígena e 0,4% amarela."
 - id: genderBenchmark
@@ -773,6 +786,23 @@
   translation: "Este painel acompanha exclusivamente a distribuição do Fundo Eleitoral (FEFC). Os valores e percentuais apresentados são calculados a partir dos recursos do Fundo Eleitoral declarados pelas candidaturas como recebidos. Embora regras semelhantes também se apliquem aos recursos do Fundo Partidário utilizados em campanhas, optamos por acompanhar apenas o Fundo Eleitoral para permitir comparações mais claras e consistentes entre os partidos."
 - id: painelMethodP2
   translation: "A fatia de cada grupo é calculada sobre o Fundo Eleitoral declarado pelas candidaturas como recebido até a última coleta, e não sobre a cota total recebida pelo partido. Os percentuais mostram como os recursos já distribuídos estão sendo divididos entre os grupos analisados. O recorte racial considera a autodeclaração informada à Justiça Eleitoral (pessoas pretas e pardas). Partidos que ainda não atingiram R$ 250 mil em repasses do Fundo Eleitoral aparecem na seção 'Quase nada distribuído até agora', pois, abaixo desse valor, os percentuais ainda podem não representar o padrão de distribuição de recursos do partido ao longo da campanha."
+# Nota do gráfico de tempo: declarações com data posterior à coleta saem do
+# eixo e continuam nos totais. O número vem do arquivo do painel.
+- id: painelFutureDatedLead
+  translation: "O gráfico vai até a data da última coleta. Declarações com data posterior a ela ficam fora do eixo e seguem somadas nos totais da tabela, porque o mais provável é que a data tenha sido digitada errada na prestação de contas. Nesta coleta, o número dessas declarações é"
+- id: painelFutureDatedTail
+  translation: "."
+# De onde vem o piso feminino de cada partido, e por que a data de corte não
+# envelhece: o TSE fixa esses percentuais para fins de destinação de recursos.
+- id: painelMethodFloors
+  translation: "O piso de cada partido para candidaturas de mulheres vem dos percentuais de candidatura que o TSE divulgou por partido, com data de corte em"
+- id: painelMethodFloorsTail
+  translation: "Esses são os percentuais que valem para a destinação de recursos e permanecem fixos, ainda que as estatísticas gerais de candidaturas sigam sendo atualizadas conforme os registros são julgados."
+# Conciliação com a página inicial: o painel mede menos que a eleição inteira.
+- id: painelMethodReconcileLead
+  translation: "Este painel pontua apenas os partidos que chegam pela lista de filtros da API e passam pelas regras desta página, então ele soma menos Fundo Eleitoral do que a página inicial, que cobre a eleição inteira. Na última coleta, a diferença é de"
+- id: painelMethodReconcileTail
+  translation: "declarados por candidaturas fora dos partidos pontuados aqui."
 - id: painelMethodP3
   translation: "Todos os dados de financiamento utilizados pelo 72horas são baseados exclusivamente nas informações declaradas pelas candidaturas à Justiça Eleitoral. Declarações feitas por partidos ou diretórios não são utilizadas como base para os indicadores da plataforma. Como existe prazo para atualização das prestações de contas, um repasse realizado hoje pode aparecer apenas nas próximas coletas. Mesmo nas federações, os recursos são atribuídos ao partido responsável pelo repasse. Os percentuais apresentados nesta página acompanham o ritmo e a distribuição dos recursos ao longo da campanha e não representam, antes do prazo legal e da análise da prestação de contas pela Justiça Eleitoral, uma conclusão sobre o cumprimento ou descumprimento da legislação eleitoral."
 - id: painelLinkFefc

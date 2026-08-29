@@ -30,7 +30,8 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 import {
-  buildFundTotalUrl, buildIndexUrl, buildPartyEntry, isPanelParty, PARTY_FUND_TYPE,
+  buildFundTotalUrl, buildIndexUrl, buildPartyEntry, FEFC_FUND_TYPE, futureDatedDays,
+  isPanelParty, PARTY_FUND_TYPE,
 } from './partyPanel.mjs';
 
 const projectRoot = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -79,15 +80,28 @@ async function main() {
   if (!allParties.length) throw new Error('filters returned no parties');
   const parties = allParties.filter(isPanelParty);
 
+  // The collection date, in the API's own clock, used as the cutoff for the
+  // plotted daily series. Declarations dated after it are set aside there
+  // (never in the totals) and counted in `future_dated` below.
+  let until = new Date().toISOString().slice(0, 10);
+  const futureDated = { count: 0, value: 0 };
+
   // One party's two requests, in order: the second is skipped when the
   // first shows no Fundo Eleitoral at all.
   const fetchParty = async (party) => {
     const fefcData = await fetchJson(buildIndexUrl(apiBase, year, party.id), deadline);
+    // `now` is the API's clock. Preferring it over ours keeps the cutoff on
+    // the same clock that produced the series, so a build machine with a
+    // skewed date can neither hide real days nor keep future ones.
+    if (fefcData?.now) until = String(fefcData.now).slice(0, 10);
     const hasMoney = Number(fefcData?.big_numbers?.total_amount) > 0;
     const blackData = hasMoney
       ? await fetchJson(buildIndexUrl(apiBase, year, party.id, { black: true }), deadline)
       : { big_numbers: {}, chart: {} };
-    return buildPartyEntry(party, fefcData, blackData, fefc.quotas);
+    const late = futureDatedDays(fefcData?.chart, until);
+    futureDated.count += late.count;
+    futureDated.value += late.value;
+    return buildPartyEntry(party, fefcData, blackData, fefc.quotas, { until });
   };
 
   // Fixed-size batches rather than a full fan-out: bounded concurrency keeps
@@ -118,6 +132,25 @@ async function main() {
     process.stderr.write(`party panel: party-fund total unavailable (${err.message})\n`);
   }
 
+  // The whole election's Fundo Eleitoral, on the same basis as the panel.
+  // The panel's own sum is smaller: it scores only the parties that come
+  // back from /filters and survive isPanelParty, so legends excluded there
+  // (and any record attached to none of them) fall outside. On 29/08/2026
+  // the gap was R$ 73,5 milhões, 4,6%, which is the sort of thing a reader
+  // finds by comparing this page with the home and we would rather state
+  // ourselves. Degrades to null exactly like the Fundo Partidário total.
+  let fefcDeclaredTotal = null;
+  try {
+    const fefcTotal = await fetchJson(
+      buildFundTotalUrl(apiBase, year, FEFC_FUND_TYPE), deadline,
+    );
+    fefcDeclaredTotal = Number(fefcTotal?.big_numbers?.total_amount) || 0;
+  } catch (err) {
+    process.stderr.write(`party panel: FEFC election total unavailable (${err.message})\n`);
+  }
+
+  const panelSum = entries.reduce((sum, entry) => sum + entry.fefc.total, 0);
+
   const panel = {
     generated_at: new Date().toISOString(),
     year,
@@ -125,7 +158,16 @@ async function main() {
     // legacy file generated on the old FEFC + Fundo Partidário basis can
     // never be presented as if it were Fundo Eleitoral only.
     basis: 'fefc',
+    // Cutoff of the plotted daily series, and what it left out. Both exist so
+    // the page can say where the lines stop and why, instead of the reader
+    // discovering a silent trim.
+    collected_until: until,
+    future_dated: futureDated,
     fefc_total: fefc.total,
+    // What the panel itself measures, and what the whole election declared on
+    // the same fund. The difference is the money outside the scored parties.
+    fefc_declared_panel: panelSum,
+    fefc_declared_total: fefcDeclaredTotal,
     party_fund_declared: partyFundDeclared,
     parties: entries,
   };

@@ -1,7 +1,7 @@
 {
  "source": "TSE, Resumo Candidatos 2026 por partido (planilha 'Percentuais_Candidatos_2026_Partido_UF'), divulgada em 21/08/2026",
  "cutoff": "2026-08-18",
- "note": "Percentuais calculados por nós a partir dos números absolutos da aba 'Partido'. O TSE publica, naquela planilha, a composição racial dentro de cada sexo; a proporção de candidaturas femininas sobre o total do partido, que é a base do piso do art. 17, § 4º, I, sai da divisão Feminino Total / Total Geral.",
+ "note": "Percentuais calculados por nós a partir dos números absolutos da aba 'Partido'. O TSE publica, naquela planilha, a composição racial dentro de cada sexo; a proporção de candidaturas femininas sobre o total do partido, que é a base do piso do art. 17, § 4º, I, sai da divisão Feminino Total / Total Geral. O corte de 18/08/2026 NÃO envelhece: o TSE informa que os percentuais considerados para fins de destinação de recursos permanecem fixos, ainda que as estatísticas gerais de candidaturas sigam sendo atualizadas conforme os registros são julgados. Atualizar este arquivo com números posteriores ao corte trocaria o piso legal por um número que não vale para a cota.",
  "totals": {
   "candidacies": 20560,
   "female": 7165,
@@ -281,5 +281,6 @@
    "indigenous_share": 0.54
   }
  ],
- "source_url": "https://www.tse.jus.br/eleicoes/copy_of_percentuais-de-candidaturas-de-femininas-e-de-pessoas-negras-por-partido-politico"
+ "source_url": "https://www.tse.jus.br/eleicoes/copy_of_percentuais-de-candidaturas-de-femininas-e-de-pessoas-negras-por-partido-politico",
+ "cutoff_is_fixed": true
 }

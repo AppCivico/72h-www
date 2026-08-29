@@ -3,6 +3,7 @@ import MicroModal from 'micromodal';
 import chartTheme, { categorical, compactCurrency } from './utilities/chartTheme';
 import config from './config';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
+import formatCurrencyExact from './utilities/formatCurrencyExact';
 import formatNumeral from './utilities/formatNumeral';
 import personUrl, { slugify } from './utilities/personUrl';
 import spendingLimit, { SELF_FUNDING_FRACTION } from './utilities/spendingLimits';
@@ -517,6 +518,7 @@ window.$vueCandidato = Vue.createApp({
   },
   methods: {
     formatCurrencyNoAbbr,
+    formatCurrencyExact,
     formatNumeral,
     formatDateBR,
     formatRace,

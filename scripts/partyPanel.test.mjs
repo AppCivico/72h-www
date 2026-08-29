@@ -10,6 +10,7 @@ import {
   cumulativeFemaleShareSeries,
   cumulativeShareSeries,
   deriveShares,
+  futureDatedDays,
   quotaFor,
   splitForRanking,
   toDailySeries,
@@ -63,6 +64,60 @@ test('toDailySeries sorts by date and drops empty padding days', () => {
 test('toDailySeries survives a missing or malformed chart', () => {
   assert.deepEqual(toDailySeries(null), []);
   assert.deepEqual(toDailySeries('not-a-chart'), []);
+});
+
+test('toDailySeries drops days declared after the collection date', () => {
+  // Real shape of the 29/08/2026 panel: three weeks of campaign plus one
+  // transfer typed as 24/11, which alone stretched the axis by three months.
+  const chart = {
+    '2026-08-24': { F: 171295763.64, M: 415619172.84 },
+    '2026-08-27': { F: 26963060.69, M: 43010169.17 },
+    '2026-11-24': { F: 0, M: 90000 },
+  };
+  assert.deepEqual(toDailySeries(chart, { until: '2026-08-29' }).map((day) => day.d), [
+    '2026-08-24', '2026-08-27',
+  ]);
+  // The collection day itself is inside the cut, not after it.
+  assert.deepEqual(toDailySeries(chart, { until: '2026-08-27' }).map((day) => day.d), [
+    '2026-08-24', '2026-08-27',
+  ]);
+  // No cutoff means the old behaviour, unchanged.
+  assert.equal(toDailySeries(chart).length, 3);
+});
+
+test('futureDatedDays counts and sums what the cutoff left out', () => {
+  const chart = {
+    '2026-08-27': { F: 26963060.69, M: 43010169.17 },
+    '2026-09-26': { F: 0, M: 137500 },
+    '2026-10-24': { F: 17500, M: 0 },
+    '2026-11-24': { F: 0, M: 90000 },
+    // Padding day after the cutoff with no money: not a declaration, so it
+    // must not inflate the count the page shows.
+    '2026-10-30': { F: 0, M: 0 },
+  };
+  assert.deepEqual(futureDatedDays(chart, '2026-08-29'), { count: 3, value: 245000 });
+});
+
+test('futureDatedDays is silent without a cutoff or a chart', () => {
+  assert.deepEqual(futureDatedDays(null, '2026-08-29'), { count: 0, value: 0 });
+  assert.deepEqual(futureDatedDays({ '2026-11-24': { F: 0, M: 1 } }, null), { count: 0, value: 0 });
+});
+
+test('buildPartyEntry keeps future-dated money in the totals, out of the series', () => {
+  const chart = {
+    '2026-08-27': { F: 100, M: 300 },
+    '2026-11-24': { F: 0, M: 90000 },
+  };
+  const entry = buildPartyEntry(
+    { id: 10, acronym: 'PL', name: 'PL' },
+    { big_numbers: { total_amount: 90400, amount_female: 100 }, chart },
+    { big_numbers: {}, chart: {} },
+    { PL: 881657477.34 },
+    { until: '2026-08-29' },
+  );
+  // The table's number comes from big_numbers and is untouched by the cut.
+  assert.equal(entry.fefc.total, 90400);
+  assert.deepEqual(entry.fefc.daily.map((day) => day.d), ['2026-08-27']);
 });
 
 test('quotaFor matches across acronym spelling drift and misses honestly', () => {

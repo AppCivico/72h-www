@@ -15,9 +15,11 @@ import chartTheme, {
 } from './utilities/chartTheme';
 import { liveHtml, liveText } from './directives/liveValue';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
+import formatCurrencyExact from './utilities/formatCurrencyExact';
 import formatNumeral from './utilities/formatNumeral';
 import { FEFC_TOTALS, QUOTA_DEADLINES } from './utilities/electoralFund';
 import { implausibleValue } from './utilities/implausibleValue';
+import { sliceTotalMismatch } from './utilities/sliceTotalMismatch';
 import personUrl from './utilities/personUrl';
 
 dayjs.extend(duration);
@@ -319,6 +321,13 @@ if (window.location.href.indexOf('/') > -1) {
       // carregada, e esta soma não subestima.
       flaggedTotal({ flaggedCandidates } = this) {
         return flaggedCandidates.reduce((sum, flag) => sum + flag.value, 0);
+      },
+      // A divergência entre a soma das fatias dos recortes e o total que a
+      // API declara para eles. Os três recortes vêm do mesmo `accumulated`,
+      // então na prática divergem juntos; a nota mostra um par de números, e
+      // pega o primeiro que divergir. Null quando fecham, que é o normal.
+      chartsTotalMismatch({ introCharts } = this) {
+        return introCharts.map((chart) => chart.totalMismatch).find(Boolean) || null;
       },
       // O acumulado do gráfico, com os valores implausíveis descontados.
       //
@@ -726,9 +735,26 @@ if (window.location.href.indexOf('/') > -1) {
         // the tail is cut at the last day that actually moved money —
         // otherwise the line ran flat into November, two thirds of the plot
         // showing nothing.
+        //
+        // "Moved money" is not enough on its own: a declaration can carry a
+        // date in the future, and four of them were enough to reopen the very
+        // empty tail this cut exists to close. On 29/08/2026 the series
+        // carried transfers dated 26/09, 24/10, 26/10 and 24/11, the largest
+        // of them R$ 90 mil, and the axis ran to November because of those.
+        // They are almost certainly typos in the declaration, but the rule
+        // here doesn't have to judge that: a day that hasn't happened yet has
+        // no running total to show.
+        //
+        // The reference is the server's clock (`now`), not the visitor's: it
+        // is the clock that produced the series, and a browser set to the
+        // wrong date can neither hide real days nor invent future ones. With
+        // no `now` in the response, no date cut is applied at all.
+        const reference = this.mainData?.now ? dayjs(this.mainData.now) : null;
+        const isFuture = (date) => Boolean(reference) && dayjs(`${date} 12:00`).isAfter(reference, 'day');
+
         let lastMove = -1;
         totalArray.forEach((value, index) => {
-          if (value > 0) lastMove = index;
+          if (value > 0 && !isFuture(dates[index])) lastMove = index;
         });
         const end = lastMove + 1;
 
@@ -796,6 +822,12 @@ if (window.location.href.indexOf('/') > -1) {
 
         newItem.data = Array.isArray(newItem.data) ? newItem.data : [];
         newItem.chartType = 'bar';
+        // A API manda, em cada recorte, o total que aquelas fatias deveriam
+        // somar — o mesmo `accumulated.total_value` do bloco de grandes
+        // números. Ele é comparado com a soma real ANTES de ser substituído,
+        // porque é a única chance de perceber que os dois discordam: daqui
+        // para baixo só existe a soma das fatias.
+        newItem.totalMismatch = sliceTotalMismatch(newItem.total, newItem.data);
         newItem.total = newItem.data.reduce((sum, point) => sum + (point.y || 0), 0);
 
         newItem.data.sort((a, b) => b.y - a.y);
@@ -848,6 +880,7 @@ if (window.location.href.indexOf('/') > -1) {
         return numeral(value).format('$0[.]00 a').replace('.', ',');
       },
       formatCurrencyNoAbbr,
+      formatCurrencyExact,
       personUrl,
       /**
        * Builds a chart headline that states the finding ("Candidaturas de
@@ -880,7 +913,12 @@ if (window.location.href.indexOf('/') > -1) {
         // fatia mas não crava a porcentagem. Quem está no topo resiste ao
         // desconto (o PL lidera com ou sem o valor); o número não resiste, e
         // era ele que a frase afirmava. A ressalva acima do bloco diz por quê.
-        const flagged = this.flaggedTotal > 0;
+        //
+        // Fatias que não fecham com o total declarado pela API caem no mesmo
+        // caminho, pela mesma razão e com mais força: ali nem o denominador
+        // da porcentagem está estabelecido. Qual fatia é a maior continua
+        // valendo, porque a ordem entre elas não depende do total.
+        const flagged = this.flaggedTotal > 0 || Boolean(chart.totalMismatch);
         const template = flagged
           ? (templates.flagged || {})[chart.type]
           : templates[chart.type];
@@ -1397,6 +1435,12 @@ if (window.location.href.indexOf('/') > -1) {
           const total = chart.total
             || chart.data.reduce((sum, point) => sum + (point.y || 0), 0);
           const headline = this.chartHeadline(chart, total, label);
+          // Quando as fatias não fecham com o total declarado, a porcentagem
+          // sai da manchete E das barras: o rótulo de cada barra dividia pelo
+          // mesmo denominador, então dizia "80,7%" logo abaixo de uma manchete
+          // que tinha acabado de se recusar a dizer isso. Sem denominador
+          // confiável sobra o valor, que é dado bruto e não afirma proporção.
+          const mismatched = Boolean(chart.totalMismatch);
           // one row per category, plus room for the title block
           const height = 132 + (chart.data.length * 38);
           const containerId = `js-chart__${chart.type}`;
@@ -1444,11 +1488,16 @@ if (window.location.href.indexOf('/') > -1) {
               // eslint-disable-next-line object-shorthand, func-names
               formatter: function () {
                 const share = total ? ((this.y / total) * 100) : 0;
+                // Mesma regra do rótulo da barra: sem total confiável, o
+                // tooltip mostra o valor e cala a proporção.
+                const shareLine = mismatched
+                  ? ''
+                  : `<div style="color:#CFC9DE">${share.toFixed(1).replace('.', ',')}% do total</div>`;
 
                 return `<div style="min-width:9rem">
                     <div style="margin-bottom:.25rem;font-weight:600">${this.key}</div>
                     <div><b>${window.$vueHome.formatCurrencyNoAbbr(this.y)}</b></div>
-                    <div style="color:#CFC9DE">${share.toFixed(1).replace('.', ',')}% do total</div>
+                    ${shareLine}
                   </div>`;
               },
             },
@@ -1470,6 +1519,7 @@ if (window.location.href.indexOf('/') > -1) {
                   // legend needed, identity is on the axis
                   // eslint-disable-next-line object-shorthand, func-names
                   formatter: function () {
+                    if (mismatched) return compactCurrency(this.y, 1);
                     const share = total ? ((this.y / total) * 100) : 0;
 
                     return `${share.toFixed(1).replace('.', ',')}%`;
