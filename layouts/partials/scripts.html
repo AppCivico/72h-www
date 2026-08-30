@@ -75,6 +75,17 @@
   // live figures on every render, so they follow the moment instead of
   // reading as neutral labels. Editors change the wording here (i18n),
   // the numbers come from the API.
+  // Régua histórica da manchete da home. Ciclos encerrados vivem em
+  // data/declaracaoHistorico.json (contagens, nunca porcentagens escritas
+  // à mão) e chegam aqui inteiros para o seletor de ano funcionar sem
+  // outra requisição. heroLead é a palavra que abre a frase enquanto o
+  // índice está baixo; o limiar vem do mesmo arquivo, para o template do
+  // Hugo e o JS lerem uma fonte só e nunca discordarem no primeiro paint.
+  // safeJS, senão o html/template do Hugo entrega o JSON como string
+  // escapada e o objeto chega ao JS como texto.
+  window.appDeclarationHistory = {{ $.Site.Data.declaracaoHistorico | jsonify | safeJS }};
+  window.appHeroLead = '{{ i18n "heroHeadlineBefore" }}';
+
   window.appChartTitles = {
     "ethnicity": '{{ i18n "chartTitleEthnicity" }}',
     "gender": '{{ i18n "chartTitleGender" }}',

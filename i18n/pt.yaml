@@ -355,10 +355,20 @@
   translation: "Eleição"
 - id: heroEyebrow
   translation: "Atualização contínua"
+# Abre a manchete da home enquanto o índice está abaixo de
+# heroLeadMaxPercent (data/declaracaoHistorico.json). Acima disso a palavra
+# sai e a frase começa no número: o advérbio descreve um índice baixo, e este
+# sobe a campanha inteira.
 - id: heroHeadlineBefore
   translation: "Só"
 - id: heroHeadlineAfter
   translation: "das candidaturas declararam recebimento de recursos financeiros até o momento."
+# Régua histórica sob a manchete. O rótulo do ciclo e a porcentagem vêm de
+# data/declaracaoHistorico.json, calculada a partir das contagens.
+- id: heroBenchmarkBefore
+  translation: "Para comparar: na"
+- id: heroBenchmarkAfter
+  translation: "das candidaturas declararam recebimento ao longo de todo o ciclo."
 - id: heroSourceLabel
   translation: "Fonte dos dados"
 - id: heroSourceValue

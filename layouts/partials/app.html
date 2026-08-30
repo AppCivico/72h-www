@@ -33,13 +33,33 @@
                      figure: editors reword it in i18n (heroHeadlineBefore/
                      After), the percentage follows the data. The static
                      value is the build-time snapshot, replaced by Vue. */}}
+                {{/* O advérbio de abertura é condicional. "Só" descreve bem
+                     um índice baixo, e este sobe durante toda a campanha: na
+                     eleição geral de 2022 fechou em 83,7%. O limiar vem do
+                     mesmo data file que o JS lê (heroLead em home.js), para
+                     o HTML servido e o Vue decidirem igual e a palavra não
+                     piscar na montagem. Sem figuras de build, $showLead fica
+                     false: melhor começar pelo número do que afirmar "Só"
+                     sobre um dado que ainda não chegou. */}}
+                {{- $leadMax := $.Site.Data.declaracaoHistorico.heroLeadMaxPercent | default 0 -}}
+                {{- $heroDen := $heroElection.candidate_count | default 0 -}}
+                {{- $heroNum := $heroAcc.total_candidates_who_received | default 0 -}}
+                {{- $showLead := false -}}
+                {{- if $heroDen -}}
+                  {{- $showLead = lt (mul (div (float $heroNum) (float $heroDen)) 100) $leadMax -}}
+                {{- end -}}
                 <h1 class="jumbotron__headline">
-                  {{ i18n "heroHeadlineBefore" }}
                   {{/* v-live-text, not v-text: the headline states a fact,
                        so it must never show a placeholder zero while the
                        API answers — it keeps this build-time figure until
                        a real one arrives. */}}
-                  <em
+                  {{/* O span e o <em> ficam na MESMA linha de propósito, pelo
+                       mesmo motivo já documentado na nota de valor
+                       implausível: o compilador de template do Vue descarta
+                       nó de texto que só tem espaço em branco quando ele
+                       contém quebra de linha, e a manchete saía colada
+                       ("Só28,84%"). */}}
+                  <span v-text="heroLead">{{ if $showLead }}{{ i18n "heroHeadlineBefore" }}{{ end }}</span> <em
                     class="jumbotron__stat"
                     :aria-hidden="figuresPlaceholder ? 'true' : null"
                     v-live-text="livePercent(mainData?.accumulated?.total_candidates_who_received, mainData?.election?.candidate_count)">{{ partial "formatPercentBR.html" (dict "numerator" $heroAcc.total_candidates_who_received "denominator" $heroElection.candidate_count) }}</em>
@@ -57,6 +77,20 @@
                   {{ i18n "heroDekBefore" }}
                   <strong v-live-text="liveNumeral(mainData?.election?.candidate_count)">{{ partial "formatNumeralBR.html" $heroElection.candidate_count }}</strong>
                   {{ i18n "heroDekAfter" }}
+                </p>
+
+                {{/* Régua histórica, para o leitor saber se o índice de hoje
+                     é alto ou baixo sem que a home precise adjetivá-lo. Só
+                     aparece quando existe ciclo encerrado do MESMO tipo de
+                     eleição (ver declarationBenchmark em home.js); sem par,
+                     nada é dito. Nasce oculta no HTML servido, como a nota de
+                     valor implausível: depende do ano selecionado, que só o
+                     Vue conhece depois de montar. */}}
+                <p class="jumbotron__benchmark" v-if="declarationBenchmark" v-cloak>
+                  {{ i18n "heroBenchmarkBefore" }}
+                  <span v-text="declarationBenchmark.label"></span>,
+                  <strong v-text="formatPercent(declarationBenchmark.percent)"></strong>
+                  {{ i18n "heroBenchmarkAfter" }}
                 </p>
               </div>
 

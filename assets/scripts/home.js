@@ -276,6 +276,39 @@ if (window.location.href.indexOf('/') > -1) {
         if (candidates.candidates.length > 0) return false;
         return countAll > 0;
       },
+      // "Só 42%" descreve bem um número baixo, e este sobe durante toda a
+      // campanha: na eleição geral de 2022 fechou em 83,7%, e "Só 83,7%"
+      // leria como erro de digitação. Então o advérbio é condicional, e o
+      // limiar mora no data file junto com a régua histórica, para o Hugo
+      // decidir igual no HTML servido e não haver troca de palavra quando
+      // o Vue monta.
+      heroLead({ heroPercent } = this) {
+        const max = Number(window.appDeclarationHistory?.heroLeadMaxPercent);
+        if (heroPercent === null || !Number.isFinite(max)) return '';
+        return heroPercent < max ? (window.appHeroLead || '') : '';
+      },
+      // null enquanto não há as duas pontas: sem denominador não há índice, e
+      // um zero aqui viraria "Só 0%", que é afirmação, não ausência de dado.
+      heroPercent({ mainData } = this) {
+        const received = Number(mainData?.accumulated?.total_candidates_who_received);
+        const total = Number(mainData?.election?.candidate_count);
+        if (!Number.isFinite(received) || !Number.isFinite(total) || total <= 0) return null;
+        return (received / total) * 100;
+      },
+      // O ciclo encerrado que serve de régua para o ano selecionado, ou null
+      // quando não existe par do MESMO tipo de eleição. Municipal já variou de
+      // 37,6% (2020) a 69,8% (2024), então comparar geral com municipal daria
+      // uma régua falsa: sem par, a linha simplesmente não aparece.
+      declarationBenchmark({ selectedYear } = this) {
+        const history = window.appDeclarationHistory;
+        const key = history?.benchmarkFor?.[String(selectedYear)];
+        const cycle = key ? history?.cycles?.[key] : null;
+        if (!cycle || !(cycle.candidates > 0)) return null;
+        return {
+          label: cycle.label,
+          percent: (cycle.received / cycle.candidates) * 100,
+        };
+      },
       countFemale({ mainData } = this) {
         return Number.parseInt(mainData?.big_numbers?.count_female, 10) || 0;
       },
