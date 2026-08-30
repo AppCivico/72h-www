@@ -563,6 +563,25 @@ if (window.location.href.indexOf('/') > -1) {
       },
     },
     async mounted() {
+      // A isca do Painel dos partidos (painelCta.js, script solto que roda
+      // em toda página) e o CTA "Aplicar novos filtros" ficam os dois
+      // fixos no mesmo canto: no celular a isca cobria exatamente o botão
+      // que o leitor acabou de pedir. Os dois componentes não se conhecem,
+      // então a ponte é uma classe no <body> — a isca sai enquanto o CTA
+      // estiver no ar e volta sozinha depois.
+      //
+      // Registrado aqui, e não no bloco `watch`: uma entrada declarativa
+      // para esta computada não chega a ser criada nesta app (as outras,
+      // sobre dados, funcionam), enquanto o $watch em tempo de execução
+      // dispara. Testado em tests/e2e/home-filtros.spec.mjs.
+      this.$watch(
+        'isFilterableChartOutdated',
+        (desatualizado) => {
+          document.body.classList.toggle('js-filters-stale', !!desatualizado);
+        },
+        { immediate: true },
+      );
+
       const cleanUri = `${window.location.protocol}//${window.location.host + window.location.pathname}`;
 
       await this.populateParams();

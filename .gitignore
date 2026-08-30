@@ -325,3 +325,12 @@ _to_delete/
 # 72h e um arquivo velho no repo viraria a versão publicada.
 /static/sitemap-candidatos.xml
 /static/sitemap-candidatos-*.xml
+
+# Playwright (relatórios e artefatos de execução dos testes E2E)
+/playwright-report/
+/test-results/
+/blob-report/
+/playwright/.cache/
+
+# Tarball temporário usado para rodar a suíte fora desta máquina
+/72h-source.tgz

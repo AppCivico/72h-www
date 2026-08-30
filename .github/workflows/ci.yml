@@ -1,0 +1,121 @@
+name: Testes
+
+# Roda em todo PR e em todo push para as duas branches que viram site:
+# `dev` (staging, dev.72horas.org) e `master` (produção). O objetivo é
+# simples: nada chega em produção sem que a suíte inteira tenha rodado.
+#
+# São dois jobs porque as camadas custam coisas diferentes. O primeiro é
+# de segundos e não precisa nem do Hugo; o segundo constrói o site e abre
+# um navegador. Separados, quem quebrou um lint sabe disso em 40 segundos.
+
+on:
+  pull_request:
+  push:
+    branches: [dev, master]
+
+concurrency:
+  group: testes-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Os mesmos do netlify.toml — testar com outra versão do Hugo é testar
+  # outro site.
+  HUGO_VERSION: '0.164.0'
+  DART_SASS_VERSION: '1.101.0'
+  NODE_VERSION: '22'
+
+jobs:
+  rapidos:
+    name: Lint, unidade e dados
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      # O ESLint bloqueia; o stylelint ainda tem ~138 apontamentos antigos
+      # no CSS (aspas, espaçamento) que ninguém zerou. Deixá-lo bloquear
+      # deixaria o CI vermelho desde o primeiro dia, e um CI que já está
+      # vermelho não avisa mais nada. Ele roda, aparece no log e não trava
+      # o merge — até alguém rodar `npx stylelint ... --fix` e trocar esta
+      # linha por um `run` normal.
+      - name: Lint do JS
+        run: npm run lint:es
+
+      - name: Lint do SCSS (informativo)
+        continue-on-error: true
+        run: npm run lint:sass
+
+      - name: Testes de unidade
+        run: npm run test:unit
+
+      - name: Testes de dados e i18n
+        run: npm run test:data
+
+      # O lint escreve relatório em testResults/; guardar ajuda a ler o
+      # erro sem reproduzir localmente.
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: relatorios-de-lint
+          path: testResults/
+          retention-days: 7
+
+  site:
+    name: Build, smoke e E2E
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Instalar Hugo extended
+        run: |
+          curl -sfLO "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz"
+          sudo tar -C /usr/local/bin -xf "hugo_extended_${HUGO_VERSION}_linux-amd64.tar.gz" hugo
+          hugo version
+
+      - name: Instalar Dart Sass
+        run: |
+          curl -sfLO "https://github.com/sass/dart-sass/releases/download/${DART_SASS_VERSION}/dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz"
+          tar -xf "dart-sass-${DART_SASS_VERSION}-linux-x64.tar.gz"
+          echo "$PWD/dart-sass" >> "$GITHUB_PATH"
+
+      # Sem prebuild: o sitemap de candidaturas e o painel dos partidos
+      # dependem da API e têm o seu próprio workflow. O build aqui é o do
+      # site em si — e ele PRECISA passar mesmo com a API fora do ar, que
+      # é o caminho que os testes de filtros cobrem.
+      - name: Construir o site
+        run: npm run site:for-tests
+
+      - name: Smoke do HTML publicado
+        run: npm run test:build
+
+      - name: Instalar o Chromium do Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: E2E (desktop, laptop e celular)
+        run: npm run test:e2e
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 7

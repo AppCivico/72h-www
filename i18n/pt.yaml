@@ -196,8 +196,6 @@
 - id: office
   one: "Cargo"
   other: "Cargos"
-- id: ofTotal
-  translation: "Do total"
 - id: oldInfo
   translation: "Os dados deste link não estão atualizados, esses dados são de:"
 - id: oldInfoUpdate

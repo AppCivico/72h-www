@@ -48,6 +48,15 @@
   &[hidden] {
     display: none;
   }
+
+  /// Enquanto os filtros da home estiverem desatualizados, o rodapé é do
+  /// botão "Aplicar novos filtros" — os dois são fixos no mesmo canto e no
+  /// celular esta faixa cobria o botão inteiro. A classe vem de home.js
+  /// (watch de isFilterableChartOutdated); em qualquer outra página ela
+  /// nunca aparece e a isca segue como sempre.
+  .js-filters-stale & {
+    display: none;
+  }
 }
 
 .painel-cta__link {

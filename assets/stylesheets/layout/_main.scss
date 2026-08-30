@@ -10,6 +10,14 @@
   width: 100%;
   max-width: 59rem;
   margin: 0 auto;
+
+  // As páginas editoriais (/imprensa/, /sobre-os-dados/) citam URLs
+  // inteiras como texto do link. Uma URL é uma palavra só de 90
+  // caracteres: sem quebrar, ela empurrava a página 103px para o lado no
+  // celular — a barra de rolagem horizontal aparecia no site inteiro.
+  a {
+    overflow-wrap: anywhere;
+  }
 }
 
 .filterable-area {

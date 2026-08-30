@@ -13,7 +13,11 @@
     {{ end }}
     <script type="application/ld+json">{{ dict "@context" "https://schema.org" "@graph" $graph | jsonify | safeJS }}</script>
   {{ end }}
-  {{ partial "siteNav.html" . }}
+  {{/* Sem yearSwitcher: estas páginas não montam nenhum app Vue, e o
+       seletor de ano vem com v-cloak — que nunca seria removido, deixando
+       o overlay de carregamento branco em cima do controle para sempre.
+       A mesma razão pela qual /candidato/ e /partidos/ já passavam false. */}}
+  {{ partial "siteNav.html" (dict "ctx" . "yearSwitcher" false) }}
 
   <main>
     <div class="container container--small">

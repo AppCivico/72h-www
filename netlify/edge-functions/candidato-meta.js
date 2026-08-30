@@ -146,9 +146,14 @@ export function injectMeta(html, meta) {
     /(<meta itemprop="description" content=")[^"]*(")/,
     `$1${escapeHtml(meta.description)}$2`,
   );
+  // O nome vem da API (que espelha o TSE), logo é entrada externa: um "<"
+  // literal dentro do JSON fecharia este <script> e jogaria o resto do
+  // <head> no corpo da página. \u003c e um JSON válido e inerte no HTML.
+  const structuredData = JSON.stringify(meta.jsonLd).replaceAll('<', '\\u003c');
+
   out = out.replace(
     '</head>',
-    `<script type="application/ld+json">${JSON.stringify(meta.jsonLd)}</script>\n</head>`,
+    `<script type="application/ld+json">${structuredData}</script>\n</head>`,
   );
 
   return out;

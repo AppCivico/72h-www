@@ -1,0 +1,67 @@
+{
+  "person": {
+    "id": 260327,
+    "name": "MÁRCIO FRANÇA"
+  },
+  "elections": [
+    {
+      "year": 2026,
+      "election_name": "Eleições 2026",
+      "candidate_id": 900001,
+      "total_value": "2853182.50",
+      "total_transfers": 5,
+      "party": {
+        "id": 25,
+        "acronym": "PSB",
+        "name": "Partido Socialista Brasileiro"
+      },
+      "position": {
+        "id": 6,
+        "name": "Deputado Federal"
+      },
+      "city": {
+        "id": 71072,
+        "name": "SÃO PAULO",
+        "region": {
+          "id": 24,
+          "name": "SÃO PAULO"
+        }
+      },
+      "race": {
+        "id": 1,
+        "name": "BRANCA"
+      },
+      "name": "MÁRCIO FRANÇA"
+    },
+    {
+      "year": 2022,
+      "election_name": "Eleições 2022",
+      "candidate_id": 800001,
+      "total_value": "1200000.00",
+      "total_transfers": 3,
+      "party": {
+        "id": 25,
+        "acronym": "PSB",
+        "name": "Partido Socialista Brasileiro"
+      },
+      "position": {
+        "id": 3,
+        "name": "Governador"
+      },
+      "city": {
+        "id": 71072,
+        "name": "SÃO PAULO",
+        "region": {
+          "id": 24,
+          "name": "SÃO PAULO"
+        }
+      },
+      "race": {
+        "id": 3,
+        "name": "PARDA"
+      },
+      "name": "MÁRCIO FRANÇA"
+    }
+  ],
+  "_fixture": "Resposta de /v1/people/{id}. Cada eleição traz o NOME DE URNA daquela candidatura (campo name) — candidato.js valida o slug da URL contra ele."
+}

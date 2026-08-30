@@ -1,0 +1,90 @@
+{
+  "_fixture": "Resposta de /v1/index?year=2026&days=all, com a forma medida na API real em 30/08/2026 e os números reduzidos à mão para caber num teste. Alterar aqui muda o que os E2E consideram 'a API certa'.",
+  "accumulated": {
+    "pie_charts": [
+      {
+        "type": "ethnicity",
+        "total": 2557048749.12,
+        "data": [
+          { "name": "Branca", "y": 1600000000 },
+          { "name": "Parda", "y": 620000000 },
+          { "name": "Preta", "y": 251311540.84 },
+          { "name": "Indígena", "y": 21037756.25 },
+          { "name": "Amarela", "y": 11563046.05 }
+        ]
+      },
+      {
+        "type": "gender",
+        "total": 2557048749.12,
+        "data": [
+          { "name": "Masculino", "y": 1773448919.48 },
+          { "name": "Feminino", "y": 783599829.64 }
+        ]
+      },
+      {
+        "type": "party",
+        "total": 2557048749.12,
+        "data": [
+          { "name": "PL", "y": 500000000 },
+          { "name": "PT", "y": 420000000 },
+          { "name": "PSB", "y": 180000000 }
+        ]
+      }
+    ],
+    "total_candidates_crowdfunding": "0",
+    "total_candidates_direct_donation": "0",
+    "total_candidates_other_resources": "4848",
+    "total_candidates_party_fund": "979",
+    "total_candidates_self_funding": "0",
+    "total_candidates_special_fund": "6491",
+    "total_candidates_who_received": "9203",
+    "total_transfers": "27310",
+    "total_value": "2557048749.12",
+    "transfers_crowdfunding": "0",
+    "transfers_direct_donation": "0",
+    "transfers_other_resources": "18110",
+    "transfers_party_fund": "2163",
+    "transfers_self_funding": "0",
+    "transfers_special_fund": "7037",
+    "value_crowdfunding": "0",
+    "value_direct_donation": "0",
+    "value_other_resources": "189761509.08",
+    "value_party_fund": "81730344.91",
+    "value_self_funding": "0",
+    "value_special_fund": "2285556895.13"
+  },
+  "big_numbers": {
+    "amount_female": "783599829.64",
+    "amount_male": "1773448919.48",
+    "count_all": "9203",
+    "count_female": "3140",
+    "count_male": "6063",
+    "total_amount": "2557048749.12"
+  },
+  "chart": {
+    "2026-08-20": { "F": "1000000", "M": "2500000" },
+    "2026-08-21": { "F": "1500000", "M": "3200000" },
+    "2026-08-22": { "F": "2200000", "M": "4100000" },
+    "2026-08-23": { "F": "3000000", "M": "5300000" },
+    "2026-08-24": { "F": "4100000", "M": "7000000" },
+    "2026-08-25": { "F": "5200000", "M": "9100000" },
+    "2026-08-26": { "F": "6400000", "M": "11800000" },
+    "2026-08-27": { "F": "7700000", "M": "14200000" },
+    "2026-08-28": { "F": "9000000", "M": "17000000" },
+    "2026-08-29": { "F": "10500000", "M": "20500000" }
+  },
+  "election": {
+    "candidate_count": 20805,
+    "end_at": null,
+    "id": 20322002026,
+    "is_active": true,
+    "name": "Eleição Geral Federal 2026",
+    "start_at": null,
+    "type": "general",
+    "uses_region_as_city": true
+  },
+  "epoch": 1788114242,
+  "is_outdated": false,
+  "last_run_at": "2026-08-30 14:45:56.74642",
+  "now": "2026-08-30T15:24:02"
+}
