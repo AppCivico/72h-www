@@ -414,6 +414,14 @@
   translation: "%s lidera a declaração de recebimento de recursos"
 - id: chartTitleStateFlagged
   translation: "%s concentra a maior fatia do valor total"
+# Botão de expandir os recortes com muitas categorias. O número entre as duas
+# metades é quantas barras estão fora, para o leitor decidir se vale abrir.
+- id: chartShowAllBefore
+  translation: "Ver os"
+- id: chartShowAllAfter
+  translation: "restantes"
+- id: chartShowFewer
+  translation: "Ver menos"
 - id: chartSubtitleValue
   translation: "Valor acumulado declarado ao TSE"
 - id: ethnicityBenchmark
@@ -992,6 +1000,15 @@
   translation: "Prestação de contas é declaração, e um dígito a mais explica números como este. O 72horas mostra o que o TSE publica e sinaliza o que não fecha, sem alterar o dado."
 - id: implausibleBigNumberLead
   translation: "Inclui"
+# Mostrada quando as fatias destes recortes não somam o total que a própria
+# API declara para eles. Nesse estado as manchetes nomeiam a maior fatia e não
+# afirmam porcentagem, porque a distorção observada não é de escala e sim de
+# forma: em 30/08/2026 cor/raça Branca inflava 2,14 vez e Preta 1,17, então a
+# proporção entre as fatias também não se sustenta.
+- id: chartsDoNotCloseLead
+  translation: "Os valores abaixo não fecham com o total declarado para este recorte."
+- id: chartsDoNotCloseTail
+  translation: "Enquanto não fecharem, os títulos nomeiam a maior fatia mas não afirmam porcentagem, e as barras devem ser lidas como ordem de grandeza, não como proporção exata. O número grande no topo da página, esse sim, fecha. Estamos apurando com a origem dos dados."
 - id: implausibleIntroChartsTail
   translation: "segue somado nestes gráficos. É um valor declarado acima de três vezes o teto legal de gastos do cargo, provável dígito a mais na prestação de contas. A listagem não informa a cor/raça nem o gênero de quem declarou, então não dá para descontá-lo da fatia certa: enquanto ele estiver no total, infla a maior fatia de cada recorte. Leia as porcentagens abaixo com essa ressalva."
 - id: implausibleBigNumberTail

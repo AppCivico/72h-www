@@ -16,9 +16,16 @@ import chartTheme, {
 import { liveHtml, liveText } from './directives/liveValue';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
+import quotaSummary from './utilities/quotaSummary';
 import { FEFC_TOTALS, QUOTA_DEADLINES } from './utilities/electoralFund';
 import { implausibleValue } from './utilities/implausibleValue';
 import personUrl from './utilities/personUrl';
+
+// Quantas barras um recorte mostra antes de precisar de "ver todos". Dez cabem
+// numa tela sem rolagem e já contêm quem decide a leitura; a cauda de partidos
+// com fração de ponto percentual empurrava o resto da página para baixo sem
+// dizer nada que a lista completa não diga melhor.
+const INTRO_CHART_ROWS = 10;
 
 dayjs.extend(duration);
 dayjs.locale('pt-br');
@@ -98,6 +105,10 @@ if (window.location.href.indexOf('/') > -1) {
         dataError: false,
         hasBuildFigures: document.querySelector('#vueHome')?.dataset.hasBuildFigures === 'true',
         introCharts: [],
+        // Recortes de "O que os dados mostram" expandidos, por tipo. Só o de
+        // partido passa do teto hoje (28 legendas em 2026), mas a lógica é por
+        // tipo para não virar um caso especial escondido.
+        expandedCharts: {},
         explainerOpen: false,
         pieColors: [
           '#dc5b64',
@@ -308,6 +319,42 @@ if (window.location.href.indexOf('/') > -1) {
           label: cycle.label,
           percent: (cycle.received / cycle.candidates) * 100,
         };
+      },
+      // Os recortes de "O que os dados mostram" não fecham com o total que a
+      // própria API declara para eles. Enquanto não fecharem, a tela não pode
+      // afirmar porcentagem em cima deles: a distorção não é de escala, é de
+      // forma (em 30/08/2026, cor/raça Branca inflava 2,14 vez e Preta 1,17),
+      // então nem a fatia nem a proporção entre fatias se sustentam.
+      //
+      // A régua é folgada de propósito. Diferença de centavos é arredondamento
+      // da API e não deve calar a tela; o que este guarda existe para pegar é a
+      // ordem de grandeza.
+      introChartsDoNotClose({ introCharts } = this) {
+        const charts = Array.isArray(introCharts) ? introCharts : [];
+
+        return charts.some((chart) => {
+          const declared = Number(chart?.apiTotal) || 0;
+          const summed = Number(chart?.total) || 0;
+          if (declared <= 0 || summed <= 0) return false;
+          return Math.abs(summed - declared) / declared > 0.01;
+        });
+      },
+      // Quantas barras deste recorte estão fora da tela dobrada, ou 0 quando
+      // ele cabe inteiro. O template usa para decidir se mostra o botão e para
+      // dizer quantas faltam, em vez de um "ver mais" que não diz o tamanho.
+      hiddenRows() {
+        const map = {};
+        (Array.isArray(this.introCharts) ? this.introCharts : []).forEach((chart) => {
+          const extra = (chart?.data?.length || 0) - INTRO_CHART_ROWS;
+          map[chart.type] = this.expandedCharts[chart.type] || extra <= 0 ? 0 : extra;
+        });
+        return map;
+      },
+      quotaCall() {
+        return quotaSummary(
+          window.appQuotaParties,
+          window.appCandidacies?.parties,
+        );
       },
       countFemale({ mainData } = this) {
         return Number.parseInt(mainData?.big_numbers?.count_female, 10) || 0;
@@ -854,6 +901,11 @@ if (window.location.href.indexOf('/') > -1) {
 
         newItem.data = Array.isArray(newItem.data) ? newItem.data : [];
         newItem.chartType = 'bar';
+        // A API manda um campo `total` junto com as fatias. Guardamos ANTES de
+        // sobrescrever, porque a divergência entre os dois é hoje o único sinal
+        // automático de que este recorte não fecha: em 30/08/2026 as fatias
+        // somavam 1,76 vez o total que a própria resposta declarava.
+        newItem.apiTotal = Number.parseFloat(newItem.total) || 0;
         newItem.total = newItem.data.reduce((sum, point) => sum + (point.y || 0), 0);
 
         newItem.data.sort((a, b) => b.y - a.y);
@@ -934,11 +986,13 @@ if (window.location.href.indexOf('/') > -1) {
           return fallback;
         }
 
-        // Com valor implausível dentro do recorte, a manchete nomeia a maior
-        // fatia mas não crava a porcentagem. Quem está no topo resiste ao
-        // desconto (o PL lidera com ou sem o valor); o número não resiste, e
-        // era ele que a frase afirmava. A ressalva acima do bloco diz por quê.
-        const flagged = this.flaggedTotal > 0;
+        // Duas razões para a manchete nomear a maior fatia sem cravar a
+        // porcentagem, e o mesmo remédio serve às duas: valor implausível
+        // dentro do recorte, ou recorte que não fecha com o total declarado
+        // pela API. Nos dois casos quem está no topo resiste (o PL lidera com
+        // ou sem o valor implausível, e cor/raça Branca lidera nas duas bases);
+        // o número não resiste, e era ele que a frase afirmava.
+        const flagged = this.flaggedTotal > 0 || this.introChartsDoNotClose;
         const template = flagged
           ? (templates.flagged || {})[chart.type]
           : templates[chart.type];
@@ -1437,6 +1491,10 @@ if (window.location.href.indexOf('/') > -1) {
         });
         return true;
       },
+      toggleChartRows(type) {
+        this.expandedCharts = { ...this.expandedCharts, [type]: !this.expandedCharts[type] };
+        this.generateIntroCharts();
+      },
       generateIntroCharts() {
         this.introCharts.forEach((chart) => {
           if (!Array.isArray(chart.data) || !chart.data.length) {
@@ -1444,11 +1502,23 @@ if (window.location.href.indexOf('/') > -1) {
           }
 
           const label = window.appDictionary[chart.type];
+          // O total continua sendo o do recorte INTEIRO, mesmo quando só dez
+          // barras aparecem: as porcentagens têm que ser fatias do todo, senão
+          // recolher a lista mudaria os números de quem ficou visível.
           const total = chart.total
             || chart.data.reduce((sum, point) => sum + (point.y || 0), 0);
           const headline = this.chartHeadline(chart, total, label);
+
+          const allCategories = chart.xAxis?.categories || [];
+          const collapsed = chart.data.length > INTRO_CHART_ROWS
+            && !this.expandedCharts[chart.type];
+          const data = collapsed ? chart.data.slice(0, INTRO_CHART_ROWS) : chart.data;
+          const categories = collapsed
+            ? allCategories.slice(0, INTRO_CHART_ROWS)
+            : allCategories;
+
           // one row per category, plus room for the title block
-          const height = 132 + (chart.data.length * 38);
+          const height = 132 + (data.length * 38);
           const containerId = `js-chart__${chart.type}`;
 
           // no-param-reassign: same alias-the-parameter workaround already
@@ -1464,7 +1534,7 @@ if (window.location.href.indexOf('/') > -1) {
               marginRight: 24,
             },
             xAxis: {
-              categories: chart.xAxis?.categories || [],
+              categories,
               lineWidth: 0,
               tickWidth: 0,
               labels: {
@@ -1532,7 +1602,7 @@ if (window.location.href.indexOf('/') > -1) {
             },
             series: [{
               name: label,
-              data: chart.data,
+              data,
               showInLegend: false,
             }],
           });

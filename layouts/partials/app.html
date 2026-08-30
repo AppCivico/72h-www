@@ -206,6 +206,16 @@
                    comparação logo abaixo emparelham a fatia com o Censo e com
                    o piso de 30%, e um número inflado nessa vizinhança vira
                    achado. */}}
+              {{/* Quando os recortes não fecham com o total que a própria API
+                   declara para eles, as manchetes perdem a porcentagem (ver
+                   chartHeadline em home.js) e esta nota diz por quê. Sem ela o
+                   leitor veria títulos que só nomeiam a maior fatia e não
+                   entenderia a mudança. */}}
+              <p class="implausible-note" v-if="introChartsDoNotClose" v-cloak>
+                <strong>{{ i18n "chartsDoNotCloseLead" }}</strong>
+                {{ i18n "chartsDoNotCloseTail" }}
+              </p>
+
               <p class="implausible-note" v-if="flaggedTotal > 0" v-cloak>
                 {{/* strong e span na MESMA linha de propósito: o compilador de
                      template do Vue descarta nó de texto que só tem espaço em
@@ -227,6 +237,27 @@
                        the population it should mirror, or the share the
                        law requires. Wording lives in i18n so it can be
                        updated when the reference data changes. */}}
+                  {{/* "Ver todos" em vez de rolar 28 barras. O rótulo diz
+                       quantas faltam, porque "ver mais" não informa o tamanho
+                       do que está escondido e o leitor não consegue decidir se
+                       vale a pena abrir. */}}
+                  <button
+                    v-if="hiddenRows[chart.type] > 0"
+                    type="button"
+                    class="chart-expand"
+                    :aria-expanded="expandedCharts[chart.type] ? 'true' : 'false'"
+                    @click="toggleChartRows(chart.type)">
+                    {{ i18n "chartShowAllBefore" }} <span v-text="hiddenRows[chart.type]"></span> {{ i18n "chartShowAllAfter" }}
+                  </button>
+                  <button
+                    v-else-if="expandedCharts[chart.type]"
+                    type="button"
+                    class="chart-expand"
+                    aria-expanded="true"
+                    @click="toggleChartRows(chart.type)">
+                    {{ i18n "chartShowFewer" }}
+                  </button>
+
                   <p class="chart-benchmark" v-if="chart.type === 'ethnicity'">{{ i18n "ethnicityBenchmark" }}</p>
                   <p class="chart-benchmark" v-if="chart.type === 'gender'">{{ i18n "genderBenchmark" }}</p>
 

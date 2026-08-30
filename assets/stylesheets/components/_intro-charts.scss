@@ -111,6 +111,28 @@
   content: ' \2192';
 }
 
+/// Botão de expandir do recorte: discreto, alinhado com o texto do card, e
+/// nunca competindo com o CTA da cota logo abaixo.
+.chart-expand {
+  padding: 0;
+  margin-top: 0.75rem;
+
+  font-family: inherit;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--brand);
+
+  cursor: pointer;
+
+  background: none;
+  border: 0;
+}
+
+.chart-expand:hover,
+.chart-expand:focus-visible {
+  text-decoration: underline;
+}
+
 .chart-benchmark {
   padding-top: 0.75rem;
   margin-top: 0.75rem;
