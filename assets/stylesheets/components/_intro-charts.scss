@@ -78,6 +78,39 @@
 
 /// Comparison note: what the distribution should be measured against
 /// (population share, legal minimum). Sits under its own figure.
+/// Chamada da cota sob o card de gênero: mesma família visual do benchmark
+/// logo acima, sem a régua de topo, para os dois lerem como uma coisa só.
+.quota-call {
+  margin-top: 0.5rem;
+}
+
+.quota-call__text {
+  margin: 0;
+
+  font-size: var(--t-xs);
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+
+.quota-call__text strong {
+  font-variant-numeric: lining-nums;
+  color: var(--ink);
+}
+
+.quota-call__cta {
+  display: inline-block;
+
+  margin-top: 0.5rem;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.quota-call__cta::after {
+  content: ' \2192';
+}
+
 .chart-benchmark {
   padding-top: 0.75rem;
   margin-top: 0.75rem;

@@ -86,6 +86,18 @@
   window.appDeclarationHistory = {{ $.Site.Data.declaracaoHistorico | jsonify | safeJS }};
   window.appHeroLead = '{{ i18n "heroHeadlineBefore" }}';
 
+  {{/* Chamada da cota de gênero no card de gênero da home. Vai só a projeção
+       que a conta usa (sigla, FEFC declarado, parcela feminina), não o
+       partyPanel.json inteiro, que carrega série diária por partido e pesa
+       dez vezes mais. A tabela de candidaturas vem junto porque é dela que
+       sai o piso proporcional de cada partido. */}}
+  {{- $quotaRows := slice -}}
+  {{- range (site.Data.partyPanel.parties | default slice) -}}
+    {{- $quotaRows = $quotaRows | append (dict "acronym" .acronym "name" .name "fefc" (dict "total" .fefc.total "female" .fefc.female)) -}}
+  {{- end -}}
+  window.appQuotaParties = {{ $quotaRows | jsonify | safeJS }};
+  {{ with site.Data.candidaturas2026 }}window.appCandidacies = {{ . | jsonify | safeJS }};{{ end }}
+
   window.appChartTitles = {
     "ethnicity": '{{ i18n "chartTitleEthnicity" }}',
     "gender": '{{ i18n "chartTitleGender" }}',

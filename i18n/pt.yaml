@@ -185,6 +185,28 @@
 # Nunca afirmar que não houve repasse quando a própria página mostra que houve.
 - id: listingUnavailable
   translation: "Não foi possível carregar a listagem agora. Os números acima seguem válidos: este recorte tem candidaturas com repasse declarado."
+# Chamada da cota de gênero, sob o card de gênero da home. Dois estados, e o
+# número que decide qual deles aparece vem do painel dos partidos (FEFC).
+# A linguagem é deliberadamente "abaixo do piso até aqui": prestação de contas
+# ainda não aconteceu e o repasse pode continuar, então nada aqui afirma
+# descumprimento.
+# Duas réguas diferentes, e a distinção não é preciosismo: 30% é o mínimo
+# legal, e o piso de cada partido é proporcional às candidaturas de mulheres
+# que ele registrou. Um partido pode estar acima dos 30% e abaixo do próprio
+# piso (o PT, em 30/08/2026, estava em 32,4% com piso de 36,8%), então as
+# frases nunca podem usar os dois termos como sinônimos.
+- id: quotaBelowLead
+  translation: "No Fundo Eleitoral, os partidos declararam repassar"
+- id: quotaBelowTail
+  translation: "às candidaturas de mulheres, abaixo do mínimo de 30% até aqui. Os que mais pesam nessa diferença:"
+- id: quotaMetLead
+  translation: "No Fundo Eleitoral, os partidos já declararam repassar"
+- id: quotaMetMiddle
+  translation: "às candidaturas de mulheres, acima do mínimo de 30%. Ainda assim,"
+- id: quotaMetTail
+  translation: "partidos com volume relevante estão abaixo do piso proporcional às próprias candidatas. Puxam o conjunto para cima:"
+- id: quotaCta
+  translation: "Ver partido a partido"
 - id: noResultsCandidates
   translation: "Não há repasses para candidaturas com este perfil de busca"
 - id: noElectionHistory

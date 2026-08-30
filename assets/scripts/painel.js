@@ -5,36 +5,25 @@ import formatNumeral from './utilities/formatNumeral';
 import { QUOTA_DEADLINES } from './utilities/electoralFund';
 import watchMainMenu from './menuToggle';
 import watchHeaderCondense from './components/headerCondense';
+import { RANKING_FLOOR, FLOOR_SHARE, foldAcronym } from './utilities/quotaSummary';
 
 // Same reason as candidato.js: this page loads its own lean bundle instead of
 // scripts.html, so the shared menu needs wiring here too.
 watchMainMenu();
 watchHeaderCondense();
 
-// Below this much Fundo Eleitoral declared as received, the percentages still
-// reflect a handful of transfers and may not represent how the party will
-// distribute money over the campaign, so those parties go to the "quase nada
-// distribuído" list instead. Mirrors RANKING_FLOOR in scripts/partyPanel.mjs
-// -- change both together.
-const RANKING_FLOOR = 250000;
-
-// O piso fixo, em pontos percentuais: 30% do Fundo Eleitoral para
-// candidaturas de pessoas pretas e pardas (art. 17, § 9º, da Constituição),
-// independentemente de quantas candidaturas negras o partido tenha. Para
-// mulheres, 30% é só o mínimo: a obrigação acompanha a proporção de
-// candidatas do partido (art. 17, § 8º), e é ela que vale abaixo.
-const FLOOR_SHARE = 30;
-
-// Normaliza sigla para casar nossa tabela de partidos com a do TSE
-// ("PC do B" vs "PCDOB", caixa, acento). Gêmeo de foldAcronym em
-// scripts/partyPanel.mjs -- se um mudar, mude o outro.
-function foldAcronym(value) {
-  return String(value || '')
-    .normalize('NFD')
-    .replace(/\p{M}/gu, '')
-    .replace(/[^a-z0-9]/gi, '')
-    .toLowerCase();
-}
+// A régua (RANKING_FLOOR, FLOOR_SHARE, foldAcronym) mora em
+// utilities/quotaSummary.js, que a home também usa para a chamada da cota no
+// card de gênero. Antes eram duas cópias com um comentário pedindo "mude os
+// dois juntos"; uma terceira, na home, seria a garantia de divergirem. O
+// gêmeo restante é scripts/partyPanel.mjs, que roda no build e não pode
+// importar de assets/.
+//
+// Sobre FLOOR_SHARE: são 30% do Fundo Eleitoral para candidaturas de pessoas
+// pretas e pardas (art. 17, § 9º, da Constituição), independentemente de
+// quantas candidaturas negras o partido tenha. Para mulheres, 30% é só o
+// mínimo: a obrigação acompanha a proporção de candidatas do partido
+// (art. 17, § 8º), e é ela que vale abaixo.
 
 // Piso proporcional de mulheres por partido, calculado das candidaturas
 // registradas e divulgadas pelo TSE. Ausente = partido fora daquela tabela

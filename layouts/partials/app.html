@@ -229,6 +229,31 @@
                        updated when the reference data changes. */}}
                   <p class="chart-benchmark" v-if="chart.type === 'ethnicity'">{{ i18n "ethnicityBenchmark" }}</p>
                   <p class="chart-benchmark" v-if="chart.type === 'gender'">{{ i18n "genderBenchmark" }}</p>
+
+                  {{/* A cota é uma pergunta sobre os FUNDOS, e a barra acima
+                       mede todos os recursos declarados. Por isso a chamada
+                       diz "no Fundo Eleitoral" na primeira palavra: sem isso,
+                       os dois números pareceriam responder à mesma coisa e
+                       discordar. Os dois estados e os nomes saem de
+                       quotaCall (home.js), que lê o mesmo partyPanel.json do
+                       painel; nenhum número é escrito à mão aqui. */}}
+                  <div class="quota-call" v-if="chart.type === 'gender' && quotaCall" v-cloak>
+                    <p class="quota-call__text" v-if="!quotaCall.meetsFloor">
+                      {{ i18n "quotaBelowLead" }}
+                      <strong v-text="formatPercent(quotaCall.share)"></strong>
+                      {{ i18n "quotaBelowTail" }}
+                      <strong v-text="quotaCall.worst.join(', ')"></strong>.
+                    </p>
+                    <p class="quota-call__text" v-else>
+                      {{ i18n "quotaMetLead" }}
+                      <strong v-text="formatPercent(quotaCall.share)"></strong>
+                      {{ i18n "quotaMetMiddle" }}
+                      <strong v-text="`${quotaCall.belowCount} dos ${quotaCall.ranked}`"></strong>
+                      {{ i18n "quotaMetTail" }}
+                      <strong v-text="quotaCall.best.join(', ')"></strong>.
+                    </p>
+                    <a class="quota-call__cta" href="/partidos/painel/">{{ i18n "quotaCta" }}</a>
+                  </div>
                 </div>
               </template>
               <div v-else-if="!loadingIntroCharts" class="no-results">
