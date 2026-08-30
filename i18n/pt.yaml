@@ -180,6 +180,11 @@
   translation: "Próximo →"
 - id: noResults
   translation: "Sem resultados"
+# Usada quando a listagem volta vazia mas os números grandes do MESMO recorte
+# contam candidaturas: aí o vazio é falha de carga, não ausência de repasse.
+# Nunca afirmar que não houve repasse quando a própria página mostra que houve.
+- id: listingUnavailable
+  translation: "Não foi possível carregar a listagem agora. Os números acima seguem válidos: este recorte tem candidaturas com repasse declarado."
 - id: noResultsCandidates
   translation: "Não há repasses para candidaturas com este perfil de busca"
 - id: noElectionHistory

@@ -97,8 +97,6 @@ if (window.location.href.indexOf('/') > -1) {
         mainData: null,
         dataError: false,
         hasBuildFigures: document.querySelector('#vueHome')?.dataset.hasBuildFigures === 'true',
-        epochFromParam: null,
-        useEpoch: false,
         introCharts: [],
         explainerOpen: false,
         pieColors: [
@@ -147,9 +145,6 @@ if (window.location.href.indexOf('/') > -1) {
         set(value) {
           this.mainData.is_outdated = value;
         },
-      },
-      epoch() {
-        return this.mainData?.epoch;
       },
       states() {
         return this.filters.regions?.sort((a, b) => a.name.localeCompare(b.name)) || [];
@@ -259,6 +254,27 @@ if (window.location.href.indexOf('/') > -1) {
       },
       countAll({ mainData } = this) {
         return Number.parseInt(mainData?.big_numbers?.count_all, 10) || 0;
+      },
+      // Uma listagem vazia significa duas coisas muito diferentes, e a tela
+      // precisa distingui-las: ou o recorte realmente não tem repasse, ou a
+      // listagem falhou enquanto o resto da página carregou bem. Os números
+      // grandes respondem aos MESMOS filtros que a listagem, então servem de
+      // testemunha: se eles contam candidaturas e a lista voltou vazia, dizer
+      // "não há repasses" seria afirmar o contrário do que a própria página
+      // mostra alguns centímetros acima.
+      //
+      // Não é hipótese: foi exatamente o que o parâmetro `epoch` provocou. O
+      // /index o ignorava e devolvia os números certos, o /candidates o
+      // honrava e devolvia [], e a tela anunciava "não há repasses" com 98
+      // candidaturas no card de cima. Num site de transparência, afirmar que
+      // não houve repasse quando houve é o pior modo de falha disponível.
+      // O epoch saiu, mas o guarda fica: ele vale para qualquer divergência
+      // futura entre os dois endpoints.
+      listingUnavailable({ candidates, countAll, loadingCandidates } = this) {
+        if (loadingCandidates) return false;
+        if (!candidates || !Array.isArray(candidates.candidates)) return false;
+        if (candidates.candidates.length > 0) return false;
+        return countAll > 0;
       },
       countFemale({ mainData } = this) {
         return Number.parseInt(mainData?.big_numbers?.count_female, 10) || 0;
@@ -478,10 +494,6 @@ if (window.location.href.indexOf('/') > -1) {
               : `&city_id=${this.selectedCity}`;
           }
         }
-        if (this.useEpoch) {
-          mountedURL += `&epoch=${this.epoch}`;
-        }
-
         return mountedURL;
       },
     },
@@ -564,7 +576,6 @@ if (window.location.href.indexOf('/') > -1) {
         const reelection = params.get('reelection');
         const rangeOfVotes = params.get('votes');
         const days = params.get('days');
-        const epoch = Number(params.get('epoch') || 0);
 
         if (regionId?.length && this.filters.regions) {
           this.selectedState = this.filters.regions
@@ -606,10 +617,6 @@ if (window.location.href.indexOf('/') > -1) {
         if (days) {
           this.selectedDay = days;
         }
-        if (epoch) {
-          this.epochFromParam = Number(params.get('epoch'));
-        }
-
         // Pagination links carry a real ?page= now (crawlable anchors);
         // honouring it on load is what makes those URLs mean something.
         const page = Number.parseInt(params.get('page') || '1', 10);
@@ -696,7 +703,6 @@ if (window.location.href.indexOf('/') > -1) {
       },
       handleData() {
         const entries = typeof this.mainData?.chart === 'object' ? Object.entries(this.mainData.chart) : [];
-        // this.epoch = this.mainData.epoch;
 
         const totalArray = [];
         const maleArray = [];
@@ -1046,11 +1052,7 @@ if (window.location.href.indexOf('/') > -1) {
           config.api.timeoutMs,
         );
 
-        let url = `${config.api.domain}index?year=${this.selectedYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
-
-        if (this.epochFromParam) {
-          url += `&epoch=${this.epochFromParam}`;
-        }
+        const url = `${config.api.domain}index?year=${this.selectedYear}&days=${this.selectedDay}${this.filtersAsQueryString}`;
 
         fetch(url, {
           method: 'GET',
@@ -1121,10 +1123,6 @@ if (window.location.href.indexOf('/') > -1) {
         let url = `${config.api.domain}candidates?year=${this.selectedYear}&results=9&days=${this.selectedDay}`
           + `&order_by=${config.api.candidatesOrderBy}&order=${config.api.candidatesOrder}`
           + `${this.filtersAsQueryString}`;
-
-        if (this.epochFromParam) {
-          url += `&epoch=${this.epochFromParam}`;
-        }
 
         if (page) {
           url += `&page=${page}`;

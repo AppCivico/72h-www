@@ -562,6 +562,21 @@
                         </div>
                       </div>
                     </template>
+                    {{/* Lista vazia com os números grandes contando
+                         candidaturas não é "não há repasses": é a listagem
+                         falhando enquanto o resto da página carregou. Ver
+                         listingUnavailable em home.js. */}}
+                    <div
+                      v-else-if="listingUnavailable"
+                      class="no-results no-results--candidates"
+                      v-cloak>
+                      <img src="/assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
+                      <p>{{ i18n "listingUnavailable" }}</p>
+                      <button
+                        type="button"
+                        class="button"
+                        @click="getCandidates()">{{ i18n "tryAgain" }}</button>
+                    </div>
                     <div
                       v-else
                       class="no-results no-results--candidates">
@@ -625,17 +640,15 @@
           <div class="modal micromodal-slide share-modal" id="js-share-modal" aria-hidden="true" v-cloak>
             <div class="modal__overlay" tabindex="-1" data-micromodal-close>
               <div class="modal__container" role="dialog" aria-modal="true" aria-labelledby="share-modal-title">
+                {{/* Aqui havia uma opção de "compartilhar os dados desta data",
+                     que acrescentava &epoch=<carimbo> ao link. O /index ignorava
+                     esse parâmetro e o /candidates o honrava devolvendo lista
+                     vazia, então todo link gerado com a opção marcada abria uma
+                     página que anunciava "não há repasses" logo abaixo do número
+                     que dizia o contrário. A opção saiu junto com o parâmetro.
+                     Para voltar, ela precisa de um id de snapshot que a API
+                     reconheça nos DOIS endpoints, nunca de um carimbo de tempo. */}}
                 {{ partial "shareModal.html" . }}
-                <footer class="modal__footer share-modal__footer">
-                  <label for="share-date">
-                    <input
-                      v-model="useEpoch"
-                      type="checkbox"
-                      name="time"
-                      id="share-date">
-                      {{ i18n "shareDataFrom" }} <span v-if="mainData">{{ "{{ epochToHuman(mainData.epoch) }}" }}</span>
-                  </label>
-                </footer>
               </div>
             </div>
           </div>
