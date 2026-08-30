@@ -1,0 +1,31 @@
+{
+  "_source": "API 72horas, /v1/index?year=<ano>&days=all, lido em 2026-08-30",
+  "_note": "Ciclos encerrados: a proporção de candidaturas que declararam recebimento não muda mais, então vive aqui em vez de custar uma segunda requisição na home só para uma linha de contexto. As porcentagens NÃO são escritas à mão: guardamos as contagens e quem divide é o template. Para atualizar, releia os dois campos na API do ano correspondente.",
+  "_comparabilidade": "Só compare ciclos do mesmo tipo. Municipal com municipal já variou de 37,6% (2020) a 69,8% (2024), então cruzar geral com municipal produziria uma régua falsa. Por isso benchmarkFor mapeia geral para geral e municipal para municipal, e um ano sem par simplesmente não mostra a linha.",
+  "_heroLeadMaxPercent": "Abaixo deste percentual a manchete da home abre com heroHeadlineBefore (\"Só\"); daí para cima a palavra sai e a frase começa no número. O advérbio só descreve bem um número baixo, e este sobe durante toda a campanha: na eleição geral de 2022 fechou em 83,7%.",
+  "heroLeadMaxPercent": 40,
+  "cycles": {
+    "2020": {
+      "label": "eleição municipal de 2020",
+      "type": "municipal",
+      "received": 210037,
+      "candidates": 558889
+    },
+    "2022": {
+      "label": "eleição geral de 2022",
+      "type": "general",
+      "received": 24544,
+      "candidates": 29310
+    },
+    "2024": {
+      "label": "eleição municipal de 2024",
+      "type": "municipal",
+      "received": 324010,
+      "candidates": 464239
+    }
+  },
+  "benchmarkFor": {
+    "2024": "2020",
+    "2026": "2022"
+  }
+}
