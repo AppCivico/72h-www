@@ -19,6 +19,12 @@ import formatNumeral from './utilities/formatNumeral';
 import quotaSummary from './utilities/quotaSummary';
 import { FEFC_TOTALS, QUOTA_DEADLINES } from './utilities/electoralFund';
 import { implausibleValue } from './utilities/implausibleValue';
+import {
+  FALLBACK_RACES,
+  fundGroupIds,
+  introBreakdownRequests,
+  shapeIntroBreakdowns,
+} from './utilities/introBreakdowns';
 import personUrl from './utilities/personUrl';
 
 // Quantas barras um recorte mostra antes de precisar de "ver todos". Dez cabem
@@ -109,6 +115,20 @@ if (window.location.href.indexOf('/') > -1) {
         // partido passa do teto hoje (28 legendas em 2026), mas a lógica é por
         // tipo para não virar um caso especial escondido.
         expandedCharts: {},
+        // Tipo de financiamento dos recortes de gênero e cor/raça em "O que
+        // os dados mostram": 'all' | 'fefc' | 'fp' | 'others'. O recorte de
+        // partido não responde a ele (segue no pie_charts, todos os tipos).
+        selectedIntroFund: 'all',
+        // Gênero e cor/raça montados dos big_numbers FILTRADOS — a mesma
+        // base do /partidos/painel/ e da chamada da cota, então os números
+        // desta seção e o "31,55%" do texto respondem à mesma conta.
+        // Ver utilities/introBreakdowns.js.
+        introBreakdowns: [],
+        // O que sobra do accumulated.pie_charts (partido; estado, se vier):
+        // ainda a fonte antiga, com a ressalva de não fechar restrita a ela.
+        partyIntroCharts: [],
+        loadingIntroBreakdowns: false,
+        introFundError: false,
         explainerOpen: false,
         pieColors: [
           '#dc5b64',
@@ -320,24 +340,21 @@ if (window.location.href.indexOf('/') > -1) {
           percent: (cycle.received / cycle.candidates) * 100,
         };
       },
-      // Os recortes de "O que os dados mostram" não fecham com o total que a
-      // própria API declara para eles. Enquanto não fecharem, a tela não pode
-      // afirmar porcentagem em cima deles: a distorção não é de escala, é de
-      // forma (em 30/08/2026, cor/raça Branca inflava 2,14 vez e Preta 1,17),
-      // então nem a fatia nem a proporção entre fatias se sustentam.
-      //
-      // A régua é folgada de propósito. Diferença de centavos é arredondamento
-      // da API e não deve calar a tela; o que este guarda existe para pegar é a
-      // ordem de grandeza.
-      introChartsDoNotClose({ introCharts } = this) {
-        const charts = Array.isArray(introCharts) ? introCharts : [];
-
-        return charts.some((chart) => {
-          const declared = Number(chart?.apiTotal) || 0;
-          const summed = Number(chart?.total) || 0;
-          if (declared <= 0 || summed <= 0) return false;
-          return Math.abs(summed - declared) / declared > 0.01;
-        });
+      // Chips do tipo de financiamento. Os rótulos vêm do i18n via
+      // scripts.html (window.appFundGroups); as chaves são as que
+      // fundGroupIds (introBreakdowns.js) entende.
+      introFundOptions() {
+        const labels = window.appFundGroups || {};
+        return ['all', 'fefc', 'fp', 'others'].map((key) => ({
+          key,
+          label: labels[key] || key,
+        }));
+      },
+      // A seção tem duas cargas independentes (o /index da página e o lote
+      // dos recortes filtrados); o esmaecido de "carregando" vale enquanto
+      // qualquer uma estiver no ar.
+      introChartsBusy() {
+        return this.loadingIntroCharts || this.loadingIntroBreakdowns;
       },
       // Quantas barras deste recorte estão fora da tela dobrada, ou 0 quando
       // ele cabe inteiro. O template usa para decidir se mostra o botão e para
@@ -633,6 +650,7 @@ if (window.location.href.indexOf('/') > -1) {
 
       await this.populateParams();
       this.getData();
+      this.fetchIntroBreakdowns();
       this.getCandidates(this.pageFromParam || false);
       this.setChartOptions();
       this.updateFilterText();
@@ -908,6 +926,17 @@ if (window.location.href.indexOf('/') > -1) {
         newItem.apiTotal = Number.parseFloat(newItem.total) || 0;
         newItem.total = newItem.data.reduce((sum, point) => sum + (point.y || 0), 0);
 
+        // O recorte fecha com o total declarado? A régua é folgada de
+        // propósito (1%): diferença de centavos é arredondamento da API; o
+        // que ela pega é ordem de grandeza. Enquanto um recorte não fechar,
+        // a manchete dele não afirma porcentagem e o card carrega a ressalva
+        // (chartsDoNotCloseLead no i18n). Hoje só o pie_charts de partido
+        // dispara isto: gênero e cor/raça saem dos big_numbers filtrados,
+        // que fecham (ver utilities/introBreakdowns.js).
+        newItem.doesNotClose = newItem.apiTotal > 0
+          && newItem.total > 0
+          && Math.abs(newItem.total - newItem.apiTotal) / newItem.apiTotal > 0.01;
+
         newItem.data.sort((a, b) => b.y - a.y);
 
         newItem.xAxis = { categories: [] };
@@ -992,7 +1021,7 @@ if (window.location.href.indexOf('/') > -1) {
         // pela API. Nos dois casos quem está no topo resiste (o PL lidera com
         // ou sem o valor implausível, e cor/raça Branca lidera nas duas bases);
         // o número não resiste, e era ele que a frase afirmava.
-        const flagged = this.flaggedTotal > 0 || this.introChartsDoNotClose;
+        const flagged = this.flaggedTotal > 0 || chart.doesNotClose;
         const template = flagged
           ? (templates.flagged || {})[chart.type]
           : templates[chart.type];
@@ -1098,6 +1127,9 @@ if (window.location.href.indexOf('/') > -1) {
         // reads the selectedX fields above (already reset), never `this.filters`.
         this.fetchFiltersForYear(year);
         this.updateData();
+        // Os recortes filtrados dependem só de ano + chip (cache por ano):
+        // o updateData acima não os recarrega.
+        this.fetchIntroBreakdowns();
       },
       // Keeps the address bar in sync with year + days + filters (item 10) —
       // one pushState per meaningful change (year switch or "Aplicar" click),
@@ -1176,12 +1208,16 @@ if (window.location.href.indexOf('/') > -1) {
 
             // Always reassign (not just when there's something to show) —
             // a year/filter combo with no pie_charts (e.g. an election
-            // with no data yet) must clear introCharts, or the previous
-            // year's charts stay stuck on screen.
-            this.introCharts = Array.isArray(response?.accumulated?.pie_charts)
-              // eslint-disable-next-line max-len
-              ? response.accumulated.pie_charts.map((x) => this.handleBarData(x))
+            // with no data yet) must clear the charts, or the previous
+            // year's charts stay stuck on screen. Só partido (e estado, se
+            // vier) sai daqui: gênero e cor/raça vêm dos big_numbers
+            // filtrados em fetchIntroBreakdowns().
+            this.partyIntroCharts = Array.isArray(response?.accumulated?.pie_charts)
+              ? response.accumulated.pie_charts
+                .filter((x) => !['gender', 'ethnicity'].includes(x.type))
+                .map((x) => this.handleBarData(x))
               : [];
+            this.composeIntroCharts();
 
             return true;
           })
@@ -1495,6 +1531,116 @@ if (window.location.href.indexOf('/') > -1) {
         this.expandedCharts = { ...this.expandedCharts, [type]: !this.expandedCharts[type] };
         this.generateIntroCharts();
       },
+      selectIntroFund(key) {
+        if (key === this.selectedIntroFund) return;
+        this.selectedIntroFund = key;
+        this.fetchIntroBreakdowns();
+      },
+      // A ordem de exibição é a que o pie_charts sempre teve: cor/raça,
+      // gênero, partido.
+      composeIntroCharts() {
+        this.introCharts = [
+          ...(Array.isArray(this.introBreakdowns) ? this.introBreakdowns : []),
+          ...(Array.isArray(this.partyIntroCharts) ? this.partyIntroCharts : []),
+        ];
+      },
+      /**
+       * Gênero e cor/raça a partir dos big_numbers FILTRADOS
+       * (fund_type_id/race_id) — a mesma base do /partidos/painel/, e por
+       * isso estes recortes fecham com o total e batem com a chamada da
+       * cota logo abaixo. O pie_charts, a fonte anterior, infla e distorce
+       * a forma: era ele que punha 21,6% feminino ao lado de um texto
+       * dizendo 31,55% no FEFC.
+       *
+       * days=all sempre: a seção é "Total acumulado", independente do
+       * período e dos filtros da área de pesquisa abaixo (mesma regra do
+       * accumulated). Cache por ano+tipo: trocar de chip e voltar não
+       * refaz as 7 chamadas.
+       */
+      async fetchIntroBreakdowns() {
+        const year = this.selectedYear;
+        const groupKey = this.selectedIntroFund;
+        const cacheKey = `${year}:${groupKey}`;
+
+        this.introBreakdownCache = this.introBreakdownCache || {};
+        this.introFundError = false;
+
+        const cached = this.introBreakdownCache[cacheKey];
+        if (cached) {
+          this.introBreakdowns = cached;
+          this.composeIntroCharts();
+          await this.$nextTick();
+          this.generateIntroCharts();
+          return;
+        }
+
+        this.loadingIntroBreakdowns = true;
+
+        this.introBreakdownsAbortController?.abort();
+        this.introBreakdownsAbortController = new AbortController();
+        const { signal } = this.introBreakdownsAbortController;
+        const timeoutId = window.setTimeout(
+          () => this.introBreakdownsAbortController?.abort(new Error('timeout')),
+          config.api.timeoutMs,
+        );
+
+        const requests = introBreakdownRequests({
+          domain: config.api.domain,
+          year,
+          fundIds: fundGroupIds(groupKey, this.filters?.fund_types),
+          races: this.filters?.races?.length ? this.filters.races : FALLBACK_RACES,
+        });
+        // O subtítulo do gráfico diz de qual dinheiro se trata; em "todos"
+        // o subtítulo padrão já diz tudo.
+        const fundLabel = groupKey === 'all'
+          ? ''
+          : (window.appFundGroups || {})[groupKey] || '';
+
+        try {
+          const fetchJson = (url) => fetch(url, { method: 'GET', signal })
+            .then((response) => {
+              if (!response.ok) throw new Error('Network response was not OK');
+              return response.json();
+            });
+
+          const [genderResponse, ...raceResponses] = await Promise.all([
+            fetchJson(requests.gender),
+            ...requests.races.map((race) => fetchJson(race.url)),
+          ]);
+
+          const raceRows = requests.races.map((race, i) => ({
+            name: race.name,
+            total: raceResponses[i]?.big_numbers?.total_amount,
+          }));
+
+          const shaped = shapeIntroBreakdowns({
+            bigNumbers: genderResponse?.big_numbers,
+            raceRows,
+            fundLabel,
+          }).map((item) => this.handleBarData(item));
+
+          this.introBreakdownCache[cacheKey] = shaped;
+          this.introBreakdowns = shaped;
+          this.composeIntroCharts();
+          this.loadingIntroBreakdowns = false;
+          await this.$nextTick();
+          this.generateIntroCharts();
+        } catch (error) {
+          // Um lote mais novo supersedeu este — o mais novo é dono do estado
+          // de carregamento. Timeout também aborta, mas com razão própria, e
+          // esse precisa ser reportado: os gráficos anteriores continuam na
+          // tela e a nota de erro diz que o recorte pedido não veio.
+          const timedOut = signal.reason instanceof Error && signal.reason.message === 'timeout';
+          if (error.name === 'AbortError' && !timedOut) return;
+
+          this.loadingIntroBreakdowns = false;
+          this.introFundError = true;
+          // eslint-disable-next-line no-console
+          console.error(error);
+        } finally {
+          window.clearTimeout(timeoutId);
+        }
+      },
       generateIntroCharts() {
         this.introCharts.forEach((chart) => {
           if (!Array.isArray(chart.data) || !chart.data.length) {
@@ -1508,6 +1654,14 @@ if (window.location.href.indexOf('/') > -1) {
           const total = chart.total
             || chart.data.reduce((sum, point) => sum + (point.y || 0), 0);
           const headline = this.chartHeadline(chart, total, label);
+
+          // O subtítulo diz de qual dinheiro se trata quando um tipo de
+          // financiamento está selecionado (fundLabel vem de
+          // shapeIntroBreakdowns; o recorte de partido não o tem).
+          const subtitleBase = (window.appChartTitles && window.appChartTitles.subtitle) || '';
+          const subtitle = chart.fundLabel
+            ? `${subtitleBase} · ${chart.fundLabel}`
+            : subtitleBase;
 
           const allCategories = chart.xAxis?.categories || [];
           const collapsed = chart.data.length > INTRO_CHART_ROWS
@@ -1558,7 +1712,7 @@ if (window.location.href.indexOf('/') > -1) {
             },
             title: { text: headline },
             subtitle: {
-              text: (window.appChartTitles && window.appChartTitles.subtitle) || '',
+              text: subtitle,
             },
             tooltip: {
               // eslint-disable-next-line object-shorthand, func-names

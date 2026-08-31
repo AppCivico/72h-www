@@ -98,6 +98,16 @@
   window.appQuotaParties = {{ $quotaRows | jsonify | safeJS }};
   {{ with site.Data.candidaturas2026 }}window.appCandidacies = {{ . | jsonify | safeJS }};{{ end }}
 
+  // Rótulos dos chips de tipo de financiamento de "O que os dados
+  // mostram". As chaves são as que fundGroupIds (introBreakdowns.js)
+  // entende; o JS também usa o rótulo no subtítulo do gráfico filtrado.
+  window.appFundGroups = {
+    "all": '{{ i18n "introFundAll" }}',
+    "fefc": '{{ i18n "introFundFEFC" }}',
+    "fp": '{{ i18n "introFundParty" }}',
+    "others": '{{ i18n "introFundOthers" }}',
+  }
+
   window.appChartTitles = {
     "ethnicity": '{{ i18n "chartTitleEthnicity" }}',
     "gender": '{{ i18n "chartTitleGender" }}',

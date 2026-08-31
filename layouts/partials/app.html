@@ -191,29 +191,37 @@
 
           <section class="home-section home-section--warm">
             <div class="container">
-            <div class="intro-charts" :aria-busy="loadingIntroCharts">
+            <div class="intro-charts" :aria-busy="introChartsBusy">
               <p class="eyebrow">{{ i18n "homePieEyebrow" }}</p>
               <h2 class="border-title border-title--primary">{{ i18n "homePieTitle" }}</h2>
               <p class="intro-charts__intro">{{ i18n "chartsIntro" }}</p>
 
-              {{/* Estes três recortes somam por fatia, não por candidatura,
-                   e a listagem não devolve cor/raça nem gênero: não há como
-                   tirar o valor implausível da fatia a que ele pertence, como
-                   o gráfico de linha faz. Então aqui o dado fica, e a ressalva
-                   vem ANTES dele, pela mesma razão da página do candidato: uma
-                   fatia inflada sem aviso ao lado já informou errado. Pior
-                   aqui do que em qualquer outro lugar, porque as notas de
-                   comparação logo abaixo emparelham a fatia com o Censo e com
-                   o piso de 30%, e um número inflado nessa vizinhança vira
-                   achado. */}}
-              {{/* Quando os recortes não fecham com o total que a própria API
-                   declara para eles, as manchetes perdem a porcentagem (ver
-                   chartHeadline em home.js) e esta nota diz por quê. Sem ela o
-                   leitor veria títulos que só nomeiam a maior fatia e não
-                   entenderia a mudança. */}}
-              <p class="implausible-note implausible-note--inline" v-if="introChartsDoNotClose" v-cloak>
-                <strong>{{ i18n "chartsDoNotCloseLead" }}</strong>
-                {{ i18n "chartsDoNotCloseTail" }}
+              {{/* O tipo de financiamento muda a base dos recortes de gênero
+                   e cor/raça (big_numbers filtrados — a MESMA base do
+                   /partidos/painel/ e da chamada da cota, então "31,55% no
+                   FEFC" e a barra do chip FEFC respondem à mesma conta). O
+                   recorte de partido não responde ao chip: segue no
+                   pie_charts, somando todos os tipos, e o card diz isso
+                   quando um tipo específico está selecionado. */}}
+              <div class="fund-chips" role="group" aria-label="{{ i18n "introFundLabel" }}">
+                <span class="fund-chips__label" aria-hidden="true">{{ i18n "introFundLabel" }}:</span>
+                <button
+                  v-for="option in introFundOptions"
+                  :key="option.key"
+                  type="button"
+                  class="fund-chips__chip"
+                  :class="{ 'fund-chips__chip--active': selectedIntroFund === option.key }"
+                  :aria-pressed="selectedIntroFund === option.key ? 'true' : 'false'"
+                  @click="selectIntroFund(option.key)"
+                  v-text="option.label"></button>
+              </div>
+
+              {{/* O lote do recorte pedido falhou: os gráficos anteriores
+                   continuam na tela (não mentem, só não são o recorte
+                   pedido), e esta nota diz isso em vez de deixar o clique
+                   sem resposta. */}}
+              <p class="implausible-note implausible-note--inline" v-if="introFundError" v-cloak>
+                {{ i18n "introFundError" }}
               </p>
 
               <p class="implausible-note implausible-note--inline" v-if="flaggedTotal > 0" v-cloak>
@@ -232,6 +240,16 @@
                    new ones replace them in place. */}}
               <template v-if="hasIntroCharts">
                 <div class="intro-charts__chart" :class="`intro-charts__chart--${chart.type}`" v-for="chart in introCharts">
+                  {{/* Recorte que não fecha com o total que a própria API
+                       declara para ele: a manchete perde a porcentagem (ver
+                       chartHeadline em home.js) e esta nota, DENTRO do card
+                       e antes das barras, diz por quê. Hoje só o de partido
+                       dispara isto — gênero e cor/raça saem dos big_numbers
+                       filtrados, que fecham (introBreakdowns.js). */}}
+                  <p class="implausible-note implausible-note--inline" v-if="chart.doesNotClose" v-cloak>
+                    <strong>{{ i18n "chartsDoNotCloseLead" }}</strong>
+                    {{ i18n "chartsDoNotCloseTail" }}
+                  </p>
                   <div :id="`js-chart__${chart.type}`"></div>
                   {{/* Benchmarks turn a distribution into a comparison —
                        the population it should mirror, or the share the
@@ -257,6 +275,8 @@
                     @click="toggleChartRows(chart.type)">
                     {{ i18n "chartShowFewer" }}
                   </button>
+
+                  <p class="chart-benchmark" v-if="chart.type === 'party' && selectedIntroFund !== 'all'" v-cloak>{{ i18n "introPartyAllFunds" }}</p>
 
                   <p class="chart-benchmark" v-if="chart.type === 'ethnicity'">{{ i18n "ethnicityBenchmark" }}</p>
                   <p class="chart-benchmark" v-if="chart.type === 'gender'">{{ i18n "genderBenchmark" }}</p>
@@ -287,7 +307,7 @@
                   </div>
                 </div>
               </template>
-              <div v-else-if="!loadingIntroCharts" class="no-results">
+              <div v-else-if="!introChartsBusy" class="no-results">
                 <img src="/assets/images/no-results--candidates.svg" alt="{{ i18n "noResults" }}">
                 <p>{{ i18n "noResultsCharts" }}</p>
               </div>

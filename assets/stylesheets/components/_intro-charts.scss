@@ -28,10 +28,59 @@
 .intro-charts > h2,
 .intro-charts > .eyebrow,
 .intro-charts > .intro-charts__intro,
+.intro-charts > .fund-chips,
 .intro-charts > .no-results,
 .intro-charts > .implausible-note,
 .intro-charts > .chart-source {
   grid-column: 1 / -1;
+}
+
+/// Filtro de tipo de financiamento dos recortes. Muda a base dos gráficos de
+/// gênero e cor/raça; o de partido segue somando todos os tipos (e o card
+/// diz isso quando um tipo específico está selecionado).
+.fund-chips {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.5rem;
+
+  align-items: center;
+
+  margin-bottom: 0.5rem;
+}
+
+.fund-chips__label {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.fund-chips__chip {
+  padding: 0.375rem 0.875rem;
+
+  font-family: inherit;
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink);
+
+  cursor: pointer;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: 999px;
+}
+
+.fund-chips__chip:hover,
+.fund-chips__chip:focus-visible {
+  border-color: var(--brand);
+}
+
+.fund-chips__chip--active {
+  color: var(--card);
+
+  background: var(--brand);
+  border-color: var(--brand);
 }
 
 .intro-charts h2 {

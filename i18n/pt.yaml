@@ -338,7 +338,24 @@
 - id: homePieEyebrow
   translation: "O que os dados mostram"
 - id: chartsIntro
-  translation: "Distribuição do valor total repassado por gênero, cor/raça e partido."
+  translation: "Distribuição do valor repassado por gênero, cor/raça e partido. Escolha o tipo de financiamento para ver como a distribuição muda."
+# Chips do tipo de financiamento em "O que os dados mostram". Os recortes de
+# gênero e cor/raça respondem a eles (big_numbers filtrados — a mesma base do
+# /partidos/painel/); o de partido não, e o card diz isso (introPartyAllFunds).
+- id: introFundLabel
+  translation: "Tipo de financiamento"
+- id: introFundAll
+  translation: "Todos os recursos"
+- id: introFundFEFC
+  translation: "Fundo Eleitoral (FEFC)"
+- id: introFundParty
+  translation: "Fundo Partidário"
+- id: introFundOthers
+  translation: "Outros recursos"
+- id: introPartyAllFunds
+  translation: "Este recorte considera todos os tipos de financiamento, independentemente do filtro acima."
+- id: introFundError
+  translation: "Não foi possível carregar este recorte agora. Os gráficos abaixo seguem mostrando o recorte anterior."
 - id: mainChartTitle
   translation: "Evolução dos repasses"
 - id: mainChartSubtitle
@@ -1000,11 +1017,13 @@
   translation: "Prestação de contas é declaração, e um dígito a mais explica números como este. O 72horas mostra o que o TSE publica e sinaliza o que não fecha, sem alterar o dado."
 - id: implausibleBigNumberLead
   translation: "Inclui"
-# Mostrada quando as fatias destes recortes não somam o total que a própria
-# API declara para eles. Nesse estado as manchetes nomeiam a maior fatia e não
-# afirmam porcentagem, porque a distorção observada não é de escala e sim de
+# Mostrada DENTRO do card de um recorte cujas fatias não somam o total que a
+# própria API declara para ele. Nesse estado a manchete nomeia a maior fatia e
+# não afirma porcentagem, porque a distorção observada não é de escala e sim de
 # forma: em 30/08/2026 cor/raça Branca inflava 2,14 vez e Preta 1,17, então a
-# proporção entre as fatias também não se sustenta.
+# proporção entre as fatias também não se sustenta. Desde que gênero e cor/raça
+# passaram aos big_numbers filtrados (que fecham), só o recorte de partido
+# (ainda pie_charts) dispara isto.
 - id: chartsDoNotCloseLead
   translation: "Os valores abaixo não fecham com o total declarado para este recorte."
 - id: chartsDoNotCloseTail
