@@ -195,16 +195,19 @@
 # que ele registrou. Um partido pode estar acima dos 30% e abaixo do próprio
 # piso (o PT, em 30/08/2026, estava em 32,4% com piso de 36,8%), então as
 # frases nunca podem usar os dois termos como sinônimos.
+# O sujeito é sempre a CANDIDATURA: quem declara ao TSE é ela, nunca o
+# partido. Agregado por partido é derivado dessas declarações, então
+# nenhuma frase pode dizer "os partidos declararam".
 - id: quotaBelowLead
-  translation: "No Fundo Eleitoral, os partidos declararam repassar"
+  translation: "No Fundo Eleitoral, as candidaturas de mulheres declararam ter recebido"
 - id: quotaBelowTail
-  translation: "às candidaturas de mulheres, abaixo do mínimo de 30% até aqui. Os que mais pesam nessa diferença:"
+  translation: "do total, abaixo do mínimo de 30% até aqui. Os partidos que mais pesam nessa diferença:"
 - id: quotaMetLead
-  translation: "No Fundo Eleitoral, os partidos já declararam repassar"
+  translation: "No Fundo Eleitoral, as candidaturas de mulheres já declararam ter recebido"
 - id: quotaMetMiddle
-  translation: "às candidaturas de mulheres, acima do mínimo de 30%. Ainda assim,"
+  translation: "do total, acima do mínimo de 30%. Ainda assim, em"
 - id: quotaMetTail
-  translation: "partidos com volume relevante estão abaixo do piso proporcional às próprias candidatas. Puxam o conjunto para cima:"
+  translation: "partidos com volume relevante o valor declarado pelas candidatas fica abaixo do piso proporcional. Puxam o conjunto para cima:"
 - id: quotaCta
   translation: "Ver partido a partido"
 - id: noResultsCandidates
@@ -636,7 +639,7 @@
 - id: publicFundsLead3
   translation: "desse total. Isso representa"
 - id: publicFundsLead4
-  translation: "do Fundo Eleitoral já distribuído pelos partidos às candidaturas. A maior parte dos recursos ainda permanece nos diretórios partidários."
+  translation: "do Fundo Eleitoral. O restante ainda não apareceu nas declarações das candidaturas."
 - id: publicFundsCountdownSingular
   translation: "Falta"
 - id: publicFundsCountdownPlural
