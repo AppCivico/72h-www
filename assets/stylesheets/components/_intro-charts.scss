@@ -21,10 +21,15 @@
   }
 }
 
+/// Tudo que não é card atravessa as colunas. As ressalvas entram aqui porque
+/// falam dos DOIS gráficos: como célula do grid elas ocupavam a primeira
+/// coluna, empurravam o card de gênero para a linha seguinte e deixavam um
+/// vão branco do tamanho de um gráfico ao lado do texto.
 .intro-charts > h2,
 .intro-charts > .eyebrow,
 .intro-charts > .intro-charts__intro,
 .intro-charts > .no-results,
+.intro-charts > .implausible-note,
 .intro-charts > .chart-source {
   grid-column: 1 / -1;
 }

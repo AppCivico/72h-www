@@ -211,12 +211,12 @@
                    chartHeadline em home.js) e esta nota diz por quê. Sem ela o
                    leitor veria títulos que só nomeiam a maior fatia e não
                    entenderia a mudança. */}}
-              <p class="implausible-note" v-if="introChartsDoNotClose" v-cloak>
+              <p class="implausible-note implausible-note--inline" v-if="introChartsDoNotClose" v-cloak>
                 <strong>{{ i18n "chartsDoNotCloseLead" }}</strong>
                 {{ i18n "chartsDoNotCloseTail" }}
               </p>
 
-              <p class="implausible-note" v-if="flaggedTotal > 0" v-cloak>
+              <p class="implausible-note implausible-note--inline" v-if="flaggedTotal > 0" v-cloak>
                 {{/* strong e span na MESMA linha de propósito: o compilador de
                      template do Vue descarta nó de texto que só tem espaço em
                      branco quando ele contém quebra de linha, e a frase saía
