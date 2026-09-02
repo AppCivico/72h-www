@@ -1315,9 +1315,9 @@
 - id: donorsSwarmTitle
   translation: "Cada círculo é uma pessoa. O tamanho é quanto ela doou no total."
 - id: donorsSwarmIntroLead
-  translation: "A escala é logarítmica: cada marca do eixo é um salto maior que o anterior. Aqui está todo mundo que doou mais de"
+  translation: "À esquerda, em bloco, quem doou até"
 - id: donorsSwarmIntroTail
-  translation: "no total da eleição. A linha tracejada é o corte escolhido no topo; os círculos à direita dela são os grandes doadores. Passe o mouse ou toque em um círculo para ver quem é."
+  translation: "no total da eleição: a altura de cada bloco é o número de pessoas. À direita, um círculo por pessoa acima disso, em escala logarítmica, com o tamanho pelo total doado. Passe o mouse ou toque em um círculo para ver quem é."
 - id: donorsSwarmColorAria
   translation: "Escolha o que a cor dos círculos representa"
 - id: donorsSwarmColorBy
@@ -1349,7 +1349,17 @@
 - id: donorsSwarmCaptionLead
   translation: "Só quem doou mais de"
 - id: donorsSwarmCaptionTail
-  translation: "aparece como círculo, porque é o menor corte que a API entrega doador a doador. Os médios e os pequenos estão na tabela dos três portes, em agregado."
+  translation: "aparece como círculo, porque é o menor corte que a API entrega doador a doador; abaixo disso a API dá só a contagem por faixa, que vira bloco."
+- id: donorsSwarmCaptionJitter
+  translation: "Círculos com o mesmo valor se afastam um pouco para não se sobrepor, então a posição horizontal é aproximada."
+- id: donorsSwarmBelowFloor
+  translation: "pessoas doaram até"
+- id: donorsSwarmBelowFloorNote
+  translation: "em bloco, pela contagem de cada faixa"
+- id: donorsSwarmOneByOne
+  translation: "uma a uma"
+- id: donorsWhiteMen
+  translation: "Homens brancos"
 - id: donorsUnnamed
   translation: "Doador sem nome divulgado"
 # Bloco dos pequenos doadores

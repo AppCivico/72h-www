@@ -130,9 +130,22 @@
           {{/* viewBox estático de propósito (template in-DOM minúsculo os
                atributos): as medidas são SWARM_WIDTH e SWARM_HEIGHT em
                scripts/doadores.js. Mude as duas juntas. */}}
-          <svg viewBox="0 0 1000 380" class="doadores__swarm" role="img" aria-label="{{ i18n "donorsSwarmAria" }}">
+          <svg viewBox="0 0 1200 400" class="doadores__swarm" role="img" aria-label="{{ i18n "donorsSwarmAria" }}">
+            <g class="doadores__swarm-blocks">
+              <text :x="swarm.gutterLeft" :y="swarm.cutTop + 4" class="doadores__swarm-cut-label"
+                v-text="formatNumeral(swarm.belowCount) + ' {{ i18n "donorsSwarmBelowFloor" }} ' + spelledCurrency(swarm.floor)"></text>
+              <text :x="swarm.gutterLeft" :y="swarm.cutTop + 20">{{ i18n "donorsSwarmBelowFloorNote" }}</text>
+              <template v-for="block in swarm.blocks" :key="block.band">
+                <rect
+                  :x="block.x" :y="block.y" :width="block.width" :height="block.height" rx="6"
+                  :class="'doadores__swarm-block doadores__swarm-block--' + block.tone"></rect>
+                <text :x="block.labelX" :y="block.y - 8" text-anchor="middle" class="doadores__swarm-count" v-text="block.count"></text>
+                <text :x="block.labelX" :y="swarm.axisY + 22" text-anchor="middle" v-text="block.range"></text>
+              </template>
+              <line :x1="swarm.left - 20" :x2="swarm.left - 20" :y1="swarm.cutTop - 4" :y2="swarm.axisY" class="doadores__swarm-divider"></line>
+            </g>
             <g class="doadores__swarm-axis">
-              <line x1="24" x2="976" :y1="swarm.axisY" :y2="swarm.axisY"></line>
+              <line :x1="swarm.left" :x2="swarm.right" :y1="swarm.axisY" :y2="swarm.axisY"></line>
               <template v-for="tick in swarm.ticks" :key="tick.value">
                 <line :x1="tick.x" :x2="tick.x" :y1="swarm.axisY" :y2="swarm.axisY + 6"></line>
                 <text :x="tick.x" :y="swarm.axisY + 22" text-anchor="middle" v-text="tick.label"></text>
@@ -146,6 +159,10 @@
                 v-text="'{{ i18n "donorsSwarmCut" }} ' + spelledCurrency(threshold)"></text>
               <text :x="swarm.cutX + 6" :y="swarm.cutTop + 20"
                 v-text="countLabel(swarm.bigCount, '{{ i18n "donorsSwarmBigOne" }}', '{{ i18n "donorsSwarmBigMany" }}')"></text>
+            </g>
+            <g class="doadores__swarm-cut" v-else>
+              <text :x="swarm.left" :y="swarm.cutTop + 4" class="doadores__swarm-cut-label"
+                v-text="countLabel(swarm.bigCount, '{{ i18n "donorsSwarmBigOne" }}', '{{ i18n "donorsSwarmBigMany" }}') + ', {{ i18n "donorsSwarmOneByOne" }}'"></text>
             </g>
             <g class="doadores__swarm-nodes">
               <circle
@@ -166,6 +183,7 @@
           {{ i18n "donorsSwarmCaptionLead" }}
           <span v-text="spelledCurrency(swarm.floor)"></span>
           {{ i18n "donorsSwarmCaptionTail" }}
+          {{ i18n "donorsSwarmCaptionJitter" }}
         </p>
       </section>
 
@@ -515,7 +533,7 @@
                ignoraria. As medidas abaixo são as mesmas de SLOPE_WIDTH e
                SLOPE_HEIGHT em scripts/doadores.js; mude as duas juntas. */}}
           <svg
-            viewBox="0 0 1000 340"
+            viewBox="0 0 1000 420"
             class="doadores__slope"
             role="img"
             aria-label="{{ i18n "donorsSlopeAria" }}">
@@ -548,7 +566,7 @@
               </template>
               <text
                 class="doadores__slope-name"
-                :x="line.endX + 14" :y="line.endY + 4" v-text="line.name"></text>
+                :x="line.endX + 14" :y="line.endLabelY + 4" v-text="line.endLabel"></text>
             </g>
           </svg>
         </figure>
@@ -826,6 +844,7 @@
       money: '{{ i18n "donorsMoneyAxis" }}',
       peopleWord: '{{ i18n "donorsPeopleWord" }}',
       women: '{{ i18n "donorsWomen" }}',
+      whiteMen: '{{ i18n "donorsWhiteMen" }}',
       black: '{{ i18n "donorsBlack" }}',
       blackWomen: '{{ i18n "donorsBlackWomen" }}',
       others: '{{ i18n "donorsOthers" }}',

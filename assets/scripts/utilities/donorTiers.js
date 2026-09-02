@@ -201,44 +201,107 @@ export function bandLabel(band, money = spelledCurrency) {
 }
 
 /**
- * Beeswarm sem d3: cada círculo cai na posição x que o valor dele manda e
- * procura, entre as alturas possíveis, a mais próxima do eixo em que não
- * colide com nenhum círculo já colocado. É o algoritmo de "dodge" clássico:
- * ordena por x, e para cada círculo testa o eixo e os pontos tangentes a
- * todos os vizinhos que estão a menos de um diâmetro de distância.
+ * Beeswarm sem d3, por simulação de forças (o mesmo princípio do d3-force do
+ * protótipo). Cada círculo é puxado para o x que o valor dele manda e
+ * empurrado para fora de quem colide. O empurrão vale nos dois eixos, e é
+ * isso que resolve o dado real: dezenas de pessoas doaram exatamente R$ 100
+ * mil, e um layout que só empilha na vertical transforma o grupo numa coluna
+ * que sai do gráfico. Aqui o grupo abre em bolha. O deslocamento horizontal
+ * fica pequeno (a atração ao x é mais forte que a repulsão) e é sempre igual
+ * para o mesmo dado: sem aleatoriedade, o jitter inicial é determinístico.
  *
- * Recebe itens já com `x` e `r` em unidades do desenho e devolve os mesmos
- * itens com `y` (positivo ou negativo em torno de zero). O caller centraliza.
+ * Recebe itens com `x` e `r` em unidades do desenho e devolve os mesmos itens
+ * com `x` ajustado e `y` em torno de zero. O caller centraliza.
  */
-export function beeswarmLayout(items, padding = 1) {
-  const sorted = items
-    .map((item) => ({ ...item }))
-    .sort((a, b) => a.x - b.x || b.r - a.r);
-  const placed = [];
+export function beeswarmLayout(items, padding = 1, options = {}) {
+  const iterations = options.iterations || 300;
+  const xStrength = options.xStrength || 0.15;
+  const yStrength = options.yStrength || 0.06;
 
-  sorted.forEach((item) => {
-    const candidates = [0];
-    placed.forEach((other) => {
-      const reach = item.r + other.r + padding;
-      const dx = item.x - other.x;
-      if (Math.abs(dx) >= reach) return;
-      const dy = Math.sqrt(reach * reach - dx * dx);
-      candidates.push(other.y - dy, other.y + dy);
-    });
+  // Jitter inicial determinístico nos DOIS eixos, só para quebrar a simetria
+  // de quem cai no mesmo x: com todos exatamente no mesmo ponto a repulsão
+  // só saberia empurrar na vertical, e o grupo viraria coluna.
+  const noise = (index, salt) => ((((index + 1) * salt) % 1000) / 1000 - 0.5);
+  const nodes = items.map((item, index) => ({
+    ...item,
+    targetX: item.x,
+    x: item.x + noise(index, 7919) * item.r,
+    y: noise(index, 104729) * item.r,
+  }));
 
-    const collides = (y) => placed.some((other) => {
-      const reach = item.r + other.r + padding;
-      const dx = item.x - other.x;
-      const dy = y - other.y;
-      // Uma folga mínima evita que erros de ponto flutuante rejeitem a
-      // própria posição tangente que acabamos de calcular.
-      return dx * dx + dy * dy < reach * reach - 1e-6;
-    });
+  // As últimas passadas são só de colisão, sem atração: limpam a sobreposição
+  // residual que a simulação deixa quando a atração e o empurrão se equilibram
+  // a meio pixel de distância.
+  const settle = 24;
+  for (let step = 0; step < iterations + settle; step += 1) {
+    const alpha = Math.max(0.08, 1 - step / iterations);
+    const attracting = step < iterations;
 
-    candidates.sort((a, b) => Math.abs(a) - Math.abs(b));
-    const y = candidates.find((candidate) => !collides(candidate));
-    placed.push({ ...item, y: y === undefined ? 0 : y });
+    if (attracting) {
+      for (let k = 0; k < nodes.length; k += 1) {
+        nodes[k].x += (nodes[k].targetX - nodes[k].x) * xStrength * alpha;
+        nodes[k].y -= nodes[k].y * yStrength * alpha;
+      }
+    }
+
+    nodes.sort((a, b) => a.x - b.x);
+    const maxReach = 2 * Math.max(...nodes.map((node) => node.r)) + padding;
+    for (let i = 0; i < nodes.length; i += 1) {
+      const a = nodes[i];
+      for (let j = i + 1; j < nodes.length; j += 1) {
+        const b = nodes[j];
+        if (b.x - a.x > maxReach) break;
+        const reach = a.r + b.r + padding;
+        let dx = b.x - a.x;
+        let dy = b.y - a.y;
+        let distance = Math.sqrt(dx * dx + dy * dy);
+        if (distance >= reach) continue; // eslint-disable-line no-continue
+        if (distance === 0) {
+          // Sobreposição exata: empurra numa direção que depende só da
+          // posição na lista, para o resultado ser o mesmo a cada carga.
+          const angle = ((i * 31 + j * 17) % 360) * (Math.PI / 180);
+          dx = Math.cos(angle) * 1e-3;
+          dy = Math.sin(angle) * 1e-3;
+          distance = 1e-3;
+        }
+        const overlap = ((reach - distance) / distance) * 0.5;
+        const pushX = dx * overlap;
+        const pushY = dy * overlap;
+        a.x -= pushX;
+        a.y -= pushY;
+        b.x += pushX;
+        b.y += pushY;
+      }
+    }
+  }
+
+  return nodes.map((node) => {
+    const { targetX, ...rest } = node;
+    return rest;
   });
+}
 
-  return placed;
+/**
+ * Afasta rótulos que cairiam uns sobre os outros, mantendo a ordem e o
+ * centro do conjunto: quem estava acima continua acima, e o grupo inteiro
+ * não migra para baixo. Recebe e devolve posições y na mesma ordem.
+ */
+export function spreadLabels(positions, gap) {
+  const order = positions
+    .map((y, index) => ({ y: toNumber(y), index }))
+    .sort((a, b) => a.y - b.y);
+
+  for (let k = 1; k < order.length; k += 1) {
+    if (order[k].y - order[k - 1].y < gap) order[k].y = order[k - 1].y + gap;
+  }
+
+  const before = positions.reduce((sum, y) => sum + toNumber(y), 0);
+  const after = order.reduce((sum, item) => sum + item.y, 0);
+  const shift = order.length ? (after - before) / order.length : 0;
+
+  const out = [];
+  order.forEach((item) => {
+    out[item.index] = item.y - shift;
+  });
+  return out;
 }

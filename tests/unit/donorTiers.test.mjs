@@ -14,6 +14,7 @@ import {
   medianRatio,
   share,
   spelledCurrency,
+  spreadLabels,
   toNumber,
 } from '../../assets/scripts/utilities/donorTiers.js';
 
@@ -139,33 +140,61 @@ test('bandLabel escreve as faixas com as bordas conferidas', () => {
   assert.equal(bandLabel(9), '');
 });
 
-test('beeswarmLayout não deixa dois círculos se sobrepondo', () => {
-  // Quarenta círculos amontoados no mesmo trecho do eixo, raios variados.
-  const items = Array.from({ length: 40 }, (_, index) => ({
+test('beeswarmLayout abre em bolha quem tem o mesmo valor', () => {
+  // Setenta pessoas que doaram exatamente o mesmo valor: o dado real tem
+  // isso em R$ 100 mil. Não podem virar uma coluna que sai do gráfico.
+  const items = Array.from({ length: 70 }, (_, index) => ({ id: index, x: 400, r: 6 }));
+  const placed = beeswarmLayout(items, 1);
+  const height = Math.max(...placed.map((item) => Math.abs(item.y) + item.r));
+  const width = Math.max(...placed.map((item) => Math.abs(item.x - 400) + item.r));
+  assert.ok(height < 140, `a bolha ficou alta demais: ${height}`);
+  assert.ok(width < 140, `a bolha ficou larga demais: ${width}`);
+  // e ninguém foi parar longe do próprio valor
+  placed.forEach((item) => assert.ok(Math.abs(item.x - 400) < 90));
+});
+
+test('beeswarmLayout quase não sobrepõe círculos', () => {
+  const items = Array.from({ length: 60 }, (_, index) => ({
     id: index, x: 100 + (index % 7) * 3, r: 4 + (index % 5) * 2,
   }));
   const placed = beeswarmLayout(items, 1);
-  assert.equal(placed.length, 40);
+  let worst = 0;
   for (let a = 0; a < placed.length; a += 1) {
     for (let b = a + 1; b < placed.length; b += 1) {
       const dx = placed[a].x - placed[b].x;
       const dy = placed[a].y - placed[b].y;
-      const minimum = placed[a].r + placed[b].r + 1;
-      assert.ok(
-        Math.sqrt(dx * dx + dy * dy) >= minimum - 1e-6,
-        `círculos ${placed[a].id} e ${placed[b].id} se sobrepõem`,
-      );
+      const minimum = placed[a].r + placed[b].r;
+      worst = Math.max(worst, minimum - Math.sqrt(dx * dx + dy * dy));
     }
   }
+  // Simulação de forças converge, não resolve exato: tolerância de um pixel.
+  assert.ok(worst < 1, `sobreposição máxima de ${worst.toFixed(2)}`);
 });
 
 test('beeswarmLayout deixa quem está sozinho no eixo', () => {
   const placed = beeswarmLayout([{ id: 1, x: 10, r: 5 }, { id: 2, x: 500, r: 5 }]);
-  assert.deepEqual(placed.map((item) => item.y), [0, 0]);
+  placed.forEach((item) => assert.ok(Math.abs(item.y) < 0.5));
+  placed.forEach((item) => assert.ok(Math.abs(item.x - (item.id === 1 ? 10 : 500)) < 0.5));
 });
 
-test('beeswarmLayout preserva os dados de cada círculo', () => {
-  const placed = beeswarmLayout([{ id: 'a', x: 10, r: 5, name: 'Fulana' }]);
-  assert.equal(placed[0].name, 'Fulana');
-  assert.equal(placed[0].id, 'a');
+test('beeswarmLayout é determinístico e preserva os dados', () => {
+  const items = [{ id: 'a', x: 10, r: 5, name: 'Fulana' }, { id: 'b', x: 11, r: 5, name: 'Beltrano' }];
+  const first = beeswarmLayout(items);
+  const second = beeswarmLayout(items);
+  assert.deepEqual(first, second);
+  assert.equal(first.find((item) => item.id === 'a').name, 'Fulana');
 });
+
+test('spreadLabels afasta rótulos colados sem trocar a ordem', () => {
+  const out = spreadLabels([100, 104, 300], 18);
+  assert.ok(out[1] - out[0] >= 18 - 1e-9);
+  assert.ok(out[0] < out[1] && out[1] < out[2]);
+  // o terceiro, longe dos outros, mal se move
+  assert.ok(Math.abs(out[2] - 300) < 10);
+});
+
+test('spreadLabels devolve o mesmo quando ninguém colide', () => {
+  assert.deepEqual(spreadLabels([10, 50, 90], 18), [10, 50, 90]);
+  assert.deepEqual(spreadLabels([], 18), []);
+});
+

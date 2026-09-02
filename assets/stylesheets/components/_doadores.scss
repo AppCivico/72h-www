@@ -358,6 +358,25 @@
   stroke: var(--hairline-2);
 }
 
+.doadores__swarm-divider {
+  stroke: var(--hairline-2);
+}
+
+.doadores__swarm-block {
+  fill: var(--donors-medium);
+  fill-opacity: 0.75;
+}
+
+.doadores__swarm-block--small {
+  fill: var(--donors-small);
+}
+
+.doadores__swarm-count {
+  font-weight: 600;
+
+  fill: var(--ink);
+}
+
 .doadores__swarm-cut {
   line {
     stroke: var(--ink);
@@ -965,57 +984,31 @@
   font-weight: 600;
 }
 
-.doadores__slope-line--women {
-  circle {
-    fill: var(--dv-3);
-    stroke: var(--paper);
-    stroke-width: 2;
-  }
+// Mesma lógica de cor dos waffles: magenta é mulher, azul é homem, escuro é
+// negra, claro é branca. "Pessoas negras" (todos os gêneros) fica no azul
+// escuro porque o grafite neutro não se distingue do vinho em protanopia.
+@each $group, $color in (
+  'women': #a8336a,
+  'black': #173a78,
+  'black-women': #6e1030,
+  'white-men': #6693dd
+) {
+  .doadores__slope-line--#{$group} {
+    circle {
+      fill: $color;
+      stroke: var(--paper);
+      stroke-width: 2;
+    }
 
-  .doadores__slope-path,
-  .doadores__slope-reference {
-    stroke: var(--dv-3);
-  }
+    .doadores__slope-path,
+    .doadores__slope-reference {
+      stroke: $color;
+    }
 
-  .doadores__slope-name,
-  .doadores__slope-reference-label {
-    fill: var(--dv-3);
-  }
-}
-
-.doadores__slope-line--black {
-  circle {
-    fill: var(--dv-4);
-    stroke: var(--paper);
-    stroke-width: 2;
-  }
-
-  .doadores__slope-path,
-  .doadores__slope-reference {
-    stroke: var(--dv-4);
-  }
-
-  .doadores__slope-name,
-  .doadores__slope-reference-label {
-    fill: var(--dv-4);
-  }
-}
-
-.doadores__slope-line--black-women {
-  circle {
-    fill: var(--dv-5);
-    stroke: var(--paper);
-    stroke-width: 2;
-  }
-
-  .doadores__slope-path,
-  .doadores__slope-reference {
-    stroke: var(--dv-5);
-  }
-
-  .doadores__slope-name,
-  .doadores__slope-reference-label {
-    fill: var(--dv-5);
+    .doadores__slope-name,
+    .doadores__slope-reference-label {
+      fill: $color;
+    }
   }
 }
 

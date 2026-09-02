@@ -18,6 +18,7 @@ import {
   medianRatio,
   share,
   spelledCurrency,
+  spreadLabels,
   toNumber,
 } from './utilities/donorTiers';
 
@@ -49,8 +50,8 @@ const RANKING_PAGE = 20;
 // mesma razão do gráfico de inclinação: mude os dois juntos). O piso é o
 // menor corte que a API entrega doador a doador; quando `min_total` voltar a
 // funcionar, basta trocar SWARM_FLOOR por 10000 para a nuvem dos médios entrar.
-const SWARM_WIDTH = 1000;
-const SWARM_HEIGHT = 380;
+const SWARM_WIDTH = 1200;
+const SWARM_HEIGHT = 400;
 const SWARM_FLOOR = THRESHOLDS[0];
 const SWARM_RESULTS = 5000;
 
@@ -58,7 +59,7 @@ const SWARM_RESULTS = 5000;
 // estático no template (in-DOM não preserva o "B" maiúsculo de um atributo
 // ligado), então estes dois números são espelhados lá: mude os dois juntos.
 const SLOPE_WIDTH = 1000;
-const SLOPE_HEIGHT = 340;
+const SLOPE_HEIGHT = 420;
 
 // Quantas fatias os gráficos de partido e cargo mostram antes de agrupar o
 // resto em "outros": a paleta é fixa e nunca ciclada, e uma lista de 28
@@ -299,7 +300,11 @@ window.$vueDoadores = Vue.createApp({
         };
       };
 
+      // Quatro grupos: os três que a régua de equidade acompanha e o que
+      // fica com a maior parte do dinheiro, para a comparação ter os dois
+      // lados. Ids fixados pelo backend (intersection_group).
       const lines = [
+        line(breakdown.intersection, (row) => row.id === 4, 'white-men', this.labels.whiteMen),
         line(breakdown.gender, (row) => row.id === 2, 'women', this.labels.women),
         line(breakdown.race, (row) => row.id === 4 || row.id === 5, 'black', this.labels.black),
         line(breakdown.intersection, (row) => row.id === 1, 'black-women', this.labels.blackWomen),
@@ -326,6 +331,13 @@ window.$vueDoadores = Vue.createApp({
       const x = (index) => left + ((width - left - right) * index) / (TIERS.length - 1);
       const y = (value) => (height - bottom) - ((height - bottom - topPad) * (value / top));
 
+      // O rótulo do fim junta nome e valor e é afastado dos vizinhos: com
+      // quatro linhas, duas terminam a poucos pontos uma da outra.
+      const endYs = spreadLabels(
+        lines.map((entry) => y(entry.points[TIERS.length - 1].share)),
+        18,
+      );
+
       return {
         width,
         height,
@@ -333,8 +345,10 @@ window.$vueDoadores = Vue.createApp({
         axisX: TIERS.map((tier, index) => ({ tier, x: x(index), name: this.labels[tier] })),
         baseline: height - bottom,
         topPad,
-        lines: lines.map((entry) => ({
+        lines: lines.map((entry, lineIndex) => ({
           ...entry,
+          endLabelY: endYs[lineIndex],
+          endLabel: `${entry.name} · ${this.formatPercent(entry.points[TIERS.length - 1].share)}`,
           polyline: entry.points.map((point, index) => `${x(index)},${y(point.share)}`).join(' '),
           // Rótulo só nas pontas: com três linhas e três portes, um número
           // sobre cada ponto vira colisão no meio do gráfico. `anchor` joga o
@@ -344,9 +358,9 @@ window.$vueDoadores = Vue.createApp({
             ...point,
             x: x(index),
             y: y(point.share),
-            labelled: index === 0 || index === TIERS.length - 1,
-            labelX: x(index) + (index === 0 ? 9 : -9),
-            anchor: index === 0 ? 'start' : 'end',
+            labelled: index === 0,
+            labelX: x(index) + 9,
+            anchor: 'start',
           })),
           referenceY: y(entry.reference),
           endX: x(TIERS.length - 1),
@@ -357,16 +371,52 @@ window.$vueDoadores = Vue.createApp({
     // Cada círculo é uma pessoa acima do piso; o x é o total doado em escala
     // logarítmica, o raio cresce com a raiz do total (área proporcional ao
     // dinheiro) e o y vem do layout de "dodge", que só afasta quem colide.
-    swarm({ swarmDonors, threshold, swarmMode } = this) {
+    swarm({
+      swarmDonors, threshold, swarmMode, summary,
+    } = this) {
       if (!swarmDonors.length) return null;
 
-      const left = 24;
+      // À esquerda do eixo, em bloco, quem ficou abaixo do piso: a API só
+      // entrega um a um a partir de R$ 50 mil, mas dá a contagem por faixa,
+      // e sem essa multidão a figura perde a proporção. A altura de cada
+      // bloco é o número de pessoas; a maior faixa ocupa a altura toda.
+      const gutterLeft = 24;
+      const gutterWidth = 260;
+      const left = gutterLeft + gutterWidth + 40;
       const right = 24;
       const top = 56;
-      const bottom = 52;
+      const bottom = 60;
       const plotWidth = SWARM_WIDTH - left - right;
       const plotHeight = SWARM_HEIGHT - top - bottom;
       const centerY = top + plotHeight / 2;
+
+      const belowFloor = TOTAL_BANDS
+        .filter((entry) => entry.max !== null && entry.max <= SWARM_FLOOR)
+        .map((entry) => {
+          const row = (summary?.bands || []).find((band) => Number(band.total_band) === entry.band);
+          return { ...entry, donors: toNumber(row?.donors), value: toNumber(row?.value) };
+        });
+      const mostDonors = Math.max(1, ...belowFloor.map((entry) => entry.donors));
+      const slot = belowFloor.length ? gutterWidth / belowFloor.length : 0;
+      const blocks = belowFloor.map((entry, index) => {
+        const height = Math.max(4, (entry.donors / mostDonors) * (plotHeight - 36));
+        const width = slot * 0.66;
+        return {
+          band: entry.band,
+          tone: entry.max <= SMALL_MAX ? 'small' : 'medium',
+          x: gutterLeft + index * slot + (slot - width) / 2,
+          width,
+          y: centerY - height / 2,
+          height,
+          labelX: gutterLeft + index * slot + slot / 2,
+          count: formatNumeral(entry.donors),
+          // Compacto de propósito: três rótulos dividem 260 unidades, e o
+          // "R$" já está no eixo ao lado.
+          range: entry.min === 0
+            ? `${this.labels.upTo} ${spelledCurrency(entry.max).replace('R$ ', '')}`
+            : `${entry.min / 1000} ${this.labels.to} ${entry.max / 1000} mil`,
+        };
+      });
 
       const totals = swarmDonors.map((donor) => toNumber(donor.total_value));
       const min = SWARM_FLOOR;
@@ -394,7 +444,7 @@ window.$vueDoadores = Vue.createApp({
             x: x(value),
             r: rMin + (rMax - rMin) * Math.min(1, Math.max(0, t)),
           };
-        }), 1.2);
+        }), 1.2, { xStrength: 0.2, yStrength: 0.05 });
         const extent = Math.max(...placed.map((item) => Math.abs(item.y) + item.r));
         if (extent <= plotHeight / 2) break;
         scale *= 0.88;
@@ -419,12 +469,18 @@ window.$vueDoadores = Vue.createApp({
 
       return {
         nodes,
+        blocks,
+        gutterLeft,
+        gutterRight: gutterLeft + gutterWidth,
+        left,
+        right: SWARM_WIDTH - right,
         ticks,
         axisY: SWARM_HEIGHT - bottom + 8,
         cutX: threshold > SWARM_FLOOR ? x(threshold) : null,
         cutTop: top - 30,
         bigCount: nodes.filter((item) => item.value > threshold).length,
         mediumCount: nodes.filter((item) => item.value <= threshold).length,
+        belowCount: belowFloor.reduce((sum, entry) => sum + entry.donors, 0),
         floor: SWARM_FLOOR,
       };
     },
