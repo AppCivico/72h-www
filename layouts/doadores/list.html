@@ -1,0 +1,679 @@
+{{ partial "head.html" . }}
+
+<body>
+  {{ partial "siteNav.html" (dict "ctx" . "yearSwitcher" false) }}
+
+  <main class="container doadores__main">
+    <div id="vueDoadores" v-cloak>
+
+      {{/* ---- Manchete ---------------------------------------------------- */}}
+      <header class="doadores__hero">
+        <div class="doadores__hero-copy">
+          <p class="eyebrow">{{ i18n "donorsEyebrow" }}</p>
+
+          <h1 class="doadores__title" v-if="summary">
+            <span class="doadores__live" v-text="formatNumeral(tiers[2].donors)"></span>
+            {{ i18n "donorsHeadlineGaveOver" }}
+            <span class="doadores__live" v-text="compactCurrency(threshold)"></span>
+            {{ i18n "donorsHeadlineAndAnswer" }}
+            <span class="doadores__live" v-text="formatPercent(tiers[2].valueShare)"></span>
+            {{ i18n "donorsHeadlineOfIndividuals" }}
+            {{ i18n "donorsHeadlineOthers" }}
+            <span class="doadores__live doadores__live--small" v-text="formatNumeral(tiers[0].donors)"></span>
+            {{ i18n "donorsHeadlineGaveUpTo" }}
+            <span class="doadores__live doadores__live--small" v-text="compactCurrency(smallMax)"></span>
+            {{ i18n "donorsHeadlineEach" }}
+          </h1>
+          <h1 class="doadores__title" v-else>{{ i18n "donorsTitleFallback" }}</h1>
+
+          <p class="doadores__dek">{{ i18n "donorsDek" }}</p>
+          <p class="doadores__note">
+            {{ i18n "donorsSourceNote" }}
+            <template v-if="lastDeclared">
+              {{ i18n "donorsLastDeclared" }} <span v-text="formatDate(lastDeclared)"></span>.
+            </template>
+          </p>
+        </div>
+
+        {{/* Os quatro números que resumem a página. Os dois primeiros são os
+             extremos que ela compara; os dois últimos dizem o que "típico"
+             significa de cada lado. */}}
+        <div class="doadores__bignumbers" v-if="summary">
+          <div class="doadores__bignumber">
+            <p class="doadores__bignumber-value" v-text="compactCurrency(tiers[2].value)"></p>
+            <p class="doadores__bignumber-label">{{ i18n "donorsBigValueLabel" }}</p>
+            <p class="doadores__bignumber-detail" v-text="tiers[2].range"></p>
+          </div>
+          <div class="doadores__bignumber doadores__bignumber--small">
+            <p class="doadores__bignumber-value" v-text="compactCurrency(tiers[0].value)"></p>
+            <p class="doadores__bignumber-label">{{ i18n "donorsSmallValueLabel" }}</p>
+            <p class="doadores__bignumber-detail">
+              <span v-text="formatPercent(tiers[0].valueShare)"></span>
+              {{ i18n "donorsOfAllIndividuals" }}
+            </p>
+          </div>
+          <div class="doadores__bignumber">
+            <p class="doadores__bignumber-value" v-text="formatCurrencyNoAbbr(tiers[2].medianTotal)"></p>
+            <p class="doadores__bignumber-label">{{ i18n "donorsBigMedianLabel" }}</p>
+            <p class="doadores__bignumber-detail">{{ i18n "donorsMedianDetail" }}</p>
+          </div>
+          <div class="doadores__bignumber doadores__bignumber--small">
+            <p class="doadores__bignumber-value" v-text="formatCurrencyNoAbbr(tiers[0].medianTotal)"></p>
+            <p class="doadores__bignumber-label">{{ i18n "donorsSmallMedianLabel" }}</p>
+            <p class="doadores__bignumber-detail">{{ i18n "donorsMedianDetail" }}</p>
+          </div>
+        </div>
+      </header>
+
+      <p v-if="loading" class="doadores__loading">{{ i18n "loadingData" }}</p>
+      <p v-if="error" class="pay-attention-to__danger doadores__error">{{ i18n "donorsLoadError" }}</p>
+
+      {{/* ---- Controle do corte ------------------------------------------- */}}
+      <div class="doadores__cut" role="group" aria-label="{{ i18n "donorsCutAria" }}" v-if="summary">
+        <span class="doadores__cut-label">{{ i18n "donorsCutLabel" }}</span>
+        <div class="doadores__cut-chips">
+          <button
+            v-for="option in thresholds"
+            :key="option"
+            type="button"
+            class="doadores__chip"
+            :aria-pressed="option === threshold ? 'true' : 'false'"
+            @click="selectThreshold(option)"
+            v-text="compactCurrency(option)"></button>
+        </div>
+        <p class="doadores__cut-result">
+          <strong v-text="formatNumeral(tiers[2].donors)"></strong> {{ i18n "donorsPeopleWord" }} ·
+          <strong v-text="compactCurrency(tiers[2].value)"></strong> ·
+          <strong v-text="formatPercent(tiers[2].valueShare)"></strong>
+          {{ i18n "donorsOfAllIndividuals" }}
+        </p>
+      </div>
+
+      {{/* ---- 1. Duas eleições: pessoas x dinheiro ------------------------- */}}
+      <section class="doadores__section" v-if="summary">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsDotsEyebrow" }}</p>
+            <h2>{{ i18n "donorsDotsTitle" }}</h2>
+          </div>
+          <p>{{ i18n "donorsDotsIntro" }}</p>
+        </div>
+
+        <div class="doadores__toggle" role="group" aria-label="{{ i18n "donorsDotsAria" }}">
+          <button
+            type="button"
+            class="doadores__chip"
+            :aria-pressed="dotMode === 'people' ? 'true' : 'false'"
+            @click="dotMode = 'people'">{{ i18n "donorsDotsByPeople" }}</button>
+          <button
+            type="button"
+            class="doadores__chip"
+            :aria-pressed="dotMode === 'money' ? 'true' : 'false'"
+            @click="dotMode = 'money'">{{ i18n "donorsDotsByMoney" }}</button>
+          <span class="doadores__toggle-note">
+            {{ i18n "donorsDotsEach" }} <strong v-text="dotEach"></strong>
+          </span>
+        </div>
+
+        <ul class="doadores__legend">
+          <li v-for="entry in dotLegend" :key="entry.key">
+            <i :class="'doadores__swatch doadores__swatch--' + entry.key" aria-hidden="true"></i>
+            <span v-text="entry.name"></span>
+            <strong v-text="formatPercent(entry.share, entry.share < 0.01 ? 1 : 0)"></strong>
+            <span class="doadores__legend-detail" v-text="entry.detail"></span>
+          </li>
+        </ul>
+
+        <div
+          class="doadores__dots"
+          role="img"
+          :aria-label="dotMode === 'people'
+            ? '{{ i18n "donorsDotsAriaPeople" }}'
+            : '{{ i18n "donorsDotsAriaMoney" }}'">
+          <span
+            v-for="(tier, index) in dots"
+            :key="index"
+            :class="'doadores__dot doadores__dot--' + tier"></span>
+        </div>
+        <p class="doadores__figcaption">{{ i18n "donorsDotsCaption" }}</p>
+      </section>
+
+      {{/* ---- 2. Os três portes lado a lado -------------------------------- */}}
+      <section class="doadores__section" v-if="summary">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsTiersEyebrow" }}</p>
+            <h2>{{ i18n "donorsTiersTitle" }}</h2>
+          </div>
+          <p>{{ i18n "donorsTiersIntro" }}</p>
+        </div>
+
+        <div class="doadores__tierbars">
+          <div class="doadores__tierbar" v-for="bar in tierBars" :key="bar.key">
+            <span class="doadores__tierbar-label" v-text="bar.label"></span>
+            <span class="doadores__tierbar-track">
+              <span
+                v-for="part in bar.parts"
+                :key="part.key"
+                :class="'doadores__tierbar-part doadores__tierbar-part--' + part.key"
+                :style="{ flexGrow: Math.max(part.share, 0.004) }"
+                :title="part.name + ': ' + part.detail">
+                <span v-if="part.share >= 0.07" v-text="formatPercent(part.share)"></span>
+              </span>
+            </span>
+          </div>
+        </div>
+
+        <div class="doadores__table-scroll">
+          <table class="doadores__table">
+            <thead>
+              <tr>
+                <th scope="col">{{ i18n "donorsMeasure" }}</th>
+                <th scope="col" v-for="tier in tiers" :key="tier.key">
+                  <i :class="'doadores__swatch doadores__swatch--' + tier.key" aria-hidden="true"></i>
+                  <span v-text="tier.name"></span>
+                  <small v-text="tier.range"></small>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">{{ i18n "donorsRowPeople" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatNumeral(tier.donors)"></td>
+              </tr>
+              <tr>
+                <th scope="row">{{ i18n "donorsRowValue" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="compactCurrency(tier.value)"></td>
+              </tr>
+              <tr class="doadores__table-sep">
+                <th scope="row">{{ i18n "donorsRowValueShare" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatPercent(tier.valueShare, 1)"></td>
+              </tr>
+              <tr>
+                <th scope="row">{{ i18n "donorsRowMean" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatCurrencyNoAbbr(tier.meanTotal)"></td>
+              </tr>
+              <tr>
+                <th scope="row">{{ i18n "donorsRowMedian" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatCurrencyNoAbbr(tier.medianTotal)"></td>
+              </tr>
+              <tr class="doadores__table-sep">
+                <th scope="row">{{ i18n "donorsRowMode" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatCurrencyNoAbbr(tier.modeTransfer)"></td>
+              </tr>
+              <tr>
+                <th scope="row">{{ i18n "donorsRowTransfers" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatNumeral(tier.transfers)"></td>
+              </tr>
+              <tr>
+                <th scope="row">{{ i18n "donorsRowReached" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatNumeral(tier.reached)"></td>
+              </tr>
+              <tr>
+                <th scope="row">{{ i18n "donorsRowSingle" }}</th>
+                <td v-for="tier in tiers" :key="tier.key" v-text="formatPercent(tier.singleShare)"></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="doadores__figcaption">{{ i18n "donorsTiersCaption" }}</p>
+      </section>
+
+      {{/* ---- 3. A escala -------------------------------------------------- */}}
+      <section class="doadores__section doadores__section--scale" v-if="scale">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsScaleEyebrow" }}</p>
+            <h2>
+              {{ i18n "donorsScaleTitleLead" }}
+              <span class="doadores__live" v-text="formatNumeral(scale.ratio)"></span>
+              {{ i18n "donorsScaleTitleTail" }}
+            </h2>
+          </div>
+          <p>
+            {{ i18n "donorsScaleIntroLead" }}
+            <strong v-text="formatCurrencyNoAbbr(scale.big)"></strong>.
+            {{ i18n "donorsScaleIntroMiddle" }}
+            <strong v-text="formatCurrencyNoAbbr(scale.small)"></strong>.
+            <template v-if="scale.capped">{{ i18n "donorsScaleCapped" }}</template>
+          </p>
+        </div>
+        <div class="doadores__scale">
+          <span class="doadores__scale-big" aria-hidden="true"></span>
+          <span class="doadores__scale-crowd" aria-hidden="true">
+            <span v-for="n in scale.drawn" :key="n" class="doadores__scale-unit"></span>
+          </span>
+        </div>
+      </section>
+
+      {{/* ---- 4. Concentração ---------------------------------------------- */}}
+      <section class="doadores__section" v-if="concentrationRows.length">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsConcentrationEyebrow" }}</p>
+            <h2>{{ i18n "donorsConcentrationTitle" }}</h2>
+          </div>
+          <p>{{ i18n "donorsConcentrationIntro" }}</p>
+        </div>
+
+        <div class="doadores__panels">
+          <div class="doadores__panel" v-for="row in concentrationRows" :key="row.key">
+            <h3 v-text="row.name"></h3>
+            <p class="doadores__panel-sub" v-text="row.range"></p>
+            <span class="doadores__stack">
+              <span
+                v-for="bucket in row.buckets"
+                :key="bucket.bucket"
+                class="doadores__stack-part"
+                :style="{ flexGrow: Math.max(bucket.share, 0.002) }"
+                :title="bucket.bucket + ': ' + formatNumeral(bucket.donors)">
+                <span v-if="bucket.share >= 0.12" v-text="formatPercent(bucket.share)"></span>
+              </span>
+            </span>
+            <ul class="doadores__buckets">
+              <li v-for="bucket in row.buckets" :key="bucket.bucket">
+                <span v-text="bucket.bucket"></span>
+                <strong v-text="formatNumeral(bucket.donors)"></strong>
+              </li>
+            </ul>
+            <p class="doadores__panel-note">
+              <strong v-text="formatPercent(row.singleShare)"></strong>
+              {{ i18n "donorsSingleShareNote" }}
+            </p>
+          </div>
+        </div>
+        <p class="doadores__figcaption">{{ i18n "donorsConcentrationCaption" }}</p>
+      </section>
+
+      {{/* ---- 5. Gênero e cor/raça ----------------------------------------- */}}
+      <section class="doadores__section" v-if="waffles.length">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsRaceEyebrow" }}</p>
+            <h2>{{ i18n "donorsWaffleTitle" }}</h2>
+          </div>
+          <p>{{ i18n "donorsWaffleIntro" }}</p>
+        </div>
+
+        <div class="doadores__waffles">
+          <figure class="doadores__waffle" v-for="panel in waffles" :key="panel.key">
+            <figcaption>
+              <h3 v-text="panel.title"></h3>
+              <p class="doadores__panel-sub" v-text="panel.note"></p>
+            </figcaption>
+            <div
+              class="doadores__waffle-grid"
+              role="img"
+              :aria-label="panel.title + ': ' + panel.rows.map((row) => row.name + ' ' + formatPercent(row.share)).join(', ')">
+              <i
+                v-for="(group, index) in panel.flat"
+                :key="index"
+                :class="'doadores__cell doadores__cell--' + group"></i>
+            </div>
+            <ul class="doadores__waffle-keys">
+              <li v-for="row in panel.rows" :key="row.id">
+                <i :class="'doadores__cell doadores__cell--' + row.id" aria-hidden="true"></i>
+                <span v-text="row.name"></span>
+                <strong v-text="formatPercent(row.share)"></strong>
+              </li>
+            </ul>
+          </figure>
+        </div>
+        <p class="doadores__figcaption">{{ i18n "donorsWaffleCaption" }}</p>
+
+        {{/* Gráfico de inclinação: a mesma pergunta ao longo dos três portes,
+             com a régua tracejada da presença entre as candidaturas. */}}
+        <div class="doadores__section-head doadores__section-head--inner" v-if="slope">
+          <div><h3 class="doadores__subtitle">{{ i18n "donorsSlopeTitle" }}</h3></div>
+          <p>{{ i18n "donorsSlopeIntro" }}</p>
+        </div>
+        <figure class="doadores__figure" v-if="slope">
+          {{/* O viewBox é estático de propósito. Este é um template in-DOM:
+               o parser de HTML minúsculo o nome de todo atributo antes de o
+               Vue ver, então `:viewBox` chegaria como `viewbox` e o SVG
+               ignoraria. As medidas abaixo são as mesmas de SLOPE_WIDTH e
+               SLOPE_HEIGHT em scripts/doadores.js; mude as duas juntas. */}}
+          <svg
+            viewBox="0 0 1000 340"
+            class="doadores__slope"
+            role="img"
+            aria-label="{{ i18n "donorsSlopeAria" }}">
+            <g class="doadores__slope-axis">
+              <line
+                v-for="tick in slope.axisX"
+                :key="tick.tier"
+                :x1="tick.x" :x2="tick.x" :y1="slope.topPad" :y2="slope.baseline"></line>
+              <text
+                v-for="tick in slope.axisX"
+                :key="'label-' + tick.tier"
+                :x="tick.x" :y="slope.baseline + 24" text-anchor="middle"
+                class="doadores__slope-tier" v-text="tick.name"></text>
+            </g>
+            <g v-for="line in slope.lines" :key="line.key" :class="'doadores__slope-line doadores__slope-line--' + line.key">
+              <line
+                class="doadores__slope-reference"
+                :x1="slope.left" :x2="line.endX" :y1="line.referenceY" :y2="line.referenceY"></line>
+              <text
+                class="doadores__slope-reference-label"
+                :x="slope.left - 10" :y="line.referenceY + 4" text-anchor="end"
+                v-text="formatPercent(line.reference) + ' {{ i18n "donorsOfCandidacies" }}'"></text>
+              <polyline class="doadores__slope-path" :points="line.polyline"></polyline>
+              <circle v-for="dot in line.dots" :key="dot.tier" :cx="dot.x" :cy="dot.y" r="5"></circle>
+              <template v-for="dot in line.dots" :key="'value-' + dot.tier">
+                <text
+                  v-if="dot.labelled"
+                  :x="dot.labelX" :y="dot.y - 11" :text-anchor="dot.anchor"
+                  class="doadores__slope-value" v-text="formatPercent(dot.share)"></text>
+              </template>
+              <text
+                class="doadores__slope-name"
+                :x="line.endX + 14" :y="line.endY + 4" v-text="line.name"></text>
+            </g>
+          </svg>
+        </figure>
+      </section>
+
+      {{/* ---- 6. Para onde vai ---------------------------------------------- */}}
+      <section class="doadores__section" v-if="partyRows.length">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsWhereEyebrow" }}</p>
+            <h2>{{ i18n "donorsWhereTitle" }}</h2>
+          </div>
+          <p>{{ i18n "donorsWhereIntro" }}</p>
+        </div>
+
+        <ul class="doadores__legend">
+          <li><i class="doadores__swatch doadores__swatch--big" aria-hidden="true"></i>{{ i18n "donorsBigTier" }}</li>
+          <li><i class="doadores__swatch doadores__swatch--small" aria-hidden="true"></i>{{ i18n "donorsSmallTier" }}</li>
+        </ul>
+
+        <div class="doadores__panels doadores__panels--two">
+          <div class="doadores__panel">
+            <h3>{{ i18n "donorsByParty" }}</h3>
+            <p class="doadores__panel-sub">{{ i18n "donorsByPartySub" }}</p>
+            <div class="doadores__compare">
+              <div class="doadores__compare-row" v-for="row in partyRows" :key="row.id">
+                <span class="doadores__compare-key" :title="row.label" v-text="row.label"></span>
+                <span class="doadores__compare-bars">
+                  <span class="doadores__bar doadores__bar--big" :style="{ width: row.bigWidth + '%' }">
+                    <span v-text="formatPercent(row.big)"></span>
+                  </span>
+                  <span class="doadores__bar doadores__bar--small" :style="{ width: row.smallWidth + '%' }">
+                    <span>
+                      <span v-text="formatPercent(row.small)"></span>
+                      <span
+                        v-if="Math.abs(row.delta) >= 0.02"
+                        :class="'doadores__delta doadores__delta--' + (row.delta > 0 ? 'up' : 'down')"
+                        v-text="formatPoints(row.delta)"></span>
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+
+          <div class="doadores__panel">
+            <h3>{{ i18n "donorsByPosition" }}</h3>
+            <p class="doadores__panel-sub">{{ i18n "donorsByPositionSub" }}</p>
+            <div class="doadores__compare">
+              <div class="doadores__compare-row" v-for="row in positionRows" :key="row.id">
+                <span class="doadores__compare-key" :title="row.label" v-text="row.label"></span>
+                <span class="doadores__compare-bars">
+                  <span class="doadores__bar doadores__bar--big" :style="{ width: row.bigWidth + '%' }">
+                    <span v-text="formatPercent(row.big)"></span>
+                  </span>
+                  <span class="doadores__bar doadores__bar--small" :style="{ width: row.smallWidth + '%' }">
+                    <span>
+                      <span v-text="formatPercent(row.small)"></span>
+                      <span
+                        v-if="Math.abs(row.delta) >= 0.02"
+                        :class="'doadores__delta doadores__delta--' + (row.delta > 0 ? 'up' : 'down')"
+                        v-text="formatPoints(row.delta)"></span>
+                    </span>
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="doadores__figcaption">{{ i18n "donorsWhereCaption" }}</p>
+      </section>
+
+      {{/* ---- 7. As duas listas de candidaturas ----------------------------- */}}
+      <section class="doadores__section" v-if="smallLed.length || dependent.length">
+        <div class="doadores__panels doadores__panels--two">
+          <div v-if="smallLed.length">
+            <div class="doadores__section-head doadores__section-head--stacked">
+              <div>
+                <p class="eyebrow">{{ i18n "donorsSmallLedEyebrow" }}</p>
+                <h3 class="doadores__subtitle">{{ i18n "donorsSmallLedTitle" }}</h3>
+              </div>
+              <p>
+                {{ i18n "donorsSmallLedIntro" }}
+                <strong v-text="compactCurrency(smallListFloor)"></strong>
+                {{ i18n "donorsSmallLedIntroTail" }}
+              </p>
+            </div>
+            <ul class="doadores__list">
+              <li class="doadores__list-row" v-for="item in smallLed" :key="item.candidate_id">
+                <a class="doadores__list-name" :href="'/candidato/' + item.person_id + '/'" v-text="item.name"></a>
+                <span class="doadores__list-share doadores__list-share--small" v-text="formatPercent(item.small_share)"></span>
+                <span class="doadores__list-meta"
+                  v-text="[item.party.acronym || item.party.name, item.position.name, item.uf.name, item.gender.name, item.race.name].join(' · ')"></span>
+                <span class="doadores__track doadores__track--small">
+                  <i :style="{ width: (toNumber(item.small_share) * 100) + '%' }"></i>
+                </span>
+                <span class="doadores__list-detail">
+                  <span v-text="formatCurrencyNoAbbr(item.total_value)"></span>
+                  {{ i18n "donorsListIndividualTotal" }}
+                </span>
+              </li>
+            </ul>
+          </div>
+
+          <div v-if="dependent.length">
+            <div class="doadores__section-head doadores__section-head--stacked">
+              <div>
+                <p class="eyebrow">{{ i18n "donorsDependentEyebrow" }}</p>
+                <h3 class="doadores__subtitle">{{ i18n "donorsDependentTitle" }}</h3>
+              </div>
+              <p>
+                {{ i18n "donorsDependentIntro" }}
+                <strong v-text="compactCurrency(dependentListFloor)"></strong>
+                {{ i18n "donorsDependentIntroTail" }}
+              </p>
+            </div>
+            <ul class="doadores__list">
+              <li class="doadores__list-row" v-for="item in dependent" :key="item.candidate_id">
+                <a class="doadores__list-name" :href="'/candidato/' + item.person_id + '/'" v-text="item.name"></a>
+                <span class="doadores__list-share" v-text="formatPercent(item.top_donor.share)"></span>
+                <span class="doadores__list-meta"
+                  v-text="[item.party.acronym || item.party.name, item.position.name, item.uf.name, item.gender.name, item.race.name].join(' · ')"></span>
+                <span class="doadores__track">
+                  <i :style="{ width: (toNumber(item.top_donor.share) * 100) + '%' }"></i>
+                </span>
+                <span class="doadores__list-detail">
+                  <span v-text="formatCurrencyNoAbbr(item.top_donor.value)"></span>
+                  {{ i18n "donorsListFrom" }}
+                  <strong v-text="item.top_donor.name"></strong>,
+                  {{ i18n "donorsListOutOf" }}
+                  <span v-text="formatCurrencyNoAbbr(item.total_value)"></span>
+                  {{ i18n "donorsListDeclaredIndividual" }}
+                </span>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      {{/* ---- 8. O tempo ---------------------------------------------------- */}}
+      <section class="doadores__section" v-if="timeline">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsTimeEyebrow" }}</p>
+            <h2>{{ i18n "donorsTimeTitle" }}</h2>
+          </div>
+          <p>{{ i18n "donorsTimeIntro" }}</p>
+        </div>
+        <figure class="doadores__figure">
+          <div id="js-doadores-timeline" class="doadores__chart"></div>
+        </figure>
+        <p class="doadores__figcaption">{{ i18n "donorsTimeCaption" }}</p>
+      </section>
+
+      {{/* ---- 9. O ranking --------------------------------------------------- */}}
+      <section class="doadores__section" v-if="ranking.length">
+        <div class="doadores__section-head">
+          <div>
+            <p class="eyebrow">{{ i18n "donorsRankEyebrow" }}</p>
+            <h2>{{ i18n "donorsRankTitle" }}</h2>
+          </div>
+          <p>{{ i18n "donorsRankIntro" }}</p>
+        </div>
+
+        <div class="doadores__rank">
+          <template v-for="(donor, index) in ranking" :key="donor.donor_id">
+            <button
+              type="button"
+              class="doadores__rank-row"
+              :aria-expanded="openDonorId === donor.donor_id ? 'true' : 'false'"
+              @click="toggleDonor(donor.donor_id)">
+              <span class="doadores__rank-index" v-text="index + 1"></span>
+              <span class="doadores__rank-name">
+                <span v-text="donor.name"></span>
+                <small
+                  v-text="countLabel(donor.candidacies_count, '{{ i18n "donorsCandidacyWord" }}', '{{ i18n "donorsCandidaciesWord" }}')
+                    + ' · ' + countLabel(donor.parties_count, '{{ i18n "donorsPartyWord" }}', '{{ i18n "donorsPartiesWord" }}')"></small>
+              </span>
+              <span class="doadores__rank-parties">
+                <span
+                  v-for="party in donor.parties"
+                  :key="party.id"
+                  v-show="partyTag(party)"
+                  class="doadores__tag"
+                  v-text="partyTag(party)"></span>
+              </span>
+              <span class="doadores__rank-value" v-text="compactCurrency(donor.total_value)"></span>
+              <span class="doadores__rank-top">
+                <strong v-text="formatPercent(donor.top_share)"></strong>
+                {{ i18n "donorsTopShareLabel" }}
+              </span>
+            </button>
+
+            <div class="doadores__rank-detail" v-if="openDonorId === donor.donor_id">
+              <p v-if="donorDetailLoading">{{ i18n "loadingData" }}</p>
+              <template v-if="donorDetail && !donorDetailLoading">
+                <p class="doadores__rank-detail-lead">
+                  <span v-text="formatCurrencyNoAbbr(donorDetail.total_value)"></span>
+                  {{ i18n "donorsDetailIn" }}
+                  <span v-text="formatNumeral(donorDetail.transfers)"></span>
+                  {{ i18n "donorsDetailTransfers" }}
+                  <template v-if="donorDetail.elections && donorDetail.elections.length > 1">
+                    · {{ i18n "donorsDetailAlsoIn" }}
+                    <span v-text="donorDetail.elections.filter((e) => e.year !== {{ site.Params.run }}).map((e) => e.year).join(', ')"></span>
+                  </template>
+                </p>
+                <div class="doadores__table-scroll">
+                  <table class="doadores__table doadores__table--detail">
+                    <thead>
+                      <tr>
+                        <th scope="col">{{ i18n "donorsDetailCandidacy" }}</th>
+                        <th scope="col">{{ i18n "donorsDetailParty" }}</th>
+                        <th scope="col">{{ i18n "donorsDetailPosition" }}</th>
+                        <th scope="col">{{ i18n "donorsDetailProfile" }}</th>
+                        <th scope="col">{{ i18n "donorsDetailValue" }}</th>
+                        <th scope="col">{{ i18n "donorsDetailShare" }}</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr v-for="row in donorDetail.candidacies" :key="row.candidate_id">
+                        <td>
+                          <a :href="'/candidato/' + row.person_id + '/'" v-text="row.name || row.candidate_id"></a>
+                        </td>
+                        <td v-text="row.party.acronym || row.party.name"></td>
+                        <td v-text="row.position.name + ' · ' + (row.uf.acronym || row.uf.name)"></td>
+                        <td v-text="row.gender.name + ' · ' + row.race.name"></td>
+                        <td v-text="formatCurrencyNoAbbr(row.value)"></td>
+                        <td v-text="formatPercent(row.share)"></td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <p class="doadores__note">{{ i18n "donorsDetailNote" }}</p>
+              </template>
+            </div>
+          </template>
+        </div>
+
+        <p class="doadores__more" v-if="rankingHasMore">
+          <button type="button" class="doadores__chip" :disabled="rankingLoading" @click="loadMoreDonors">
+            {{ i18n "donorsLoadMore" }}
+          </button>
+        </p>
+      </section>
+
+      {{/* ---- Metodologia ---------------------------------------------------- */}}
+      <section class="doadores__method">
+        <p class="eyebrow">{{ i18n "donorsMethodEyebrow" }}</p>
+        <div class="doadores__method-columns">
+          <div>
+            <h3>{{ i18n "donorsMethodDeclaresTitle" }}</h3>
+            <p>{{ i18n "donorsMethodDeclaresBody" }}</p>
+          </div>
+          <div>
+            <h3>{{ i18n "donorsMethodTiersTitle" }}</h3>
+            <p>
+              {{ i18n "donorsMethodTiersBodyLead" }}
+              <span v-text="compactCurrency(smallMax)"></span>
+              {{ i18n "donorsMethodTiersBodyTail" }}
+            </p>
+          </div>
+          <div>
+            <h3>{{ i18n "donorsMethodUnknownTitle" }}</h3>
+            <p>{{ i18n "donorsMethodUnknownBody" }}</p>
+          </div>
+        </div>
+        <p class="doadores__note">
+          {{ i18n "donorsMethodSources" }}
+          <a href="/sobre-os-dados/">{{ i18n "methodologyLink" }}</a>
+        </p>
+      </section>
+
+    </div>
+  </main>
+
+  {{ partial "footer.html" . }}
+
+  <script>
+    window.appChartCredits = '{{ i18n "chartExportCredits" }}';
+    window.appApiDomain = '{{ site.Params.apiDomain }}';
+    window.appDonorsYear = {{ site.Params.run }};
+    window.appDonorsLabels = {
+      small: '{{ i18n "donorsSmallTier" }}',
+      medium: '{{ i18n "donorsMediumTier" }}',
+      big: '{{ i18n "donorsBigTier" }}',
+      registered: '{{ i18n "donorsRegistered" }}',
+      candidacies: '{{ i18n "donorsCandidaciesWord" }}',
+      people: '{{ i18n "donorsPeopleAxis" }}',
+      money: '{{ i18n "donorsMoneyAxis" }}',
+      peopleWord: '{{ i18n "donorsPeopleWord" }}',
+      women: '{{ i18n "donorsWomen" }}',
+      black: '{{ i18n "donorsBlack" }}',
+      blackWomen: '{{ i18n "donorsBlackWomen" }}',
+      others: '{{ i18n "donorsOthers" }}',
+      upTo: '{{ i18n "donorsUpTo" }}',
+      above: '{{ i18n "donorsAbove" }}',
+      to: '{{ i18n "donorsTo" }}',
+      halfway: '{{ i18n "donorsHalfway" }}',
+    }
+  </script>
+
+  {{ $vue := resources.Get (cond hugo.IsProduction "vendor/vue.global.prod.js" "vendor/vue.global.js") | resources.Fingerprint "sha512" }}
+  <script src="{{ $vue.RelPermalink }}" integrity="{{ $vue.Data.Integrity }}"></script>
+  {{ $highcharts := resources.Get "vendor/highcharts/highcharts.js" | resources.Fingerprint "sha512" }}
+  <script src="{{ $highcharts.RelPermalink }}" integrity="{{ $highcharts.Data.Integrity }}"></script>
+  {{ $doadoresJS := resources.Get "scripts/doadores.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
+  <script type="text/javascript" src="{{ $doadoresJS.RelPermalink }}" integrity="{{ $doadoresJS.Data.Integrity }}"></script>
+</body>
+</html>
