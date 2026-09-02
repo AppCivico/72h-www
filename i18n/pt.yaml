@@ -1117,8 +1117,6 @@
   translation: "a"
 - id: donorsOthers
   translation: "Outros"
-- id: donorsHalfway
-  translation: "metade em"
 - id: donorsDotsEyebrow
   translation: "Duas eleições"
 - id: donorsDotsTitle
@@ -1254,11 +1252,15 @@
 - id: donorsTimeEyebrow
   translation: "O tempo"
 - id: donorsTimeTitle
-  translation: "Quem chega cedo e quem chega com a campanha"
+  translation: "Quando o dinheiro entrou"
 - id: donorsTimeIntro
-  translation: "Cada linha mostra que parte do dinheiro de um porte já havia sido declarada a cada dia. Uma linha que sobe cedo é um grupo que decide antes; uma que sobe no fim é um grupo que reage ao que acontece na campanha."
+  translation: "Cada linha mostra que parte do dinheiro de um porte já havia sido declarada a cada dia. Uma linha que sobe antes das outras é um grupo que decide cedo; linhas que sobem juntas dizem que os três portes entraram na mesma janela."
 - id: donorsTimeCaption
   translation: "As datas são as da doação declarada, não as da entrega da prestação de contas."
+- id: donorsHalfwayLead
+  translation: "Metade do dinheiro de cada porte já estava declarada em:"
+- id: donorsFutureDaysNote
+  translation: "Doações declaradas com data futura, provável erro de preenchimento, ficam fora deste gráfico."
 - id: donorsRankEyebrow
   translation: "O ranking"
 - id: donorsRankTitle
@@ -1307,3 +1309,87 @@
   translation: "Prestação de contas é parcial até a entrega final. Um doador ausente pode ter doado e ainda não constar nas declarações, e um valor pode ser retificado. Por isso a página fala do que foi declarado até aqui e não afirma irregularidade a partir destes números."
 - id: donorsMethodSources
   translation: "Fonte: TSE, DivulgaCandContas."
+# Beeswarm: os grandes doadores, um a um
+- id: donorsSwarmEyebrow
+  translation: "Os grandes, um a um"
+- id: donorsSwarmTitle
+  translation: "Cada círculo é uma pessoa. O tamanho é quanto ela doou no total."
+- id: donorsSwarmIntroLead
+  translation: "A escala é logarítmica: cada marca do eixo é um salto maior que o anterior. Aqui está todo mundo que doou mais de"
+- id: donorsSwarmIntroTail
+  translation: "no total da eleição. A linha tracejada é o corte escolhido no topo; os círculos à direita dela são os grandes doadores. Passe o mouse ou toque em um círculo para ver quem é."
+- id: donorsSwarmColorAria
+  translation: "Escolha o que a cor dos círculos representa"
+- id: donorsSwarmColorBy
+  translation: "colorir por"
+- id: donorsSwarmByTier
+  translation: "porte"
+- id: donorsSwarmByConcentration
+  translation: "número de candidaturas"
+- id: donorsSwarmLegendBig
+  translation: "Grandes doadores, acima do corte"
+- id: donorsSwarmLegendMedium
+  translation: "Abaixo do corte"
+- id: donorsSwarmLegendSingle
+  translation: "Doou a uma única candidatura"
+- id: donorsSwarmLegendMany
+  translation: "Doou a duas ou mais"
+- id: donorsSwarmAria
+  translation: "Cada doador acima do piso como um círculo, posicionado pelo total doado em escala logarítmica"
+- id: donorsSwarmCut
+  translation: "corte:"
+- id: donorsSwarmBigOne
+  translation: "grande doador"
+- id: donorsSwarmBigMany
+  translation: "grandes doadores"
+- id: donorsSwarmMediumOne
+  translation: "doador abaixo do corte"
+- id: donorsSwarmMediumMany
+  translation: "doadores abaixo do corte"
+- id: donorsSwarmCaptionLead
+  translation: "Só quem doou mais de"
+- id: donorsSwarmCaptionTail
+  translation: "aparece como círculo, porque é o menor corte que a API entrega doador a doador. Os médios e os pequenos estão na tabela dos três portes, em agregado."
+- id: donorsUnnamed
+  translation: "Doador sem nome divulgado"
+# Bloco dos pequenos doadores
+- id: donorsSmallEyebrow
+  translation: "Os pequenos doadores"
+- id: donorsSmallTitleLead
+  translation: "Quem são as"
+- id: donorsSmallTitleMiddle
+  translation: "pessoas que doaram até"
+- id: donorsSmallIntro
+  translation: "Nenhum nome aparece aqui, por escolha editorial: pequenos doadores são cidadãos comuns, e o interesse público está no conjunto, não no indivíduo. Os números vêm das mesmas declarações das candidaturas."
+- id: donorsSmallMeanLabel
+  translation: "doação total média por pessoa"
+- id: donorsSmallMedianPrefix
+  translation: "mediana:"
+- id: donorsSmallModeLabel
+  translation: "valor mais comum de uma doação"
+- id: donorsSmallTransfersSuffix
+  translation: "doações no total"
+- id: donorsSmallReachedLabel
+  translation: "candidaturas receberam de pelo menos um pequeno doador"
+- id: donorsSmallReachedOf
+  translation: "de"
+- id: donorsSmallReachedTail
+  translation: "com alguma receita de pessoa física"
+- id: donorsSmallRatioLabel
+  translation: "é quanto os grandes doadores deram a mais que os pequenos"
+- id: donorsSmallRatioDetail
+  translation: "para cada R$ 1 de pequeno doador"
+- id: donorsSmallWomenLabel
+  translation: "do dinheiro dos pequenos doadores foi para candidaturas de mulheres"
+- id: donorsSmallWomenBig
+  translation: "entre os grandes:"
+- id: donorsBandsTitle
+  translation: "Quantas pessoas doaram quanto"
+- id: donorsBandsIntro
+  translation: "Cada faixa é um porte de doador, pelo total que a pessoa deu na eleição. A barra cinza diz quantas, de cada cem pessoas que doaram, estão naquela faixa; a barra âmbar, quantos de cada cem reais saíram dela."
+- id: donorsBandsPeople
+  translation: "de cada 100 doadores"
+- id: donorsBandsMoney
+  translation: "de cada R$ 100"
+- id: donorsBandsCaption
+  translation: "As faixas seguem as bordas que a própria API usa para os portes. A distribuição doação a doação, por valor de cada repasse, entra quando a API passar a informar as bordas das faixas."

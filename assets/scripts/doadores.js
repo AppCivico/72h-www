@@ -1,5 +1,5 @@
 /* global Vue, Highcharts */
-import chartTheme, { categorical, compactCurrency } from './utilities/chartTheme';
+import chartTheme, { categorical } from './utilities/chartTheme';
 import formatCurrencyNoAbbr from './utilities/formatCurrencyNoAbbr';
 import formatNumeral from './utilities/formatNumeral';
 import watchMainMenu from './menuToggle';
@@ -9,11 +9,15 @@ import {
   SMALL_MAX,
   THRESHOLDS,
   TIERS,
+  TOTAL_BANDS,
+  bandLabel,
+  beeswarmLayout,
   cumulativeSeries,
   halfwayDate,
   largestRemainder,
   medianRatio,
   share,
+  spelledCurrency,
   toNumber,
 } from './utilities/donorTiers';
 
@@ -40,6 +44,15 @@ const LIST_RESULTS = 6;
 const SMALL_LIST_FLOOR = 200000;
 const DEPENDENT_LIST_FLOOR = 100000;
 const RANKING_PAGE = 20;
+
+// Geometria do beeswarm, em unidades do viewBox (estático no template, pela
+// mesma razão do gráfico de inclinação: mude os dois juntos). O piso é o
+// menor corte que a API entrega doador a doador; quando `min_total` voltar a
+// funcionar, basta trocar SWARM_FLOOR por 10000 para a nuvem dos médios entrar.
+const SWARM_WIDTH = 1000;
+const SWARM_HEIGHT = 380;
+const SWARM_FLOOR = THRESHOLDS[0];
+const SWARM_RESULTS = 5000;
 
 // Geometria do gráfico de inclinação, em unidades do viewBox. O viewBox é
 // estático no template (in-DOM não preserva o "B" maiúsculo de um atributo
@@ -100,6 +113,10 @@ window.$vueDoadores = Vue.createApp({
       loading: true,
       error: false,
       dotMode: 'people',
+      swarmDonors: [],
+      swarmMode: 'tier',
+      tip: null,
+      bandChart: null,
       openDonorId: null,
       donorDetail: null,
       donorDetailLoading: false,
@@ -158,7 +175,7 @@ window.$vueDoadores = Vue.createApp({
           share: tier[bar.pick],
           detail: bar.key === 'people'
             ? `${formatNumeral(tier.donors)} ${this.labels.peopleWord}`
-            : compactCurrency(tier.value),
+            : spelledCurrency(tier.value),
         })),
       }));
     },
@@ -186,7 +203,7 @@ window.$vueDoadores = Vue.createApp({
         share: dotMode === 'people' ? tier.peopleShare : tier.valueShare,
         detail: dotMode === 'people'
           ? `${formatNumeral(tier.donors)} ${this.labels.peopleWord}`
-          : compactCurrency(tier.value),
+          : spelledCurrency(tier.value),
         each,
       }));
     },
@@ -194,7 +211,7 @@ window.$vueDoadores = Vue.createApp({
       if (!summary) return '';
       return dotMode === 'people'
         ? `${formatNumeral(Math.round(toNumber(summary.individuals.donors) / DOTS))} ${this.labels.peopleWord}`
-        : compactCurrency(toNumber(summary.individuals.value) / DOTS);
+        : spelledCurrency(toNumber(summary.individuals.value) / DOTS);
     },
     // Quantos pequenos doadores medianos cabem num grande doador mediano.
     scale({ summary } = this) {
@@ -223,13 +240,13 @@ window.$vueDoadores = Vue.createApp({
         {
           key: 'big',
           title: this.labels.big,
-          note: `${compactCurrency(bigTier?.value || 0)} · ${this.labels.above} ${compactCurrency(threshold)}`,
+          note: `${spelledCurrency(bigTier?.value || 0)} · ${this.labels.above} ${spelledCurrency(threshold)}`,
           weight: (group) => toNumber(group.big?.value),
         },
         {
           key: 'small',
           title: this.labels.small,
-          note: `${compactCurrency(smallTier?.value || 0)} · ${this.labels.upTo} ${compactCurrency(SMALL_MAX)}`,
+          note: `${spelledCurrency(smallTier?.value || 0)} · ${this.labels.upTo} ${spelledCurrency(SMALL_MAX)}`,
           weight: (group) => toNumber(group.small?.value),
         },
         {
@@ -337,6 +354,123 @@ window.$vueDoadores = Vue.createApp({
         })),
       };
     },
+    // Cada círculo é uma pessoa acima do piso; o x é o total doado em escala
+    // logarítmica, o raio cresce com a raiz do total (área proporcional ao
+    // dinheiro) e o y vem do layout de "dodge", que só afasta quem colide.
+    swarm({ swarmDonors, threshold, swarmMode } = this) {
+      if (!swarmDonors.length) return null;
+
+      const left = 24;
+      const right = 24;
+      const top = 56;
+      const bottom = 52;
+      const plotWidth = SWARM_WIDTH - left - right;
+      const plotHeight = SWARM_HEIGHT - top - bottom;
+      const centerY = top + plotHeight / 2;
+
+      const totals = swarmDonors.map((donor) => toNumber(donor.total_value));
+      const min = SWARM_FLOOR;
+      const max = Math.max(...totals) * 1.15;
+      const logMin = Math.log10(min);
+      const logSpan = Math.log10(max) - logMin || 1;
+      const x = (value) => {
+        const position = (Math.log10(Math.max(value, min)) - logMin) / logSpan;
+        return left + position * plotWidth;
+      };
+
+      // Se a nuvem estourar a altura, os raios encolhem juntos até caber:
+      // a proporção entre os círculos é o que importa, não o tamanho absoluto.
+      let scale = 1;
+      let placed = [];
+      for (let attempt = 0; attempt < 8; attempt += 1) {
+        const rMin = 3 * scale;
+        const rMax = 26 * scale;
+        placed = beeswarmLayout(swarmDonors.map((donor) => {
+          const value = toNumber(donor.total_value);
+          const t = Math.sqrt((value - min) / (max - min));
+          return {
+            donor,
+            value,
+            x: x(value),
+            r: rMin + (rMax - rMin) * Math.min(1, Math.max(0, t)),
+          };
+        }), 1.2);
+        const extent = Math.max(...placed.map((item) => Math.abs(item.y) + item.r));
+        if (extent <= plotHeight / 2) break;
+        scale *= 0.88;
+      }
+
+      const ticks = [50000, 100000, 250000, 500000, 1e6, 2.5e6, 5e6, 1e7, 2.5e7, 5e7]
+        .filter((tick) => tick >= min && tick <= max)
+        .map((tick) => ({ value: tick, x: x(tick), label: spelledCurrency(tick) }));
+
+      const color = (item) => {
+        if (swarmMode === 'concentration') {
+          return toNumber(item.donor.candidacies_count) === 1 ? 'single' : 'many';
+        }
+        return item.value > threshold ? 'big' : 'medium';
+      };
+
+      const nodes = placed.map((item) => ({
+        ...item,
+        cy: centerY + item.y,
+        tone: color(item),
+      }));
+
+      return {
+        nodes,
+        ticks,
+        axisY: SWARM_HEIGHT - bottom + 8,
+        cutX: threshold > SWARM_FLOOR ? x(threshold) : null,
+        cutTop: top - 30,
+        bigCount: nodes.filter((item) => item.value > threshold).length,
+        mediumCount: nodes.filter((item) => item.value <= threshold).length,
+        floor: SWARM_FLOOR,
+      };
+    },
+    // Os números do bloco dos pequenos doadores. O "de N candidaturas" usa as
+    // candidaturas com alguma receita de pessoa física, que o /breakdown
+    // devolve por grupo e aqui são somadas.
+    smallNumbers({ tiers, breakdown } = this) {
+      const small = tiers.find((tier) => tier.key === 'small');
+      const big = tiers.find((tier) => tier.key === 'big');
+      if (!small || !big) return null;
+      const gender = breakdown?.gender || [];
+      const women = gender.filter((row) => row.id === 2);
+      return {
+        ...small,
+        ratio: small.value > 0 ? big.value / small.value : null,
+        candidaciesWithIndividuals: sumBy(gender, (row) => row.candidacies_registered),
+        womenShare: share(
+          sumBy(women, (row) => row.small?.value),
+          sumBy(gender, (row) => row.small?.value),
+        ),
+        womenShareBig: share(
+          sumBy(women, (row) => row.big?.value),
+          sumBy(gender, (row) => row.big?.value),
+        ),
+      };
+    },
+    // As oito faixas de porte como "de cada 100 doadores" e "de cada R$ 100":
+    // a mesma pergunta do histograma por doação, com as bordas que a API
+    // confirma (o histograma por doação vem sem bordas e ficou de fora).
+    bandRows({ summary } = this) {
+      const bands = summary?.bands;
+      if (!bands?.length) return [];
+      const donors = sumBy(bands, (band) => band.donors);
+      const value = sumBy(bands, (band) => band.value);
+      return TOTAL_BANDS.map((entry) => {
+        const row = bands.find((band) => Number(band.total_band) === entry.band) || {};
+        return {
+          band: entry.band,
+          label: bandLabel(entry.band),
+          donors: toNumber(row.donors),
+          value: toNumber(row.value),
+          donorsShare: share(row.donors, donors),
+          valueShare: share(row.value, value),
+        };
+      });
+    },
     // O /donors devolve as siglas do doador sem o nome do partido, e pelo
     // menos uma delas chega nula (o PSD, em 02/09/2026). O /breakdown traz id
     // e nome no mesmo objeto, então serve de dicionário para o ranking.
@@ -374,18 +508,41 @@ window.$vueDoadores = Vue.createApp({
         };
       });
     },
+    // Uma parte das declarações traz data futura (erro de preenchimento na
+    // prestação de contas). Elas esticavam o eixo do gráfico até outubro com
+    // uma linha reta em 100%, então ficam fora daqui e são contadas na
+    // legenda, em vez de sumirem sem aviso.
+    timelineDays({ timeline } = this) {
+      const today = new Date().toLocaleDateString('en-CA');
+      return (timeline?.days || []).filter((row) => row.date <= today);
+    },
+    futureDays({ timeline, timelineDays } = this) {
+      return (timeline?.days || []).length - timelineDays.length;
+    },
     // A data da doação mais recente que já aparece nas declarações. Não é a
     // data da coleta (o /donors/summary não devolve uma), e a diferença
     // importa: o texto diz "declarada até", nunca "atualizado em".
-    lastDeclared({ timeline } = this) {
-      const days = timeline?.days;
-      if (!days?.length) return null;
-      return days.reduce((latest, row) => (row.date > latest ? row.date : latest), days[0].date);
+    lastDeclared({ timelineDays } = this) {
+      if (!timelineDays.length) return null;
+      return timelineDays.reduce(
+        (latest, row) => (row.date > latest ? row.date : latest),
+        timelineDays[0].date,
+      );
+    },
+    // O dia em que cada porte passou da metade do próprio dinheiro. Saía como
+    // três marcas dentro do gráfico, que caem em datas próximas e viravam
+    // três rótulos empilhados por cima das linhas.
+    halfwayDates({ timelineDays, tiers } = this) {
+      if (!timelineDays.length || !tiers.length) return [];
+      const series = cumulativeSeries(timelineDays);
+      return tiers
+        .map((tier) => ({ key: tier.key, name: tier.name, date: halfwayDate(series[tier.key]) }))
+        .filter((entry) => entry.date);
     },
   },
   methods: {
     formatNumeral,
-    compactCurrency,
+    spelledCurrency,
     formatCurrencyNoAbbr,
     share,
     toNumber,
@@ -407,9 +564,9 @@ window.$vueDoadores = Vue.createApp({
     // e o médio é o intervalo entre os dois.
     tierRange(key) {
       const { labels } = this;
-      if (key === 'small') return `${labels.upTo} ${compactCurrency(SMALL_MAX)}`;
-      if (key === 'big') return `${labels.above} ${compactCurrency(this.threshold)}`;
-      return `${compactCurrency(SMALL_MAX)} ${labels.to} ${compactCurrency(this.threshold)}`;
+      if (key === 'small') return `${labels.upTo} ${spelledCurrency(SMALL_MAX)}`;
+      if (key === 'big') return `${labels.above} ${spelledCurrency(this.threshold)}`;
+      return `${spelledCurrency(SMALL_MAX)} ${labels.to} ${spelledCurrency(this.threshold)}`;
     },
     partyLabel(row) {
       // O PSD chega com acronym null na API; o nome longo é o que sobra.
@@ -465,6 +622,95 @@ window.$vueDoadores = Vue.createApp({
         delta: row.big - row.small,
       }));
     },
+    showTip(event, node) {
+      const { donor } = node;
+      this.tip = {
+        x: Math.min(event.clientX + 14, window.innerWidth - 280),
+        y: event.clientY + 14,
+        name: donor.name || this.labels.unnamed,
+        total: spelledCurrency(node.value),
+        candidacies: this.countLabel(
+          donor.candidacies_count,
+          this.labels.candidacy,
+          this.labels.candidacies,
+        ),
+      };
+    },
+    hideTip() {
+      this.tip = null;
+    },
+    // Todo mundo acima do piso, uma vez só: o beeswarm não depende do corte
+    // escolhido (o corte só recolore os círculos e move a linha).
+    async loadSwarm() {
+      try {
+        const data = await getJSON('donors', {
+          threshold: SWARM_FLOOR,
+          fields: 'light',
+          results: SWARM_RESULTS,
+        });
+        this.swarmDonors = data.donors || [];
+      } catch (err) {
+        // eslint-disable-next-line no-console
+        console.error(err);
+      }
+    },
+    // Duas colunas por faixa de porte, as duas em porcentagem do próprio
+    // total, no mesmo eixo: quantas pessoas caem ali e quanto dinheiro.
+    renderBandChart() {
+      const container = document.getElementById('js-doadores-bands');
+      if (!container || typeof Highcharts === 'undefined' || !this.bandRows.length) return;
+
+      Highcharts.setOptions(chartTheme);
+      if (this.bandChart) this.bandChart.destroy();
+      this.bandChart = Highcharts.chart('js-doadores-bands', {
+        chart: { type: 'column', height: 360 },
+        title: { text: null },
+        xAxis: {
+          categories: this.bandRows.map((row) => row.label),
+          labels: { style: { fontSize: '11px' } },
+        },
+        yAxis: {
+          title: { text: null },
+          min: 0,
+          max: 100,
+          labels: { format: '{value}%' },
+        },
+        tooltip: {
+          shared: true,
+          valueDecimals: 1,
+          valueSuffix: '%',
+        },
+        plotOptions: {
+          column: {
+            borderRadius: 3,
+            pointPadding: 0.06,
+            groupPadding: 0.12,
+            dataLabels: {
+              enabled: true,
+              // eslint-disable-next-line object-shorthand, func-names
+              formatter: function () {
+                // Dois doadores em 14.856 são 0,01%: "0,0%" leria como zero.
+                if (this.y < 0.05) return '<0,1%';
+                return this.y >= 1 ? `${formatNumeral(this.y, 0)}%` : `${formatNumeral(this.y, 1)}%`;
+              },
+              style: { fontSize: '11px', fontWeight: '600', textOutline: 'none' },
+            },
+          },
+        },
+        series: [
+          {
+            name: this.labels.ofPeople,
+            color: '#7a7488',
+            data: this.bandRows.map((row) => row.donorsShare * 100),
+          },
+          {
+            name: this.labels.ofMoney,
+            color: '#b45309',
+            data: this.bandRows.map((row) => row.valueShare * 100),
+          },
+        ],
+      });
+    },
     selectThreshold(value) {
       if (value === this.threshold) return;
       this.threshold = value;
@@ -517,7 +763,10 @@ window.$vueDoadores = Vue.createApp({
       } finally {
         if (ticket === this.requestId) {
           this.loading = false;
-          this.$nextTick(() => this.renderTimeline());
+          this.$nextTick(() => {
+            this.renderTimeline();
+            this.renderBandChart();
+          });
         }
       }
     },
@@ -583,31 +832,11 @@ window.$vueDoadores = Vue.createApp({
       const container = document.getElementById('js-doadores-timeline');
       if (!container || typeof Highcharts === 'undefined') return;
 
-      const series = cumulativeSeries(this.timeline?.days);
+      const series = cumulativeSeries(this.timelineDays);
       const keys = TIERS.filter((tier) => series[tier]?.length);
       if (!keys.length) return;
 
       const colors = { small: categorical[1], medium: '#a9a3b4', big: categorical[0] };
-
-      const plotLines = keys.map((tier) => {
-        const day = halfwayDate(series[tier]);
-        if (!day) return null;
-        return {
-          value: Date.parse(`${day}T12:00:00Z`),
-          color: colors[tier],
-          dashStyle: 'Dash',
-          width: 1,
-          zIndex: 3,
-          label: {
-            text: `${this.labels[tier]}: ${this.labels.halfway} ${this.formatDate(day)}`,
-            rotation: 0,
-            // Escalonado por porte: as três marcas caem em datas próximas e
-            // os rótulos se sobrepõem se saírem todos na mesma altura.
-            y: 16 + TIERS.indexOf(tier) * 16,
-            style: { color: '#565064', fontSize: '11px' },
-          },
-        };
-      }).filter(Boolean);
 
       Highcharts.setOptions(chartTheme);
       if (this.timelineChart) this.timelineChart.destroy();
@@ -617,7 +846,6 @@ window.$vueDoadores = Vue.createApp({
         legend: { enabled: true },
         xAxis: {
           type: 'datetime',
-          plotLines,
           labels: { format: '{value:%e %b}' },
         },
         yAxis: {
@@ -647,5 +875,6 @@ window.$vueDoadores = Vue.createApp({
   mounted() {
     this.loadThresholdData();
     this.loadSmallLed();
+    this.loadSwarm();
   },
 }).mount('#vueDoadores');

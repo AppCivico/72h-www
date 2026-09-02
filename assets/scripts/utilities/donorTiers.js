@@ -19,7 +19,9 @@ export const SMALL_MAX = 2000;
 /** Cortes que a API aceita em `threshold`. Qualquer outro valor responde 400. */
 export const THRESHOLDS = [50000, 100000, 250000, 500000, 1000000];
 
-export const DEFAULT_THRESHOLD = 100000;
+// O corte que a página abre. R$ 50 mil é o menor da lista: começa mostrando
+// o maior grupo de grandes doadores, e o leitor aperta para cima se quiser.
+export const DEFAULT_THRESHOLD = 50000;
 
 /** Ordem fixa dos portes, do menor para o maior. Nunca ciclar. */
 export const TIERS = ['small', 'medium', 'big'];
@@ -107,6 +109,38 @@ export function largestRemainder(weights, cells) {
 }
 
 /**
+ * Dinheiro por extenso, para a página não abreviar "milhões" como "mi".
+ * Milhar continua "mil", que ninguém lê como abreviação. O singular vale até
+ * dois, como em português se escreve: "R$ 1,5 milhão", "R$ 2 milhões".
+ */
+export function spelledCurrency(value) {
+  const number = toNumber(value);
+  const abs = Math.abs(number);
+
+  // Zero à direita é ruído numa escala ("R$ 1,0 milhão"), mas a casa decimal
+  // fica quando carrega informação ("R$ 1,5 milhão").
+  const br = (amount, digits) => {
+    const fixed = amount.toFixed(digits);
+    const trimmed = fixed.includes('.')
+      ? fixed.replace(/0+$/, '').replace(/\.$/, '')
+      : fixed;
+    return trimmed.replace('.', ',');
+  };
+
+  if (abs >= 1e9) {
+    const scaled = number / 1e9;
+    return `R$ ${br(scaled, 2)} ${Math.abs(scaled) < 2 ? 'bilhão' : 'bilhões'}`;
+  }
+  if (abs >= 1e6) {
+    const scaled = number / 1e6;
+    return `R$ ${br(scaled, 2)} ${Math.abs(scaled) < 2 ? 'milhão' : 'milhões'}`;
+  }
+  if (abs >= 1e3) return `R$ ${br(number / 1e3, 0)} mil`;
+
+  return `R$ ${br(number, 0)}`;
+}
+
+/**
  * Série acumulada por porte a partir das linhas cruas de /donors/timeline
  * (uma linha por data e porte). Cada porte acumula sobre o PRÓPRIO total, que
  * é a pergunta da seção: quando cada grupo entrou, não quanto ele pesa.
@@ -153,4 +187,58 @@ export function medianRatio(tiers) {
   const small = toNumber(tiers?.small?.median_total);
   if (!big || !small) return null;
   return Math.round(big / small);
+}
+
+/**
+ * Rótulo de uma faixa de porte (`total_band`), como o leitor lê no eixo.
+ */
+export function bandLabel(band, money = spelledCurrency) {
+  const entry = TOTAL_BANDS.find((item) => item.band === Number(band));
+  if (!entry) return '';
+  if (entry.min === 0) return `até ${money(entry.max)}`;
+  if (entry.max === null) return `acima de ${money(entry.min)}`;
+  return `${money(entry.min)} a ${money(entry.max)}`;
+}
+
+/**
+ * Beeswarm sem d3: cada círculo cai na posição x que o valor dele manda e
+ * procura, entre as alturas possíveis, a mais próxima do eixo em que não
+ * colide com nenhum círculo já colocado. É o algoritmo de "dodge" clássico:
+ * ordena por x, e para cada círculo testa o eixo e os pontos tangentes a
+ * todos os vizinhos que estão a menos de um diâmetro de distância.
+ *
+ * Recebe itens já com `x` e `r` em unidades do desenho e devolve os mesmos
+ * itens com `y` (positivo ou negativo em torno de zero). O caller centraliza.
+ */
+export function beeswarmLayout(items, padding = 1) {
+  const sorted = items
+    .map((item) => ({ ...item }))
+    .sort((a, b) => a.x - b.x || b.r - a.r);
+  const placed = [];
+
+  sorted.forEach((item) => {
+    const candidates = [0];
+    placed.forEach((other) => {
+      const reach = item.r + other.r + padding;
+      const dx = item.x - other.x;
+      if (Math.abs(dx) >= reach) return;
+      const dy = Math.sqrt(reach * reach - dx * dx);
+      candidates.push(other.y - dy, other.y + dy);
+    });
+
+    const collides = (y) => placed.some((other) => {
+      const reach = item.r + other.r + padding;
+      const dx = item.x - other.x;
+      const dy = y - other.y;
+      // Uma folga mínima evita que erros de ponto flutuante rejeitem a
+      // própria posição tangente que acabamos de calcular.
+      return dx * dx + dy * dy < reach * reach - 1e-6;
+    });
+
+    candidates.sort((a, b) => Math.abs(a) - Math.abs(b));
+    const y = candidates.find((candidate) => !collides(candidate));
+    placed.push({ ...item, y: y === undefined ? 0 : y });
+  });
+
+  return placed;
 }

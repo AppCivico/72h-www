@@ -2,14 +2,18 @@ import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
 import {
+  DEFAULT_THRESHOLD,
   SMALL_MAX,
   THRESHOLDS,
   TOTAL_BANDS,
+  bandLabel,
+  beeswarmLayout,
   cumulativeSeries,
   halfwayDate,
   largestRemainder,
   medianRatio,
   share,
+  spelledCurrency,
   toNumber,
 } from '../../assets/scripts/utilities/donorTiers.js';
 
@@ -103,4 +107,65 @@ test('a régua bate com a que a API aceita', () => {
       `nenhuma banda termina em ${threshold}`,
     );
   });
+});
+
+test('spelledCurrency escreve milhões por extenso', () => {
+  assert.equal(spelledCurrency(51716306.51), 'R$ 51,72 milhões');
+  assert.equal(spelledCurrency('4812425.48'), 'R$ 4,81 milhões');
+  assert.equal(spelledCurrency(1000000), 'R$ 1 milhão');
+  assert.equal(spelledCurrency(1500000), 'R$ 1,5 milhão');
+  assert.equal(spelledCurrency(2000000), 'R$ 2 milhões');
+  assert.equal(spelledCurrency(2390000000), 'R$ 2,39 bilhões');
+  assert.equal(spelledCurrency(1000000000), 'R$ 1 bilhão');
+});
+
+test('spelledCurrency mantém mil e valores pequenos', () => {
+  assert.equal(spelledCurrency(50000), 'R$ 50 mil');
+  assert.equal(spelledCurrency(2000), 'R$ 2 mil');
+  assert.equal(spelledCurrency(200), 'R$ 200');
+  assert.equal(spelledCurrency(null), 'R$ 0');
+});
+
+test('o corte padrão é o menor da lista', () => {
+  assert.equal(DEFAULT_THRESHOLD, 50000);
+  assert.ok(THRESHOLDS.includes(DEFAULT_THRESHOLD));
+});
+
+test('bandLabel escreve as faixas com as bordas conferidas', () => {
+  assert.equal(bandLabel(1), 'até R$ 2 mil');
+  assert.equal(bandLabel(2), 'R$ 2 mil a R$ 10 mil');
+  assert.equal(bandLabel(5), 'R$ 100 mil a R$ 250 mil');
+  assert.equal(bandLabel(8), 'acima de R$ 1 milhão');
+  assert.equal(bandLabel(9), '');
+});
+
+test('beeswarmLayout não deixa dois círculos se sobrepondo', () => {
+  // Quarenta círculos amontoados no mesmo trecho do eixo, raios variados.
+  const items = Array.from({ length: 40 }, (_, index) => ({
+    id: index, x: 100 + (index % 7) * 3, r: 4 + (index % 5) * 2,
+  }));
+  const placed = beeswarmLayout(items, 1);
+  assert.equal(placed.length, 40);
+  for (let a = 0; a < placed.length; a += 1) {
+    for (let b = a + 1; b < placed.length; b += 1) {
+      const dx = placed[a].x - placed[b].x;
+      const dy = placed[a].y - placed[b].y;
+      const minimum = placed[a].r + placed[b].r + 1;
+      assert.ok(
+        Math.sqrt(dx * dx + dy * dy) >= minimum - 1e-6,
+        `círculos ${placed[a].id} e ${placed[b].id} se sobrepõem`,
+      );
+    }
+  }
+});
+
+test('beeswarmLayout deixa quem está sozinho no eixo', () => {
+  const placed = beeswarmLayout([{ id: 1, x: 10, r: 5 }, { id: 2, x: 500, r: 5 }]);
+  assert.deepEqual(placed.map((item) => item.y), [0, 0]);
+});
+
+test('beeswarmLayout preserva os dados de cada círculo', () => {
+  const placed = beeswarmLayout([{ id: 'a', x: 10, r: 5, name: 'Fulana' }]);
+  assert.equal(placed[0].name, 'Fulana');
+  assert.equal(placed[0].id, 'a');
 });

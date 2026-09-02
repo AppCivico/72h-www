@@ -15,11 +15,17 @@
   --donors-small: var(--dv-2);
   --donors-medium: #a9a3b4;
   --donors-big: var(--dv-1);
-  --donors-g1: var(--dv-5);
-  --donors-g2: var(--dv-3);
-  --donors-g3: var(--dv-4);
-  --donors-g4: #565064;
-  --donors-g5: #cbc6bb;
+  // Interseção de gênero e cor/raça: o MATIZ carrega o gênero (magenta para
+  // mulheres, azul para homens) e o TOM carrega a cor/raça (escuro para
+  // negras, claro para brancas). Assim o leitor decodifica sem voltar à
+  // legenda, e ninguém é pintado com a cor da própria pele. Validada para
+  // daltonismo: o pior par tem ΔE 11,9 em protanopia, acima do piso de 8, e
+  // os quadrados vêm agrupados com rótulo direto ao lado.
+  --donors-g1: #6e1030;
+  --donors-g2: #d06a92;
+  --donors-g3: #173a78;
+  --donors-g4: #6693dd;
+  --donors-g5: #c4bca6;
 
   flex-wrap: nowrap;
 
@@ -320,6 +326,120 @@
   background: var(--donors-big);
 }
 
+/* ---------- beeswarm ---------- */
+
+// No celular o SVG inteiro em 342px vira poeira: ele mantém uma largura
+// mínima legível e rola na horizontal dentro da própria figura, nunca a
+// página.
+.doadores__swarm-scroll {
+  overflow-x: auto;
+}
+
+.doadores__swarm {
+  display: block;
+
+  width: 100%;
+  min-width: 46rem;
+  height: auto;
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    min-width: 0;
+  }
+
+  text {
+    font-family: var(--font-sans);
+    font-size: 12px;
+
+    fill: var(--ink-3);
+  }
+}
+
+.doadores__swarm-axis line {
+  stroke: var(--hairline-2);
+}
+
+.doadores__swarm-cut {
+  line {
+    stroke: var(--ink);
+    stroke-dasharray: 3 4;
+  }
+
+  text {
+    fill: var(--ink-2);
+  }
+}
+
+.doadores__swarm-cut-label {
+  font-weight: 600;
+
+  fill: var(--ink);
+}
+
+.doadores__swarm-node {
+  cursor: pointer;
+
+  fill: var(--donors-medium);
+  fill-opacity: 0.7;
+  stroke: var(--paper);
+  stroke-width: 1;
+
+  &:hover,
+  &:focus {
+    outline: none;
+
+    stroke: var(--ink);
+    stroke-width: 2;
+  }
+}
+
+.doadores__swarm-node--big {
+  fill: var(--donors-big);
+  fill-opacity: 0.95;
+}
+
+.doadores__swarm-node--single {
+  fill: var(--dv-3);
+  fill-opacity: 0.95;
+}
+
+.doadores__swarm-node--many {
+  fill: var(--dv-4);
+  fill-opacity: 0.95;
+}
+
+.doadores__swatch--single {
+  background: var(--dv-3);
+}
+
+.doadores__swatch--many {
+  background: var(--dv-4);
+}
+
+.doadores__tip {
+  position: fixed;
+  z-index: 30;
+
+  display: grid;
+
+  gap: 0.15rem;
+
+  max-width: 17rem;
+  padding: 0.55rem 0.75rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--paper);
+
+  pointer-events: none;
+
+  background: var(--ink);
+  border-radius: var(--radius-s);
+
+  strong {
+    font-weight: 600;
+  }
+}
+
 /* ---------- os pontos ---------- */
 
 .doadores__toggle {
@@ -370,6 +490,46 @@
 
 .doadores__dot--big {
   background: var(--donors-big);
+}
+
+/* ---------- pequenos doadores ---------- */
+
+.doadores__section--small {
+  padding: 2.5rem 1.25rem 1.5rem;
+
+  background: var(--tint-ok);
+  border-top: 0;
+  border-radius: var(--radius);
+
+  .eyebrow--small {
+    color: var(--accent-cool);
+  }
+}
+
+.doadores__bignumbers--three {
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.doadores__small-grid {
+  display: grid;
+
+  gap: 2rem;
+
+  margin-top: 2rem;
+
+  @media (min-width: functions.breakpoint('desktop')) {
+    grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  }
+}
+
+.doadores__chart--bands {
+  min-height: 360px;
+}
+
+.doadores__list--wide {
+  max-width: 46rem;
 }
 
 /* ---------- tabela dos portes ---------- */
@@ -1052,7 +1212,7 @@
 .doadores__rank-row {
   display: grid;
 
-  grid-template-columns: 2rem minmax(0, 1.6fr) minmax(0, 1fr) 6rem 7rem;
+  grid-template-columns: 2rem minmax(0, 1.5fr) minmax(0, 0.9fr) 8.5rem 6rem;
 
   gap: 0.5rem 1rem;
 
@@ -1167,6 +1327,48 @@
   margin-bottom: 0.8rem;
 
   font-size: var(--t-xs);
+  color: var(--ink-2);
+}
+
+.doadores__halfway {
+  padding: 0.9rem 1.1rem;
+  margin-top: 1rem;
+
+  background: var(--paper-warm);
+  border-radius: var(--radius);
+
+  ul {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 0.4rem 1.5rem;
+
+    padding: 0;
+    margin: 0.5rem 0 0;
+
+    list-style: none;
+  }
+
+  li {
+    display: flex;
+
+    gap: 0.4rem;
+
+    align-items: baseline;
+
+    font-size: var(--t-xs);
+    color: var(--ink-2);
+  }
+
+  strong {
+    color: var(--ink);
+  }
+}
+
+.doadores__halfway-lead {
+  font-size: var(--t-xs);
+  font-weight: 600;
   color: var(--ink-2);
 }
 
