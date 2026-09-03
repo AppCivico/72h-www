@@ -147,6 +147,9 @@ window.$vueDoadores = Vue.createApp({
         return {
           key,
           name: labels[key] || key,
+          // Os blocos dos 500 pontos ficam com o nome curto: ali o título da
+          // seção já disse que se fala de doadores, e o rótulo é uma legenda.
+          shortName: labels[`${key}Short`] || labels[key] || key,
           range: this.tierRange(key),
           donors: toNumber(tier.donors),
           value: toNumber(tier.value),
@@ -199,7 +202,7 @@ window.$vueDoadores = Vue.createApp({
         : toNumber(summary?.individuals?.value) / DOTS;
       return tiers.map((tier) => ({
         key: tier.key,
-        name: tier.name,
+        name: tier.shortName,
         range: tier.range,
         share: dotMode === 'people' ? tier.peopleShare : tier.valueShare,
         detail: dotMode === 'people'
@@ -324,7 +327,9 @@ window.$vueDoadores = Vue.createApp({
 
       const width = SLOPE_WIDTH;
       const height = SLOPE_HEIGHT;
-      const left = 190;
+      // A margem esquerda guarda o rótulo da régua em duas linhas
+      // ("49,6%" / "das candidaturas com doações"), que mede ~171 unidades.
+      const left = 230;
       const right = 250;
       const topPad = 26;
       const bottom = 54;
@@ -614,6 +619,15 @@ window.$vueDoadores = Vue.createApp({
       if (!iso) return '';
       const date = new Date(`${iso}T12:00:00Z`);
       return date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long' });
+    },
+    // A nota de fonte diz de que eleição é a data, então leva o ano. O dia 1
+    // vai como "1º", que é como se escreve data em português.
+    formatDateFull(iso) {
+      if (!iso) return '';
+      const date = new Date(`${iso}T12:00:00Z`);
+      const day = date.getUTCDate();
+      const month = date.toLocaleDateString('pt-BR', { month: 'long', timeZone: 'UTC' });
+      return `${day === 1 ? '1º' : day} de ${month} de ${date.getUTCFullYear()}`;
     },
     // A faixa em reais de cada porte, como o leitor lê no cabeçalho da
     // tabela: o pequeno tem teto fixo, o grande depende do corte escolhido,

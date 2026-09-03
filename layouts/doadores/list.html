@@ -12,6 +12,7 @@
           <p class="eyebrow">{{ i18n "donorsEyebrow" }}</p>
 
           <h1 class="doadores__title" v-if="summary">
+            {{ i18n "donorsHeadlineLead" }}
             <span class="doadores__live" v-text="formatNumeral(tiers[2].donors)"></span>
             {{ i18n "donorsHeadlineGaveOver" }}
             <span class="doadores__live" v-text="spelledCurrency(threshold)"></span>
@@ -27,10 +28,14 @@
           <h1 class="doadores__title" v-else>{{ i18n "donorsTitleFallback" }}</h1>
 
           <p class="doadores__dek">{{ i18n "donorsDek" }}</p>
+          <details class="doadores__scope">
+            <summary>{{ i18n "donorsScopeToggle" }}</summary>
+            <p>{{ i18n "donorsScopeNote" }}</p>
+          </details>
           <p class="doadores__note">
             {{ i18n "donorsSourceNote" }}
             <template v-if="lastDeclared">
-              {{ i18n "donorsLastDeclared" }} <span v-text="formatDate(lastDeclared)"></span>.
+              {{ i18n "donorsLastDeclared" }} <span v-text="formatDateFull(lastDeclared)"></span>.
             </template>
           </p>
         </div>
@@ -43,24 +48,28 @@
             <p class="doadores__bignumber-value" v-text="spelledCurrency(tiers[2].value)"></p>
             <p class="doadores__bignumber-label">{{ i18n "donorsBigValueLabel" }}</p>
             <p class="doadores__bignumber-detail" v-text="tiers[2].range"></p>
+            <p class="doadores__bignumber-note">{{ i18n "donorsBigValueDetail" }}</p>
           </div>
           <div class="doadores__bignumber doadores__bignumber--small">
             <p class="doadores__bignumber-value" v-text="spelledCurrency(tiers[0].value)"></p>
-            <p class="doadores__bignumber-label">{{ i18n "donorsSmallValueLabel" }}</p>
+            <p class="doadores__bignumber-label">
+              {{ i18n "donorsHeroSmallValueLabel" }}
+              <span v-text="spelledCurrency(smallMax)"></span>
+            </p>
             <p class="doadores__bignumber-detail">
               <span v-text="formatPercent(tiers[0].valueShare)"></span>
-              {{ i18n "donorsOfAllIndividuals" }}
+              {{ i18n "donorsOfAllIndividualDonations" }}
             </p>
           </div>
           <div class="doadores__bignumber">
-            <p class="doadores__bignumber-value" v-text="formatCurrencyNoAbbr(tiers[2].medianTotal)"></p>
+            <p class="doadores__bignumber-value" v-text="spelledCurrency(tiers[2].medianTotal)"></p>
             <p class="doadores__bignumber-label">{{ i18n "donorsBigMedianLabel" }}</p>
-            <p class="doadores__bignumber-detail">{{ i18n "donorsMedianDetail" }}</p>
+            <p class="doadores__bignumber-detail">{{ i18n "donorsBigMedianDetail" }}</p>
           </div>
           <div class="doadores__bignumber doadores__bignumber--small">
-            <p class="doadores__bignumber-value" v-text="formatCurrencyNoAbbr(tiers[0].medianTotal)"></p>
+            <p class="doadores__bignumber-value" v-text="spelledCurrency(tiers[0].medianTotal)"></p>
             <p class="doadores__bignumber-label">{{ i18n "donorsSmallMedianLabel" }}</p>
-            <p class="doadores__bignumber-detail">{{ i18n "donorsMedianDetail" }}</p>
+            <p class="doadores__bignumber-detail">{{ i18n "donorsSmallMedianDetail" }}</p>
           </div>
         </div>
       </header>
@@ -82,11 +91,12 @@
             v-text="spelledCurrency(option)"></button>
         </div>
         <p class="doadores__cut-result">
-          <strong v-text="formatNumeral(tiers[2].donors)"></strong> {{ i18n "donorsPeopleWord" }} ·
-          <strong v-text="spelledCurrency(tiers[2].value)"></strong> ·
+          <strong v-text="formatNumeral(tiers[2].donors)"></strong> {{ i18n "donorsPeopleWord" }} •
+          <strong v-text="spelledCurrency(tiers[2].value)"></strong> •
           <strong v-text="formatPercent(tiers[2].valueShare)"></strong>
           {{ i18n "donorsOfAllIndividuals" }}
         </p>
+        <p class="doadores__cut-note">{{ i18n "donorsCutNote" }}</p>
       </div>
 
       {{/* ---- 0. Os grandes, um a um (beeswarm) ---------------------------- */}}
@@ -95,6 +105,7 @@
           <div>
             <p class="eyebrow">{{ i18n "donorsSwarmEyebrow" }}</p>
             <h2>{{ i18n "donorsSwarmTitle" }}</h2>
+            <p class="doadores__lede">{{ i18n "donorsSwarmLede" }}</p>
           </div>
           <p>
             {{ i18n "donorsSwarmIntroLead" }}
@@ -133,7 +144,7 @@
           <svg viewBox="0 0 1200 400" class="doadores__swarm" role="img" aria-label="{{ i18n "donorsSwarmAria" }}">
             <g class="doadores__swarm-blocks">
               <text :x="swarm.gutterLeft" :y="swarm.cutTop + 4" class="doadores__swarm-cut-label"
-                v-text="formatNumeral(swarm.belowCount) + ' {{ i18n "donorsSwarmBelowFloor" }} ' + spelledCurrency(swarm.floor)"></text>
+                v-text="formatNumeral(swarm.belowCount) + ' {{ i18n "donorsSwarmBelowFloor" }} ' + spelledCurrency(swarm.floor) + '.'"></text>
               <text :x="swarm.gutterLeft" :y="swarm.cutTop + 20">{{ i18n "donorsSwarmBelowFloorNote" }}</text>
               <template v-for="block in swarm.blocks" :key="block.band">
                 <rect
@@ -330,9 +341,9 @@
           </div>
           <p>
             {{ i18n "donorsScaleIntroLead" }}
-            <strong v-text="formatCurrencyNoAbbr(scale.big)"></strong>.
+            <strong v-text="spelledCurrency(scale.big)"></strong>
             {{ i18n "donorsScaleIntroMiddle" }}
-            <strong v-text="formatCurrencyNoAbbr(scale.small)"></strong>.
+            <strong v-text="spelledCurrency(scale.small)"></strong>.
             <template v-if="scale.capped">{{ i18n "donorsScaleCapped" }}</template>
           </p>
         </div>
@@ -353,7 +364,7 @@
               {{ i18n "donorsSmallTitleLead" }}
               <span class="doadores__live doadores__live--small" v-text="formatNumeral(smallNumbers.donors)"></span>
               {{ i18n "donorsSmallTitleMiddle" }}
-              <span v-text="spelledCurrency(smallMax)"></span>
+              <span v-text="spelledCurrency(smallMax)"></span>.
             </h2>
           </div>
           <p>{{ i18n "donorsSmallIntro" }}</p>
@@ -365,7 +376,7 @@
             <p class="doadores__bignumber-label">{{ i18n "donorsSmallValueLabel" }}</p>
             <p class="doadores__bignumber-detail">
               <span v-text="formatPercent(smallNumbers.valueShare, 1)"></span>
-              {{ i18n "donorsOfAllIndividuals" }}
+              {{ i18n "donorsOfAllIndividualDonations" }}
             </p>
           </div>
           <div class="doadores__bignumber doadores__bignumber--small">
@@ -395,17 +406,21 @@
           </div>
           <div class="doadores__bignumber doadores__bignumber--small" v-if="smallNumbers.ratio">
             <p class="doadores__bignumber-value">
-              <span v-text="formatNumeral(smallNumbers.ratio, smallNumbers.ratio < 10 ? 1 : 0)"></span> ×
+              <span v-text="formatNumeral(smallNumbers.ratio, smallNumbers.ratio < 10 ? 1 : 0) + '×'"></span>
             </p>
             <p class="doadores__bignumber-label">{{ i18n "donorsSmallRatioLabel" }}</p>
-            <p class="doadores__bignumber-detail">{{ i18n "donorsSmallRatioDetail" }}</p>
+            <p class="doadores__bignumber-detail">
+              {{ i18n "donorsSmallRatioDetail" }}
+              <span v-text="formatCurrencyNoAbbr(smallNumbers.ratio)"></span>
+              {{ i18n "donorsSmallRatioDetailTail" }}
+            </p>
           </div>
           <div class="doadores__bignumber doadores__bignumber--small">
             <p class="doadores__bignumber-value" v-text="formatPercent(smallNumbers.womenShare)"></p>
             <p class="doadores__bignumber-label">{{ i18n "donorsSmallWomenLabel" }}</p>
             <p class="doadores__bignumber-detail">
               {{ i18n "donorsSmallWomenBig" }}
-              <span v-text="formatPercent(smallNumbers.womenShareBig)"></span>
+              <span v-text="formatPercent(smallNumbers.womenShareBig)"></span>.
             </p>
           </div>
         </div>
@@ -425,6 +440,7 @@
               {{ i18n "donorsSmallLedIntro" }}
               <strong v-text="spelledCurrency(smallListFloor)"></strong>
               {{ i18n "donorsSmallLedIntroTail" }}
+              {{ i18n "donorsSmallLedShareNote" }}
             </p>
             <ul class="doadores__list">
               <li class="doadores__list-row" v-for="item in smallLed" :key="item.candidate_id">
@@ -552,10 +568,14 @@
               <line
                 class="doadores__slope-reference"
                 :x1="slope.left" :x2="line.endX" :y1="line.referenceY" :y2="line.referenceY"></line>
+              {{/* Duas linhas de propósito: o rótulo inteiro numa só não
+                   cabe na margem de 190 unidades e o SVG o cortaria. */}}
               <text
                 class="doadores__slope-reference-label"
-                :x="slope.left - 10" :y="line.referenceY + 4" text-anchor="end"
-                v-text="formatPercent(line.reference) + ' {{ i18n "donorsOfCandidacies" }}'"></text>
+                :x="slope.left - 10" :y="line.referenceY" text-anchor="end">
+                <tspan :x="slope.left - 10" v-text="formatPercent(line.reference)"></tspan>
+                <tspan :x="slope.left - 10" dy="13">{{ i18n "donorsOfCandidacies" }}</tspan>
+              </text>
               <polyline class="doadores__slope-path" :points="line.polyline"></polyline>
               <circle v-for="dot in line.dots" :key="dot.tier" :cx="dot.x" :cy="dot.y" r="5"></circle>
               <template v-for="dot in line.dots" :key="'value-' + dot.tier">
@@ -662,12 +682,12 @@
               <i :style="{ width: (toNumber(item.top_donor.share) * 100) + '%' }"></i>
             </span>
             <span class="doadores__list-detail">
-              <span v-text="formatCurrencyNoAbbr(item.top_donor.value)"></span>
-              {{ i18n "donorsListFrom" }}
-              <strong v-text="item.top_donor.name"></strong>,
               {{ i18n "donorsListOutOf" }}
               <span v-text="formatCurrencyNoAbbr(item.total_value)"></span>
               {{ i18n "donorsListDeclaredIndividual" }}
+              <span v-text="formatCurrencyNoAbbr(item.top_donor.value)"></span>
+              {{ i18n "donorsListFrom" }}
+              <strong v-text="item.top_donor.name"></strong>.
             </span>
           </li>
         </ul>
@@ -809,6 +829,7 @@
               <span v-text="spelledCurrency(smallMax)"></span>
               {{ i18n "donorsMethodTiersBodyTail" }}
             </p>
+            <p>{{ i18n "donorsMethodNamesBody" }}</p>
           </div>
           <div>
             <h3>{{ i18n "donorsMethodUnknownTitle" }}</h3>
@@ -836,6 +857,9 @@
     window.appDonorsYear = {{ site.Params.run }};
     window.appDonorsLabels = {
       small: '{{ i18n "donorsSmallTier" }}',
+      smallShort: '{{ i18n "donorsSmallTierShort" }}',
+      mediumShort: '{{ i18n "donorsMediumTierShort" }}',
+      bigShort: '{{ i18n "donorsBigTierShort" }}',
       medium: '{{ i18n "donorsMediumTier" }}',
       big: '{{ i18n "donorsBigTier" }}',
       registered: '{{ i18n "donorsRegistered" }}',

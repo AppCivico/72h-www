@@ -1046,47 +1046,65 @@
 # aqui só vive o texto fixo. O sujeito é sempre a candidatura que declarou.
 # ---------------------------------------------------------------------------
 - id: donorsPageTitle
-  translation: "Quem financia as campanhas"
+  translation: "Quem doa às campanhas"
 - id: donorsEyebrow
-  translation: "Quem financia"
+  translation: "Quem doa às campanhas"
 - id: donorsTitleFallback
-  translation: "Quem financia as campanhas"
+  translation: "Quem doa às campanhas"
 - id: donorsHeadlineGaveOver
   translation: "pessoas doaram mais de"
+- id: donorsHeadlineLead
+  translation: "Até agora,"
 - id: donorsHeadlineAndAnswer
-  translation: "a candidaturas e respondem por"
+  translation: "às candidaturas e respondem por"
 - id: donorsHeadlineOfIndividuals
-  translation: "do dinheiro declarado de pessoa física."
+  translation: "do total declarado em doações de pessoas físicas."
 - id: donorsHeadlineOthers
-  translation: "Outras"
+  translation: "Na outra ponta,"
 - id: donorsHeadlineGaveUpTo
-  translation: "doaram até"
+  translation: "pessoas doaram até"
 - id: donorsHeadlineEach
   translation: "cada."
 - id: donorsDek
-  translation: "Esta página acompanha os dois extremos do financiamento privado de campanha: as poucas pessoas que doam acima do corte escolhido logo abaixo, e a multidão que doa cem, duzentos, quinhentos reais. Entre eles está a camada do meio, que quase não aparece no debate e carrega boa parte do dinheiro."
+  translation: "As doações de pessoas físicas às candidaturas estão concentradas em um grupo pequeno de grandes doadores, enquanto a maioria das pessoas contribui com valores baixos. Esta página acompanha como essas doações se distribuem entre pequenos, médios e grandes doadores e permite comparar o peso de cada grupo no total de recursos declarados pelas candidaturas à Justiça Eleitoral."
+- id: donorsScopeToggle
+  translation: "Saiba mais"
+- id: donorsScopeNote
+  translation: "Nesta página analisamos exclusivamente as doações realizadas por pessoas físicas às candidaturas. Na página “Onde está o dinheiro?”, essas doações aparecem agregadas na categoria “Outros recursos”, juntamente com outras receitas previstas na legislação eleitoral."
 - id: donorsSourceNote
-  translation: "Fonte: declarações de recebimento das candidaturas à Justiça Eleitoral (DivulgaCandContas). Doações ainda não declaradas não aparecem e valores podem ser retificados. Autofinanciamento e recursos repassados por partidos ficam fora desta análise."
+  translation: "Fonte: informações declaradas pelas candidaturas à Justiça Eleitoral (DivulgaCandContas). O 72horas utiliza exclusivamente os valores declarados pelas candidaturas como recebidos. Doações ainda não declaradas podem não aparecer nas primeiras coletas e os valores podem ser retificados ao longo da campanha. Esta página não inclui autofinanciamento nem recursos transferidos por partidos."
 - id: donorsLastDeclared
-  translation: "Doação declarada mais recente:"
+  translation: "Última doação declarada considerada:"
 - id: donorsLoadError
   translation: "Não foi possível carregar os dados de doadores agora. Recarregue a página em instantes."
 - id: donorsBigValueLabel
   translation: "declarados como recebidos de grandes doadores"
+- id: donorsBigValueDetail
+  translation: "Nesta página, “grandes doadores” são pessoas físicas que doaram acima do valor selecionado. O corte é apenas uma classificação metodológica e pode ser alterado."
 - id: donorsSmallValueLabel
   translation: "declarados como recebidos de pequenos doadores"
+- id: donorsHeroSmallValueLabel
+  translation: "recebidos em doações de pessoas físicas de até"
 - id: donorsOfAllIndividuals
-  translation: "de todo o dinheiro de pessoa física"
+  translation: "das doações de pessoas físicas"
+- id: donorsOfAllIndividualDonations
+  translation: "de todas as doações de pessoas físicas"
 - id: donorsBigMedianLabel
   translation: "é quanto doou um grande doador típico"
+- id: donorsBigMedianDetail
+  translation: "Metade dos grandes doadores doou acima desse valor e metade abaixo."
 - id: donorsSmallMedianLabel
   translation: "é quanto doou um pequeno doador típico"
+- id: donorsSmallMedianDetail
+  translation: "Metade dos pequenos doadores doou acima desse valor e metade abaixo."
 - id: donorsMedianDetail
-  translation: "metade deu mais, metade deu menos"
+  translation: "Metade doou mais, metade doou menos."
 - id: donorsCutAria
   translation: "Corte que define quem é grande doador"
 - id: donorsCutLabel
   translation: "Grande doador é quem doou mais de"
+- id: donorsCutNote
+  translation: "Os cortes utilizados para classificar grandes e pequenos doadores são uma opção metodológica do 72horas e podem ser alterados pelo usuário."
 - id: donorsPeopleWord
   translation: "pessoas"
 - id: donorsCandidaciesWord
@@ -1098,13 +1116,19 @@
 - id: donorsPartyWord
   translation: "partido"
 - id: donorsSmallTier
-  translation: "Pequenos"
+  translation: "Pequenos doadores"
 - id: donorsMediumTier
-  translation: "Médios"
+  translation: "Doadores médios"
 - id: donorsBigTier
+  translation: "Grandes doadores"
+- id: donorsSmallTierShort
+  translation: "Pequenos"
+- id: donorsMediumTierShort
+  translation: "Médios"
+- id: donorsBigTierShort
   translation: "Grandes"
 - id: donorsRegistered
-  translation: "Candidaturas registradas"
+  translation: "Candidaturas que receberam doações"
 - id: donorsPeopleAxis
   translation: "Pessoas"
 - id: donorsMoneyAxis
@@ -1118,31 +1142,31 @@
 - id: donorsOthers
   translation: "Outros"
 - id: donorsDotsEyebrow
-  translation: "Duas eleições"
+  translation: "Duas histórias da mesma eleição"
 - id: donorsDotsTitle
-  translation: "Quase todo mundo que doa é pequeno doador. Quase todo o dinheiro não é."
+  translation: "Quando olhamos as pessoas, os pequenos doadores são maioria. Quando olhamos o dinheiro, o retrato muda completamente."
 - id: donorsDotsIntro
-  translation: "São sempre os mesmos quinhentos pontos. O que muda é a pergunta: primeiro cada ponto é um pedaço das pessoas que doaram, depois é um pedaço do dinheiro que elas declararam."
+  translation: "São sempre os mesmos 500 pontos. O que muda é a forma de olhar os dados: primeiro, cada ponto representa um grupo de pessoas; depois, representa uma parcela do total das doações declaradas."
 - id: donorsDotsAria
   translation: "Escolha o que os pontos representam"
 - id: donorsDotsByPeople
-  translation: "por pessoas"
+  translation: "Por pessoas"
 - id: donorsDotsByMoney
-  translation: "por dinheiro"
+  translation: "Por valor doado"
 - id: donorsDotsEach
-  translation: "cada ponto vale"
+  translation: "Cada ponto representa"
 - id: donorsDotsAriaPeople
   translation: "Quinhentos pontos repartidos pelo número de doadores de cada porte"
 - id: donorsDotsAriaMoney
   translation: "Quinhentos pontos repartidos pelo dinheiro declarado de cada porte"
 - id: donorsDotsCaption
-  translation: "O porte é do doador, não da doação: vale a soma do que a pessoa declarou ter dado na eleição inteira."
+  translation: "Cada pessoa é classificada pelo total que declarou ter doado ao longo de toda a eleição, e não pelo valor de uma doação isolada."
 - id: donorsTiersEyebrow
-  translation: "Os três portes, lado a lado"
+  translation: "Pequenos, médios e grandes doadores"
 - id: donorsTiersTitle
-  translation: "Pequenos, médios e grandes doadores nas mesmas medidas"
+  translation: "Os três grupos comparados pelas mesmas medidas."
 - id: donorsTiersIntro
-  translation: "Os doadores médios são a camada que quase não aparece no debate público. Aqui os três grupos respondem exatamente às mesmas perguntas, e dá para ver de onde vem o dinheiro que decide a campanha."
+  translation: "Quando falamos em doações para campanhas, a atenção costuma se concentrar nos extremos: muitos pequenos doadores e poucos grandes doadores. Entre eles existe um grupo intermediário que responde por uma parcela importante das doações e quase nunca aparece no debate. Aqui os três grupos são comparados pelos mesmos indicadores."
 - id: donorsMeasure
   translation: "Medida"
 - id: donorsRowPeople
@@ -1150,57 +1174,57 @@
 - id: donorsRowValue
   translation: "Dinheiro declarado"
 - id: donorsRowValueShare
-  translation: "Fatia do dinheiro de pessoa física"
+  translation: "Fatia das doações de pessoas físicas"
 - id: donorsRowMean
-  translation: "Doação total média por pessoa"
+  translation: "Valor médio doado por pessoa"
 - id: donorsRowMedian
-  translation: "Doação total mediana por pessoa"
+  translation: "Valor mediano doado por pessoa"
 - id: donorsRowMode
-  translation: "Valor mais comum de uma doação"
+  translation: "Valor mais frequente das doações"
 - id: donorsRowTransfers
   translation: "Número de doações"
 - id: donorsRowReached
-  translation: "Candidaturas alcançadas"
+  translation: "Candidaturas que receberam doações"
 - id: donorsRowSingle
-  translation: "Do dinheiro do porte, quanto veio de quem apoiou uma só candidatura"
+  translation: "Doações concentradas em uma única candidatura"
 - id: donorsTiersCaption
-  translation: "A última linha é fatia de dinheiro, não de gente: mede quanto do dinheiro do porte saiu de doadores concentrados em um único nome."
+  translation: "A última linha mostra a parcela das doações de cada grupo destinada por pessoas que apoiaram apenas uma candidatura. Ela mede dinheiro, não número de doadores."
 - id: donorsScaleEyebrow
-  translation: "A escala"
+  translation: "A escala das doações"
 - id: donorsScaleTitleLead
-  translation: "Um grande doador típico equivale a"
+  translation: "Um grande doador típico doa o equivalente a"
 - id: donorsScaleTitleTail
-  translation: "pequenos doadores típicos"
+  translation: "pequenos doadores típicos."
 - id: donorsScaleIntroLead
-  translation: "A doação total mediana de um grande doador é"
+  translation: "Enquanto um grande doador típico doa"
 - id: donorsScaleIntroMiddle
-  translation: "A de um pequeno doador é"
+  translation: "ao longo da eleição, um pequeno doador típico doa"
 - id: donorsScaleCapped
   translation: "O desenho mostra mil deles; o número do título é o total."
 - id: donorsConcentrationEyebrow
   translation: "Apostam ou distribuem?"
 - id: donorsConcentrationTitle
-  translation: "Quantas candidaturas cada doador apoia"
+  translation: "Quantas candidaturas cada doador apoiou"
 - id: donorsConcentrationIntro
-  translation: "Cada barra reparte os doadores do porte pelo número de candidaturas que eles apoiaram, do apoio único, à esquerda, a onze ou mais, à direita. Quanto mais peso à esquerda, mais o grupo aposta em um nome só."
+  translation: "Cada barra mostra quantas candidaturas cada doador apoiou. Quanto mais à esquerda, maior a concentração das doações em uma única candidatura. Quanto mais à direita, maior a distribuição das doações entre diferentes candidaturas."
 - id: donorsSingleShareNote
-  translation: "do dinheiro deste porte veio de quem apoiou uma única candidatura."
+  translation: "das doações desse grupo vieram de pessoas que apoiaram apenas uma candidatura."
 - id: donorsConcentrationCaption
-  translation: "As barras contam doadores. A linha abaixo de cada painel conta dinheiro, e é por isso que as duas leituras podem divergir: poucos doadores muito distribuídos movem mais do que a maioria concentrada."
+  translation: "As barras mostram o número de doadores. A linha abaixo mostra a distribuição do valor das doações. As duas medidas podem diferir porque poucos doadores podem responder por uma parcela maior do dinheiro do que muitos doadores."
 - id: donorsRaceEyebrow
-  translation: "Gênero e cor/raça"
+  translation: "Quem recebe as doações?"
 - id: donorsWaffleTitle
   translation: "Se o dinheiro fosse cem moedas, para quem elas iriam?"
 - id: donorsWaffleIntro
-  translation: "Cada quadrado é 1% do dinheiro de um grupo de doadores, colorido pelo gênero e pela cor/raça que a candidatura declarou ao TSE. O terceiro painel mostra como seria se o dinheiro seguisse a proporção das candidaturas registradas."
+  translation: "Os dois primeiros painéis mostram para onde foi o dinheiro: cada quadrado é 1% do total declarado como recebido dos grandes doadores e, ao lado, 1% do total recebido dos pequenos doadores, colorido pelo gênero e pela cor/raça que a candidatura declarou ao TSE. O terceiro painel é a referência: como esses 100 quadrados ficariam se o dinheiro fosse dividido na mesma proporção das candidaturas que receberam doações de pessoas físicas."
 - id: donorsWaffleCaption
-  translation: "\"Negras\" reúne candidaturas que se declararam pretas ou pardas. \"Outras\" reúne amarelas, indígenas e sem informação."
+  translation: "“Negras” reúne candidaturas autodeclaradas pretas ou pardas. “Outras” reúne candidaturas autodeclaradas amarelas, indígenas ou sem informação de cor/raça."
 - id: donorsSlopeTitle
-  translation: "Quanto maior o doador, para onde vai o dinheiro?"
+  translation: "Quem recebe mais quando o doador é maior?"
 - id: donorsSlopeIntro
-  translation: "Cada linha acompanha um grupo de candidaturas ao longo dos três portes. A linha tracejada é a fatia que esse grupo tem entre as candidaturas registradas: abaixo dela, o grupo recebe menos do que a sua presença na disputa sugeriria."
+  translation: "Cada linha é um grupo de candidaturas e mostra que fatia das doações esse grupo recebeu de cada grupo de doadores: dos pequenos, à esquerda, aos grandes, à direita. A linha tracejada é a referência — a fatia que esse grupo representa entre as candidaturas que receberam doações de pessoas físicas. Quando a linha fica abaixo da referência, o grupo recebe uma parcela menor das doações do que sua presença entre essas candidaturas sugeriria."
 - id: donorsSlopeAria
-  translation: "Fatia do dinheiro por grupo de candidaturas, em cada porte de doador"
+  translation: "Fatia das doações por grupo de candidaturas, em cada grupo de doadores"
 - id: donorsWomen
   translation: "Mulheres"
 - id: donorsBlack
@@ -1208,13 +1232,13 @@
 - id: donorsBlackWomen
   translation: "Mulheres negras"
 - id: donorsOfCandidacies
-  translation: "das candidaturas"
+  translation: "das candidaturas com doações"
 - id: donorsWhereEyebrow
-  translation: "Para onde vai"
+  translation: "Para onde vão as doações?"
 - id: donorsWhereTitle
-  translation: "Grandes e pequenos doadores financiam os mesmos partidos?"
+  translation: "Grandes e pequenos doadores destinam suas doações aos mesmos partidos e cargos?"
 - id: donorsWhereIntro
-  translation: "Cada linha compara a fatia que um grupo de candidaturas recebe dos grandes doadores com a fatia que recebe dos pequenos. Onde o roxo passa do verde, os grandes estão apostando mais nesse grupo do que o doador comum."
+  translation: "Cada linha compara a distribuição das doações de grandes e pequenos doadores entre partidos e cargos. Quando a linha roxa supera a verde, os grandes doadores destinam proporcionalmente mais recursos àquele grupo do que os pequenos doadores."
 - id: donorsByParty
   translation: "Por partido"
 - id: donorsByPartySub
@@ -1224,7 +1248,7 @@
 - id: donorsByPositionSub
   translation: "disputado pela candidatura"
 - id: donorsWhereCaption
-  translation: "As duas barras são fatias de portes diferentes, cada uma sobre o próprio total. A diferença aparece em pontos percentuais quando passa de dois."
+  translation: "Cada barra representa a distribuição das doações dentro de um grupo de doadores. As diferenças são apresentadas em pontos percentuais quando superam 2 pontos."
 - id: donorsSmallLedEyebrow
   translation: "Sustentadas por muita gente"
 - id: donorsSmallLedTitle
@@ -1232,35 +1256,37 @@
 - id: donorsSmallLedIntro
   translation: "Entre as candidaturas que declararam pelo menos"
 - id: donorsSmallLedIntroTail
-  translation: "de pessoa física, estas são as que mais dependem de quem doa pouco."
+  translation: "em doações de pessoas físicas, estas são as que receberam a maior proporção de recursos de pequenos doadores."
+- id: donorsSmallLedShareNote
+  translation: "A porcentagem indica quanto das doações de pessoas físicas declaradas por cada candidatura veio de pequenos doadores."
 - id: donorsListIndividualTotal
-  translation: "declarados de pessoa física"
+  translation: "declarados em doações de pessoas físicas"
 - id: donorsDependentEyebrow
   translation: "Dependência"
 - id: donorsDependentTitle
-  translation: "Candidaturas que dependem de um único grande doador"
+  translation: "Candidaturas mais dependentes de um único grande doador"
 - id: donorsDependentIntro
   translation: "Entre as candidaturas que declararam pelo menos"
 - id: donorsDependentIntroTail
-  translation: "de pessoa física, estas são as que têm a maior parte desse dinheiro vinda de uma só pessoa. É indício de dependência, não de irregularidade."
+  translation: "em doações de pessoas físicas, estas são as que receberam a maior parte desses recursos de um único doador. O indicador mostra a concentração das doações em um único doador. Isso, por si só, não caracteriza nenhuma irregularidade eleitoral."
 - id: donorsListFrom
   translation: "vieram de"
 - id: donorsListOutOf
-  translation: "de"
+  translation: "Dos"
 - id: donorsListDeclaredIndividual
-  translation: "declarados de pessoa física"
+  translation: "declarados em doações de pessoas físicas,"
 - id: donorsTimeEyebrow
   translation: "O tempo"
 - id: donorsTimeTitle
-  translation: "Quando o dinheiro entrou"
+  translation: "Quando as doações foram declaradas"
 - id: donorsTimeIntro
-  translation: "Cada linha mostra que parte do dinheiro de um porte já havia sido declarada a cada dia. Uma linha que sobe antes das outras é um grupo que decide cedo; linhas que sobem juntas dizem que os três portes entraram na mesma janela."
+  translation: "Cada linha mostra quando as doações de um grupo de doadores foram sendo declaradas pelas candidaturas ao longo da campanha. Uma linha que sobe antes das outras indica que aquele grupo concentrou suas doações mais cedo; linhas que sobem juntas mostram ritmos semelhantes de declaração."
 - id: donorsTimeCaption
-  translation: "As datas são as da doação declarada, não as da entrega da prestação de contas."
+  translation: "As datas correspondem às datas das doações declaradas pelas candidaturas, e não às datas de envio da prestação de contas."
 - id: donorsHalfwayLead
-  translation: "Metade do dinheiro de cada porte já estava declarada em:"
+  translation: "Metade das doações de cada grupo já havia sido declarada em:"
 - id: donorsFutureDaysNote
-  translation: "Doações declaradas com data futura, provável erro de preenchimento, ficam fora deste gráfico."
+  translation: "Doações registradas com datas futuras, provavelmente por erro de preenchimento, são desconsideradas nesta visualização."
 - id: donorsRankEyebrow
   translation: "O ranking"
 - id: donorsRankTitle
@@ -1296,38 +1322,42 @@
 - id: donorsMethodDeclaresTitle
   translation: "Quem declara é a candidatura"
 - id: donorsMethodDeclaresBody
-  translation: "Todo número desta página vem do que as candidaturas declararam ter recebido à Justiça Eleitoral. Partidos e diretórios não entram como doadores: quando um partido repassa dinheiro público, o valor aparece na candidatura como Fundo Eleitoral ou Fundo Partidário, e não como doação de pessoa física. Doações feitas diretamente a diretórios partidários não estão nesta página."
+  translation: "Todos os números desta página são calculados a partir do que as candidaturas declararam ter recebido à Justiça Eleitoral. Partidos e diretórios não aparecem como doadores: quando repassam recursos às candidaturas, esses valores são registrados como Fundo Eleitoral ou Fundo Partidário, e não como doações de pessoas físicas. Doações feitas diretamente a diretórios partidários também não fazem parte desta análise."
 - id: donorsMethodTiersTitle
   translation: "Portes e nomes"
 - id: donorsMethodTiersBodyLead
-  translation: "Pequeno doador é quem doou até"
+  translation: "Pequenos doadores são aqueles que doaram até"
 - id: donorsMethodTiersBodyTail
-  translation: "no total da eleição; grande doador é quem passou do corte escolhido no topo; os demais são médios. Um mesmo doador aparece em várias candidaturas com grafias diferentes do nome, e o agrupamento é feito pelo documento, que nunca é exibido nem trafega na API. Nomes só aparecem acima de um piso de valor: abaixo dele, o doador entra apenas nos agregados. Autofinanciamento fica de fora."
+  translation: "no total da eleição. Grandes doadores são os que superam o corte selecionado no topo da página. Os demais são classificados como doadores médios."
+- id: donorsMethodNamesBody
+  translation: "Um mesmo doador pode aparecer com grafias diferentes em candidaturas distintas. O agrupamento é feito pelo documento de identificação, que nunca é exibido nem utilizado publicamente. Os nomes são mostrados apenas para doadores acima do piso definido nesta página; abaixo dele, os dados aparecem apenas de forma agregada, por opção metodológica do 72horas. O autofinanciamento não integra esta análise."
 - id: donorsMethodUnknownTitle
   translation: "O que ainda não sabemos"
 - id: donorsMethodUnknownBody
-  translation: "Prestação de contas é parcial até a entrega final. Um doador ausente pode ter doado e ainda não constar nas declarações, e um valor pode ser retificado. Por isso a página fala do que foi declarado até aqui e não afirma irregularidade a partir destes números."
+  translation: "As prestações de contas são parciais até a entrega final. Uma doação pode ainda não ter sido declarada e valores já informados podem ser retificados. Por isso, esta página acompanha exclusivamente o que foi declarado pelas candidaturas até o momento e não permite concluir, por si só, pela existência de irregularidades."
 - id: donorsMethodSources
   translation: "Fonte: TSE, DivulgaCandContas."
 # Beeswarm: os grandes doadores, um a um
 - id: donorsSwarmEyebrow
-  translation: "Os grandes, um a um"
+  translation: "Os grandes doadores, um a um"
 - id: donorsSwarmTitle
-  translation: "Cada círculo é uma pessoa. O tamanho é quanto ela doou no total."
+  translation: "Cada círculo representa uma pessoa. Quanto maior o círculo, maior o valor total doado na eleição."
+- id: donorsSwarmLede
+  translation: "Poucas pessoas concentram boa parte das doações de pessoas físicas às campanhas. Este gráfico mostra quem são esses grandes doadores."
 - id: donorsSwarmIntroLead
-  translation: "À esquerda, em bloco, quem doou até"
+  translation: "À esquerda estão agrupados os doadores de até"
 - id: donorsSwarmIntroTail
-  translation: "no total da eleição: a altura de cada bloco é o número de pessoas. À direita, um círculo por pessoa acima disso, em escala logarítmica, com o tamanho pelo total doado. Passe o mouse ou toque em um círculo para ver quem é."
+  translation: "À direita, cada grande doador aparece individualmente. Passe o mouse ou toque em um círculo para ver quem é e quanto doou."
 - id: donorsSwarmColorAria
   translation: "Escolha o que a cor dos círculos representa"
 - id: donorsSwarmColorBy
-  translation: "colorir por"
+  translation: "Colorir por"
 - id: donorsSwarmByTier
   translation: "porte"
 - id: donorsSwarmByConcentration
   translation: "número de candidaturas"
 - id: donorsSwarmLegendBig
-  translation: "Grandes doadores, acima do corte"
+  translation: "Grandes doadores acima do corte selecionado"
 - id: donorsSwarmLegendMedium
   translation: "Abaixo do corte"
 - id: donorsSwarmLegendSingle
@@ -1347,17 +1377,17 @@
 - id: donorsSwarmMediumMany
   translation: "doadores abaixo do corte"
 - id: donorsSwarmCaptionLead
-  translation: "Só quem doou mais de"
+  translation: "Cada círculo representa uma pessoa que doou acima do corte selecionado. A visualização individual começa em"
 - id: donorsSwarmCaptionTail
-  translation: "aparece como círculo, porque é o menor corte que a API entrega doador a doador; abaixo disso a API dá só a contagem por faixa, que vira bloco."
+  translation: "porque esse é o menor valor para o qual os dados públicos disponibilizam informações individualizadas. Abaixo desse valor, os dados são divulgados apenas de forma agregada por faixas de doação e, por isso, aparecem agrupados em blocos."
 - id: donorsSwarmCaptionJitter
-  translation: "Círculos com o mesmo valor se afastam um pouco para não se sobrepor, então a posição horizontal é aproximada."
+  translation: "Quando dois ou mais doadores têm valores semelhantes, os círculos podem ser deslocados horizontalmente apenas para facilitar a visualização. Essa posição não representa nenhuma informação adicional."
 - id: donorsSwarmBelowFloor
   translation: "pessoas doaram até"
 - id: donorsSwarmBelowFloorNote
-  translation: "em bloco, pela contagem de cada faixa"
+  translation: "Aparecem agrupadas por faixa de valor."
 - id: donorsSwarmOneByOne
-  translation: "uma a uma"
+  translation: "um a um"
 - id: donorsWhiteMen
   translation: "Homens brancos"
 - id: donorsUnnamed
@@ -1366,40 +1396,42 @@
 - id: donorsSmallEyebrow
   translation: "Os pequenos doadores"
 - id: donorsSmallTitleLead
-  translation: "Quem são as"
+  translation: "O retrato das"
 - id: donorsSmallTitleMiddle
   translation: "pessoas que doaram até"
 - id: donorsSmallIntro
-  translation: "Nenhum nome aparece aqui, por escolha editorial: pequenos doadores são cidadãos comuns, e o interesse público está no conjunto, não no indivíduo. Os números vêm das mesmas declarações das candidaturas."
+  translation: "Nenhum nome aparece aqui por opção editorial do 72horas. Pequenas doações podem representar grandes gestos de participação democrática. Por isso, o interesse público desta análise está no comportamento do conjunto dos pequenos doadores, e não na identificação individual de cidadãos comuns. Todos os dados são baseados nas declarações das candidaturas à Justiça Eleitoral."
 - id: donorsSmallMeanLabel
-  translation: "doação total média por pessoa"
+  translation: "valor médio doado por pessoa"
 - id: donorsSmallMedianPrefix
   translation: "mediana:"
 - id: donorsSmallModeLabel
-  translation: "valor mais comum de uma doação"
+  translation: "valor mais frequente das doações"
 - id: donorsSmallTransfersSuffix
   translation: "doações no total"
 - id: donorsSmallReachedLabel
-  translation: "candidaturas receberam de pelo menos um pequeno doador"
+  translation: "candidaturas receberam pelo menos uma doação de pequeno doador"
 - id: donorsSmallReachedOf
-  translation: "de"
+  translation: "entre as"
 - id: donorsSmallReachedTail
-  translation: "com alguma receita de pessoa física"
+  translation: "candidaturas que receberam doações de pessoas físicas"
 - id: donorsSmallRatioLabel
-  translation: "é quanto os grandes doadores deram a mais que os pequenos"
+  translation: "é quanto o total doado pelos grandes doadores supera o total doado pelos pequenos doadores"
 - id: donorsSmallRatioDetail
-  translation: "para cada R$ 1 de pequeno doador"
+  translation: "Para cada R$ 1 recebido de pequenos doadores, as candidaturas receberam"
+- id: donorsSmallRatioDetailTail
+  translation: "de grandes doadores."
 - id: donorsSmallWomenLabel
-  translation: "do dinheiro dos pequenos doadores foi para candidaturas de mulheres"
+  translation: "das doações de pequenos doadores foram destinadas a candidaturas de mulheres"
 - id: donorsSmallWomenBig
-  translation: "entre os grandes:"
+  translation: "Entre os grandes doadores:"
 - id: donorsBandsTitle
   translation: "Quantas pessoas doaram quanto"
 - id: donorsBandsIntro
-  translation: "Cada faixa é um porte de doador, pelo total que a pessoa deu na eleição. A barra cinza diz quantas, de cada cem pessoas que doaram, estão naquela faixa; a barra âmbar, quantos de cada cem reais saíram dela."
+  translation: "Os doadores foram agrupados conforme o total que doaram na eleição. A barra cinza mostra quantas pessoas há em cada grupo. A barra âmbar mostra quanto do dinheiro doado veio de cada grupo."
 - id: donorsBandsPeople
   translation: "de cada 100 doadores"
 - id: donorsBandsMoney
   translation: "de cada R$ 100"
 - id: donorsBandsCaption
-  translation: "As faixas seguem as bordas que a própria API usa para os portes. A distribuição doação a doação, por valor de cada repasse, entra quando a API passar a informar as bordas das faixas."
+  translation: "As faixas desta visualização seguem a classificação metodológica adotada pelo 72horas. Quando os dados permitirem analisar cada doação individualmente por valor, esta visualização poderá ser ampliada."

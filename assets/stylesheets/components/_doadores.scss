@@ -95,6 +95,27 @@
   color: var(--ink-3);
 }
 
+/* Recorte da página: fechado por padrão, para não competir com a manchete. */
+.doadores__scope {
+  max-width: 46rem;
+  margin-top: 0.9rem;
+
+  font-size: var(--t-s);
+  line-height: 1.5;
+  color: var(--ink-2);
+
+  > summary {
+    font-weight: 600;
+    color: var(--ink-2);
+
+    cursor: pointer;
+  }
+
+  > p {
+    margin-top: 0.5rem;
+  }
+}
+
 .doadores__loading,
 .doadores__error {
   margin: 1.5rem 0;
@@ -149,6 +170,14 @@
   color: var(--ink-3);
 }
 
+.doadores__bignumber-note {
+  margin-top: 0.4rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+
 /* ---------- corte ---------- */
 
 .doadores__cut {
@@ -190,6 +219,16 @@
   font-size: var(--t-xs);
   font-variant-numeric: tabular-nums;
   color: var(--ink-2);
+}
+
+.doadores__cut-note {
+  flex-basis: 100%;
+
+  margin: 0;
+
+  font-size: var(--t-xs);
+  line-height: 1.45;
+  color: var(--ink-3);
 }
 
 .doadores__chip {
@@ -261,6 +300,14 @@
 
 .doadores__section-head--inner {
   margin-top: 2.5rem;
+}
+
+.doadores__lede {
+  margin-top: 0.6rem;
+
+  font-size: var(--t-s);
+  line-height: 1.5;
+  color: var(--ink-2);
 }
 
 .doadores__subtitle {
