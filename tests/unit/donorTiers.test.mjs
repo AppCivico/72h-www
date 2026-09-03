@@ -16,6 +16,8 @@ import {
   spelledCurrency,
   spreadLabels,
   toNumber,
+  crowdLayout,
+  waveAt,
 } from '../../assets/scripts/utilities/donorTiers.js';
 
 test('toNumber aceita o que a API manda de verdade', () => {
@@ -198,3 +200,71 @@ test('spreadLabels devolve o mesmo quando ninguém colide', () => {
   assert.deepEqual(spreadLabels([], 18), []);
 });
 
+
+// --- a multidão abaixo do piso, como enxame -------------------------------
+
+const FAIXAS = [
+  { band: 1, donors: 9474, tone: 'small', label: 'até 2 mil' },
+  { band: 2, donors: 4365, tone: 'medium', label: '2 a 10 mil' },
+  { band: 3, donors: 1674, tone: 'medium', label: '10 a 50 mil' },
+];
+
+const OPCOES = {
+  originX: 24, width: 260, height: 240, centerY: 176, perDot: 10,
+};
+
+test('crowdLayout desenha uma bolinha para cada perDot pessoas, sem sobrar nem faltar', () => {
+  const out = crowdLayout(FAIXAS, OPCOES);
+  const esperado = FAIXAS.reduce((soma, f) => soma + Math.round(f.donors / 10), 0);
+  assert.equal(out.dots.length, esperado);
+  assert.equal(out.people, 15513);
+  // e cada faixa fecha a sua própria conta
+  FAIXAS.forEach((faixa) => {
+    const naFaixa = out.dots.filter((d) => d.band === faixa.band);
+    assert.equal(naFaixa.length, Math.round(faixa.donors / 10));
+  });
+});
+
+test('crowdLayout dá a cada faixa a largura da sua contagem: a área é a gente', () => {
+  const out = crowdLayout(FAIXAS, OPCOES);
+  const larguras = out.regions.map((r) => r.x1 - r.x0);
+  const proporcao = larguras[0] / larguras[2];
+  const esperada = 9474 / 1674;
+  assert.ok(Math.abs(proporcao - esperada) / esperada < 0.1);
+});
+
+test('crowdLayout cabe na altura pedida, com a onda incluída', () => {
+  const out = crowdLayout(FAIXAS, OPCOES);
+  const topo = Math.min(...out.dots.map((d) => d.y - d.r));
+  const base = Math.max(...out.dots.map((d) => d.y + d.r));
+  assert.ok(topo >= 176 - 120 - 1, `topo ${topo}`);
+  assert.ok(base <= 176 + 120 + 1, `base ${base}`);
+});
+
+test('crowdLayout usa um passo só para as três faixas', () => {
+  const out = crowdLayout(FAIXAS, OPCOES);
+  const raios = new Set(out.dots.map((d) => d.r));
+  assert.equal(raios.size, 1);
+});
+
+test('crowdLayout é determinístico: a página recarrega e o desenho é o mesmo', () => {
+  assert.deepEqual(crowdLayout(FAIXAS, OPCOES), crowdLayout(FAIXAS, OPCOES));
+});
+
+test('crowdLayout aguenta faixa vazia e lista vazia', () => {
+  assert.equal(crowdLayout([], OPCOES).dots.length, 0);
+  assert.equal(crowdLayout([{ band: 1, donors: 0 }], OPCOES).dots.length, 0);
+  const so = crowdLayout([{ band: 1, donors: 30, tone: 'small' }], OPCOES);
+  assert.equal(so.dots.length, 3);
+});
+
+test('waveAt move o centro e volta, sem passar da amplitude pedida', () => {
+  assert.equal(waveAt(100, 0), 0);
+  for (let x = 0; x <= 1200; x += 7) {
+    assert.ok(Math.abs(waveAt(x, 30)) <= 30 + 1e-9);
+  }
+  // não é uma reta: em algum lugar do desenho ela sobe de verdade
+  const alcance = [];
+  for (let x = 0; x <= 1200; x += 7) alcance.push(waveAt(x, 30));
+  assert.ok(Math.max(...alcance) > 18 && Math.min(...alcance) < -18);
+});

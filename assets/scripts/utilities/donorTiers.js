@@ -305,3 +305,163 @@ export function spreadLabels(positions, gap) {
   });
   return out;
 }
+
+/**
+ * A serpentina do enxame: duas senoides lentas somadas, uma volta e meia ao
+ * longo do desenho. Move só a LINHA DE CENTRO, e por isso é enfeite honesto —
+ * a posição vertical num beeswarm nunca significou nada. Ondular a ALTURA,
+ * essa sim, inventaria uma distribuição que os dados não têm.
+ */
+export function waveAt(x, amplitude) {
+  if (!amplitude) return 0;
+  return amplitude * (0.62 * Math.sin(x / 205 + 0.9) + 0.38 * Math.sin(x / 78 + 2.3));
+}
+
+/**
+ * Tremor determinístico, para o desenho sair igual a cada carga da página.
+ */
+function wiggle(index) {
+  const value = Math.sin(index * 127.1 + 311.7) * 43758.5453;
+  return value - Math.floor(value) - 0.5;
+}
+
+/**
+ * Reparte bolinhas entre colunas pelo maior resto, SEM o piso de uma célula
+ * que o largestRemainder aplica: ali o piso existe para o grupo minúsculo não
+ * sumir do waffle; aqui ele inflaria a contagem sempre que houvesse mais
+ * colunas do que bolinhas.
+ */
+function spreadCounts(weights, total) {
+  const clean = weights.map((weight) => Math.max(0, toNumber(weight)));
+  const sum = clean.reduce((acc, weight) => acc + weight, 0);
+  if (sum <= 0 || total <= 0) return clean.map(() => 0);
+
+  const exact = clean.map((weight) => (weight / sum) * total);
+  const out = exact.map((value) => Math.floor(value));
+  const order = exact
+    .map((value, index) => ({ index, rest: value - Math.floor(value) }))
+    .sort((a, b) => b.rest - a.rest);
+
+  let left = total - out.reduce((acc, value) => acc + value, 0);
+  let step = 0;
+  while (left > 0 && order.length) {
+    out[order[step % order.length].index] += 1;
+    left -= 1;
+    step += 1;
+  }
+  return out;
+}
+
+/**
+ * A multidão abaixo do piso desenhada como enxame, e não como barra.
+ *
+ * Cada faixa ocupa uma fatia da calha proporcional a quanta gente tem, então
+ * a ÁREA de cada cor é a contagem. As bolinhas se empilham em colunas
+ * centradas, com as colunas ímpares meio passo abaixo (empacotamento
+ * hexagonal), e o passo é único para as três faixas: se o grão mudasse no
+ * meio do desenho pareceria outra unidade de medida.
+ *
+ * Duas coisas ondulam, as duas decorativas: a linha de centro (waveAt) e a
+ * borda, por senoide lenta ao longo das colunas. O peso de cada coluna passa
+ * pelo maior resto, então a contagem fecha exata e ninguém aparece ou some.
+ * Sorteio coluna a coluna foi testado e sai serrilhado, não ondulado.
+ *
+ * Uma bolinha vale `perDot` pessoas: abaixo de R$ 50 mil só se sabe quantas
+ * pessoas há em cada faixa, e uma bolinha por pessoa sairia com menos de um
+ * pixel na calha. Quem chama precisa dizer isso na tela.
+ */
+export function crowdLayout(bands, options = {}) {
+  const originX = toNumber(options.originX);
+  const width = options.width || 260;
+  const height = options.height || 240;
+  const centerY = toNumber(options.centerY);
+  const perDot = Math.max(1, options.perDot || 10);
+  const maxStep = options.maxStep || 10.5;
+  const wave = options.wave === undefined ? Math.min(30, height * 0.12) : options.wave;
+
+  const rows = (bands || []).filter((band) => toNumber(band.donors) > 0);
+  const people = rows.reduce((sum, band) => sum + toNumber(band.donors), 0);
+  if (!rows.length || !people) {
+    return {
+      dots: [], regions: [], step: 0, radius: 0, people: 0, perDot,
+    };
+  }
+
+  // A onda come altura nas duas pontas, então o empilhamento só pode contar
+  // com o que sobra — senão a massa transborda o gráfico.
+  const usable = Math.max(24, height - wave * 2 - 14);
+
+  const regions = [];
+  let cursor = originX;
+  let step = Infinity;
+  rows.forEach((band) => {
+    const donors = toNumber(band.donors);
+    const slot = (donors / people) * width;
+    const dots = Math.max(1, Math.round(donors / perDot));
+    const x0 = cursor + 1;
+    const x1 = cursor + Math.max(6, slot - 1);
+    regions.push({
+      band: band.band,
+      tone: band.tone,
+      label: band.label,
+      donors,
+      dots,
+      x0,
+      x1,
+    });
+    cursor += slot;
+    step = Math.min(step, Math.sqrt((usable * Math.max(8, x1 - x0)) / (0.87 * dots)));
+  });
+
+  step = Math.min(step, maxStep);
+  const radius = Math.max(0.5, step * 0.38);
+
+  const dots = [];
+  const marcas = [];
+  regions.forEach((region, index) => {
+    const span = region.x1 - region.x0;
+    const columns = Math.max(1, Math.min(Math.round(span / step), region.dots));
+    // Fase própria por faixa: em uníssono as três sobem e descem juntas e o
+    // desenho vira bandeira.
+    const phase = 1.7 + index * 2.1;
+    const weights = [];
+    for (let c = 0; c < columns; c += 1) {
+      weights.push(1
+        + 0.16 * Math.sin(c / 3.4 + phase)
+        + 0.09 * Math.sin(c / 8.9 + phase * 0.7));
+    }
+    const counts = spreadCounts(weights, region.dots);
+
+    let top = Infinity;
+    for (let c = 0; c < columns; c += 1) {
+      const many = counts[c];
+      const cx = region.x0 + (c + 0.5) * (span / columns);
+      const base = centerY + waveAt(cx, wave) + (c % 2) * step * 0.435;
+      for (let i = 0; i < many; i += 1) {
+        const y = base + (i - (many - 1) / 2) * step * 0.87
+          + wiggle(index * 977 + c * 31 + i * 7) * step * 0.13;
+        if (y - radius < top) top = y - radius;
+        dots.push({
+          x: cx + wiggle(index * 613 + c * 17 + i) * step * 0.13,
+          y,
+          r: radius,
+          tone: region.tone,
+          band: region.band,
+        });
+      }
+    }
+    marcas[index] = {
+      top: Number.isFinite(top) ? top : centerY,
+      labelX: (region.x0 + region.x1) / 2,
+    };
+  });
+
+  return {
+    dots,
+    regions: regions.map((region, index) => ({ ...region, ...marcas[index] })),
+    step,
+    radius,
+    people,
+    perDot,
+  };
+}

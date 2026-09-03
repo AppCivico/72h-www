@@ -145,13 +145,32 @@
             <g class="doadores__swarm-blocks">
               <text :x="swarm.gutterLeft" :y="swarm.cutTop + 4" class="doadores__swarm-cut-label"
                 v-text="formatNumeral(swarm.belowCount) + ' {{ i18n "donorsSwarmBelowFloor" }} ' + spelledCurrency(swarm.floor) + '.'"></text>
-              <text :x="swarm.gutterLeft" :y="swarm.cutTop + 20">{{ i18n "donorsSwarmBelowFloorNote" }}</text>
-              <template v-for="block in swarm.blocks" :key="block.band">
+              <text :x="swarm.gutterLeft" :y="swarm.cutTop + 20"
+                v-text="'{{ i18n "donorsSwarmDotWorthLead" }} ' + formatNumeral(swarm.perDot) + ' {{ i18n "donorsSwarmDotWorthTail" }}'"></text>
+              {{/* Uma bolinha por grupo de pessoas, e não uma barra: a
+                   largura de cada faixa é a sua contagem, então a área de
+                   cada cor é o número de gente. O empilhamento e a ondulação
+                   saem de crowdLayout, em utilities/donorTiers.js. */}}
+              <circle
+                v-for="(dot, index) in swarm.crowd"
+                :key="'m' + index"
+                :cx="dot.x" :cy="dot.y" :r="dot.r"
+                :class="'doadores__swarm-grain doadores__swarm-grain--' + dot.tone"></circle>
+              {{/* Retângulo transparente por faixa: é o que dá alvo de mouse
+                   a uma nuvem de bolinhas pequenas demais para se acertar
+                   uma por uma. */}}
+              <template v-for="faixa in swarm.bands" :key="faixa.band">
+                <text :x="faixa.labelX" :y="swarm.axisY + 22" text-anchor="middle" v-text="faixa.label"></text>
                 <rect
-                  :x="block.x" :y="block.y" :width="block.width" :height="block.height" rx="6"
-                  :class="'doadores__swarm-block doadores__swarm-block--' + block.tone"></rect>
-                <text :x="block.labelX" :y="block.y - 8" text-anchor="middle" class="doadores__swarm-count" v-text="block.count"></text>
-                <text :x="block.labelX" :y="swarm.axisY + 22" text-anchor="middle" v-text="block.range"></text>
+                  class="doadores__swarm-hit"
+                  :x="faixa.x0" :y="swarm.cutTop" :width="faixa.width"
+                  :height="swarm.axisY - swarm.cutTop"
+                  tabindex="0"
+                  @mouseenter="showBandTip($event, faixa)"
+                  @mousemove="showBandTip($event, faixa)"
+                  @mouseleave="hideTip"
+                  @focus="showBandTip($event, faixa)"
+                  @blur="hideTip"></rect>
               </template>
               <line :x1="swarm.left - 20" :x2="swarm.left - 20" :y1="swarm.cutTop - 4" :y2="swarm.axisY" class="doadores__swarm-divider"></line>
             </g>
@@ -159,7 +178,7 @@
               <line :x1="swarm.left" :x2="swarm.right" :y1="swarm.axisY" :y2="swarm.axisY"></line>
               <template v-for="tick in swarm.ticks" :key="tick.value">
                 <line :x1="tick.x" :x2="tick.x" :y1="swarm.axisY" :y2="swarm.axisY + 6"></line>
-                <text :x="tick.x" :y="swarm.axisY + 22" text-anchor="middle" v-text="tick.label"></text>
+                <text :x="tick.x" :y="swarm.axisY + 22" :text-anchor="tick.anchor" v-text="tick.label"></text>
               </template>
             </g>
             <g class="doadores__swarm-cut" v-if="swarm.cutX !== null">
@@ -876,6 +895,8 @@
       above: '{{ i18n "donorsAbove" }}',
       to: '{{ i18n "donorsTo" }}',
       unnamed: '{{ i18n "donorsUnnamed" }}',
+      dotWorthLead: '{{ i18n "donorsSwarmDotWorthLead" }}',
+      dotWorthTail: '{{ i18n "donorsSwarmDotWorthTail" }}',
       candidacy: '{{ i18n "donorsCandidacyWord" }}',
       ofPeople: '{{ i18n "donorsBandsPeople" }}',
       ofMoney: '{{ i18n "donorsBandsMoney" }}',

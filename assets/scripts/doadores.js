@@ -10,6 +10,7 @@ import {
   THRESHOLDS,
   TIERS,
   TOTAL_BANDS,
+  crowdLayout,
   bandLabel,
   beeswarmLayout,
   cumulativeSeries,
@@ -50,6 +51,11 @@ const RANKING_PAGE = 20;
 // mesma razão do gráfico de inclinação: mude os dois juntos). O piso é o
 // menor corte que a API entrega doador a doador; quando `min_total` voltar a
 // funcionar, basta trocar SWARM_FLOOR por 10000 para a nuvem dos médios entrar.
+// Uma bolinha para cada dez pessoas na multidão abaixo do piso. Uma por
+// pessoa sairia com menos de um pixel na calha de 260 unidades, e vira
+// textura em vez de gente; dez deixa o grão quase do tamanho do menor
+// círculo do enxame. A tela precisa dizer isso, e diz.
+const CROWD_PER_DOT = 10;
 const SWARM_WIDTH = 1200;
 const SWARM_HEIGHT = 400;
 const SWARM_FLOOR = THRESHOLDS[0];
@@ -381,10 +387,11 @@ window.$vueDoadores = Vue.createApp({
     } = this) {
       if (!swarmDonors.length) return null;
 
-      // À esquerda do eixo, em bloco, quem ficou abaixo do piso: a API só
+      // À esquerda do eixo, a multidão que ficou abaixo do piso: a API só
       // entrega um a um a partir de R$ 50 mil, mas dá a contagem por faixa,
-      // e sem essa multidão a figura perde a proporção. A altura de cada
-      // bloco é o número de pessoas; a maior faixa ocupa a altura toda.
+      // e sem essa gente a figura perde a proporção. Ela vem como enxame,
+      // não como barra — a largura de cada faixa é a sua contagem, então a
+      // ÁREA de cada cor é o número de pessoas.
       const gutterLeft = 24;
       const gutterWidth = 260;
       const left = gutterLeft + gutterWidth + 40;
@@ -401,26 +408,30 @@ window.$vueDoadores = Vue.createApp({
           const row = (summary?.bands || []).find((band) => Number(band.total_band) === entry.band);
           return { ...entry, donors: toNumber(row?.donors), value: toNumber(row?.value) };
         });
-      const mostDonors = Math.max(1, ...belowFloor.map((entry) => entry.donors));
-      const slot = belowFloor.length ? gutterWidth / belowFloor.length : 0;
-      const blocks = belowFloor.map((entry, index) => {
-        const height = Math.max(4, (entry.donors / mostDonors) * (plotHeight - 36));
-        const width = slot * 0.66;
-        return {
-          band: entry.band,
-          tone: entry.max <= SMALL_MAX ? 'small' : 'medium',
-          x: gutterLeft + index * slot + (slot - width) / 2,
-          width,
-          y: centerY - height / 2,
-          height,
-          labelX: gutterLeft + index * slot + slot / 2,
-          count: formatNumeral(entry.donors),
-          // Compacto de propósito: três rótulos dividem 260 unidades, e o
-          // "R$" já está no eixo ao lado.
-          range: entry.min === 0
-            ? `${this.labels.upTo} ${spelledCurrency(entry.max).replace('R$ ', '')}`
-            : `${entry.min / 1000} ${this.labels.to} ${entry.max / 1000} mil`,
-        };
+      const faixaLabel = (entry) => (entry.min === 0
+        // Compacto de propósito: três rótulos dividem 260 unidades, e o
+        // "R$" já está no eixo ao lado.
+        ? `${this.labels.upTo} ${spelledCurrency(entry.max).replace('R$ ', '')}`
+        : `${entry.min / 1000} ${this.labels.to} ${entry.max / 1000} mil`);
+
+      // O rótulo curto vai para o eixo, que tem 260 unidades para três
+      // faixas; o por extenso vai para a dica, que tem a largura que precisar.
+      const faixaRange = (entry) => (entry.min === 0
+        ? `${this.labels.upTo} ${spelledCurrency(entry.max)}`
+        : `${spelledCurrency(entry.min)} ${this.labels.to} ${spelledCurrency(entry.max)}`);
+      const ranges = new Map(belowFloor.map((entry) => [entry.band, faixaRange(entry)]));
+
+      const crowd = crowdLayout(belowFloor.map((entry) => ({
+        band: entry.band,
+        donors: entry.donors,
+        tone: entry.max <= SMALL_MAX ? 'small' : 'medium',
+        label: faixaLabel(entry),
+      })), {
+        originX: gutterLeft,
+        width: gutterWidth,
+        height: plotHeight,
+        centerY,
+        perDot: CROWD_PER_DOT,
       });
 
       const totals = swarmDonors.map((donor) => toNumber(donor.total_value));
@@ -457,7 +468,14 @@ window.$vueDoadores = Vue.createApp({
 
       const ticks = [50000, 100000, 250000, 500000, 1e6, 2.5e6, 5e6, 1e7, 2.5e7, 5e7]
         .filter((tick) => tick >= min && tick <= max)
-        .map((tick) => ({ value: tick, x: x(tick), label: spelledCurrency(tick) }));
+        .map((tick, index) => ({
+          value: tick,
+          x: x(tick),
+          label: spelledCurrency(tick),
+          // A primeira marca cai em cima da calha se for centrada: ali ela
+          // corre para a direita e devolve o espaço aos rótulos das faixas.
+          anchor: index === 0 ? 'start' : 'middle',
+        }));
 
       const color = (item) => {
         if (swarmMode === 'concentration') {
@@ -474,7 +492,34 @@ window.$vueDoadores = Vue.createApp({
 
       return {
         nodes,
-        blocks,
+        crowd: crowd.dots,
+        // Três rótulos dividem 260 unidades e a faixa mais estreita tem 28,
+        // então eles não cabem no centro das suas faixas: cada um anda para a
+        // direita até parar de encostar no anterior, e no fim o conjunto volta
+        // para dentro da calha. O texto se move; as bolinhas ficam onde estão.
+        bands: (() => {
+          const larguraDe = (texto) => texto.length * 5.6;
+          const fim = gutterLeft + gutterWidth + 28;
+          let cursor = gutterLeft;
+          const posicoes = crowd.regions.map((region) => {
+            const largura = larguraDe(region.label);
+            const centro = Math.max((region.x0 + region.x1) / 2, cursor + largura / 2);
+            cursor = centro + largura / 2 + 10;
+            return centro;
+          });
+          const sobra = cursor - fim;
+          return crowd.regions.map((region, index) => ({
+            ...region,
+            width: Math.max(4, region.x1 - region.x0),
+            labelX: sobra > 0
+              ? Math.max(gutterLeft + larguraDe(region.label) / 2, posicoes[index] - sobra)
+              : posicoes[index],
+            count: formatNumeral(region.donors),
+            range: ranges.get(region.band) || region.label,
+            perDot: crowd.perDot,
+          }));
+        })(),
+        perDot: crowd.perDot,
         gutterLeft,
         gutterRight: gutterLeft + gutterWidth,
         left,
@@ -704,6 +749,18 @@ window.$vueDoadores = Vue.createApp({
           this.labels.candidacy,
           this.labels.candidacies,
         ),
+      };
+    },
+    // A multidão não tem nome para mostrar: o que a faixa sabe dizer é
+    // quanta gente há ali e em que intervalo de valor, que é exatamente o
+    // que os dados públicos entregam abaixo do piso.
+    showBandTip(event, faixa) {
+      this.tip = {
+        x: Math.min(event.clientX + 14, window.innerWidth - 280),
+        y: event.clientY + 14,
+        name: `${formatNumeral(faixa.donors)} ${this.labels.peopleWord}`,
+        total: faixa.range,
+        candidacies: `${this.labels.dotWorthLead} ${formatNumeral(faixa.perDot)} ${this.labels.dotWorthTail}`,
       };
     },
     hideTip() {

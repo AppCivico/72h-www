@@ -1377,15 +1377,17 @@
 - id: donorsSwarmMediumMany
   translation: "doadores abaixo do corte"
 - id: donorsSwarmCaptionLead
-  translation: "Cada círculo representa uma pessoa que doou acima do corte selecionado. A visualização individual começa em"
+  translation: "À direita, cada círculo é uma pessoa que doou acima do corte selecionado. A visualização individual começa em"
 - id: donorsSwarmCaptionTail
-  translation: "porque esse é o menor valor para o qual os dados públicos disponibilizam informações individualizadas. Abaixo desse valor, os dados são divulgados apenas de forma agregada por faixas de doação e, por isso, aparecem agrupados em blocos."
+  translation: "porque esse é o menor valor para o qual os dados públicos disponibilizam informações individualizadas. Abaixo dele os dados só dizem quantas pessoas há em cada faixa: por isso, à esquerda, a largura de cada faixa é proporcional à sua contagem e uma bolinha vale um grupo de pessoas, mas a posição de uma bolinha dentro da faixa não é o valor de ninguém."
 - id: donorsSwarmCaptionJitter
-  translation: "Quando dois ou mais doadores têm valores semelhantes, os círculos podem ser deslocados horizontalmente apenas para facilitar a visualização. Essa posição não representa nenhuma informação adicional."
+  translation: "A ondulação do desenho é decorativa. A posição vertical, dos dois lados, não representa nenhuma informação — círculos de valor parecido se afastam um pouco só para não se sobrepor."
 - id: donorsSwarmBelowFloor
   translation: "pessoas doaram até"
-- id: donorsSwarmBelowFloorNote
-  translation: "Aparecem agrupadas por faixa de valor."
+- id: donorsSwarmDotWorthLead
+  translation: "Cada bolinha,"
+- id: donorsSwarmDotWorthTail
+  translation: "pessoas."
 - id: donorsSwarmOneByOne
   translation: "um a um"
 - id: donorsWhiteMen

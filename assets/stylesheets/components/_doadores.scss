@@ -409,19 +409,30 @@
   stroke: var(--hairline-2);
 }
 
-.doadores__swarm-block {
+/* A multidão abaixo do piso: uma bolinha por grupo de pessoas, no lugar das
+   três barras que havia aqui. O empilhamento vem de crowdLayout. */
+.doadores__swarm-grain {
   fill: var(--donors-medium);
-  fill-opacity: 0.75;
+  fill-opacity: 0.85;
 }
 
-.doadores__swarm-block--small {
+.doadores__swarm-grain--small {
   fill: var(--donors-small);
+  fill-opacity: 1;
 }
 
-.doadores__swarm-count {
-  font-weight: 600;
+/* Alvo de mouse por faixa: as bolinhas são pequenas demais para se acertar
+   uma por uma, e a informação que a faixa tem é a mesma para todas elas. */
+.doadores__swarm-hit {
+  cursor: help;
 
-  fill: var(--ink);
+  fill: transparent;
+
+  &:hover,
+  &:focus-visible {
+    fill: var(--ink);
+    fill-opacity: 0.04;
+  }
 }
 
 .doadores__swarm-cut {
