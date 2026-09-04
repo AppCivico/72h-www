@@ -68,10 +68,10 @@ de build.
 
 ## Bug conhecido marcado na suíte
 
-`tests/e2e/home-filtros.spec.mjs` tem um `test.fail()` para o celular: o
-aviso "Painel dos partidos" fica ancorado no rodapé e cobre o botão
-flutuante "Aplicar novos filtros". Quando isso for resolvido, o teste passa
-a acusar que o marcador pode sair.
+`tests/e2e/home-filtros.spec.mjs` tem um `test.fail()` para o celular: a
+isca fixa do site (`.site-cta`, hoje anunciando /doadores) fica ancorada no
+rodapé e cobre o botão flutuante "Aplicar novos filtros". Quando isso for
+resolvido, o teste passa a acusar que o marcador pode sair.
 
 ## Ao adicionar página, filtro ou dado novo
 

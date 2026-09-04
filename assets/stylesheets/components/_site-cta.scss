@@ -1,14 +1,14 @@
 @use '../abstracts/functions';
 
 ////
-/// A isca fixa do Painel dos partidos: canto inferior direito no desktop,
-/// faixa colada no rodapé da tela no celular. Fica no ar em toda página
-/// menos a própria, e o visitante pode fechar de vez.
+/// A isca fixa do site: canto inferior direito no desktop, faixa colada no
+/// rodapé da tela no celular. Fica no ar em toda página menos a que ela
+/// anuncia, e o visitante pode fechar de vez.
 ///
 /// @group components
 ////
 
-.painel-cta {
+.site-cta {
   position: fixed;
   right: 1rem;
   bottom: 1rem;
@@ -59,7 +59,7 @@
   }
 }
 
-.painel-cta__link {
+.site-cta__link {
   display: flex;
 
   flex: 1 1 auto;
@@ -72,15 +72,15 @@
 
   text-decoration: none;
 
-  &:hover .painel-cta__arrow,
-  &:focus-visible .painel-cta__arrow {
+  &:hover .site-cta__arrow,
+  &:focus-visible .site-cta__arrow {
     transform: translateX(3px);
   }
 }
 
 /// A etiqueta de novidade. Em caixa alta e pequena: quem já conhece a página
 /// ignora, quem não conhece entende que apareceu algo.
-.painel-cta__tag {
+.site-cta__tag {
   flex: none;
 
   padding: 0.1rem 0.4rem;
@@ -95,13 +95,13 @@
   border-radius: 999px;
 }
 
-.painel-cta__body {
+.site-cta__body {
   flex: 1 1 auto;
 
   min-width: 0;
 }
 
-.painel-cta__title {
+.site-cta__title {
   display: block;
 
   font-size: var(--t-xs);
@@ -110,9 +110,9 @@
   color: var(--ink);
 }
 
-/// A linha que dá o motivo de clicar agora: a contagem para o prazo das
-/// cotas, escrita pelo painelCta.js.
-.painel-cta__line {
+/// A linha que dá o motivo de clicar agora, escrita no build a partir dos
+/// números da página anunciada (partials/donorsHighlight.html).
+.site-cta__line {
   display: block;
 
   font-size: 0.8125rem;
@@ -120,7 +120,7 @@
   color: var(--ink-2);
 }
 
-.painel-cta__arrow {
+.site-cta__arrow {
   flex: none;
 
   font-size: var(--t-s);
@@ -131,7 +131,7 @@
   }
 }
 
-.painel-cta__close {
+.site-cta__close {
   flex: 0 0 auto;
 
   padding: 0 0.75rem 0 0.5rem;

@@ -1,0 +1,132 @@
+{{/* As duas manchetes da home, logo abaixo dos big numbers: /doadores à
+     esquerda e o painel dos partidos à direita, mesmo peso visual.
+
+     HTML puro, sem Vue: são convites para sair da página, e um cartão que
+     nasce em esqueleto e só resolve depois que o app monta convida pior do
+     que um que já está escrito. Os números saem do build — os dos doadores de
+     donorsHighlight.html, os dos partidos do mesmo data/partyPanel.json que a
+     home já lê para a chamada da cota, atualizado todo dia pelo
+     .github/workflows/painel-partidos.yml. Nenhum é escrito à mão, e cada
+     cartão tem uma linha de reserva para quando o número não estiver lá.
+
+     Cada cartão traz um desenho pequeno feito do próprio dado, no idioma da
+     página que ele anuncia: pontinhos para os doadores, traços contra a linha
+     do mínimo para os partidos. Eles não são ilustração — se o número mudar, o
+     desenho muda junto —, mas também não são o gráfico: repetem em imagem o
+     que a frase ao lado diz em palavras, e é a frase que carrega a leitura.
+     Por isso ficam com aria-hidden e sem rótulo próprio.
+
+     Ordem e destaque: doadores primeiro. Trocar o destaque é trocar a ordem
+     aqui e o peso 1 em menus.yaml (de onde sai o ponto do menu). */}}
+{{- $donors := partial "donorsHighlight.html" . -}}
+
+{{/* Agregado do Fundo Eleitoral declarado pelas candidaturas: a MESMA conta
+     de quotaSummary.js (`female / declared`, todos os partidos com total
+     positivo), que é o que a chamada da cota mostra mais abaixo na página.
+     Se um dia a conta de lá mudar, esta tem de mudar junto — as duas nunca
+     podem responder a mesma pergunta com números diferentes. */}}
+{{- $declared := 0.0 -}}
+{{- $female := 0.0 -}}
+{{- $ranked := 0 -}}
+{{- $belowFloor := 0 -}}
+{{- range (site.Data.partyPanel.parties | default slice) -}}
+  {{- $total := float (.fefc.total | default 0) -}}
+  {{- if gt $total 0.0 -}}
+    {{- $declared = add $declared $total -}}
+    {{- $female = add $female (float (.fefc.female | default 0)) -}}
+    {{/* Um quadradinho por partido, aceso quando a parcela feminina dele
+         ficou abaixo do mínimo legal de 30%. O piso de R$ 1 milhão é o mesmo
+         RANKING_FLOOR de quotaSummary.js: abaixo dele a porcentagem de um
+         volume pequeno vira e mexe com um repasse só, e o quadrado mentiria.
+         Aqui a régua é o mínimo legal de 30% para todos, que é o que a frase
+         do cartão diz; o piso PROPORCIONAL de cada partido, mais rigoroso, é
+         assunto do painel e não cabe num desenho de quatro centímetros. */}}
+    {{- if ge $total 1000000.0 -}}
+      {{- $ranked = add $ranked 1 -}}
+      {{- if lt (div (mul (float (.fefc.female | default 0)) 100.0) $total) 30.0 -}}
+        {{- $belowFloor = add $belowFloor 1 -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $femaleShare := cond (gt $declared 0.0) (div (mul $female 100.0) $declared) 0.0 -}}
+
+<section class="home-section home-calls" aria-label="{{ i18n "homeCallsEyebrow" }}">
+  <div class="container">
+    <div class="home-calls__grid">
+
+      <a class="home-call" href="/doadores/">
+        <p class="home-call__eyebrow">{{ i18n "homeCallsDonorsEyebrow" }}</p>
+        <h2 class="home-call__title">{{ i18n "homeCallsDonorsTitle" }}</h2>
+
+        {{/* Cem pontinhos, cada um 1% das doações de pessoas físicas: os
+             cheios são o que veio dos grandes doadores. Mesma unidade da
+             frase abaixo, e some junto com ela quando o número não vem. */}}
+        {{- with $donors -}}
+          {{- $filled := int (math.Round .bigSharePct) -}}
+          <svg class="home-call__dots" viewBox="0 0 232 40" role="presentation" aria-hidden="true" focusable="false">
+            {{- range $i := seq 0 99 -}}
+              {{- $col := math.Mod $i 25 -}}
+              {{- $rowIndex := math.Floor (div $i 25) -}}
+              <circle
+                cx="{{ add 4 (mul $col 9) }}"
+                cy="{{ add 4 (mul $rowIndex 11) }}"
+                r="3.4"
+                class="home-call__dot{{ if lt $i $filled }} home-call__dot--on{{ end }}"></circle>
+            {{- end -}}
+          </svg>
+        {{- end -}}
+
+        <p class="home-call__dek">
+          {{- with $donors -}}
+            <strong>{{ lang.FormatNumber 0 .bigDonors }}</strong> {{ i18n "homeCallsDonorsLead" }}
+            <strong>R$ {{ lang.FormatNumber 0 (div .threshold 1000) }} {{ i18n "thousandWord" }}</strong> {{ i18n "homeCallsDonorsMiddle" }}
+            <strong>{{ lang.FormatPercent 0 .bigSharePct }}</strong> {{ i18n "homeCallsDonorsTail" }}
+            <strong>{{ lang.FormatNumber 0 .smallDonors }}</strong> {{ i18n "homeCallsDonorsEnd" }}
+          {{- else -}}
+            {{ i18n "homeCallsDonorsFallback" }}
+          {{- end -}}
+        </p>
+        <span class="home-call__cta">{{ i18n "homeCallsDonorsCta" }}<span class="home-call__arrow" aria-hidden="true">&rarr;</span></span>
+      </a>
+
+      <a class="home-call" href="/partidos/painel/">
+        <p class="home-call__eyebrow">{{ i18n "homeCallsPartiesEyebrow" }}</p>
+        <h2 class="home-call__title">{{ i18n "homeCallsPartiesTitle" }}</h2>
+
+        {{/* Um quadrado por partido, na ordem em que o painel os lista. Os
+             acesos são os que declararam menos de 30% do próprio Fundo
+             Eleitoral às candidaturas de mulheres. Sem eixo e sem escala: a
+             conta que interessa aqui é quantos, e ela se lê contando. */}}
+        {{- if $ranked -}}
+          <svg class="home-call__squares" viewBox="0 0 232 22" role="presentation" aria-hidden="true" focusable="false">
+            {{- range $i := seq 0 (sub $ranked 1) -}}
+              <rect
+                x="{{ mul $i 11 }}" y="2" width="9" height="18" rx="2"
+                class="home-call__square{{ if lt $i $belowFloor }} home-call__square--below{{ end }}"></rect>
+            {{- end -}}
+          </svg>
+        {{- end -}}
+
+        <p class="home-call__dek">
+          {{- if gt $femaleShare 0.0 -}}
+            {{ i18n "homeCallsPartiesLead" }}
+            <strong>{{ lang.FormatPercent 1 $femaleShare }}</strong>
+            {{ i18n "homeCallsPartiesTail" }}
+            {{- if $belowFloor }}
+              {{ i18n "homeCallsPartiesBelowLead" }}
+              <strong>{{ $belowFloor }}</strong>
+              {{ i18n "homeCallsPartiesBelowMid" }}
+              <strong>{{ $ranked }}</strong>
+              {{ i18n "homeCallsPartiesBelowTail" }}
+            {{- end }}
+          {{- else -}}
+            {{ i18n "homeCallsPartiesFallback" }}
+          {{- end -}}
+        </p>
+        <span class="home-call__cta">{{ i18n "homeCallsPartiesCta" }}<span class="home-call__arrow" aria-hidden="true">&rarr;</span></span>
+      </a>
+
+    </div>
+  </div>
+</section>

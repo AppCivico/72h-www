@@ -292,6 +292,12 @@
           </div>
         </div>
 
+        {{/* data-label em toda célula: abaixo do breakpoint de tabela as regras
+             globais de layout/_table.scss escondem o <thead> e transformam cada
+             <tr> num cartão. Sem o rótulo na célula, a coluna perde o nome e o
+             leitor vê "98% / 94% / 56%" sem saber de quem é cada um — foi
+             exatamente o que aconteceu. Usa o nome curto do porte porque ele
+             vira prefixo de cada valor. */}}
         <div class="doadores__table-scroll">
           <table class="doadores__table">
             <thead>
@@ -307,39 +313,39 @@
             <tbody>
               <tr>
                 <th scope="row">{{ i18n "donorsRowPeople" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatNumeral(tier.donors)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatNumeral(tier.donors)"></td>
               </tr>
               <tr>
                 <th scope="row">{{ i18n "donorsRowValue" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="spelledCurrency(tier.value)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="spelledCurrency(tier.value)"></td>
               </tr>
               <tr class="doadores__table-sep">
                 <th scope="row">{{ i18n "donorsRowValueShare" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatPercent(tier.valueShare, 1)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatPercent(tier.valueShare, 1)"></td>
               </tr>
               <tr>
                 <th scope="row">{{ i18n "donorsRowMean" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatCurrencyNoAbbr(tier.meanTotal)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatCurrencyNoAbbr(tier.meanTotal)"></td>
               </tr>
               <tr>
                 <th scope="row">{{ i18n "donorsRowMedian" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatCurrencyNoAbbr(tier.medianTotal)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatCurrencyNoAbbr(tier.medianTotal)"></td>
               </tr>
               <tr class="doadores__table-sep">
                 <th scope="row">{{ i18n "donorsRowMode" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatCurrencyNoAbbr(tier.modeTransfer)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatCurrencyNoAbbr(tier.modeTransfer)"></td>
               </tr>
               <tr>
                 <th scope="row">{{ i18n "donorsRowTransfers" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatNumeral(tier.transfers)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatNumeral(tier.transfers)"></td>
               </tr>
               <tr>
                 <th scope="row">{{ i18n "donorsRowReached" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatNumeral(tier.reached)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatNumeral(tier.reached)"></td>
               </tr>
               <tr>
                 <th scope="row">{{ i18n "donorsRowSingle" }}</th>
-                <td v-for="tier in tiers" :key="tier.key" v-text="formatPercent(tier.singleShare)"></td>
+                <td v-for="tier in tiers" :key="tier.key" :data-label="tier.shortName" v-text="formatPercent(tier.singleShare)"></td>
               </tr>
             </tbody>
           </table>
@@ -481,6 +487,12 @@
       </section>
 
       {{/* ---- 4. Concentração ---------------------------------------------- */}}
+      {{/* Um bloco só para os três portes, com as duas medidas empilhadas em
+           cada um. Antes eram três cartões soltos, e dentro de cada um a barra
+           contava PESSOAS enquanto a frase logo abaixo contava DINHEIRO, sem
+           nada dizendo que eram medidas diferentes. Agora as duas dividem a
+           mesma régua e a mesma cor, e a diferença entre elas vira leitura em
+           vez de tropeço. */}}
       <section class="doadores__section" v-if="concentrationRows.length">
         <div class="doadores__section-head">
           <div>
@@ -490,31 +502,92 @@
           <p>{{ i18n "donorsConcentrationIntro" }}</p>
         </div>
 
-        <div class="doadores__panels">
-          <div class="doadores__panel" v-for="row in concentrationRows" :key="row.key">
-            <h3 v-text="row.name"></h3>
-            <p class="doadores__panel-sub" v-text="row.range"></p>
-            <span class="doadores__stack">
-              <span
-                v-for="bucket in row.buckets"
-                :key="bucket.bucket"
-                class="doadores__stack-part"
-                :style="{ flexGrow: Math.max(bucket.share, 0.002) }"
-                :title="bucket.bucket + ': ' + formatNumeral(bucket.donors)">
-                <span v-if="bucket.share >= 0.12" v-text="formatPercent(bucket.share)"></span>
-              </span>
-            </span>
-            <ul class="doadores__buckets">
-              <li v-for="bucket in row.buckets" :key="bucket.bucket">
-                <span v-text="bucket.bucket"></span>
-                <strong v-text="formatNumeral(bucket.donors)"></strong>
-              </li>
-            </ul>
-            <p class="doadores__panel-note">
-              <strong v-text="formatPercent(row.singleShare)"></strong>
-              {{ i18n "donorsSingleShareNote" }}
-            </p>
+        <div class="doadores__spread">
+          <p class="doadores__spread-legend">
+            <span><i class="doadores__spread-swatch doadores__spread-swatch--one" aria-hidden="true"></i>{{ i18n "donorsSpreadLegendOne" }}</span>
+            <span><i class="doadores__spread-swatch doadores__spread-swatch--many" aria-hidden="true"></i>{{ i18n "donorsSpreadLegendMany" }}</span>
+          </p>
+
+          <div class="doadores__spread-row" v-for="row in concentrationRows" :key="row.key">
+            <div class="doadores__spread-id">
+              <h3 v-text="row.name"></h3>
+              <p v-text="row.range"></p>
+            </div>
+
+            <div class="doadores__spread-tracks">
+              {{/* Duas medidas, uma régua. O rótulo da fatia pequena sai da
+                   barra e vira texto ao lado quando não caberia dentro: 1,3%
+                   de 100% é uma lasca de quatro pixels. */}}
+              <div class="doadores__spread-track">
+                <span class="doadores__spread-axis">{{ i18n "donorsPeopleAxis" }}</span>
+                <span class="doadores__spread-bar">
+                  <span
+                    class="doadores__spread-part doadores__spread-part--one"
+                    :style="{ flexGrow: Math.max(row.peopleOneShare, 0.004) }"
+                    :title="labels.people + ': ' + formatPercent(row.peopleOneShare, 1)">
+                    <span v-if="row.peopleOneShare >= 0.12" v-text="formatPercent(row.peopleOneShare, 1)"></span>
+                  </span>
+                  <span
+                    class="doadores__spread-part doadores__spread-part--many"
+                    :style="{ flexGrow: Math.max(row.peopleManyShare, 0.004) }"
+                    :title="labels.people + ': ' + formatPercent(row.peopleManyShare, 1)">
+                    <span v-if="row.peopleManyShare >= 0.12" v-text="formatPercent(row.peopleManyShare, 1)"></span>
+                  </span>
+                </span>
+                <span class="doadores__spread-outside" v-if="row.peopleManyShare < 0.12" v-text="formatPercent(row.peopleManyShare, 1)"></span>
+              </div>
+
+              <div class="doadores__spread-track">
+                <span class="doadores__spread-axis">{{ i18n "donorsMoneyAxis" }}</span>
+                <span class="doadores__spread-bar">
+                  <span
+                    class="doadores__spread-part doadores__spread-part--one"
+                    :style="{ flexGrow: Math.max(row.moneyOneShare, 0.004) }"
+                    :title="labels.money + ': ' + formatPercent(row.moneyOneShare, 1)">
+                    <span v-if="row.moneyOneShare >= 0.12" v-text="formatPercent(row.moneyOneShare, 1)"></span>
+                  </span>
+                  <span
+                    class="doadores__spread-part doadores__spread-part--many"
+                    :style="{ flexGrow: Math.max(row.moneyManyShare, 0.004) }"
+                    :title="labels.money + ': ' + formatPercent(row.moneyManyShare, 1)">
+                    <span v-if="row.moneyManyShare >= 0.12" v-text="formatPercent(row.moneyManyShare, 1)"></span>
+                  </span>
+                </span>
+                <span class="doadores__spread-outside" v-if="row.moneyManyShare < 0.12" v-text="formatPercent(row.moneyManyShare, 1)"></span>
+              </div>
+
+              <p class="doadores__spread-note">
+                <strong v-text="formatNumeral(row.peopleOne)"></strong>
+                {{ i18n "donorsSpreadOneTail" }}
+                <template v-if="row.peopleMany">
+                  {{ i18n "donorsSpreadManyLead" }}
+                  <strong v-text="formatNumeral(row.peopleMany)"></strong>
+                  {{ i18n "donorsSpreadManyTail" }}
+                  <span class="doadores__spread-buckets">
+                    <span v-for="bucket in row.manyBuckets" :key="bucket.bucket">
+                      <strong v-text="formatNumeral(bucket.donors)"></strong>
+                      <span v-text="bucketWord(bucket.bucket)"></span>
+                    </span>
+                  </span>
+                </template>
+              </p>
+            </div>
           </div>
+
+          {{/* A conclusão da seção, escrita com os números da coleta e não à
+               mão: "1,3% contra 34,5%" é a mesma informação e não se sente;
+               "uma em cada 79 contra uma em cada três", sim. */}}
+          <p class="doadores__spread-conclusion" v-if="spreadConclusion">
+            {{ i18n "donorsSpreadConclusionLead" }}
+            <strong v-text="spreadConclusion.smallOneIn"></strong>
+            {{ i18n "donorsSpreadConclusionMid1" }}
+            <strong v-text="spreadConclusion.bigOneIn"></strong>
+            {{ i18n "donorsSpreadConclusionMid2" }}
+            <strong v-text="formatPercent(spreadConclusion.bigMoney)"></strong>
+            {{ i18n "donorsSpreadConclusionMid3" }}
+            <strong v-text="formatPercent(spreadConclusion.smallMoney)"></strong>
+            {{ i18n "donorsSpreadConclusionTail" }}
+          </p>
         </div>
         <p class="doadores__figcaption">{{ i18n "donorsConcentrationCaption" }}</p>
       </section>
@@ -555,60 +628,65 @@
         </div>
         <p class="doadores__figcaption">{{ i18n "donorsWaffleCaption" }}</p>
 
-        {{/* Gráfico de inclinação: a mesma pergunta ao longo dos três portes,
-             com a régua tracejada da presença entre as candidaturas. */}}
-        <div class="doadores__section-head doadores__section-head--inner" v-if="slope">
+        {{/* Quatro gráficos pequenos, um por grupo, cada um contra a sua
+             própria régua. Era um gráfico só com as quatro linhas e as quatro
+             réguas juntas, e não dava para ler: as réguas colidiam entre si e
+             a frase "das candidaturas com doações" aparecia quatro vezes na
+             margem. Nome, valores e referência são texto HTML acima do
+             desenho, não <text> dentro dele — quebram linha no celular e o
+             leitor de tela os lê como texto. */}}
+        <div class="doadores__section-head doadores__section-head--inner" v-if="slopePanels">
           <div><h3 class="doadores__subtitle">{{ i18n "donorsSlopeTitle" }}</h3></div>
           <p>{{ i18n "donorsSlopeIntro" }}</p>
         </div>
-        <figure class="doadores__figure" v-if="slope">
-          {{/* O viewBox é estático de propósito. Este é um template in-DOM:
-               o parser de HTML minúsculo o nome de todo atributo antes de o
-               Vue ver, então `:viewBox` chegaria como `viewbox` e o SVG
-               ignoraria. As medidas abaixo são as mesmas de SLOPE_WIDTH e
-               SLOPE_HEIGHT em scripts/doadores.js; mude as duas juntas. */}}
-          <svg
-            viewBox="0 0 1000 420"
-            class="doadores__slope"
-            role="img"
-            aria-label="{{ i18n "donorsSlopeAria" }}">
-            <g class="doadores__slope-axis">
+        <div class="doadores__slopes" v-if="slopePanels">
+          <figure
+            class="doadores__slope-panel"
+            v-for="panel in slopePanels.panels"
+            :key="panel.key"
+            :class="'doadores__slope-line--' + panel.key">
+            <figcaption>
+              <h4 class="doadores__slope-name" v-text="panel.name"></h4>
+              <p class="doadores__slope-values">
+                <strong v-text="formatPercent(panel.first)"></strong>
+                <span aria-hidden="true">&rarr;</span>
+                <strong v-text="formatPercent(panel.last)"></strong>
+                {{ i18n "donorsSlopeOfMoney" }}
+              </p>
+              <p class="doadores__slope-ref">
+                {{ i18n "donorsSlopePresence" }}
+                <span v-text="formatPercent(panel.reference)"></span>
+                {{ i18n "donorsOfCandidacies" }}
+              </p>
+            </figcaption>
+            {{/* O viewBox é estático de propósito. Este é um template in-DOM:
+                 o parser de HTML minúsculo o nome de todo atributo antes de o
+                 Vue ver, então `:viewBox` chegaria como `viewbox` e o SVG
+                 ignoraria. As medidas são as mesmas de SLOPE_PANEL_WIDTH e
+                 SLOPE_PANEL_HEIGHT em scripts/doadores.js; mude as duas
+                 juntas. */}}
+            <svg
+              viewBox="0 0 260 130"
+              class="doadores__slope"
+              role="img"
+              :aria-label="panel.name + ': ' + formatPercent(panel.first) + ' a ' + formatPercent(panel.last) + ', contra ' + formatPercent(panel.reference)">
               <line
-                v-for="tick in slope.axisX"
-                :key="tick.tier"
-                :x1="tick.x" :x2="tick.x" :y1="slope.topPad" :y2="slope.baseline"></line>
-              <text
-                v-for="tick in slope.axisX"
-                :key="'label-' + tick.tier"
-                :x="tick.x" :y="slope.baseline + 24" text-anchor="middle"
-                class="doadores__slope-tier" v-text="tick.name"></text>
-            </g>
-            <g v-for="line in slope.lines" :key="line.key" :class="'doadores__slope-line doadores__slope-line--' + line.key">
+                class="doadores__slope-baseline"
+                x1="16" :x2="slopePanels.width - 16" :y1="slopePanels.baseline" :y2="slopePanels.baseline"></line>
               <line
                 class="doadores__slope-reference"
-                :x1="slope.left" :x2="line.endX" :y1="line.referenceY" :y2="line.referenceY"></line>
-              {{/* Duas linhas de propósito: o rótulo inteiro numa só não
-                   cabe na margem de 190 unidades e o SVG o cortaria. */}}
+                x1="16" :x2="slopePanels.width - 16" :y1="panel.referenceY" :y2="panel.referenceY"></line>
+              <polyline class="doadores__slope-path" :points="panel.polyline"></polyline>
+              <circle v-for="dot in panel.dots" :key="dot.tier" :cx="dot.x" :cy="dot.y" r="4.5"></circle>
               <text
-                class="doadores__slope-reference-label"
-                :x="slope.left - 10" :y="line.referenceY" text-anchor="end">
-                <tspan :x="slope.left - 10" v-text="formatPercent(line.reference)"></tspan>
-                <tspan :x="slope.left - 10" dy="13">{{ i18n "donorsOfCandidacies" }}</tspan>
-              </text>
-              <polyline class="doadores__slope-path" :points="line.polyline"></polyline>
-              <circle v-for="dot in line.dots" :key="dot.tier" :cx="dot.x" :cy="dot.y" r="5"></circle>
-              <template v-for="dot in line.dots" :key="'value-' + dot.tier">
-                <text
-                  v-if="dot.labelled"
-                  :x="dot.labelX" :y="dot.y - 11" :text-anchor="dot.anchor"
-                  class="doadores__slope-value" v-text="formatPercent(dot.share)"></text>
-              </template>
-              <text
-                class="doadores__slope-name"
-                :x="line.endX + 14" :y="line.endLabelY + 4" v-text="line.endLabel"></text>
-            </g>
-          </svg>
-        </figure>
+                v-for="tick in slopePanels.axisX"
+                :key="'tick-' + tick.tier"
+                :x="tick.x" :y="slopePanels.tickY" :text-anchor="tick.anchor"
+                class="doadores__slope-tier" v-text="tick.name"></text>
+            </svg>
+          </figure>
+        </div>
+        <p class="doadores__figcaption" v-if="slopePanels">{{ i18n "donorsSlopeCaption" }}</p>
       </section>
 
       {{/* ---- 6. Para onde vai ---------------------------------------------- */}}
@@ -900,6 +978,12 @@
       candidacy: '{{ i18n "donorsCandidacyWord" }}',
       ofPeople: '{{ i18n "donorsBandsPeople" }}',
       ofMoney: '{{ i18n "donorsBandsMoney" }}',
+      // Faixas de "quantas candidaturas cada doador apoiou". As chaves saem do
+      // rótulo da API sem pontuação ('3-5' -> bucket35), ver bucketWord().
+      bucket2: '{{ i18n "donorsBucket2" }}',
+      bucket35: '{{ i18n "donorsBucket35" }}',
+      bucket610: '{{ i18n "donorsBucket610" }}',
+      bucket11: '{{ i18n "donorsBucket11" }}',
     }
   </script>
 

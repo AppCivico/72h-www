@@ -38,14 +38,16 @@
 
     <div class="main-header__links js-menu-area" id="js-main-menu">
       <nav class="main-header__nav" aria-label="{{ i18n "mainMenu" }}">
-        {{/* O item do painel ganha um ponto: é a página nova e a única com
-             prazo correndo. O aria-current marca a página atual para leitor
-             de tela, e o ponto sai quando o visitante já está lá. */}}
+        {{/* O item em destaque ganha um ponto. Hoje é Doadores, a página
+             nova e a que o site quer em evidência; para mudar o destaque
+             basta trocar o identifier aqui e o peso 1 em menus.yaml. O
+             aria-current marca a página atual para leitor de tela, e o
+             ponto sai quando o visitante já está lá. */}}
         {{ with $ctx.Site.Menus.header }}
           {{ range . }}
             {{- $current := hasPrefix $ctx.RelPermalink .URL -}}
             <a
-              class="main-header__link{{ if and (eq .Identifier "partyPanel") (not $current) }} main-header__link--new{{ end }}"
+              class="main-header__link{{ if and (eq .Identifier "donors") (not $current) }} main-header__link--new{{ end }}"
               href="{{ .URL }}"
               {{- if $current }} aria-current="page"{{ end }}
               {{- if (hasPrefix .URL "http") }} target="_blank" rel="noopener"{{ end }}>

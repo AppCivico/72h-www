@@ -1,0 +1,38 @@
+{{/* Os números da página /doadores, lidos UMA vez por build e devolvidos como
+     dict para quem quiser chamar o leitor para lá (a isca fixa no rodapé e as
+     duas manchetes da home). Build time, e não fetch no cliente: é uma linha
+     de chamariz em toda página, e um número de porte de doador se move devagar
+     — não vale uma requisição por visita. O Hugo faz cache do GetRemote por
+     URL dentro do build, então chamar este partial duas vezes é uma requisição
+     só.
+
+     Devolve nil quando a API não responde ou responde torto, e quem chama
+     precisa ter uma frase que funcione sem número: uma isca sem cifra ainda
+     convida, uma isca com cifra errada mente.
+
+     Uso: {{ $donors := partial "donorsHighlight.html" . }} */}}
+{{- $threshold := 50000 -}}
+{{- $url := printf "%sdonors/summary?year=%d&threshold=%d" site.Params.apiDomain site.Params.run $threshold -}}
+{{- $out := false -}}
+{{- $result := try (resources.GetRemote $url) -}}
+{{- if and (not $result.Err) $result.Value -}}
+  {{- $data := $result.Value | transform.Unmarshal -}}
+  {{- $big := $data.tiers.big -}}
+  {{- $small := $data.tiers.small -}}
+  {{/* share_of_individuals chega como string ("0.515409"): é a fatia das
+       doações de pessoas físicas que os grandes doadores respondem. Sai daqui
+       em pontos percentuais, sem arredondar — quem escreve a frase decide a
+       casa decimal com lang.FormatPercent. */}}
+  {{- $share := float ($big.share_of_individuals | default 0) -}}
+  {{- if and $big.donors (gt $share 0.0) -}}
+    {{- $out = dict
+          "threshold" $threshold
+          "bigDonors" (int $big.donors)
+          "bigSharePct" (mul $share 100)
+          "smallDonors" (int ($small.donors | default 0))
+    -}}
+  {{- end -}}
+{{- else -}}
+  {{- warnf "donors/summary falhou no build (err=%v) — a chamada de /doadores sai sem número" $result.Err -}}
+{{- end -}}
+{{- return $out -}}

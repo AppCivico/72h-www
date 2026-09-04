@@ -19,7 +19,6 @@ import {
   medianRatio,
   share,
   spelledCurrency,
-  spreadLabels,
   toNumber,
 } from './utilities/donorTiers';
 
@@ -61,11 +60,12 @@ const SWARM_HEIGHT = 400;
 const SWARM_FLOOR = THRESHOLDS[0];
 const SWARM_RESULTS = 5000;
 
-// Geometria do gráfico de inclinação, em unidades do viewBox. O viewBox é
-// estático no template (in-DOM não preserva o "B" maiúsculo de um atributo
-// ligado), então estes dois números são espelhados lá: mude os dois juntos.
-const SLOPE_WIDTH = 1000;
-const SLOPE_HEIGHT = 420;
+// Geometria de CADA painel do gráfico de inclinação (são quatro, um por
+// grupo), em unidades do viewBox. O viewBox é estático no template (in-DOM não
+// preserva o "B" maiúsculo de um atributo ligado), então estes dois números
+// são espelhados lá: mude os dois juntos.
+const SLOPE_PANEL_WIDTH = 260;
+const SLOPE_PANEL_HEIGHT = 130;
 
 // Quantas fatias os gráficos de partido e cargo mostram antes de agrupar o
 // resto em "outros": a paleta é fixa e nunca ciclada, e uma lista de 28
@@ -284,9 +284,13 @@ window.$vueDoadores = Vue.createApp({
         return { ...panel, rows, flat };
       });
     },
-    // As três linhas do gráfico de inclinação, com a régua tracejada de cada
-    // grupo (a fatia que ele tem entre as candidaturas registradas).
-    slope({ breakdown } = this) {
+    // Quatro gráficos pequenos, um por grupo de candidaturas, cada um com a
+    // sua régua tracejada. Antes era um gráfico só com as quatro linhas e as
+    // quatro réguas juntas: oito coisas ao mesmo tempo, duas réguas colidindo
+    // e "das candidaturas com doações" escrito quatro vezes na margem. Separar
+    // custa a comparação direta entre os grupos e paga com poder ler cada um
+    // contra a própria referência, que é a pergunta da seção.
+    slopePanels({ breakdown } = this) {
       if (!breakdown) return null;
 
       const line = (rows, matches, key, name) => {
@@ -309,9 +313,9 @@ window.$vueDoadores = Vue.createApp({
         };
       };
 
-      // Quatro grupos: os três que a régua de equidade acompanha e o que
-      // fica com a maior parte do dinheiro, para a comparação ter os dois
-      // lados. Ids fixados pelo backend (intersection_group).
+      // Quatro grupos: os três que a régua de equidade acompanha e o que fica
+      // com a maior parte do dinheiro, para a comparação ter os dois lados.
+      // Ids fixados pelo backend (intersection_group).
       const lines = [
         line(breakdown.intersection, (row) => row.id === 4, 'white-men', this.labels.whiteMen),
         line(breakdown.gender, (row) => row.id === 2, 'women', this.labels.women),
@@ -321,61 +325,56 @@ window.$vueDoadores = Vue.createApp({
 
       if (!lines.length) return null;
 
-      // O teto acompanha o dado (a maior fatia ou a maior régua), senão as
-      // três linhas ficam espremidas no rodapé de um eixo de 60%.
+      // Escala ÚNICA para os quatro painéis. Cada um com a sua esticaria o
+      // desenho do grupo que recebe 3% até a altura do que recebe 69%, e dois
+      // painéis lado a lado que não se comparam mentem mais do que informam.
+      // O preço é o painel de baixo ficar achatado; por isso os números vão
+      // escritos no subtítulo, e não dependem de medir o desenho.
       const top = Math.max(
         0.08,
         ...lines.map((entry) => Math.max(
           entry.reference,
           ...entry.points.map((point) => point.share),
         )),
-      ) * 1.25;
+      ) * 1.12;
 
-      const width = SLOPE_WIDTH;
-      const height = SLOPE_HEIGHT;
-      // A margem esquerda guarda o rótulo da régua em duas linhas
-      // ("49,6%" / "das candidaturas com doações"), que mede ~171 unidades.
-      const left = 230;
-      const right = 250;
-      const topPad = 26;
-      const bottom = 54;
+      const width = SLOPE_PANEL_WIDTH;
+      const height = SLOPE_PANEL_HEIGHT;
+      // Nome do grupo, valores e referência são texto HTML acima do desenho,
+      // não <text> dentro dele: quebram linha, herdam o tipo da página e o
+      // leitor de tela os lê como texto. O SVG guarda só o traçado.
+      const left = 16;
+      const right = 16;
+      const topPad = 12;
+      const bottom = 34;
       const x = (index) => left + ((width - left - right) * index) / (TIERS.length - 1);
       const y = (value) => (height - bottom) - ((height - bottom - topPad) * (value / top));
-
-      // O rótulo do fim junta nome e valor e é afastado dos vizinhos: com
-      // quatro linhas, duas terminam a poucos pontos uma da outra.
-      const endYs = spreadLabels(
-        lines.map((entry) => y(entry.points[TIERS.length - 1].share)),
-        18,
-      );
 
       return {
         width,
         height,
-        left,
-        axisX: TIERS.map((tier, index) => ({ tier, x: x(index), name: this.labels[tier] })),
         baseline: height - bottom,
-        topPad,
-        lines: lines.map((entry, lineIndex) => ({
-          ...entry,
-          endLabelY: endYs[lineIndex],
-          endLabel: `${entry.name} · ${this.formatPercent(entry.points[TIERS.length - 1].share)}`,
-          polyline: entry.points.map((point, index) => `${x(index)},${y(point.share)}`).join(' '),
-          // Rótulo só nas pontas: com três linhas e três portes, um número
-          // sobre cada ponto vira colisão no meio do gráfico. `anchor` joga o
-          // primeiro para a direita do ponto (onde não bate na régua
-          // tracejada) e o último para a esquerda (onde não bate no nome).
-          dots: entry.points.map((point, index) => ({
-            ...point,
+        tickY: height - bottom + 18,
+        // Primeira marca ancorada à esquerda e última à direita, senão elas
+        // saem do viewBox de 260 unidades nas pontas.
+        axisX: TIERS.map((tier, index) => {
+          const anchors = { 0: 'start', [TIERS.length - 1]: 'end' };
+          return {
+            tier,
             x: x(index),
-            y: y(point.share),
-            labelled: index === 0,
-            labelX: x(index) + 9,
-            anchor: 'start',
-          })),
+            name: this.labels[`${tier}Short`] || this.labels[tier],
+            anchor: anchors[index] || 'middle',
+          };
+        }),
+        panels: lines.map((entry) => ({
+          key: entry.key,
+          name: entry.name,
+          first: entry.points[0].share,
+          last: entry.points[TIERS.length - 1].share,
+          reference: entry.reference,
           referenceY: y(entry.reference),
-          endX: x(TIERS.length - 1),
-          endY: y(entry.points[TIERS.length - 1].share),
+          polyline: entry.points.map((point, index) => `${x(index)},${y(point.share)}`).join(' '),
+          dots: entry.points.map((point, index) => ({ ...point, x: x(index), y: y(point.share) })),
         })),
       };
     },
@@ -593,26 +592,54 @@ window.$vueDoadores = Vue.createApp({
     positionRows({ breakdown } = this) {
       return this.compareRows(breakdown?.position, 0);
     },
-    // Concentração: de cada 100 doadores do porte, quantos apoiaram uma, duas
-    // ou muitas candidaturas. A API entrega contagem de doadores por balde
-    // (não o dinheiro), então a leitura de dinheiro fica com single_share.
+    // Concentração: quem bancou uma única candidatura e quem dividiu a doação
+    // entre várias, no mesmo bloco para os três portes. Duas medidas por porte
+    // e elas não se equivalem: a API entrega a contagem de DOADORES por balde,
+    // e o single_candidacy_share do summary é a fatia do DINHEIRO. Ver as duas
+    // lado a lado é o ponto da seção, então nenhuma delas pode aparecer
+    // sozinha e sem nome.
     concentrationRows({ concentration, tiers } = this) {
       if (!concentration) return [];
       return tiers.map((tier) => {
-        const buckets = concentration[tier.key] || [];
+        const buckets = (concentration[tier.key] || [])
+          .map((bucket) => ({ bucket: bucket.bucket, donors: toNumber(bucket.donors) }));
         const total = sumBy(buckets, (bucket) => bucket.donors);
+        const one = buckets.find((bucket) => bucket.bucket === '1')?.donors || 0;
+        const many = total - one;
+        const moneyOne = toNumber(tier.singleShare);
         return {
           key: tier.key,
           name: tier.name,
           range: tier.range,
-          singleShare: tier.singleShare,
-          buckets: buckets.map((bucket) => ({
-            bucket: bucket.bucket,
-            donors: toNumber(bucket.donors),
-            share: share(bucket.donors, total),
-          })),
+          total,
+          peopleOne: one,
+          peopleMany: many,
+          peopleOneShare: share(one, total),
+          peopleManyShare: share(many, total),
+          moneyOneShare: moneyOne,
+          moneyManyShare: moneyOne ? 1 - moneyOne : 0,
+          // Só os baldes de duas ou mais, e só os que existem: escrever
+          // "0 apoiaram de seis a dez" é ruído, e nos pequenos três dos
+          // quatro baldes são zero.
+          manyBuckets: buckets.filter((bucket) => bucket.bucket !== '1' && bucket.donors > 0),
         };
       });
+    },
+    // A frase de fechamento da seção. "Um em cada N" porque 1,3% contra 34,5%
+    // é a mesma informação e não se sente; um em cada 79 contra um em cada
+    // três, sim. Só sai quando os três portes têm base, senão a comparação
+    // que a frase faz não existe.
+    spreadConclusion({ concentrationRows } = this) {
+      const byKey = Object.fromEntries(concentrationRows.map((row) => [row.key, row]));
+      const smallRow = byKey.small;
+      const bigRow = byKey.big;
+      if (!smallRow?.peopleMany || !bigRow?.peopleMany) return null;
+      return {
+        smallOneIn: Math.round(smallRow.total / smallRow.peopleMany),
+        bigOneIn: Math.round(bigRow.total / bigRow.peopleMany),
+        smallMoney: smallRow.moneyManyShare,
+        bigMoney: bigRow.moneyManyShare,
+      };
     },
     // Uma parte das declarações traz data futura (erro de preenchimento na
     // prestação de contas). Elas esticavam o eixo do gráfico até outubro com
@@ -654,6 +681,11 @@ window.$vueDoadores = Vue.createApp({
     toNumber,
     formatPercent(value, digits = 0) {
       return `${formatNumeral((toNumber(value) * 100), digits)}%`;
+    },
+    // A faixa "3-5" da API vira "entre três e cinco" na frase; o rótulo cru
+    // serve de reserva se um dia aparecer um balde novo.
+    bucketWord(bucket) {
+      return this.labels[`bucket${bucket.replace(/[^0-9a-z]/gi, '')}`] || bucket;
     },
     formatPoints(value) {
       const points = toNumber(value) * 100;

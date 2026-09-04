@@ -988,17 +988,73 @@
   translation: "de"
 - id: painelHeroDistributed
   translation: "distribuídos aos partidos pelo TSE"
-- id: painelCtaTag
-  translation: "Novo"
-- id: painelCtaTitle
+# As duas manchetes da home, logo abaixo dos big numbers
+# (partials/homeCalls.html). Doadores vem primeiro porque é a página em
+# evidência; as duas têm o mesmo peso visual. Os números dos doadores são
+# lidos no build (partials/donorsHighlight.html) e os dos partidos saem do
+# data/partyPanel.json, então nenhum é escrito à mão. Cada uma tem uma linha
+# de reserva sem número, para o cartão nunca ficar mudo.
+- id: homeCallsEyebrow
+  translation: "Para onde ir agora"
+- id: homeCallsDonorsEyebrow
+  translation: "Quem doa às campanhas"
+- id: homeCallsDonorsTitle
+  translation: "Os grandes doadores, um a um"
+- id: homeCallsDonorsLead
+  translation: "pessoas doaram acima de"
+# "mil" do corte escrito por extenso na manchete dos doadores: o valor vem da
+# constante do partial, e só a palavra é texto.
+- id: thousandWord
+  translation: "mil"
+- id: homeCallsDonorsMiddle
+  translation: "e respondem por"
+- id: homeCallsDonorsTail
+  translation: "das doações de pessoas físicas. Outras"
+- id: homeCallsDonorsEnd
+  translation: "doaram até R$ 2 mil cada."
+- id: homeCallsDonorsFallback
+  translation: "De um lado, algumas centenas de pessoas com doações de seis dígitos. Do outro, milhares que deram pequenas quantias. A página mostra os dois extremos."
+- id: homeCallsDonorsCta
+  translation: "Ver os doadores"
+- id: homeCallsPartiesEyebrow
   translation: "Painel dos partidos"
-- id: painelCtaDefault
+- id: homeCallsPartiesTitle
   translation: "Quem está distribuindo o Fundo Eleitoral"
-- id: painelCtaDeadlineTail
-  translation: "para o prazo das cotas"
-- id: painelCtaPast
-  translation: "Como cada partido chegou ao prazo"
-- id: painelCtaClose
+- id: homeCallsPartiesLead
+  translation: "As candidaturas de mulheres declararam ter recebido"
+- id: homeCallsPartiesTail
+  translation: "do Fundo Eleitoral, contra um mínimo de 30%."
+# A segunda frase do cartão do painel, montada com a contagem do build:
+# lead + quantos abaixo + mid + quantos ao todo + tail. A régua aqui é o
+# mínimo legal de 30% para todos, e não o piso proporcional de cada partido
+# que o painel calcula — o texto tem de continuar dizendo "desse mínimo",
+# referindo os 30% da frase anterior, e nunca "do seu piso".
+- id: homeCallsPartiesBelowLead
+  translation: "Em"
+- id: homeCallsPartiesBelowMid
+  translation: "dos"
+- id: homeCallsPartiesBelowTail
+  translation: "partidos com mais de R$ 1 milhão declarado, a parcela ficou abaixo desse mínimo."
+- id: homeCallsPartiesFallback
+  translation: "Partido a partido, quanto do Fundo Eleitoral chegou às candidaturas de mulheres e de pessoas pretas, pardas e indígenas."
+- id: homeCallsPartiesCta
+  translation: "Ver o painel"
+# A isca fixa de canto (partials/footer.html + siteCta.js). Hoje anuncia
+# /doadores. A linha é montada com os números do build: porcentagem +
+# siteCtaLineMiddle + contagem + siteCtaLineTail. Cabem duas linhas no cartão
+# de 21rem, então nada de frase longa aqui. siteCtaDefault é a reserva de
+# quando a leitura falha, e precisa convidar sozinha.
+- id: siteCtaTag
+  translation: "Novo"
+- id: siteCtaTitle
+  translation: "Quem doa às campanhas"
+- id: siteCtaLineMiddle
+  translation: "das doações de pessoas físicas vêm de"
+- id: siteCtaLineTail
+  translation: "pessoas"
+- id: siteCtaDefault
+  translation: "Os maiores doadores, um a um"
+- id: siteCtaClose
   translation: "Fechar este aviso"
 - id: implausibleChartLead
   translation: "Detectamos um provável erro de preenchimento."
@@ -1027,10 +1083,15 @@
 # proporção entre as fatias também não se sustenta. Desde que gênero e cor/raça
 # passaram aos big_numbers filtrados (que fecham), só o recorte de partido
 # (ainda pie_charts) dispara isto.
+#
+# O texto encolheu em 04/09/2026 (o Thiago achou o parágrafo anterior confuso).
+# O que NÃO pode sair: a ressalva de que as fatias não somam o total. Dizer só
+# "são dados parciais" seria falso — dado parcial fecha, este não fecha, e é
+# por isso que a manchete acima perde a porcentagem.
 - id: chartsDoNotCloseLead
-  translation: "Os valores abaixo não fecham com o total declarado para este recorte."
+  translation: "Números declarados pelas candidaturas até aqui."
 - id: chartsDoNotCloseTail
-  translation: "Enquanto não fecharem, os títulos nomeiam a maior fatia mas não afirmam porcentagem, e as barras devem ser lidas como ordem de grandeza, não como proporção exata. O número grande no topo da página, esse sim, fecha. Estamos apurando com a origem dos dados."
+  translation: "Nesta divisão as fatias ainda não somam o total declarado, então leia as barras como ordem de grandeza, não como proporção exata."
 - id: implausibleIntroChartsTail
   translation: "segue somado nestes gráficos. É um valor declarado acima de três vezes o teto legal de gastos do cargo, provável dígito a mais na prestação de contas. A listagem não informa a cor/raça nem o gênero de quem declarou, então não dá para descontá-lo da fatia certa: enquanto ele estiver no total, infla a maior fatia de cada recorte. Leia as porcentagens abaixo com essa ressalva."
 - id: implausibleBigNumberTail
@@ -1185,10 +1246,13 @@
   translation: "Número de doações"
 - id: donorsRowReached
   translation: "Candidaturas que receberam doações"
+# A linha da concentração mede DINHEIRO enquanto as vizinhas medem pessoas, e
+# no celular a legenda fica longe da tabela: por isso a unidade está no próprio
+# rótulo da linha, não só na legenda.
 - id: donorsRowSingle
-  translation: "Doações concentradas em uma única candidatura"
+  translation: "Dinheiro vindo de quem apoiou uma só candidatura"
 - id: donorsTiersCaption
-  translation: "A última linha mostra a parcela das doações de cada grupo destinada por pessoas que apoiaram apenas uma candidatura. Ela mede dinheiro, não número de doadores."
+  translation: "A última linha é a única que mede dinheiro em vez de pessoas: é a parcela do valor doado pelo grupo que saiu de quem apoiou uma única candidatura."
 - id: donorsScaleEyebrow
   translation: "A escala das doações"
 - id: donorsScaleTitleLead
@@ -1206,11 +1270,42 @@
 - id: donorsConcentrationTitle
   translation: "Quantas candidaturas cada doador apoiou"
 - id: donorsConcentrationIntro
-  translation: "Cada barra mostra quantas candidaturas cada doador apoiou. Quanto mais à esquerda, maior a concentração das doações em uma única candidatura. Quanto mais à direita, maior a distribuição das doações entre diferentes candidaturas."
-- id: donorsSingleShareNote
-  translation: "das doações desse grupo vieram de pessoas que apoiaram apenas uma candidatura."
+  translation: "Um doador pode bancar uma candidatura só ou dividir a doação entre várias. Cada porte aparece aqui duas vezes: em cima, quantas pessoas fizeram cada coisa; embaixo, quanto dinheiro veio de cada um dos dois comportamentos."
+# As duas medidas do bloco. Elas NÃO se equivalem e a legenda precisa dizer
+# isso: pessoas é contagem de doadores, dinheiro é valor doado.
+- id: donorsSpreadLegendOne
+  translation: "apoiou uma candidatura"
+- id: donorsSpreadLegendMany
+  translation: "apoiou mais de uma"
+- id: donorsSpreadOneTail
+  translation: "pessoas apoiaram uma única candidatura."
+- id: donorsSpreadManyLead
+  translation: "As outras"
+- id: donorsSpreadManyTail
+  translation: "dividiram a doação:"
+- id: donorsBucket2
+  translation: "entre duas"
+- id: donorsBucket35
+  translation: "entre três e cinco"
+- id: donorsBucket610
+  translation: "entre seis e dez"
+- id: donorsBucket11
+  translation: "entre onze ou mais"
+# A conclusão da seção, montada com os números da coleta: lead + "um em cada
+# N" dos pequenos + mid1 + "um em cada N" dos grandes + mid2 + % dos grandes +
+# mid3 + % dos pequenos + tail.
+- id: donorsSpreadConclusionLead
+  translation: "Quanto maior o doador, mais candidaturas ele banca: entre os pequenos, uma em cada"
+- id: donorsSpreadConclusionMid1
+  translation: "pessoas apoiou mais de uma candidatura, e entre os grandes, uma em cada"
+- id: donorsSpreadConclusionMid2
+  translation: "pessoas. Como quem espalha também doa mais, a distância cresce no dinheiro:"
+- id: donorsSpreadConclusionMid3
+  translation: "do valor que veio dos grandes doadores saiu de quem dividiu a doação, contra"
+- id: donorsSpreadConclusionTail
+  translation: "do valor que veio dos pequenos."
 - id: donorsConcentrationCaption
-  translation: "As barras mostram o número de doadores. A linha abaixo mostra a distribuição do valor das doações. As duas medidas podem diferir porque poucos doadores podem responder por uma parcela maior do dinheiro do que muitos doadores."
+  translation: "As duas medidas não se equivalem: a de cima conta pessoas, a de baixo conta dinheiro. Elas se afastam porque quem apoia mais de uma candidatura costuma doar valores maiores."
 - id: donorsRaceEyebrow
   translation: "Quem recebe as doações?"
 - id: donorsWaffleTitle
@@ -1222,7 +1317,13 @@
 - id: donorsSlopeTitle
   translation: "Quem recebe mais quando o doador é maior?"
 - id: donorsSlopeIntro
-  translation: "Cada linha é um grupo de candidaturas e mostra que fatia das doações esse grupo recebeu de cada grupo de doadores: dos pequenos, à esquerda, aos grandes, à direita. A linha tracejada é a referência — a fatia que esse grupo representa entre as candidaturas que receberam doações de pessoas físicas. Quando a linha fica abaixo da referência, o grupo recebe uma parcela menor das doações do que sua presença entre essas candidaturas sugeriria."
+  translation: "Cada quadro é um grupo de candidaturas e mostra que fatia das doações esse grupo recebeu de cada porte de doador: dos pequenos, à esquerda, aos grandes, à direita. A linha tracejada é a referência de cada grupo, a fatia que ele representa entre as candidaturas que receberam doações de pessoas físicas. Abaixo da tracejada, o grupo recebe uma parcela menor das doações do que a sua presença entre essas candidaturas sugeriria."
+- id: donorsSlopeOfMoney
+  translation: "do dinheiro"
+- id: donorsSlopePresence
+  translation: "presença:"
+- id: donorsSlopeCaption
+  translation: "Os quatro quadros usam a mesma escala, então as alturas são comparáveis entre eles. Um grupo pode aparecer em mais de um quadro: mulheres negras estão contadas também em mulheres e em pessoas negras."
 - id: donorsSlopeAria
   translation: "Fatia das doações por grupo de candidaturas, em cada grupo de doadores"
 - id: donorsWomen
@@ -1377,9 +1478,9 @@
 - id: donorsSwarmMediumMany
   translation: "doadores abaixo do corte"
 - id: donorsSwarmCaptionLead
-  translation: "À direita, cada círculo é uma pessoa que doou acima do corte selecionado. A visualização individual começa em"
+  translation: "À direita, cada círculo é uma pessoa que doou acima do corte de"
 - id: donorsSwarmCaptionTail
-  translation: "porque esse é o menor valor para o qual os dados públicos disponibilizam informações individualizadas. Abaixo dele os dados só dizem quantas pessoas há em cada faixa: por isso, à esquerda, a largura de cada faixa é proporcional à sua contagem e uma bolinha vale um grupo de pessoas, mas a posição de uma bolinha dentro da faixa não é o valor de ninguém."
+  translation: "e está na régua de baixo pelo total que doou: a régua mede quanto cada doador doou, e a quantidade de círculos é a quantidade de doadores. À esquerda, abaixo do corte, os dados só dizem quantas pessoas há em cada faixa, então a largura da faixa é proporcional à sua contagem e uma bolinha vale um grupo de pessoas, mas a posição de uma bolinha dentro da faixa não é o valor de ninguém."
 - id: donorsSwarmCaptionJitter
   translation: "A ondulação do desenho é decorativa. A posição vertical, dos dois lados, não representa nenhuma informação — círculos de valor parecido se afastam um pouco só para não se sobrepor."
 - id: donorsSwarmBelowFloor

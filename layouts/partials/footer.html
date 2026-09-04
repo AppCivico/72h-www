@@ -94,45 +94,41 @@
   </div>
 </footer>
 
-{{/* A isca do painel: fixa no canto, em toda página menos a própria, e some
-     de vez quando o visitante fecha (localStorage, com versão na chave para
-     podermos chamar de novo numa próxima novidade). Nasce hidden e só o JS
-     a revela, para quem já fechou não ver um flash a cada navegação. A
-     contagem é calculada no cliente porque o build não roda todo dia. */}}
-{{ if not (hasPrefix .RelPermalink "/partidos/painel") }}
+{{/* A isca do site: fixa no canto, em toda página menos a que ela anuncia, e
+     some de vez quando o visitante fecha (localStorage, com versão na chave
+     para podermos chamar de novo numa próxima novidade). Nasce hidden e só o
+     JS a revela, para quem já fechou não ver um flash a cada navegação.
+
+     Hoje ela anuncia /doadores. Para mudar o alvo: trocar o href, as chaves
+     de i18n e o hasPrefix abaixo, e subir a versão da chave em siteCta.js,
+     senão quem já dispensou a isca anterior nunca vê a nova. */}}
+{{ if not (hasPrefix .RelPermalink "/doadores") }}
+  {{- $donors := partial "donorsHighlight.html" . -}}
   <aside
-    class="painel-cta"
-    id="js-painel-cta"
-    aria-label="{{ i18n "painelCtaTitle" }}"
-    {{/* Passa o ANO, não a data: o prazo legal vive em
-        utilities/electoralFund.js, de onde o painel também o lê, e assim não
-        há uma segunda cópia da data para envelhecer sozinha. */}}
-    data-year="{{ site.Params.run }}"
-    data-day="{{ i18n "publicFundsDay" }}"
-    data-days="{{ i18n "publicFundsDays" }}"
-    data-tail="{{ i18n "painelCtaDeadlineTail" }}"
-    data-past="{{ i18n "painelCtaPast" }}"
+    class="site-cta"
+    id="js-site-cta"
+    aria-label="{{ i18n "siteCtaTitle" }}"
     hidden>
-    <a class="painel-cta__link" href="/partidos/painel/">
-      <span class="painel-cta__tag">{{ i18n "painelCtaTag" }}</span>
-      <span class="painel-cta__body">
-        <strong class="painel-cta__title">{{ i18n "painelCtaTitle" }}</strong>
-        <span class="painel-cta__line" data-cta-line>{{ i18n "painelCtaDefault" }}</span>
+    <a class="site-cta__link" href="/doadores/">
+      <span class="site-cta__tag">{{ i18n "siteCtaTag" }}</span>
+      <span class="site-cta__body">
+        <strong class="site-cta__title">{{ i18n "siteCtaTitle" }}</strong>
+        {{/* Com número quando o build conseguiu lê-lo; a frase de reserva
+             convida do mesmo jeito, só não crava a conta. */}}
+        <span class="site-cta__line">
+          {{- with $donors -}}
+            {{ lang.FormatPercent 0 .bigSharePct }} {{ i18n "siteCtaLineMiddle" }} {{ lang.FormatNumber 0 .bigDonors }} {{ i18n "siteCtaLineTail" }}
+          {{- else -}}
+            {{ i18n "siteCtaDefault" }}
+          {{- end -}}
+        </span>
       </span>
-      <span class="painel-cta__arrow" aria-hidden="true">&rarr;</span>
+      <span class="site-cta__arrow" aria-hidden="true">&rarr;</span>
     </a>
-    <button class="painel-cta__close" type="button" data-cta-close aria-label="{{ i18n "painelCtaClose" }}">
+    <button class="site-cta__close" type="button" data-cta-close aria-label="{{ i18n "siteCtaClose" }}">
       <span aria-hidden="true">&times;</span>
     </button>
   </aside>
-  {{ $ctaJS := resources.Get "scripts/painelCta.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
+  {{ $ctaJS := resources.Get "scripts/siteCta.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
   <script src="{{ $ctaJS.RelPermalink }}" integrity="{{ $ctaJS.Data.Integrity }}" defer></script>
 {{ end }}
-
-<div id="copy-warning" class="copy-warning" hidden>
-  <div class="container">
-    <p class="pay-attention-to__danger">
-      {{ i18n "copyWarning" }}
-    </p>
-  </div>
-</div>

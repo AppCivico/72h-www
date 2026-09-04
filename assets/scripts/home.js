@@ -627,7 +627,7 @@ if (window.location.href.indexOf('/') > -1) {
       },
     },
     async mounted() {
-      // A isca do Painel dos partidos (painelCta.js, script solto que roda
+      // A isca do site (siteCta.js, script solto que roda
       // em toda página) e o CTA "Aplicar novos filtros" ficam os dois
       // fixos no mesmo canto: no celular a isca cobria exatamente o botão
       // que o leitor acabou de pedir. Os dois componentes não se conhecem,
@@ -728,7 +728,12 @@ if (window.location.href.indexOf('/') > -1) {
         if (rangeOfVotes !== '' && !Number.isNaN(Number.parseInt(rangeOfVotes, 10))) {
           this.selectedRangeOfVotes = rangeOfVotes;
         }
-        if (reelection) {
+        // Only when the year actually offers the cut: the API drops the
+        // `reelection` filter for an election whose st_REELEICAO the TSE has
+        // not populated (2026 came back false for every candidacy). Honouring
+        // the param anyway would apply a filter with no control on screen to
+        // unset it, and every combination of it comes back empty.
+        if (reelection && this.filters.reelection?.length) {
           this.isReelectionSelected = reelection !== '0' ? 1 : 0;
         }
         if (days) {

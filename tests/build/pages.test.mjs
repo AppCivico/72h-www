@@ -22,6 +22,7 @@ const OBRIGATORIAS = [
   '2022/index.html',
   '2020/index.html',
   'candidato/index.html',
+  'doadores/index.html',
   'partidos/painel/index.html',
   'quem-somos/index.html',
   'sobre-os-dados/index.html',

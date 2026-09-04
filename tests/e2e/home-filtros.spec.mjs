@@ -193,14 +193,14 @@ test.describe('filtros da home', () => {
     expect(paramsDaUltimaChamada(chamadas).getAll('region_id[]')).toEqual([String(SAO_PAULO.id)]);
   });
 
-  test('a isca do Painel sai do rodapé enquanto o CTA de aplicar está no ar', async ({ page }) => {
+  test('a isca do site sai do rodapé enquanto o CTA de aplicar está no ar', async ({ page }) => {
     // As duas peças são fixas no mesmo canto e não se conhecem (scripts
     // separados): a ponte é a classe js-filters-stale no <body>. Este
     // teste existe para que ninguém remova a ponte sem perceber.
     await abrirHome(page);
     await abrirPainelDeFiltros(page);
 
-    const isca = page.locator('.painel-cta');
+    const isca = page.locator('.site-cta');
     const tinhaIsca = await isca.count();
 
     await escolher(listaDeEstados(page), SAO_PAULO.id);

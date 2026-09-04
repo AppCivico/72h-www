@@ -1,0 +1,159 @@
+////
+/// As duas manchetes da home (partials/homeCalls.html): /doadores e o painel
+/// dos partidos, lado a lado no desktop e empilhadas no celular.
+///
+/// São cartões-notícia, não banners: chapéu, manchete e linha fina, com o
+/// mesmo peso visual entre si. A ordem no HTML é a hierarquia — quem vem
+/// primeiro é a página em evidência —, então nada aqui pode reordenar por
+/// CSS: no celular a coluna única tem de manter a ordem da fonte.
+///
+/// @group components
+////
+
+.home-calls {
+  /// Menos respiro do que uma seção de conteúdo: elas encostam nos big
+  /// numbers de propósito, como quem diz "e daqui você vai para".
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-top: 2rem;
+}
+
+.home-calls__grid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1rem;
+
+  @media (min-width: 48rem) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 1.5rem;
+  }
+}
+
+.home-call {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.5rem;
+
+  padding: 1.5rem;
+
+  color: var(--ink);
+  text-decoration: none;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  /// A barra da esquerda é o que dá a cara de chamada e separa os dois
+  /// cartões do resto da página sem precisar de fundo colorido.
+  border-left: 3px solid var(--brand);
+  border-radius: var(--radius);
+
+  @media (prefers-reduced-motion: no-preference) {
+    transition: box-shadow 0.2s ease, transform 0.2s ease;
+  }
+
+  &:hover,
+  &:focus-visible {
+    box-shadow: var(--shadow-lift);
+
+    @media (prefers-reduced-motion: no-preference) {
+      transform: translateY(-2px);
+    }
+  }
+
+  &:hover .home-call__arrow,
+  &:focus-visible .home-call__arrow {
+    transform: translateX(3px);
+  }
+}
+
+.home-call__eyebrow {
+  margin: 0;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.home-call__title {
+  margin: 0;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-l);
+  line-height: 1.2;
+  color: var(--ink);
+
+  @media (min-width: 64rem) {
+    font-size: var(--t-xl);
+  }
+}
+
+/// Os dois desenhos pequenos: pontinhos nos doadores, traços contra a linha
+/// do mínimo nos partidos. Altura fixa e largura cheia, para os dois cartões
+/// ficarem com a mesma caixa mesmo quando um dos números não vem do build.
+.home-call__dots,
+.home-call__squares {
+  display: block;
+
+  width: 100%;
+  height: auto;
+  margin: 0.35rem 0 0.15rem;
+}
+
+.home-call__dot {
+  fill: var(--hairline-2);
+}
+
+.home-call__dot--on {
+  fill: var(--brand);
+}
+
+/// Um quadrado por partido. Os acesos são os que ficaram abaixo do mínimo:
+/// o quente é a cor de alerta do site, e é ela que dá o "quantos" de relance.
+.home-call__square {
+  fill: var(--hairline-2);
+}
+
+.home-call__square--below {
+  fill: var(--accent-warm);
+}
+
+.home-call__dek {
+  /// margin-bottom: auto empurra o "ver a página" para a base do cartão, e é
+  /// isso que mantém as duas setas alinhadas quando uma linha fina é mais
+  /// curta que a outra.
+  margin: 0 0 auto;
+
+  font-size: var(--t-s);
+  line-height: 1.5;
+  color: var(--ink-2);
+
+  strong {
+    color: var(--ink);
+  }
+}
+
+.home-call__cta {
+  display: inline-flex;
+
+  gap: 0.35rem;
+
+  align-items: center;
+
+  margin-top: 0.75rem;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--brand-deep);
+}
+
+.home-call__arrow {
+  @media (prefers-reduced-motion: no-preference) {
+    transition: transform 0.2s ease;
+  }
+}

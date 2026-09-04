@@ -10,6 +10,7 @@ import { mockApi } from './fixtures/api.mjs';
 
 const PAGINAS = [
   { url: '/2026/', nome: 'home do ano corrente' },
+  { url: '/doadores/', nome: 'doadores' },
   { url: '/partidos/painel/', nome: 'painel dos partidos' },
   { url: '/quem-somos/', nome: 'quem somos' },
   { url: '/sobre-os-dados/', nome: 'sobre os dados' },

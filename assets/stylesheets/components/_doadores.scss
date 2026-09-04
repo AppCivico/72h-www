@@ -818,15 +818,124 @@
   color: var(--ink-3);
 }
 
-.doadores__panel-note {
-  margin-top: 0.8rem;
+/* ---------- apostam ou distribuem ---------- */
 
-  font-size: var(--t-xs);
-  line-height: 1.45;
-  color: var(--ink-2);
+/// Um bloco só para os três portes, cada um com duas medidas na mesma régua:
+/// em cima a contagem de pessoas, embaixo o valor doado. Elas não se
+/// equivalem, e é a diferença entre as duas que a seção quer mostrar — por
+/// isso dividem a mesma cor e a mesma largura, e nunca aparecem separadas.
+
+.doadores__spread {
+  display: grid;
+
+  gap: 1.5rem;
+
+  padding: 1.5rem;
+
+  background: var(--card);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
 }
 
-.doadores__stack {
+.doadores__spread-legend {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.35rem 1.25rem;
+
+  margin: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+
+  span {
+    display: inline-flex;
+
+    gap: 0.4rem;
+
+    align-items: center;
+  }
+}
+
+.doadores__spread-swatch {
+  flex: none;
+
+  width: 0.8rem;
+  height: 0.8rem;
+
+  border-radius: 3px;
+}
+
+.doadores__spread-swatch--one {
+  background: var(--donors-medium);
+}
+
+.doadores__spread-swatch--many {
+  background: var(--brand);
+}
+
+.doadores__spread-row {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 0.6rem;
+
+  padding-top: 1.25rem;
+
+  border-top: 1px solid var(--hairline);
+
+  /// Nome do porte à esquerda no desktop; empilha no celular, onde a coluna
+  /// fixa comeria a barra.
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: 11rem minmax(0, 1fr);
+
+    gap: 1.5rem;
+  }
+}
+
+.doadores__spread-id {
+  h3 {
+    margin: 0;
+
+    font-size: var(--t-s);
+  }
+
+  p {
+    margin: 0.1rem 0 0;
+
+    font-size: var(--t-xs);
+    color: var(--ink-3);
+  }
+}
+
+.doadores__spread-tracks {
+  display: grid;
+
+  gap: 0.4rem;
+
+  min-width: 0;
+}
+
+.doadores__spread-track {
+  display: grid;
+
+  grid-template-columns: 4.5rem minmax(0, 1fr) 2.6rem;
+
+  gap: 0.5rem;
+
+  align-items: center;
+}
+
+.doadores__spread-axis {
+  font-size: 0.75rem;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.doadores__spread-bar {
   display: flex;
 
   gap: 2px;
@@ -837,7 +946,7 @@
   border-radius: 5px;
 }
 
-.doadores__stack-part {
+.doadores__spread-part {
   display: flex;
 
   align-items: center;
@@ -848,52 +957,77 @@
 
   font-size: 11px;
   font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.doadores__spread-part--one {
+  color: var(--ink);
+
+  background: var(--donors-medium);
+}
+
+.doadores__spread-part--many {
   color: #ffffff;
 
   background: var(--brand);
+}
 
-  &:nth-child(2) {
-    background: #7c3aed;
-  }
+/// A fatia de "mais de uma" chega a 1,3% nos pequenos: o número não cabe
+/// dentro de uma lasca de quatro pixels e sai para a coluna ao lado.
+.doadores__spread-outside {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--brand-deep);
+  text-align: left;
+}
 
-  &:nth-child(3) {
-    background: #a78bfa;
-  }
+.doadores__spread-note {
+  margin: 0.35rem 0 0;
 
-  &:nth-child(4) {
+  font-size: var(--t-xs);
+  line-height: 1.5;
+  color: var(--ink-2);
+
+  strong {
+    font-variant-numeric: tabular-nums;
     color: var(--ink);
-
-    background: #c4b5fd;
-  }
-
-  &:nth-child(5) {
-    color: var(--ink);
-
-    background: #ddd6fe;
   }
 }
 
-.doadores__buckets {
-  display: grid;
+/// As faixas de duas, de três a cinco, de seis a dez e de onze ou mais, em
+/// linha. Eram uma grade de números e viraram continuação da frase.
+.doadores__spread-buckets {
+  /// O espaço entre o número e a palavra vem do gap, não do template: o Vue
+  /// descarta o nó de texto em branco entre dois elementos quando há quebra
+  /// de linha, e era isso que colava "115entre duas".
+  > span {
+    display: inline-flex;
 
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-
-  gap: 0.15rem 0.8rem;
-
-  padding: 0;
-  margin: 0.8rem 0 0;
-
-  font-size: var(--t-xs);
-  color: var(--ink-2);
-  list-style: none;
-
-  li {
-    display: flex;
-
-    gap: 0.4rem;
-
-    justify-content: space-between;
+    gap: 0.3rem;
   }
+
+  > span:not(:last-child) {
+    margin-right: 0.35rem;
+  }
+
+  > span:not(:last-child)::after {
+    color: var(--ink-3);
+
+    content: '·';
+  }
+}
+
+.doadores__spread-conclusion {
+  padding: 1rem 1.25rem;
+  margin: 0;
+
+  font-size: var(--t-s);
+  line-height: 1.5;
+  color: var(--ink);
+
+  background: var(--brand-tint);
+  border-radius: var(--radius-s);
 
   strong {
     font-variant-numeric: tabular-nums;
@@ -992,6 +1126,80 @@
 
 /* ---------- gráfico de inclinação ---------- */
 
+/// Quatro quadros, um por grupo de candidaturas, cada um contra a sua própria
+/// régua tracejada. Era um gráfico só com as quatro linhas e as quatro réguas
+/// juntas: as réguas colidiam e "das candidaturas com doações" aparecia quatro
+/// vezes na margem esquerda. O texto de cada quadro (nome, valores,
+/// referência) é HTML acima do desenho, não <text> dentro do SVG — quebra
+/// linha no celular e o leitor de tela o lê como texto.
+
+.doadores__slopes {
+  display: grid;
+
+  /// Dois por linha já no celular: um painel por linha deixa cada desenho com
+  /// 200px de altura e o da fatia menor vira uma faixa vazia com um traço no
+  /// fundo. Quatro em linha só quando há largura para os rótulos.
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1.25rem 1rem;
+
+  margin-top: 1.25rem;
+
+  @media (min-width: 64rem) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 1rem;
+  }
+}
+
+.doadores__slope-panel {
+  margin: 0;
+
+  figcaption {
+    display: grid;
+
+    gap: 0.15rem;
+
+    margin-bottom: 0.5rem;
+  }
+}
+
+.doadores__slope-name {
+  margin: 0;
+
+  font-family: var(--font-sans);
+  font-size: var(--t-xs);
+  font-weight: 600;
+}
+
+.doadores__slope-values {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 0.3rem;
+
+  align-items: baseline;
+
+  margin: 0;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+
+  strong {
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+}
+
+.doadores__slope-ref {
+  margin: 0;
+
+  font-size: 0.75rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+}
+
 .doadores__slope {
   display: block;
 
@@ -1000,46 +1208,33 @@
 
   text {
     font-family: var(--font-sans);
-    font-size: 12px;
+    font-size: 11px;
 
-    fill: var(--ink-2);
+    fill: var(--ink-3);
   }
 }
 
-.doadores__slope-axis line {
+.doadores__slope-baseline {
   stroke: var(--hairline-2);
+  stroke-width: 1;
 }
 
 .doadores__slope-tier {
   font-weight: 600;
-
-  fill: var(--ink);
-}
-
-.doadores__slope-value {
-  font-size: 11px;
-  font-weight: 600;
-
-  fill: var(--ink);
 }
 
 .doadores__slope-path {
   fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
   stroke-width: 2.5;
 }
 
 .doadores__slope-reference {
-  opacity: 0.55;
+  opacity: 0.7;
 
   stroke-dasharray: 3 4;
-}
-
-.doadores__slope-reference-label {
-  font-size: 11px;
-}
-
-.doadores__slope-name {
-  font-weight: 600;
+  stroke-width: 1.5;
 }
 
 // Mesma lógica de cor dos waffles: magenta é mulher, azul é homem, escuro é
@@ -1063,9 +1258,8 @@
       stroke: $color;
     }
 
-    .doadores__slope-name,
-    .doadores__slope-reference-label {
-      fill: $color;
+    .doadores__slope-name {
+      color: $color;
     }
   }
 }
