@@ -1,0 +1,577 @@
+{{/*
+  /doadores/partidos/ — quem banca os diretórios NACIONAIS dos partidos.
+
+  Página estática de ponta a ponta: os números saem de
+  data/spcaDoadoresPartidos2026.json, coletado do DivulgaSPCA do TSE por
+  scripts/scrape-spca-donors.mjs, e o Hugo os imprime no build. Sem Vue e sem
+  chamada de API: o recorte é um retrato datado, não um painel ao vivo, e
+  fingir o contrário seria mentir sobre o dado. O único JavaScript é a camada
+  de tooltip.
+
+  A página não está em menu nenhum e nasce com noindex: ela existe para ser
+  validada por um punhado de pessoas antes de virar seção de verdade.
+*/}}
+{{ partial "head.html" . }}
+
+{{ $d := .Site.Data.spcaDoadoresPartidos2026 }}
+{{ $t := $d.totais }}
+{{ $legal := $d.marco_legal }}
+{{ $s25 := $d.status_2025 }}
+
+{{/* As três fatias da receita, na ordem em que a barra as mostra. O "resto"
+     não é sobra de conta: são rendimentos de aplicação e receitas diversas,
+     que existem no total mas não têm doador nenhum atrás. */}}
+{{ $resto := add (add $t.rendimentos_aplicacoes $t.outras_receitas) $t.origem_nao_identificada }}
+{{ $pctPublico := div (mul (float $t.fundo_partidario_detalhado) 100) (float $t.total_declarado) }}
+{{ $pctDoador := div (mul (float $t.doadores_privados) 100) (float $t.total_declarado) }}
+{{ $pctResto := div (mul (float $resto) 100) (float $t.total_declarado) }}
+
+<body>
+  {{ partial "siteNav.html" (dict "ctx" . "yearSwitcher" false) }}
+
+  <main class="container dpartidos">
+
+    {{/* ---- Manchete --------------------------------------------------- */}}
+    <header class="dpartidos__hero">
+      <div class="dpartidos__hero-copy">
+        <p class="eyebrow">{{ i18n "partyDonorsEyebrow" }}</p>
+        <h1 class="dpartidos__title">{{ i18n "partyDonorsTitle" }}</h1>
+        <p class="dpartidos__dek">{{ i18n "partyDonorsDek" }}</p>
+        <p class="dpartidos__note">
+          {{ i18n "partyDonorsSourceNote" }}
+          <span class="dpartidos__nowrap">{{ $d._atualizacao_tse }}</span>.
+        </p>
+      </div>
+
+      <div class="dpartidos__bignumbers">
+        <div class="dpartidos__bignumber">
+          <p class="dpartidos__bignumber-value">{{ partial "formatCurrencyBR.html" $t.total_declarado }}</p>
+          <p class="dpartidos__bignumber-label">{{ i18n "partyDonorsHeroTotal" }}</p>
+          <p class="dpartidos__bignumber-detail">
+            {{ $t.com_movimento }} {{ i18n "partyDonorsHeroTotalDetail" }} {{ $t.diretorios_nacionais }}
+          </p>
+        </div>
+        <div class="dpartidos__bignumber dpartidos__bignumber--public">
+          <p class="dpartidos__bignumber-value">{{ partial "formatPercentBR.html" (dict "numerator" $t.fundo_partidario_detalhado "denominator" $t.total_declarado) }}</p>
+          <p class="dpartidos__bignumber-label">{{ i18n "partyDonorsHeroPublic" }}</p>
+          <p class="dpartidos__bignumber-detail">{{ i18n "partyDonorsHeroPublicDetail" }}</p>
+        </div>
+        <div class="dpartidos__bignumber dpartidos__bignumber--donor">
+          <p class="dpartidos__bignumber-value">{{ partial "formatCurrencyBR.html" $t.doadores_privados }}</p>
+          <p class="dpartidos__bignumber-label">{{ i18n "partyDonorsHeroDonors" }}</p>
+          <p class="dpartidos__bignumber-detail">
+            {{ partial "formatPercentBR.html" (dict "numerator" $t.doadores_privados "denominator" $t.total_declarado) }}
+            {{ i18n "partyDonorsHeroDonorsDetail" }}
+          </p>
+        </div>
+        <div class="dpartidos__bignumber dpartidos__bignumber--donor">
+          <p class="dpartidos__bignumber-value">{{ partial "formatNumeralBR.html" $t.doadores }}</p>
+          <p class="dpartidos__bignumber-label">{{ i18n "partyDonorsHeroPeople" }}</p>
+          <p class="dpartidos__bignumber-detail">
+            {{ i18n "partyDonorsHeroMedian" }} {{ partial "formatCurrencyBR.html" $t.mediana_por_doador }}
+          </p>
+        </div>
+      </div>
+    </header>
+
+    {{/* ---- De onde vem -------------------------------------------------- */}}
+    <section class="dpartidos__section">
+      <p class="eyebrow">{{ i18n "partyDonorsOriginEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsOriginTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsOriginLead" }}</p>
+
+      <ul class="dpartidos__legend">
+        <li><i class="dpartidos__swatch dpartidos__swatch--public"></i>{{ i18n "partyDonorsFundLabel" }}</li>
+        <li><i class="dpartidos__swatch dpartidos__swatch--donor"></i>{{ i18n "partyDonorsDonorLabel" }}</li>
+        <li><i class="dpartidos__swatch dpartidos__swatch--rest"></i>{{ i18n "partyDonorsRestLabel" }}</li>
+      </ul>
+
+      <div class="dpartidos__composition" role="img"
+        aria-label="{{ i18n "partyDonorsFundLabel" }} {{ partial "formatPercentBR.html" (dict "numerator" $t.fundo_partidario_detalhado "denominator" $t.total_declarado) }}, {{ i18n "partyDonorsDonorLabel" }} {{ partial "formatPercentBR.html" (dict "numerator" $t.doadores_privados "denominator" $t.total_declarado) }}, {{ i18n "partyDonorsRestLabel" }} {{ partial "formatPercentBR.html" (dict "numerator" $resto "denominator" $t.total_declarado) }}">
+        <i class="dpartidos__composition-part dpartidos__composition-part--public" style="width: {{ $pctPublico }}%"
+          data-tip="{{ i18n "partyDonorsFundLabel" }} · {{ partial "formatCurrencyBR.html" $t.fundo_partidario_detalhado }}"></i>
+        <i class="dpartidos__composition-part dpartidos__composition-part--donor" style="width: {{ $pctDoador }}%"
+          data-tip="{{ i18n "partyDonorsDonorLabel" }} · {{ partial "formatCurrencyBR.html" $t.doadores_privados }}"></i>
+        <i class="dpartidos__composition-part dpartidos__composition-part--rest" style="width: {{ $pctResto }}%"
+          data-tip="{{ i18n "partyDonorsRestLabel" }} · {{ partial "formatCurrencyBR.html" $resto }}"></i>
+      </div>
+
+      <div class="dpartidos__keys">
+        <div class="dpartidos__key">
+          <p class="dpartidos__key-title"><i class="dpartidos__swatch dpartidos__swatch--public"></i>{{ i18n "partyDonorsFundLabel" }}</p>
+          <p class="dpartidos__key-value">{{ partial "formatCurrencyBR.html" $t.fundo_partidario_detalhado }}</p>
+          <p class="dpartidos__key-detail">{{ i18n "partyDonorsFundDetail" }}</p>
+        </div>
+        <div class="dpartidos__key">
+          <p class="dpartidos__key-title"><i class="dpartidos__swatch dpartidos__swatch--donor"></i>{{ i18n "partyDonorsDonorLabel" }}</p>
+          <p class="dpartidos__key-value">{{ partial "formatCurrencyBR.html" $t.doadores_privados }}</p>
+          <p class="dpartidos__key-detail">{{ i18n "partyDonorsDonorDetail" }}</p>
+        </div>
+        <div class="dpartidos__key">
+          <p class="dpartidos__key-title"><i class="dpartidos__swatch dpartidos__swatch--rest"></i>{{ i18n "partyDonorsRestLabel" }}</p>
+          <p class="dpartidos__key-value">{{ partial "formatCurrencyBR.html" $resto }}</p>
+          <p class="dpartidos__key-detail">{{ i18n "partyDonorsRestDetail" }}</p>
+        </div>
+      </div>
+    </section>
+
+    {{/* ---- O relógio da lei --------------------------------------------- */}}
+    {{/* Duas barras na mesma escala de dias. A de 72 horas quase não aparece,
+         e é exatamente esse o assunto da seção. */}}
+    <section class="dpartidos__section dpartidos__section--framed">
+      <p class="eyebrow">{{ i18n "partyDonorsClockEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsClockTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsClockLead" }}</p>
+
+      <div class="dpartidos__clock">
+        <div class="dpartidos__clock-row">
+          <p class="dpartidos__clock-key">{{ i18n "partyDonorsClockCampaign" }}</p>
+          <div class="dpartidos__clock-lane">
+            <span class="dpartidos__clock-bar" style="width: 0.55%"></span>
+            <span class="dpartidos__clock-label">{{ i18n "partyDonorsClockCampaignValue" }}</span>
+          </div>
+        </div>
+        <div class="dpartidos__clock-row">
+          <p class="dpartidos__clock-key">{{ i18n "partyDonorsClockParty" }}</p>
+          <div class="dpartidos__clock-lane">
+            <span class="dpartidos__clock-bar" style="width: 100%"></span>
+            <span class="dpartidos__clock-label dpartidos__clock-label--inside">{{ i18n "partyDonorsClockPartyValue" }}</span>
+          </div>
+        </div>
+      </div>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsClockCaption" }}</p>
+
+      <div class="dpartidos__lawgrid">
+        <div class="dpartidos__law">
+          <h3>{{ i18n "partyDonorsLawDeadlineTitle" }}</h3>
+          <p>{{ $legal.prazo_anual }}</p>
+        </div>
+        <div class="dpartidos__law">
+          <h3>{{ i18n "partyDonorsLawDuringTitle" }}</h3>
+          <p>{{ $legal.sem_prazo_durante_o_ano }}</p>
+        </div>
+        <div class="dpartidos__law">
+          <h3>{{ i18n "partyDonorsLawCampaignTitle" }}</h3>
+          <p>{{ $legal.prazo_campanha }}</p>
+        </div>
+      </div>
+    </section>
+
+    {{/* ---- Partido a partido -------------------------------------------- */}}
+    {{/* Ordem da tabela: fatia que veio de doador, do maior para o menor. É a
+         pergunta da seção, e ordenar por valor absoluto respondia outra
+         (quem é grande). A chave composta desempata os vários partidos com
+         100% pelo tamanho da doação: o Hugo só ordena por uma chave, e o
+         multiplicador de 1e15 garante que a fatia domine o desempate. */}}
+    {{ $rows := slice }}
+    {{ range $d.partidos }}
+      {{ $share := 0.0 }}
+      {{ if gt .total 0 }}{{ $share = div (float .privado) (float .total) }}{{ end }}
+      {{ $rows = $rows | append (dict
+          "sigla" .sigla "total" .total "privado" .privado "doadores" .doadores
+          "ultimo" .ultimo "share" $share
+          "chave" (add (mul $share 1e15) (float .privado))) }}
+    {{ end }}
+    {{ $rows = sort $rows "chave" "desc" }}
+    {{ $maxTotal := 0 }}
+    {{ range $d.partidos }}{{ if gt .total $maxTotal }}{{ $maxTotal = .total }}{{ end }}{{ end }}
+
+    <section class="dpartidos__section">
+      <p class="eyebrow">{{ i18n "partyDonorsTableEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsTableTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsTableLead" }}</p>
+
+      <ul class="dpartidos__legend">
+        <li><i class="dpartidos__swatch dpartidos__swatch--donor"></i>{{ i18n "partyDonorsTableShareHead" }}</li>
+        <li><i class="dpartidos__swatch dpartidos__swatch--public"></i>{{ i18n "partyDonorsTableTotalHead" }}</li>
+      </ul>
+
+      <div class="dpartidos__tablewrap">
+        <table class="dpartidos__table">
+          <caption class="visually-hidden">{{ i18n "partyDonorsTableCaption" }}</caption>
+          <thead>
+            <tr>
+              <th scope="col">{{ i18n "partyDonorsTableParty" }}</th>
+              <th scope="col">{{ i18n "partyDonorsTableShareHead" }}</th>
+              <th scope="col" class="dpartidos__num">{{ i18n "partyDonorsTableShare" }}</th>
+              <th scope="col" class="dpartidos__num">{{ i18n "partyDonorsTableDonorValue" }}</th>
+              <th scope="col">{{ i18n "partyDonorsTableTotalHead" }}</th>
+              <th scope="col" class="dpartidos__num dpartidos__hide-small">{{ i18n "partyDonorsTableTotal" }}</th>
+              <th scope="col" class="dpartidos__num dpartidos__hide-small">{{ i18n "partyDonorsTableDonors" }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {{ range $rows }}
+              {{ $pct := partial "formatPercentBR.html" (dict "numerator" .privado "denominator" .total) }}
+              <tr data-tip="{{ .sigla }} · {{ i18n "partyDonorsTableDonorValue" }} {{ partial "formatCurrencyBR.html" .privado }} · {{ .doadores }} {{ i18n "partyDonorsTableDonors" }}">
+                <th scope="row" class="dpartidos__sigla">{{ .sigla }}</th>
+                <td>
+                  <span class="dpartidos__track">
+                    <i class="dpartidos__track-fill dpartidos__track-fill--donor" style="width: {{ mul .share 100 }}%"></i>
+                  </span>
+                </td>
+                <td class="dpartidos__num">
+                  {{ if eq (float .privado) 0.0 }}<span class="dpartidos__zero">0</span>
+                  {{ else if lt .share 0.0001 }}<span class="dpartidos__zero">{{ i18n "partyDonorsTableUnderPercent" }}</span>
+                  {{ else }}{{ $pct }}{{ end }}
+                </td>
+                <td class="dpartidos__num">{{ partial "formatCurrencyBR.html" .privado }}</td>
+                <td>
+                  <span class="dpartidos__track">
+                    <i class="dpartidos__track-fill dpartidos__track-fill--public" style="width: {{ div (mul (float .total) 100) (float $maxTotal) }}%"></i>
+                  </span>
+                </td>
+                <td class="dpartidos__num dpartidos__hide-small">{{ partial "formatCurrencyBR.html" .total }}</td>
+                <td class="dpartidos__num dpartidos__hide-small">
+                  {{ if eq (float .doadores) 0.0 }}<span class="dpartidos__zero">0</span>{{ else }}{{ partial "formatNumeralBR.html" .doadores }}{{ end }}
+                </td>
+              </tr>
+            {{ end }}
+          </tbody>
+        </table>
+      </div>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsTableFoot" }}</p>
+    </section>
+
+    {{/* ---- Os doadores --------------------------------------------------- */}}
+    <section class="dpartidos__section">
+      <p class="eyebrow">{{ i18n "partyDonorsBandsEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsBandsTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsBandsLead" }}</p>
+
+      <ul class="dpartidos__legend">
+        <li><i class="dpartidos__swatch dpartidos__swatch--people"></i>{{ i18n "partyDonorsBandsPeopleShare" }}</li>
+        <li><i class="dpartidos__swatch dpartidos__swatch--donor"></i>{{ i18n "partyDonorsBandsMoneyShare" }}</li>
+      </ul>
+
+      {{ $ate := i18n "partyDonorsBandUpTo" }}
+      {{ $ouMais := i18n "partyDonorsBandOrMore" }}
+      {{ $entre := i18n "partyDonorsBandTo" }}
+      <div class="dpartidos__bands">
+        {{ range $d.faixas_doador }}
+          {{ $rotulo := "" }}
+          {{ if eq (float .de) 0.0 }}
+            {{ $rotulo = printf "%s %s" $ate (partial "formatCurrencyBR.html" .ate) }}
+          {{ else if not .ate }}
+            {{ $rotulo = printf "%s %s" (partial "formatCurrencyBR.html" .de) $ouMais }}
+          {{ else }}
+            {{ $rotulo = printf "%s %s %s" (partial "formatCurrencyBR.html" .de) $entre (partial "formatCurrencyBR.html" .ate) }}
+          {{ end }}
+          {{ $pctPessoas := div (mul (float .doadores) 100) (float $t.doadores) }}
+          {{ $pctDinheiro := div (mul (float .valor) 100) (float $t.doadores_privados) }}
+          <div class="dpartidos__band" data-tip="{{ $rotulo }} · {{ partial "formatNumeralBR.html" .doadores }} {{ i18n "partyDonorsPeopleWord" }} · {{ partial "formatCurrencyBR.html" .valor }}">
+            <p class="dpartidos__band-key">
+              {{ $rotulo }}
+              <small>{{ partial "formatNumeralBR.html" .doadores }} {{ i18n "partyDonorsPeopleWord" }}</small>
+            </p>
+            <div class="dpartidos__band-bars">
+              <div class="dpartidos__band-row">
+                <span class="dpartidos__band-bar dpartidos__band-bar--people" style="width: {{ $pctPessoas }}%"></span>
+                <span class="dpartidos__band-value">{{ partial "formatPercentBR.html" (dict "numerator" .doadores "denominator" $t.doadores) }} {{ i18n "partyDonorsBandsPeopleShare" }}</span>
+              </div>
+              <div class="dpartidos__band-row">
+                <span class="dpartidos__band-bar dpartidos__band-bar--money" style="width: {{ $pctDinheiro }}%"></span>
+                <span class="dpartidos__band-value">{{ partial "formatPercentBR.html" (dict "numerator" .valor "denominator" $t.doadores_privados) }} {{ i18n "partyDonorsBandsMoneyShare" }}</span>
+              </div>
+            </div>
+          </div>
+        {{ end }}
+      </div>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsBandsCaption" }}</p>
+
+      <div class="dpartidos__ladder">
+        {{ $c := $d.concentracao }}
+        {{ $r10 := i18n "partyDonorsLadder10" }}
+        {{ $r25 := i18n "partyDonorsLadder25" }}
+        {{ $r50 := i18n "partyDonorsLadder50" }}
+        {{ $r75 := i18n "partyDonorsLadder75" }}
+        {{ $r90 := i18n "partyDonorsLadder90" }}
+        {{ range (slice (dict "r" $r10 "n" $c.p10) (dict "r" $r25 "n" $c.p25) (dict "r" $r50 "n" $c.p50) (dict "r" $r75 "n" $c.p75) (dict "r" $r90 "n" $c.p90)) }}
+          <div class="dpartidos__ladder-row">
+            <p class="dpartidos__ladder-share">{{ .r }}</p>
+            <p class="dpartidos__ladder-text">
+              {{ i18n "partyDonorsLadderLead" }}
+              <b>{{ partial "formatNumeralBR.html" .n }}</b>
+              {{ if eq (float .n) 1.0 }}{{ i18n "partyDonorsDonorWordSingular" }}{{ else }}{{ i18n "partyDonorsDonorWordPlural" }}{{ end }}
+            </p>
+            <p class="dpartidos__ladder-of">{{ partial "formatPercentBR.html" (dict "numerator" .n "denominator" $c.doadores) }} {{ i18n "partyDonorsLadderOfDonors" }}</p>
+          </div>
+        {{ end }}
+      </div>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsLadderCaption" }}</p>
+    </section>
+
+    {{/* ---- Por que doam tanto -------------------------------------------- */}}
+    {{/* A série mensal exclui o PT de propósito: ele declarou só até abril e
+         sozinho tem quase metade dos doadores, então a curva do conjunto
+         mediria atraso de declaração, não comportamento de doador. */}}
+    {{/* Vira dict antes de filtrar: `append` de uma fatia dentro de outra
+         concatena os elementos em vez de guardar a fatia inteira, e o mês
+         chegava desmontado do outro lado. Setembro sai do corte por ter três
+         lançamentos no dia da coleta: a média de um mês pela metade achatava
+         todas as outras barras. */}}
+    {{ $meses := slice }}
+    {{ range $d.meses_privado_sem_pt }}
+      {{ if ge (float (index . 2)) 20.0 }}
+        {{ $meses = $meses | append (dict "mes" (index . 0) "valor" (float (index . 1)) "lanc" (float (index . 2))) }}
+      {{ end }}
+    {{ end }}
+    {{ $valorInicio := 0.0 }}{{ $lancInicio := 0.0 }}
+    {{ $valorDepois := 0.0 }}{{ $lancDepois := 0.0 }}
+    {{ range $i, $m := $meses }}
+      {{ if lt $i 4 }}
+        {{ $valorInicio = add $valorInicio $m.valor }}{{ $lancInicio = add $lancInicio $m.lanc }}
+      {{ else }}
+        {{ $valorDepois = add $valorDepois $m.valor }}{{ $lancDepois = add $lancDepois $m.lanc }}
+      {{ end }}
+    {{ end }}
+    {{ $mediaInicio := div $valorInicio $lancInicio }}
+    {{ $mediaDepois := div $valorDepois $lancDepois }}
+
+    <section class="dpartidos__section dpartidos__section--framed">
+      <p class="eyebrow">{{ i18n "partyDonorsWhyEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsWhyTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsWhyLead" }}</p>
+
+      <div class="dpartidos__whygrid">
+        <div class="dpartidos__why">
+          <h3>{{ i18n "partyDonorsWhyNoCapTitle" }}</h3>
+          <p>{{ $legal.teto_doacao_partido }}</p>
+        </div>
+        <div class="dpartidos__why">
+          <h3>{{ i18n "partyDonorsWhyFlowTitle" }}</h3>
+          <p>
+            {{ i18n "partyDonorsWhyFlowLead" }}
+            <b>{{ partial "formatCurrencyBR.html" $t.repassado_a_candidatos_e_partidos }}</b>
+            {{ i18n "partyDonorsWhyFlowTail" }}
+          </p>
+        </div>
+        <div class="dpartidos__why">
+          <h3>{{ i18n "partyDonorsWhyCalendarTitle" }}</h3>
+          <p>
+            {{ i18n "partyDonorsWhyCalendarLead" }}
+            <b>{{ partial "formatCurrencyBR.html" $mediaInicio }}</b>
+            {{ i18n "partyDonorsWhyCalendarMiddle" }}
+            <b>{{ partial "formatCurrencyBR.html" $mediaDepois }}</b>
+            {{ i18n "partyDonorsWhyCalendarTail" }}
+          </p>
+        </div>
+      </div>
+
+      <div class="dpartidos__months">
+        {{ $maxMedia := 0.0 }}
+        {{ range $meses }}
+          {{ $media := div .valor .lanc }}
+          {{ if gt $media $maxMedia }}{{ $maxMedia = $media }}{{ end }}
+        {{ end }}
+        {{ range $meses }}
+          {{ $media := div .valor .lanc }}
+          <div class="dpartidos__month" data-tip="{{ .mes }} · {{ partial "formatCurrencyBR.html" $media }} {{ i18n "partyDonorsMonthAverage" }} {{ partial "formatNumeralBR.html" .lanc }} {{ i18n "partyDonorsMonthEntries" }}">
+            <span class="dpartidos__month-bar" style="height: {{ div (mul $media 100) $maxMedia }}%"></span>
+            <span class="dpartidos__month-label">{{ .mes }}</span>
+          </div>
+        {{ end }}
+      </div>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsMonthsCaption" }}</p>
+      <p class="dpartidos__warning">{{ i18n "partyDonorsWhyCaveat" }}</p>
+    </section>
+
+    {{/* ---- Contribuição não é doação ------------------------------------ */}}
+    <section class="dpartidos__section">
+      <p class="eyebrow">{{ i18n "partyDonorsKindsEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsKindsTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsKindsLead" }}</p>
+
+      {{ $maxClasse := 0.0 }}
+      {{ range $d.classes_privadas }}{{ if gt (float (index . 1)) $maxClasse }}{{ $maxClasse = float (index . 1) }}{{ end }}{{ end }}
+      <div class="dpartidos__kinds">
+        {{ range $d.classes_privadas }}
+          <div class="dpartidos__kind">
+            <p class="dpartidos__kind-key">{{ index . 0 }}</p>
+            <span class="dpartidos__kind-bar" style="width: {{ div (mul (float (index . 1)) 100) $maxClasse }}%"></span>
+            <p class="dpartidos__kind-value">{{ partial "formatCurrencyBR.html" (index . 1) }}</p>
+          </div>
+        {{ end }}
+      </div>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsKindsCaption" }}</p>
+    </section>
+
+    {{/* ---- Os 25 maiores -------------------------------------------------- */}}
+    <section class="dpartidos__section">
+      <p class="eyebrow">{{ i18n "partyDonorsTopEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsTopTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsTopLead" }}</p>
+      <p class="dpartidos__note">{{ $legal.doacao_pj_vedada }}</p>
+      <p class="dpartidos__note">{{ i18n "partyDonorsTopLegalEntities" }}
+        {{ partial "formatNumeralBR.html" $d.pagadores_pj.quantos }} {{ i18n "partyDonorsTopLegalEntitiesTail" }}
+        {{ partial "formatCurrencyBR.html" $d.pagadores_pj.valor }}.
+      </p>
+
+      {{ $maxDoador := 0.0 }}
+      {{ range $d.top_doadores }}{{ if gt (float (index . 2)) $maxDoador }}{{ $maxDoador = float (index . 2) }}{{ end }}{{ end }}
+      <ol class="dpartidos__rank">
+        {{ range $d.top_doadores }}
+          <li class="dpartidos__rank-row" data-tip="{{ index . 1 }} · {{ partial "formatCurrencyBR.html" (index . 2) }} · {{ index . 4 }}">
+            <span class="dpartidos__rank-pos">{{ index . 0 }}</span>
+            <span class="dpartidos__rank-name">
+              {{ index . 1 }}
+              <small>{{ index . 4 }} · {{ index . 3 }} {{ if eq (float (index . 3)) 1.0 }}{{ i18n "partyDonorsDonationWordSingular" }}{{ else }}{{ i18n "partyDonorsDonationWordPlural" }}{{ end }}</small>
+            </span>
+            <span class="dpartidos__rank-value">{{ partial "formatCurrencyBR.html" (index . 2) }}</span>
+            <span class="dpartidos__rank-track">
+              <i style="width: {{ div (mul (float (index . 2)) 100) $maxDoador }}%"></i>
+            </span>
+          </li>
+        {{ end }}
+      </ol>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsTopCaption" }}</p>
+    </section>
+
+    {{/* ---- Ninguém está atrasado ----------------------------------------- */}}
+    {{/* A seção existe para desarmar a leitura errada: quem vê um partido que
+         parou de lançar em fevereiro conclui omissão, e não é. O prazo do
+         exercício de 2026 vence em 30 de junho de 2027. */}}
+    {{ $pontos := where $d.partidos "ultimo" "!=" nil }}
+    {{ $pontos = sort $pontos "ultimo" "desc" }}
+    <section class="dpartidos__section">
+      <p class="eyebrow">{{ i18n "partyDonorsPaceEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsPaceTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsPaceLead" }}</p>
+
+      <div class="dpartidos__dots">
+        {{ $inicio := (time "2026-01-01").Unix }}
+        {{ $fim := (time "2026-09-04").Unix }}
+        {{ range $pontos }}
+          {{ $x := div (mul (float (sub (time .ultimo).Unix $inicio)) 100) (float (sub $fim $inicio)) }}
+          <div class="dpartidos__dot-row" data-tip="{{ .sigla }} · {{ i18n "partyDonorsPaceTip" }} {{ dateFormat "02/01/2006" .ultimo }}">
+            <p class="dpartidos__dot-key">{{ .sigla }}</p>
+            <div class="dpartidos__dot-lane"><span class="dpartidos__dot" style="left: {{ $x }}%"></span></div>
+          </div>
+        {{ end }}
+        <div class="dpartidos__dot-row dpartidos__dot-row--axis">
+          <p class="dpartidos__dot-key"></p>
+          <div class="dpartidos__dot-axis">
+            {{ range (slice "2026-01-01" "2026-03-01" "2026-05-01" "2026-07-01" "2026-09-01") }}
+              {{ $x := div (mul (float (sub (time .).Unix $inicio)) 100) (float (sub $fim $inicio)) }}
+              <span style="left: {{ $x }}%">{{ dateFormat "Jan" . }}</span>
+            {{ end }}
+          </div>
+        </div>
+      </div>
+      <p class="dpartidos__figcaption">{{ i18n "partyDonorsPaceCaption" }}</p>
+    </section>
+
+    {{/* ---- As contas de 2025 --------------------------------------------- */}}
+    <section class="dpartidos__section dpartidos__section--framed">
+      <p class="eyebrow">{{ i18n "partyDonorsComplianceEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsComplianceTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsComplianceLead" }}</p>
+
+      <div class="dpartidos__compliance">
+        <div class="dpartidos__comp">
+          <p class="dpartidos__comp-value">{{ $s25.nacionais_entregues }}/{{ $s25.nacionais_total }}</p>
+          <p class="dpartidos__comp-label">{{ i18n "partyDonorsComplianceNational" }}</p>
+        </div>
+        <div class="dpartidos__comp">
+          <p class="dpartidos__comp-value">{{ $s25.estaduais_entregues }}/{{ $s25.estaduais_com_diretorio }}</p>
+          <p class="dpartidos__comp-label">{{ i18n "partyDonorsComplianceState" }}</p>
+          <p class="dpartidos__comp-detail">{{ i18n "partyDonorsComplianceStateMissing" }} {{ delimit $s25.estaduais_sem_entrega ", " }}</p>
+        </div>
+        <div class="dpartidos__comp">
+          <p class="dpartidos__comp-value">{{ add $s25.censo_municipal_RR.entregues $s25.censo_municipal_AP.entregues }}/{{ add $s25.censo_municipal_RR.com_diretorio $s25.censo_municipal_AP.com_diretorio }}</p>
+          <p class="dpartidos__comp-label">{{ i18n "partyDonorsComplianceCities" }}</p>
+          <p class="dpartidos__comp-detail">{{ i18n "partyDonorsComplianceCitiesDetail" }}</p>
+        </div>
+      </div>
+
+      <div class="dpartidos__gap">
+        <h3>{{ i18n "partyDonorsGapTitle" }}</h3>
+        <p>
+          {{ i18n "partyDonorsGapLead" }}
+          <b>{{ partial "formatNumeralBR.html" $s25.painel_tse.entregues }}</b>
+          {{ i18n "partyDonorsGapMiddle" }}
+          <b>{{ partial "formatNumeralBR.html" $s25.painel_tse.total }}</b>{{ i18n "partyDonorsGapAfterTotal" }}
+          <b>{{ partial "formatNumeralBR.html" (sub $s25.painel_tse.total $s25.painel_tse.entregues) }}</b>
+          {{ i18n "partyDonorsGapTail" }}
+        </p>
+        <p>{{ $s25._ressalva }}</p>
+        <p class="dpartidos__note">{{ $legal.sancao_nao_prestacao }}</p>
+      </div>
+    </section>
+
+    {{/* ---- Como acompanhar ------------------------------------------------ */}}
+    <section class="dpartidos__section">
+      <p class="eyebrow">{{ i18n "partyDonorsHowEyebrow" }}</p>
+      <h2>{{ i18n "partyDonorsHowTitle" }}</h2>
+      <p class="dpartidos__lead">{{ i18n "partyDonorsHowLead" }}</p>
+
+      <ol class="dpartidos__steps">
+        <li>
+          <h3>{{ i18n "partyDonorsHowStep1Title" }}</h3>
+          <p>{{ i18n "partyDonorsHowStep1" }}
+            <a href="https://divulgaspca.tse.jus.br" rel="noopener noreferrer" target="_blank">divulgaspca.tse.jus.br</a>.
+          </p>
+        </li>
+        <li>
+          <h3>{{ i18n "partyDonorsHowStep2Title" }}</h3>
+          <p>{{ i18n "partyDonorsHowStep2" }}
+            <a href="https://divulgacandcontas.tse.jus.br" rel="noopener noreferrer" target="_blank">divulgacandcontas.tse.jus.br</a>.
+          </p>
+        </li>
+        <li>
+          <h3>{{ i18n "partyDonorsHowStep3Title" }}</h3>
+          <p>{{ i18n "partyDonorsHowStep3" }}
+            <a href="https://pje.tse.jus.br" rel="noopener noreferrer" target="_blank">pje.tse.jus.br</a>.
+          </p>
+        </li>
+        <li>
+          <h3>{{ i18n "partyDonorsHowStep4Title" }}</h3>
+          <p>{{ $legal.quem_pode_impugnar }}</p>
+        </li>
+        <li>
+          <h3>{{ i18n "partyDonorsHowStep5Title" }}</h3>
+          <p>{{ i18n "partyDonorsHowStep5" }}
+            <a href="https://dadosabertos.tse.jus.br" rel="noopener noreferrer" target="_blank">dadosabertos.tse.jus.br</a>.
+          </p>
+        </li>
+      </ol>
+    </section>
+
+    {{/* ---- Método ---------------------------------------------------------- */}}
+    <section class="dpartidos__section dpartidos__method">
+      <h2>{{ i18n "partyDonorsMethodTitle" }}</h2>
+      <div class="dpartidos__method-cols">
+        <div>
+          <h3>{{ i18n "partyDonorsMethodSourceTitle" }}</h3>
+          <p>{{ i18n "partyDonorsMethodSource" }}</p>
+          <p>{{ $d._escopo }}</p>
+        </div>
+        <div>
+          <h3>{{ i18n "partyDonorsMethodCheckTitle" }}</h3>
+          <p>{{ $d._reconciliacao }}</p>
+          <p>{{ i18n "partyDonorsMethodPagination" }}</p>
+        </div>
+        <div>
+          <h3>{{ i18n "partyDonorsMethodOutTitle" }}</h3>
+          <p>{{ i18n "partyDonorsMethodOut" }}</p>
+          <p>{{ i18n "partyDonorsMethodFefcLead" }}
+            {{ partial "formatCurrencyBR.html" $t.fefc_2026_para_campanhas }}
+            {{ i18n "partyDonorsMethodFefcTail" }}
+          </p>
+        </div>
+        <div>
+          <h3>{{ i18n "partyDonorsMethodLawTitle" }}</h3>
+          <p>{{ $legal.obrigacao }}</p>
+          <p>{{ i18n "partyDonorsMethodCpf" }}</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  {{ partial "footer.html" . }}
+
+  {{ $partidosJS := resources.Get "scripts/doadoresPartidos.js" | js.Build (dict "target" "es2017") | resources.Minify | resources.Fingerprint "sha512" }}
+  <script type="text/javascript" src="{{ $partidosJS.RelPermalink }}" integrity="{{ $partidosJS.Data.Integrity }}"></script>
+</body>
+</html>

@@ -1,0 +1,1052 @@
+@use '../abstracts/functions';
+
+////
+/// /doadores/partidos/: quem banca os diretórios nacionais dos partidos.
+///
+/// Três cores com um papel fixo em toda a página, e nunca trocadas de
+/// significado entre seções: --dv-1 é dinheiro de doador, --dv-2 é dinheiro
+/// público e --dv-3 é contagem de pessoas. O par roxo/azul (--dv-1 com
+/// --dv-4) reprova no teste de daltonismo, com ΔE 0,3 na visão deutan, e
+/// por isso não aparece junto aqui.
+///
+/// @group components
+////
+
+// Mesmo antídoto de .painel__main: o .container é coluna flex com wrap, e um
+// filho alto era esticado até max-content pela tabela, transbordando no
+// celular.
+.dpartidos {
+  flex-wrap: nowrap;
+
+  padding-top: 2.5rem;
+  padding-bottom: 4rem;
+}
+
+.dpartidos__hero {
+  margin-bottom: 1rem;
+}
+
+.dpartidos__hero-copy {
+  max-width: 44rem;
+}
+
+.dpartidos__title {
+  margin: 0.5rem 0;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-xl);
+  line-height: 1.1;
+
+  @media (min-width: functions.breakpoint('toggle-table-layout')) {
+    font-size: var(--t-2xl);
+  }
+}
+
+.dpartidos__dek {
+  font-size: var(--t-m);
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+
+.dpartidos__note {
+  margin-top: 0.9rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+.dpartidos__nowrap {
+  white-space: nowrap;
+}
+
+.dpartidos__lead {
+  max-width: 44rem;
+  margin-top: 0.7rem;
+
+  color: var(--ink-2);
+}
+
+.dpartidos__figcaption {
+  max-width: 44rem;
+  margin-top: 0.7rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  color: var(--ink-3);
+}
+
+.dpartidos__warning {
+  padding: 0.9rem 1.1rem;
+  margin-top: 1.2rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.55;
+  color: var(--ink-2);
+
+  background: var(--tint-warn);
+  border-radius: var(--radius-s);
+}
+
+.dpartidos__section {
+  padding-top: 2.5rem;
+  margin-top: 2.5rem;
+
+  border-top: 1px solid var(--hairline);
+
+  h2 {
+    max-width: 40rem;
+
+    font-family: var(--font-serif);
+    font-size: var(--t-l);
+    line-height: 1.15;
+  }
+}
+
+.dpartidos__section--framed {
+  padding: 2rem 1.25rem;
+
+  background: var(--paper-warm);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+
+/* ---- números grandes ---------------------------------------------------- */
+
+.dpartidos__bignumbers {
+  display: grid;
+
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+
+  gap: 1px;
+
+  margin-top: 2rem;
+
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+
+  @media (min-width: functions.breakpoint('desktop')) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.dpartidos__bignumber {
+  padding: 1.1rem 1.2rem;
+
+  background: var(--card);
+}
+
+.dpartidos__bignumber-value {
+  font-family: var(--font-serif);
+  font-size: var(--t-l);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.dpartidos__bignumber--public .dpartidos__bignumber-value {
+  color: var(--dv-2);
+}
+
+.dpartidos__bignumber--donor .dpartidos__bignumber-value {
+  color: var(--dv-1);
+}
+
+.dpartidos__bignumber-label {
+  margin-top: 0.35rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+.dpartidos__bignumber-detail {
+  margin-top: 0.15rem;
+
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+
+/* ---- legenda e amostras de cor ------------------------------------------ */
+
+.dpartidos__legend {
+  display: flex;
+
+  flex-wrap: wrap;
+
+  gap: 1.2rem;
+
+  padding: 0;
+  margin: 1.4rem 0 0.9rem;
+
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+  list-style: none;
+}
+
+.dpartidos__swatch {
+  display: inline-block;
+
+  width: 10px;
+  height: 10px;
+  margin-right: 0.4rem;
+
+  vertical-align: -1px;
+
+  border-radius: 2px;
+}
+
+.dpartidos__swatch--public {
+  background: var(--dv-2);
+}
+
+.dpartidos__swatch--donor {
+  background: var(--dv-1);
+}
+
+.dpartidos__swatch--people {
+  background: var(--dv-3);
+}
+
+.dpartidos__swatch--rest {
+  background: var(--dv-muted);
+}
+
+/* ---- barra de composição ------------------------------------------------ */
+
+.dpartidos__composition {
+  display: flex;
+
+  gap: 2px;
+
+  height: 52px;
+
+  border-radius: 6px;
+}
+
+.dpartidos__composition-part {
+  display: block;
+
+  height: 100%;
+}
+
+.dpartidos__composition-part:first-child {
+  border-radius: 6px 0 0 6px;
+}
+
+.dpartidos__composition-part:last-child {
+  border-radius: 0 6px 6px 0;
+}
+
+.dpartidos__composition-part--public {
+  background: var(--dv-2);
+}
+
+.dpartidos__composition-part--donor {
+  background: var(--dv-1);
+}
+
+.dpartidos__composition-part--rest {
+  background: var(--dv-muted);
+}
+
+.dpartidos__keys {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1px;
+
+  margin-top: 1rem;
+
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dpartidos__key {
+  padding: 0.9rem 1rem;
+
+  background: var(--card);
+}
+
+.dpartidos__key-title {
+  font-size: var(--t-xs);
+  font-weight: 600;
+}
+
+.dpartidos__key-value {
+  margin-top: 0.3rem;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-m);
+}
+
+.dpartidos__key-detail {
+  margin-top: 0.15rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+/* ---- relógio da lei ------------------------------------------------------ */
+
+.dpartidos__clock {
+  display: grid;
+
+  gap: 0.9rem;
+
+  margin-top: 1.4rem;
+}
+
+.dpartidos__clock-row {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 0.25rem;
+
+  @media (min-width: functions.breakpoint('phablet')) {
+    grid-template-columns: 11rem minmax(0, 1fr);
+
+    gap: 1rem;
+
+    align-items: center;
+  }
+}
+
+.dpartidos__clock-key {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.dpartidos__clock-lane {
+  display: flex;
+
+  gap: 0.6rem;
+
+  align-items: center;
+}
+
+.dpartidos__clock-bar {
+  display: block;
+
+  min-width: 3px;
+  height: 18px;
+
+  background: var(--ink);
+  border-radius: 0 3px 3px 0;
+}
+
+.dpartidos__clock-label {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.dpartidos__clock-label--inside {
+  color: var(--ink-2);
+}
+
+.dpartidos__lawgrid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1.5rem;
+
+  margin-top: 2rem;
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dpartidos__law h3,
+.dpartidos__why h3 {
+  margin-bottom: 0.4rem;
+
+  font-family: var(--font-serif);
+  font-size: var(--t-m);
+}
+
+.dpartidos__law p,
+.dpartidos__why p {
+  font-size: var(--t-xs);
+  line-height: 1.6;
+  color: var(--ink-2);
+}
+
+/* ---- tabela partido a partido -------------------------------------------- */
+
+.dpartidos__tablewrap {
+  overflow-x: auto;
+}
+
+.dpartidos__table {
+  width: 100%;
+
+  font-size: var(--t-xs);
+
+  border-collapse: collapse;
+
+  th,
+  td {
+    padding: 0.5rem;
+
+    text-align: left;
+
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  thead th {
+    font-weight: 600;
+    color: var(--ink-2);
+    vertical-align: bottom;
+
+    border-bottom: 2px solid var(--hairline-2);
+  }
+
+  tbody tr:hover td,
+  tbody tr:hover th {
+    background: var(--paper-warm);
+  }
+}
+
+.dpartidos__num {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.dpartidos__sigla {
+  font-weight: 600;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.dpartidos__zero {
+  color: var(--ink-3);
+}
+
+.dpartidos__hide-small {
+  display: none;
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    display: table-cell;
+  }
+}
+
+.dpartidos__track {
+  display: block;
+
+  min-width: 4rem;
+  height: 10px;
+
+  background: var(--hairline);
+  border-radius: 3px;
+}
+
+.dpartidos__track-fill {
+  display: block;
+
+  height: 100%;
+
+  border-radius: 3px;
+}
+
+.dpartidos__track-fill--donor {
+  background: var(--dv-1);
+}
+
+.dpartidos__track-fill--public {
+  background: var(--dv-2);
+}
+
+/* ---- faixas de doador ----------------------------------------------------- */
+
+.dpartidos__bands {
+  display: grid;
+
+  gap: 0.9rem;
+
+  margin-top: 0.4rem;
+}
+
+.dpartidos__band {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 0.35rem;
+
+  @media (min-width: functions.breakpoint('phablet')) {
+    grid-template-columns: 11rem minmax(0, 1fr);
+
+    gap: 1rem;
+
+    align-items: center;
+  }
+}
+
+.dpartidos__band-key {
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+
+  small {
+    display: block;
+
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+}
+
+.dpartidos__band-bars {
+  display: grid;
+
+  gap: 4px;
+}
+
+.dpartidos__band-row {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  gap: 0.7rem;
+
+  align-items: center;
+}
+
+.dpartidos__band-bar {
+  display: block;
+
+  min-width: 2px;
+  height: 14px;
+
+  border-radius: 0 3px 3px 0;
+}
+
+.dpartidos__band-bar--people {
+  background: var(--dv-3);
+}
+
+.dpartidos__band-bar--money {
+  background: var(--dv-1);
+}
+
+.dpartidos__band-value {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+/* ---- escada da concentração ----------------------------------------------- */
+
+.dpartidos__ladder {
+  display: grid;
+
+  gap: 1px;
+
+  margin-top: 1.6rem;
+
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+}
+
+.dpartidos__ladder-row {
+  display: grid;
+
+  grid-template-columns: 5rem minmax(0, 1fr);
+
+  gap: 1rem;
+
+  align-items: center;
+
+  padding: 0.75rem 1.1rem;
+
+  background: var(--card);
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: 6.5rem minmax(0, 1fr) auto;
+  }
+}
+
+.dpartidos__ladder-share {
+  font-family: var(--font-serif);
+  font-size: var(--t-m);
+  color: var(--dv-1);
+}
+
+.dpartidos__ladder-text {
+  font-size: var(--t-xs);
+  color: var(--ink-2);
+
+  b {
+    font-size: var(--t-s);
+    color: var(--ink);
+  }
+}
+
+.dpartidos__ladder-of {
+  display: none;
+
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink-3);
+  text-align: right;
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    display: block;
+  }
+}
+
+/* ---- por que doam: colunas e meses ---------------------------------------- */
+
+.dpartidos__whygrid {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1.5rem;
+
+  margin-top: 1.6rem;
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dpartidos__months {
+  display: grid;
+
+  grid-auto-columns: minmax(0, 1fr);
+  grid-auto-flow: column;
+
+  gap: 0.5rem;
+
+  align-items: end;
+
+  height: 160px;
+  margin-top: 2rem;
+}
+
+.dpartidos__month {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.35rem;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  height: 100%;
+}
+
+.dpartidos__month-bar {
+  display: block;
+
+  width: 100%;
+  min-height: 2px;
+
+  background: var(--dv-1);
+  border-radius: 3px 3px 0 0;
+}
+
+.dpartidos__month-label {
+  font-size: 0.68rem;
+  color: var(--ink-3);
+  white-space: nowrap;
+}
+
+/* ---- classificação da receita --------------------------------------------- */
+
+.dpartidos__kinds {
+  display: grid;
+
+  gap: 0.55rem;
+
+  margin-top: 1.4rem;
+}
+
+.dpartidos__kind {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr) auto;
+
+  gap: 0.25rem 0.7rem;
+
+  align-items: center;
+
+  font-size: var(--t-xs);
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: minmax(0, 17rem) minmax(0, 1fr) auto;
+
+    gap: 0.9rem;
+  }
+}
+
+.dpartidos__kind-key {
+  color: var(--ink-2);
+}
+
+.dpartidos__kind-bar {
+  grid-column: 1 / -1;
+
+  min-width: 2px;
+  height: 12px;
+
+  background: var(--dv-1);
+  border-radius: 0 3px 3px 0;
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-column: auto;
+  }
+}
+
+.dpartidos__kind-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ---- ranking --------------------------------------------------------------- */
+
+.dpartidos__rank {
+  padding: 0;
+  margin-top: 1.4rem;
+
+  list-style: none;
+
+  border-top: 1px solid var(--hairline);
+}
+
+.dpartidos__rank-row {
+  display: grid;
+
+  grid-template-columns: 1.8rem minmax(0, 1fr) auto;
+
+  gap: 0.2rem 0.9rem;
+
+  align-items: center;
+
+  padding: 0.7rem 0;
+
+  border-bottom: 1px solid var(--hairline);
+}
+
+.dpartidos__rank-pos {
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+
+.dpartidos__rank-name {
+  min-width: 0;
+
+  font-weight: 600;
+
+  small {
+    display: block;
+
+    margin-top: 0.1rem;
+
+    font-size: var(--t-xs);
+    font-weight: 400;
+    color: var(--ink-3);
+  }
+}
+
+.dpartidos__rank-value {
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.dpartidos__rank-track {
+  display: block;
+
+  grid-column: 2 / -1;
+
+  height: 6px;
+  margin-top: 0.35rem;
+
+  background: var(--hairline);
+  border-radius: 3px;
+
+  i {
+    display: block;
+
+    height: 100%;
+
+    background: var(--dv-1);
+    border-radius: 3px;
+  }
+}
+
+/* ---- ritmo da declaração --------------------------------------------------- */
+
+.dpartidos__dots {
+  margin-top: 1.4rem;
+}
+
+.dpartidos__dot-row {
+  display: grid;
+
+  grid-template-columns: 5.2rem minmax(0, 1fr);
+
+  gap: 1rem;
+
+  align-items: center;
+
+  padding: 0.28rem 0;
+
+  @media (min-width: functions.breakpoint('phablet')) {
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+  }
+}
+
+.dpartidos__dot-key {
+  overflow: hidden;
+
+  font-size: var(--t-xs);
+  font-weight: 600;
+  color: var(--ink-2);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.dpartidos__dot-lane {
+  position: relative;
+
+  height: 18px;
+
+  &::before {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    left: 0;
+
+    height: 1px;
+
+    content: '';
+
+    background: var(--hairline);
+  }
+}
+
+.dpartidos__dot {
+  position: absolute;
+  top: 50%;
+
+  width: 11px;
+  height: 11px;
+
+  background: var(--ink);
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px var(--paper);
+
+  transform: translate(-50%, -50%);
+}
+
+.dpartidos__dot-axis {
+  position: relative;
+
+  height: 1.4rem;
+
+  font-size: 0.68rem;
+  color: var(--ink-3);
+
+  span {
+    position: absolute;
+
+    white-space: nowrap;
+
+    transform: translateX(-50%);
+  }
+}
+
+/* ---- contas que já venceram -------------------------------------------------- */
+
+.dpartidos__compliance {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1px;
+
+  margin-top: 1.6rem;
+
+  background: var(--hairline);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius);
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.dpartidos__comp {
+  padding: 1.1rem 1.2rem;
+
+  background: var(--card);
+}
+
+.dpartidos__comp-value {
+  font-family: var(--font-serif);
+  font-size: var(--t-l);
+  font-variant-numeric: tabular-nums;
+  color: var(--dv-2);
+}
+
+.dpartidos__comp-label {
+  margin-top: 0.3rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.35;
+  color: var(--ink-2);
+}
+
+.dpartidos__comp-detail {
+  margin-top: 0.25rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--ink-3);
+}
+
+.dpartidos__gap {
+  margin-top: 2rem;
+
+  h3 {
+    margin-bottom: 0.4rem;
+
+    font-family: var(--font-serif);
+    font-size: var(--t-m);
+  }
+
+  p {
+    max-width: 44rem;
+
+    font-size: var(--t-xs);
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  p + p {
+    margin-top: 0.6rem;
+  }
+}
+
+/* ---- como acompanhar --------------------------------------------------------- */
+
+.dpartidos__steps {
+  display: grid;
+
+  gap: 1.4rem;
+
+  padding-left: 1.2rem;
+  margin-top: 1.6rem;
+
+  h3 {
+    margin-bottom: 0.25rem;
+
+    font-family: var(--font-serif);
+    font-size: var(--t-m);
+  }
+
+  p {
+    max-width: 44rem;
+
+    font-size: var(--t-xs);
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+}
+
+/* ---- método --------------------------------------------------------------------- */
+
+.dpartidos__method {
+  padding: 2.5rem 1.25rem;
+  margin-top: 3rem;
+
+  background: var(--paper-warm);
+  border-top: 1px solid var(--hairline);
+}
+
+.dpartidos__method-cols {
+  display: grid;
+
+  grid-template-columns: minmax(0, 1fr);
+
+  gap: 1.8rem;
+
+  margin-top: 1.4rem;
+
+  @media (min-width: functions.breakpoint('tablet')) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  @media (min-width: functions.breakpoint('desktop')) {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  h3 {
+    margin-bottom: 0.5rem;
+
+    font-family: var(--font-serif);
+    font-size: var(--t-m);
+  }
+
+  p {
+    font-size: var(--t-xs);
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  p + p {
+    margin-top: 0.6rem;
+  }
+}
+
+/* ---- tooltip ---------------------------------------------------------------------- */
+
+.dpartidos__tip {
+  position: fixed;
+  z-index: 30;
+
+  max-width: 280px;
+  padding: 0.55rem 0.75rem;
+
+  font-size: var(--t-xs);
+  line-height: 1.4;
+  color: var(--paper);
+
+  pointer-events: none;
+
+  background: var(--ink);
+  border-radius: var(--radius-s);
+  opacity: 0;
+
+  transition: opacity 0.12s;
+}
+
+.dpartidos__tip--on {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dpartidos__tip {
+    transition: none;
+  }
+}

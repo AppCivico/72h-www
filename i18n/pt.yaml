@@ -185,6 +185,272 @@
 # Nunca afirmar que não houve repasse quando a própria página mostra que houve.
 - id: listingUnavailable
   translation: "Não foi possível carregar a listagem agora. Os números acima seguem válidos: este recorte tem candidaturas com repasse declarado."
+- id: partyDonorsBandOrMore
+  translation: "ou mais"
+- id: partyDonorsBandTo
+  translation: "a"
+- id: partyDonorsBandUpTo
+  translation: "até"
+- id: partyDonorsBandsCaption
+  translation: "Cada barra é a fatia do total. A faixa é a soma do que a pessoa doou no ano, não uma doação isolada."
+- id: partyDonorsBandsEyebrow
+  translation: "Os doadores"
+- id: partyDonorsBandsLead
+  translation: "Treze mil pessoas doaram para diretórios nacionais este ano. Metade delas doou até R$ 124 no ano inteiro. No outro extremo, quinze pessoas colocaram R$ 200 mil ou mais cada uma e sozinhas responderam por quase metade de todo o dinheiro privado."
+- id: partyDonorsBandsMoneyShare
+  translation: "do dinheiro"
+- id: partyDonorsBandsPeopleShare
+  translation: "das pessoas"
+- id: partyDonorsBandsTitle
+  translation: "Quinze pessoas valem mais que treze mil"
+- id: partyDonorsClockCampaign
+  translation: "Doação a campanha"
+- id: partyDonorsClockCampaignValue
+  translation: "72 horas"
+- id: partyDonorsClockCaption
+  translation: "As duas barras estão na mesma escala. Uma doação a diretório feita em 2 de janeiro de 2026 só precisa ser prestada em 30 de junho de 2027, 545 dias depois. Uma doação feita hoje tem 299 dias de prazo."
+- id: partyDonorsClockEyebrow
+  translation: "O relógio da lei"
+- id: partyDonorsClockLead
+  translation: "A mesma pessoa, doando o mesmo valor, aparece em prazos completamente diferentes conforme o destino do dinheiro. Doação a campanha vai para a internet em três dias. Doação a diretório partidário pode levar até um ano e meio para ser prestada, e nada obriga o partido a divulgá-la antes disso."
+- id: partyDonorsClockParty
+  translation: "Doação a partido"
+- id: partyDonorsClockPartyValue
+  translation: "até 545 dias"
+- id: partyDonorsClockTitle
+  translation: "Setenta e duas horas de um lado, um ano e meio do outro"
+- id: partyDonorsComplianceCities
+  translation: "diretórios municipais entregaram em Roraima e no Amapá"
+- id: partyDonorsComplianceCitiesDetail
+  translation: "Censo completo dos dois estados, tomados como amostra da base municipal."
+- id: partyDonorsComplianceEyebrow
+  translation: "As contas que já venceram"
+- id: partyDonorsComplianceLead
+  translation: "O exercício de 2025 venceu em 30 de junho de 2026. Conferimos diretório por diretório pela existência do processo no PJe, que só nasce depois da entrega."
+- id: partyDonorsComplianceNational
+  translation: "diretórios nacionais entregaram as contas de 2025"
+- id: partyDonorsComplianceState
+  translation: "diretórios estaduais entregaram"
+- id: partyDonorsComplianceStateMissing
+  translation: "Sem entrega:"
+- id: partyDonorsComplianceTitle
+  translation: "E o ano passado, alguém deixou de prestar contas?"
+- id: partyDonorsDek
+  translation: "Doar para uma campanha é o caminho que todo mundo conhece. Existe outro, aberto o ano inteiro e com muito menos gente olhando: doar para o diretório do partido. Em 2026 os diretórios nacionais já declararam meio bilhão de reais de receita, e quase tudo é dinheiro público."
+- id: partyDonorsDonationWordPlural
+  translation: "doações"
+- id: partyDonorsDonationWordSingular
+  translation: "doação"
+- id: partyDonorsDonorDetail
+  translation: "Doações e contribuições de pessoas físicas, com nome e CPF no sistema do TSE."
+- id: partyDonorsDonorLabel
+  translation: "Doadores identificados"
+- id: partyDonorsDonorWordPlural
+  translation: "doadores"
+- id: partyDonorsDonorWordSingular
+  translation: "doador"
+- id: partyDonorsEyebrow
+  translation: "Diretórios nacionais, exercício de 2026"
+- id: partyDonorsFundDetail
+  translation: "Repasse mensal do TSE, previsto no Orçamento da União."
+- id: partyDonorsFundLabel
+  translation: "Fundo Partidário"
+- id: partyDonorsGapAfterTotal
+  translation: "."
+- id: partyDonorsGapLead
+  translation: "O painel do próprio TSE informa"
+- id: partyDonorsGapMiddle
+  translation: "prestações entregues em um universo de"
+- id: partyDonorsGapTail
+  translation: "prestações seguem sem entrega dois meses depois do prazo, e o sistema público não permite listar quais são."
+- id: partyDonorsGapTitle
+  translation: "O buraco está onde não se enxerga"
+- id: partyDonorsHeroDonors
+  translation: "vieram de doadores com nome e CPF"
+- id: partyDonorsHeroDonorsDetail
+  translation: "do total declarado"
+- id: partyDonorsHeroMedian
+  translation: "Mediana de"
+- id: partyDonorsHeroPeople
+  translation: "pessoas doaram"
+- id: partyDonorsHeroPublic
+  translation: "veio do Fundo Partidário"
+- id: partyDonorsHeroPublicDetail
+  translation: "Dinheiro do Orçamento da União, repassado pelo TSE"
+- id: partyDonorsHeroTotal
+  translation: "entraram nos diretórios nacionais em 2026"
+- id: partyDonorsHeroTotalDetail
+  translation: "partidos com movimento declarado, de"
+- id: partyDonorsHowEyebrow
+  translation: "Como acompanhar"
+- id: partyDonorsHowLead
+  translation: "As contas partidárias são públicas desde o primeiro lançamento, mas ficam espalhadas por sistemas diferentes, cada um com sua lógica. Este é o caminho curto."
+- id: partyDonorsHowStep1
+  translation: "O DivulgaSPCA mostra receitas e despesas de qualquer diretório, nacional, estadual ou municipal, inclusive no ano corrente e com o nome de cada doador. É a fonte desta página:"
+- id: partyDonorsHowStep1Title
+  translation: "Veja o que o partido já lançou"
+- id: partyDonorsHowStep2
+  translation: "O DivulgaCandContas traz as doações às candidaturas, essas sim divulgadas em até 72 horas:"
+- id: partyDonorsHowStep2Title
+  translation: "Compare com o dinheiro de campanha"
+- id: partyDonorsHowStep3
+  translation: "Toda prestação entregue vira processo no PJe, com número visível na página do partido. É lá que ficam o parecer técnico, a manifestação do Ministério Público e a decisão:"
+- id: partyDonorsHowStep3Title
+  translation: "Acompanhe o processo"
+- id: partyDonorsHowStep4Title
+  translation: "Saiba quem pode contestar"
+- id: partyDonorsHowStep5
+  translation: "Os dados abertos do TSE trazem as prestações de exercícios já encerrados em arquivo, para quem quiser cruzar por conta própria:"
+- id: partyDonorsHowStep5Title
+  translation: "Baixe os dados brutos"
+- id: partyDonorsHowTitle
+  translation: "O que dá para fazer sem esperar o julgamento"
+- id: partyDonorsKindsCaption
+  translation: "Classificação declarada pelo próprio partido ao TSE. Somadas, as linhas fecham no total de receita não vinda do Fundo Partidário."
+- id: partyDonorsKindsEyebrow
+  translation: "O que é doação e o que é obrigação"
+- id: partyDonorsKindsLead
+  translation: "Boa parte do que entra fora do Fundo Partidário tem nome de contribuição, não de doação. Contribuição de parlamentar é o percentual que deputados e senadores repassam ao partido, mais próximo de uma mensalidade estatutária do que de um apoio voluntário."
+- id: partyDonorsKindsTitle
+  translation: "Nem todo dinheiro privado é doação espontânea"
+- id: partyDonorsLadder10
+  translation: "10%"
+- id: partyDonorsLadder25
+  translation: "25%"
+- id: partyDonorsLadder50
+  translation: "metade"
+- id: partyDonorsLadder75
+  translation: "75%"
+- id: partyDonorsLadder90
+  translation: "90%"
+- id: partyDonorsLadderCaption
+  translation: "Quantos doadores, começando pelo maior, são necessários para chegar a cada fatia do dinheiro privado."
+- id: partyDonorsLadderLead
+  translation: "do dinheiro privado coube a"
+- id: partyDonorsLadderOfDonors
+  translation: "dos doadores"
+- id: partyDonorsLawCampaignTitle
+  translation: "Do outro lado do balcão"
+- id: partyDonorsLawDeadlineTitle
+  translation: "O prazo"
+- id: partyDonorsLawDuringTitle
+  translation: "Durante o ano"
+- id: partyDonorsMethodCheckTitle
+  translation: "A conferência"
+- id: partyDonorsMethodCpf
+  translation: "O CPF dos doadores é público no sistema do TSE e não é reproduzido nesta página."
+- id: partyDonorsMethodFefcLead
+  translation: "O Fundo Especial de Financiamento de Campanha, os"
+- id: partyDonorsMethodFefcTail
+  translation: "que vão bancar as campanhas de 2026, ainda não aparece nestas contas: ele é distribuído perto da eleição e prestado em outro lugar."
+- id: partyDonorsMethodLawTitle
+  translation: "A base legal"
+- id: partyDonorsMethodOut
+  translation: "Só diretórios nacionais. Os estaduais e os quase 33 mil municipais também recebem doação e não estão aqui. Rendimentos de aplicações financeiras não têm doador e o TSE não os detalha."
+- id: partyDonorsMethodOutTitle
+  translation: "O que fica de fora"
+- id: partyDonorsMethodPagination
+  translation: "A paginação da API do TSE é instável: pedir a lista ordenada por valor devolve páginas que se sobrepõem e outras que somem. No PT, uma varredura simples trouxe 5.138 dos 6.257 doadores. Foi preciso varrer em duas ordenações e unir os resultados."
+- id: partyDonorsMethodSource
+  translation: "Tudo vem do DivulgaSPCA, o sistema em que o TSE publica as prestações de contas anuais dos diretórios partidários. É outro sistema, com outras regras, e não se confunde com o DivulgaCandContas, que mostra o dinheiro das candidaturas."
+- id: partyDonorsMethodSourceTitle
+  translation: "A fonte"
+- id: partyDonorsMethodTitle
+  translation: "Como esta página foi feita"
+- id: partyDonorsMonthEntries
+  translation: "lançamentos"
+- id: partyDonorsMonthAverage
+  translation: "por lançamento, em"
+- id: partyDonorsMonthsCaption
+  translation: "Valor médio por lançamento, mês a mês. A série exclui o PT, que declarou só até abril e sozinho tem quase metade dos doadores: incluí-lo faria o gráfico medir atraso de declaração em vez de comportamento de doador. Setembro também fica de fora, com três lançamentos no dia da coleta."
+- id: partyDonorsOriginEyebrow
+  translation: "De onde vem"
+- id: partyDonorsOriginLead
+  translation: "O Fundo Partidário é dinheiro do Orçamento da União repassado todo mês pelo TSE aos partidos. Ele responde por quase toda a receita dos diretórios nacionais este ano. A fatia com nome e CPF de doador é o pedaço fino da barra abaixo."
+- id: partyDonorsOriginTitle
+  translation: "De cada R$ 100 que entraram, R$ 92 saíram do seu bolso"
+- id: partyDonorsPaceCaption
+  translation: "O PT é o caso que mais distorce comparações: tem 6.252 doadores, quase metade de todos os doadores desta página, e seu último lançamento é de 30 de abril. O que ele recebeu de maio em diante ainda não está aqui, e não precisa estar."
+- id: partyDonorsPaceEyebrow
+  translation: "Cuidado com a leitura"
+- id: partyDonorsPaceLead
+  translation: "A prestação de contas do exercício de 2026 só vence em 30 de junho de 2027, e nenhuma norma obriga o partido a lançar receita no sistema durante o ano. Um diretório que parou de declarar em fevereiro não está fora do prazo, está dentro dele. A data abaixo é a do lançamento mais recente que cada diretório já registrou."
+- id: partyDonorsPaceTip
+  translation: "último lançamento em"
+- id: partyDonorsPaceTitle
+  translation: "Ninguém está atrasado, cada um declara no seu ritmo"
+- id: partyDonorsPeopleWord
+  translation: "pessoas"
+- id: partyDonorsRestDetail
+  translation: "Aplicações financeiras, receitas diversas e recursos de origem não identificada. Não têm doador atrás."
+- id: partyDonorsRestLabel
+  translation: "Rendimentos e outras receitas"
+- id: partyDonorsSourceNote
+  translation: "Fonte: Divulgação das Prestações de Contas Anuais do TSE. Última atualização do sistema em"
+- id: partyDonorsTableCaption
+  translation: "Receita declarada e fatia vinda de doadores, por diretório nacional, em 2026"
+- id: partyDonorsTableDonorValue
+  translation: "De doador"
+- id: partyDonorsTableDonors
+  translation: "Doadores"
+- id: partyDonorsTableEyebrow
+  translation: "Partido a partido"
+- id: partyDonorsTableFoot
+  translation: "Três pessoas doaram para mais de um diretório, então a soma da coluna de doadores passa em três o total de doadores distintos. Quatro partidos não têm prestação aberta em 2026 (PCB, PRTB, PCO e UP) e três abriram sem declarar movimento (PP, Cidadania e Democrata)."
+- id: partyDonorsTableLead
+  translation: "A lista está ordenada pela fatia da receita que veio de doador, do maior para o menor. Ordenar por valor absoluto responderia outra pergunta, a de quem é grande. Assim os extremos ficam nas duas pontas: em cima, partidos que se sustentam só de doação; embaixo, partidos que praticamente só recebem dinheiro público."
+- id: partyDonorsTableParty
+  translation: "Partido"
+- id: partyDonorsTableShare
+  translation: "Fatia"
+- id: partyDonorsTableShareHead
+  translation: "Quanto veio de doador"
+- id: partyDonorsTableTitle
+  translation: "Onde a doação privada pesa e onde ela some"
+- id: partyDonorsTableTotal
+  translation: "Receita total"
+- id: partyDonorsTableTotalHead
+  translation: "Total declarado"
+- id: partyDonorsTableUnderPercent
+  translation: "menos de 0,01%"
+- id: partyDonorsTitle
+  translation: "Quem banca os partidos"
+- id: partyDonorsTopCaption
+  translation: "O TSE publica o CPF completo de quem doa a partido. Esta página não repete esse dado."
+- id: partyDonorsTopEyebrow
+  translation: "Os maiores"
+- id: partyDonorsTopLead
+  translation: "Todos são pessoas físicas, e não por acaso. Os valores somam o que cada pessoa deu a diretórios nacionais no ano, em uma ou mais doações."
+- id: partyDonorsTopLegalEntities
+  translation: "Aparecem"
+- id: partyDonorsTopLegalEntitiesTail
+  translation: "CNPJs entre os pagadores fora do Fundo Partidário, e nenhum é empresa doando: são diretórios estaduais repassando à direção nacional, o próprio TSE devolvendo depósitos judiciais e tribunais restituindo valores vinculados. Somados, eles dão"
+- id: partyDonorsTopTitle
+  translation: "Os 25 maiores doadores de 2026"
+- id: partyDonorsWhyCalendarLead
+  translation: "Entre janeiro e abril, a doação média a diretórios nacionais foi de"
+- id: partyDonorsWhyCalendarMiddle
+  translation: ". De maio em diante subiu para"
+- id: partyDonorsWhyCalendarTail
+  translation: ", com o pico em julho, mês das convenções partidárias e do início da campanha."
+- id: partyDonorsWhyCalendarTitle
+  translation: "O tamanho muda com o calendário"
+- id: partyDonorsWhyCaveat
+  translation: "Nada disso prova motivo. Doar a partido é legal, não tem limite de valor e não exige justificativa. O que os números mostram é que a regra permite, que o dinheiro circula para campanha e que as maiores doações chegam quando a eleição se aproxima."
+- id: partyDonorsWhyEyebrow
+  translation: "Por que doar tanto"
+- id: partyDonorsWhyFlowLead
+  translation: "Diretório partidário não é destino final. Os mesmos diretórios nacionais já repassaram"
+- id: partyDonorsWhyFlowTail
+  translation: "a candidaturas e a outros diretórios em 2026. Quando o dinheiro doado é usado em campanha, aí sim volta a valer o limite de 10% do rendimento do doador original."
+- id: partyDonorsWhyFlowTitle
+  translation: "O dinheiro não fica parado"
+- id: partyDonorsWhyLead
+  translation: "Não dá para saber a intenção de ninguém a partir de uma planilha, e esta página não tenta. Dá para descrever o desenho da regra e o momento em que o dinheiro entra, e os dois ajudam a entender por que alguém coloca milhões em um diretório partidário."
+- id: partyDonorsWhyNoCapTitle
+  translation: "Doar ao partido não tem teto"
+- id: partyDonorsWhyTitle
+  translation: "O que a lei permite explica boa parte"
 # Chamada da cota de gênero, sob o card de gênero da home. Dois estados, e o
 # número que decide qual deles aparece vem do painel dos partidos (FEFC).
 # A linguagem é deliberadamente "abaixo do piso até aqui": prestação de contas

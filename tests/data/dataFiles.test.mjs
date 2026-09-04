@@ -13,6 +13,7 @@ const fefc = readJson('data', 'fefc2026.json');
 const representacao = readJson('data', 'representacao2026.json');
 const candidaturas = readJson('data', 'candidaturas2026.json');
 const historico = readJson('data', 'declaracaoHistorico.json');
+const spca = readJson('data', 'spcaDoadoresPartidos2026.json');
 const geral = readJson('data', 'filters', 'general.json').filters;
 const municipal = readJson('data', 'filters', 'municipal.json').filters;
 
@@ -198,5 +199,100 @@ test('partyPanel.json: quando existe, tem a forma que a página espera', { skip:
       if (!/share|pct/i.test(campo) || typeof valor !== 'number') continue;
       assert.ok(valor >= 0 && valor <= 100, `${partido.acronym}.${campo} = ${valor}`);
     }
+  }
+});
+
+/**
+ * spcaDoadoresPartidos2026.json alimenta /doadores/partidos/ inteira e não é
+ * regerado no build: é um retrato datado, digitado a partir do DivulgaSPCA.
+ * As identidades abaixo são as mesmas que o coletor confere contra a API, e
+ * é aqui que elas param de depender de alguém rodar o coletor de novo.
+ */
+const perto = (a, b, folga = 1) => Math.abs(a - b) <= folga;
+
+test('spca: a soma dos partidos fecha com o total declarado', () => {
+  const soma = spca.partidos.reduce((total, party) => total + party.total, 0);
+  assert.ok(perto(soma, spca.totais.total_declarado), `${soma} contra ${spca.totais.total_declarado}`);
+});
+
+test('spca: a soma do dinheiro de doador fecha por partido, por faixa e por classificação', () => {
+  const alvo = spca.totais.doadores_privados;
+  const porPartido = spca.partidos.reduce((total, party) => total + party.privado, 0);
+  const porFaixa = spca.faixas_doador.reduce((total, faixa) => total + faixa.valor, 0);
+  const porClasse = spca.classes_privadas.reduce((total, linha) => total + linha[1], 0);
+  assert.ok(perto(porPartido, alvo), `partidos: ${porPartido}`);
+  assert.ok(perto(porFaixa, alvo), `faixas: ${porFaixa}`);
+  assert.ok(perto(porClasse, alvo, 0.01), `classificações: ${porClasse}`);
+});
+
+test('spca: receita pública, privada e rendimentos somam o total', () => {
+  const t = spca.totais;
+  const soma = t.fundo_partidario_detalhado + t.doadores_privados
+    + t.rendimentos_aplicacoes + t.outras_receitas + t.origem_nao_identificada;
+  assert.ok(perto(soma, t.total_declarado, 0.01), `${soma.toFixed(2)} contra ${t.total_declarado}`);
+});
+
+test('spca: as faixas cobrem todos os doadores, sem sobra nem repetição', () => {
+  const soma = spca.faixas_doador.reduce((total, faixa) => total + faixa.doadores, 0);
+  assert.equal(soma, spca.totais.doadores);
+  // As bordas encaixam: o topo de uma faixa é o piso da seguinte.
+  spca.faixas_doador.forEach((faixa, i) => {
+    if (i === 0) return assert.equal(faixa.de, 0);
+    return assert.equal(faixa.de, spca.faixas_doador[i - 1].ate);
+  });
+  assert.equal(spca.faixas_doador.at(-1).ate, null, 'a última faixa tem que ser aberta');
+});
+
+test('spca: a escada de concentração só cresce e cabe no total de doadores', () => {
+  const c = spca.concentracao;
+  const degraus = [c.p10, c.p25, c.p50, c.p75, c.p90];
+  degraus.forEach((n, i) => {
+    assert.ok(n >= 1, `degrau ${i} com ${n} doadores`);
+    if (i) assert.ok(n >= degraus[i - 1], `degrau ${i} menor que o anterior`);
+  });
+  assert.ok(c.p90 <= c.doadores);
+  assert.equal(c.doadores, spca.totais.doadores);
+});
+
+test('spca: os 25 maiores estão em ordem e cabem no total', () => {
+  assert.equal(spca.top_doadores.length, 25);
+  spca.top_doadores.forEach((linha, i) => {
+    const [posicao, nome, valor, doacoes] = linha;
+    assert.equal(posicao, i + 1);
+    assert.ok(nome && nome.length > 3, `nome suspeito na posição ${posicao}`);
+    assert.ok(doacoes >= 1);
+    if (i) assert.ok(valor <= spca.top_doadores[i - 1][2], `fora de ordem na posição ${posicao}`);
+  });
+  const soma = spca.top_doadores.reduce((total, linha) => total + linha[2], 0);
+  assert.ok(soma < spca.totais.doadores_privados, 'os 25 maiores não podem passar do total privado');
+});
+
+test('spca: nenhum CPF ou CNPJ no arquivo', () => {
+  // O TSE publica o CPF inteiro de quem doa a partido. A regra da casa é não
+  // repetir: se um documento entrar aqui, ele vai parar no HTML publicado.
+  const bruto = JSON.stringify(spca);
+  const documentos = bruto.match(/\b\d{11}\b|\b\d{14}\b|\d{3}\.\d{3}\.\d{3}-\d{2}|\d{2}\.\d{3}\.\d{3}\/\d{4}-\d{2}/g);
+  assert.equal(documentos, null, `documentos encontrados: ${documentos}`);
+});
+
+test('spca: o estado das contas de 2025 é coerente', () => {
+  const s = spca.status_2025;
+  assert.ok(s.nacionais_entregues <= s.nacionais_total);
+  assert.ok(s.estaduais_entregues <= s.estaduais_com_diretorio);
+  assert.equal(s.estaduais_sem_entrega.length, s.estaduais_com_diretorio - s.estaduais_entregues);
+  for (const censo of [s.censo_municipal_RR, s.censo_municipal_AP]) {
+    assert.ok(censo.entregues <= censo.com_diretorio);
+  }
+  const painel = s.painel_tse;
+  assert.equal(painel.entregues + painel.em_preenchimento + painel.nao_iniciadas, painel.total);
+});
+
+test('spca: todo partido com doador tem valor, e todo valor tem doador', () => {
+  for (const party of spca.partidos) {
+    assert.equal(
+      party.doadores > 0, party.privado > 0,
+      `${party.sigla}: ${party.doadores} doadores e ${party.privado} em doação`,
+    );
+    assert.ok(party.privado <= party.total, `${party.sigla} recebeu mais de doador do que declarou`);
   }
 });
