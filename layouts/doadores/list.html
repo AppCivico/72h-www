@@ -11,21 +11,34 @@
         <div class="doadores__hero-copy">
           <p class="eyebrow">{{ i18n "donorsEyebrow" }}</p>
 
-          <h1 class="doadores__title" v-if="summary">
-            {{ i18n "donorsHeadlineLead" }}
-            <span class="doadores__live" v-text="formatNumeral(tiers[2].donors)"></span>
-            {{ i18n "donorsHeadlineGaveOver" }}
-            <span class="doadores__live" v-text="spelledCurrency(threshold)"></span>
-            {{ i18n "donorsHeadlineAndAnswer" }}
-            <span class="doadores__live" v-text="formatPercent(tiers[2].valueShare)"></span>
-            {{ i18n "donorsHeadlineOfIndividuals" }}
-            {{ i18n "donorsHeadlineOthers" }}
-            <span class="doadores__live doadores__live--small" v-text="formatNumeral(tiers[0].donors)"></span>
-            {{ i18n "donorsHeadlineGaveUpTo" }}
-            <span class="doadores__live doadores__live--small" v-text="spelledCurrency(smallMax)"></span>
-            {{ i18n "donorsHeadlineEach" }}
+          {{/* Um <h1> só, trocando o conteúdo por dentro. Eram dois, um com
+               v-if e outro com v-else: no HTML publicado os dois existem, e a
+               página saía com dois h1 para quem lê a marcação (buscador,
+               leitor de tela, o teste de build). O que o Vue troca é o miolo,
+               não o cabeçalho.
+
+               A manchete com números vai num <template> e a de reserva num
+               <span>: o conteúdo de um <template> não entra na árvore da
+               página, então antes de o Vue montar quem sobra visível é a de
+               reserva. Trocar o <span> por um segundo <template> deixaria o
+               h1 vazio até o app subir. */}}
+          <h1 class="doadores__title">
+            <template v-if="summary">
+              {{ i18n "donorsHeadlineLead" }}
+              <span class="doadores__live" v-text="formatNumeral(tiers[2].donors)"></span>
+              {{ i18n "donorsHeadlineGaveOver" }}
+              <span class="doadores__live" v-text="spelledCurrency(threshold)"></span>
+              {{ i18n "donorsHeadlineAndAnswer" }}
+              <span class="doadores__live" v-text="formatPercent(tiers[2].valueShare)"></span>
+              {{ i18n "donorsHeadlineOfIndividuals" }}
+              {{ i18n "donorsHeadlineOthers" }}
+              <span class="doadores__live doadores__live--small" v-text="formatNumeral(tiers[0].donors)"></span>
+              {{ i18n "donorsHeadlineGaveUpTo" }}
+              <span class="doadores__live doadores__live--small" v-text="spelledCurrency(smallMax)"></span>
+              {{ i18n "donorsHeadlineEach" }}
+            </template>
+            <span v-else>{{ i18n "donorsTitleFallback" }}</span>
           </h1>
-          <h1 class="doadores__title" v-else>{{ i18n "donorsTitleFallback" }}</h1>
 
           <p class="doadores__dek">{{ i18n "donorsDek" }}</p>
           <details class="doadores__scope">

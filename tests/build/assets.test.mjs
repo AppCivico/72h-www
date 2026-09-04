@@ -64,7 +64,7 @@ test('o CSS cobre o app com o overlay de carregando enquanto o Vue não monta', 
 test('todo v-cloak do HTML publicado está num elemento que o Vue monta', { skip }, () => {
   // v-cloak fora da árvore de um app montado nunca é removido: aquele
   // pedaço da página fica coberto pelo overlay indefinidamente.
-  const RAIZES = ['vueHome', 'vueCandidato', 'vuePainel'];
+  const RAIZES = ['vueHome', 'vueCandidato', 'vuePainel', 'vueDoadores'];
   for (const page of pages()) {
     const raizes = RAIZES.filter((id) => page.html.includes(`id="${id}"`));
     if (!page.html.includes('v-cloak')) continue;
