@@ -86,6 +86,11 @@
   window.appDeclarationHistory = {{ $.Site.Data.declaracaoHistorico | jsonify | safeJS }};
   window.appHeroLead = '{{ i18n "heroHeadlineBefore" }}';
 
+  {{/* Anos em que o corte de reeleição tem dado na origem (ver
+       partials/reelectionYears.html). Sai daqui junto com o partial no dia em
+       que o /v1/filters passar a omitir a chave sozinho. */}}
+  window.appReelectionYears = {{ (partial "reelectionYears.html" .) | jsonify | safeJS }};
+
   {{/* Chamada da cota de gênero no card de gênero da home. Vai só a projeção
        que a conta usa (sigla, FEFC declarado, parcela feminina), não o
        partyPanel.json inteiro, que carrega série diária por partido e pesa

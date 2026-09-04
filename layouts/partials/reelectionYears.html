@@ -1,0 +1,54 @@
+{{/* Em quais anos o corte de reeleição vale a pena ser oferecido, medido no
+     build contra a própria API.
+
+     Por que existe: o TSE preenche `st_REELEICAO` no seu tempo, e em 2026 ele
+     voltou false para TODAS as candidaturas — uma única marcada no país
+     inteiro, conferido no DivulgaCandContas em 03/09/2026, inclusive para quem
+     está claramente tentando reeleição. O filtro ficava na tela e devolvia
+     página vazia em qualquer combinação, o que lê como site quebrado e não
+     como dado que a fonte ainda não publicou. Pior: a tela passava a afirmar,
+     com a marca do 72horas, que as candidaturas à reeleição declararam R$ 100
+     mil na eleição inteira.
+
+     O lugar certo dessa regra é o /v1/filters, que é quem monta a lista de
+     opções, e lá ela já está escrita (Filters.pm, H72_REELECTION_MIN_SHARE).
+     Isto aqui é a mesma regra do lado de cá, para o site não depender do
+     deploy do backend. **Quando o backend subir, este partial e o
+     window.appReelectionYears saem** — não há razão para manter as duas.
+
+     Uma fração, e não uma contagem, para a régua valer em qualquer tamanho de
+     eleição: 2022 fica em torno de 6% e 2026 em 0,01%. Duas chamadas por ano
+     porque o par reelection=1 / reelection=0 particiona a eleição toda e fecha
+     sozinho, sem depender de outro campo do mesmo response.
+
+     Se a leitura falhar, o ano CONTINUA oferecendo o corte. O padrão de uma
+     medição que não aconteceu é não mexer em nada: esconder um filtro que
+     funciona (2022 tem 1.306 candidaturas marcadas) por causa de um soluço de
+     rede seria pior do que deixar o de 2026 no ar mais um build.
+
+     Uso: {{ $anos := partial "reelectionYears.html" . }} */}}
+{{- $floor := 0.01 -}}
+{{- $out := slice -}}
+{{- range site.Params.years -}}
+  {{- $year := . -}}
+  {{- $offer := true -}}
+  {{- $flaggedURL := printf "%sindex?year=%d&days=all&reelection=1" site.Params.apiDomain $year -}}
+  {{- $restURL := printf "%sindex?year=%d&days=all&reelection=0" site.Params.apiDomain $year -}}
+  {{- $flaggedRes := try (resources.GetRemote $flaggedURL) -}}
+  {{- $restRes := try (resources.GetRemote $restURL) -}}
+  {{- if and (not $flaggedRes.Err) $flaggedRes.Value (not $restRes.Err) $restRes.Value -}}
+    {{- $flagged := float (($flaggedRes.Value | transform.Unmarshal).big_numbers.count_all | default 0) -}}
+    {{- $rest := float (($restRes.Value | transform.Unmarshal).big_numbers.count_all | default 0) -}}
+    {{- $total := add $flagged $rest -}}
+    {{- if and (gt $total 0.0) (lt (div $flagged $total) $floor) -}}
+      {{- $offer = false -}}
+      {{- warnf "reeleição em %d: só %v de %v candidaturas marcadas na origem — o corte não vai ao ar neste ano" $year $flagged $total -}}
+    {{- end -}}
+  {{- else -}}
+    {{- warnf "não deu para medir a reeleição em %d (err=%v) — o corte segue no ar" $year $flaggedRes.Err -}}
+  {{- end -}}
+  {{- if $offer -}}
+    {{- $out = $out | append $year -}}
+  {{- end -}}
+{{- end -}}
+{{- return $out -}}
