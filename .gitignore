@@ -334,3 +334,7 @@ _to_delete/
 
 # Tarball temporário usado para rodar a suíte fora desta máquina
 /72h-source.tgz
+
+### Coletor DivulgaSPCA ###
+# Saída do scripts/scrape-spca-donors.mjs: NDJSON e CSV grandes, regeráveis.
+/spca-out/
