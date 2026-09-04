@@ -42,9 +42,10 @@ import { fileURLToPath } from 'node:url';
 
 import {
   COLUNAS_DOACOES, COLUNAS_DOADORES, cabecalhoCsv, comLimite, formatarReais, lerJson,
-  linhaCsv, normalizarAgregado, normalizarPrestador, normalizarReceita, ORDENACOES_RANKING,
-  parseArgs, prestadorColetavel, receitaEsperadaNoRanking, TAMANHO_MAXIMO_PAGINA, urlDetalhe,
-  urlPartidos, urlPrestador, urlRanking, urlTotalizadores, urlTotalReceitas, urlUnidadesEleitorais,
+  linhaCsv, montarPainel, normalizarAgregado, normalizarPrestador, normalizarReceita,
+  ORDENACOES_RANKING, parseArgs, prestadorColetavel, receitaEsperadaNoRanking,
+  TAMANHO_MAXIMO_PAGINA, urlDetalhe, urlPartidos, urlPrestador, urlRanking, urlTotalizadores,
+  urlTotalReceitas, urlUnidadesEleitorais,
 } from './spcaDonors.mjs';
 
 const raizProjeto = join(dirname(fileURLToPath(import.meta.url)), '..');
@@ -65,6 +66,8 @@ Coletor de doações aos diretórios partidários (DivulgaSPCA / TSE)
   --so-descoberta     para depois de mapear os prestadores
   --so-coleta         pula a descoberta e usa o cache
   --so-exportar       só regera os CSV a partir do que já foi baixado
+  --atualizar         revisita prestadores já coletados e recoleta os que mudaram
+  --painel ARQUIVO    escreve o JSON de /doadores/partidos/ ao fim da corrida
   --recomecar         apaga a saída anterior antes de começar
 `;
 
@@ -251,6 +254,9 @@ async function coletarPrestador(prestador, opcoes) {
   if (!(totalReceita > opcoes.minReceita)) {
     return {
       totalReceita, agregados: [], doacoes: [], somaDetalhe: 0, somaRanking: 0, esperadoRanking: 0,
+      contabil: {
+        rendimentos: 0, outrasReceitas: 0, roni: 0, despesa: 0, repasses: 0,
+      },
     };
   }
 
@@ -259,13 +265,23 @@ async function coletarPrestador(prestador, opcoes) {
     { tentativas: opcoes.tentativas },
   );
   const esperadoRanking = receitaEsperadaNoRanking(totalizadores) ?? totalReceita;
+  const t = totalizadores || {};
+  const contabil = {
+    rendimentos: t.valorReceitaRendimentosAplicacoesFinanceiras || 0,
+    outrasReceitas: t.valorReceitaOutrasReceitas || 0,
+    roni: t.valorReceitaRecursosRONIFinanceiro || 0,
+    despesa: t.valorTotalDespesa || 0,
+    repasses: t.valorDespesaDoacoesPartidosCandidatos || 0,
+  };
 
   const brutos = await rankingCompleto(prestador, opcoes);
   const agregados = brutos.map((item) => normalizarAgregado(item, prestador, opcoes));
   const somaRanking = brutos.reduce((soma, item) => soma + (item.valorTotalReceita || 0), 0);
 
   if (opcoes.semDetalhe) {
-    return { totalReceita, agregados, doacoes: [], somaDetalhe: 0, somaRanking, esperadoRanking };
+    return {
+      totalReceita, agregados, doacoes: [], somaDetalhe: 0, somaRanking, esperadoRanking, contabil,
+    };
   }
 
   const porDoador = await comLimite(brutos, opcoes.concorrencia, async (item) => {
@@ -278,15 +294,49 @@ async function coletarPrestador(prestador, opcoes) {
 
   const doacoes = porDoador.flat().map((receita) => normalizarReceita(receita, prestador, opcoes));
   const somaDetalhe = doacoes.reduce((soma, d) => soma + (d.valor || 0), 0);
-  return { totalReceita, agregados, doacoes, somaDetalhe, somaRanking, esperadoRanking };
+  return { totalReceita, agregados, doacoes, somaDetalhe, somaRanking, esperadoRanking, contabil };
+}
+
+/**
+ * Quem ainda precisa ser coletado.
+ *
+ * Sem --atualizar, é retomada pura: prestador que já está em
+ * concluidos.ndjson fica de fora, e a corrida só termina o que faltou.
+ *
+ * Com --atualizar, cada prestador conhecido custa UMA chamada de
+ * total-receitas, e só volta para a fila quem mudou de valor. É o que torna
+ * a rodada diária barata: quando nada mudou nos diretórios nacionais, o dia
+ * inteiro custa algumas dezenas de requisições em vez de treze mil.
+ *
+ * A hipótese, escrita para quem for depurar: total igual significa lista de
+ * doadores igual. Um partido que corrigisse o nome de um doador sem mexer no
+ * valor passaria batido; para varrer isso de tempos em tempos, --recomecar.
+ */
+async function pendentesDaCorrida(prestadores, anteriores, opcoes) {
+  if (!opcoes.atualizar) {
+    return prestadores.filter((p) => !anteriores.has(p.codigoPrestador));
+  }
+  const checados = await comLimite(prestadores, opcoes.concorrencia, async (prestador) => {
+    const anterior = anteriores.get(prestador.codigoPrestador);
+    if (!anterior) return prestador;
+    const { dados } = await buscar(
+      urlTotalReceitas(opcoes.exercicio, prestador.codigoPrestador),
+      { tentativas: opcoes.tentativas },
+    );
+    const total = dados?.totalReceita ?? 0;
+    return Math.abs(total - (anterior.totalReceita || 0)) > 0.005 ? prestador : null;
+  });
+  return checados.filter(Boolean);
 }
 
 async function coletar(opcoes, arquivos) {
   const prestadores = (await lerNdjson(arquivos.prestadores))
     .filter((p) => opcoes.esferas.includes(p.esfera))
     .filter((p) => p.esfera === 'nacional' || opcoes.ufs.includes(p.uf));
-  const concluidos = new Set((await lerNdjson(arquivos.concluidos)).map((c) => c.codigoPrestador));
-  const pendentes = prestadores.filter((p) => !concluidos.has(p.codigoPrestador));
+  // O Map fica com o ÚLTIMO registro de cada prestador: com --atualizar o
+  // arquivo é append-only e o mesmo código aparece mais de uma vez.
+  const anteriores = new Map((await lerNdjson(arquivos.concluidos)).map((c) => [c.codigoPrestador, c]));
+  const pendentes = await pendentesDaCorrida(prestadores, anteriores, opcoes);
 
   registrar(`Coleta: ${pendentes.length} prestadores pendentes de ${prestadores.length} conhecidos`);
 
@@ -314,6 +364,7 @@ async function coletar(opcoes, arquivos) {
       lancamentos: resultado.doacoes.length,
       divergencia,
       faltaNoRanking,
+      ...resultado.contabil,
       em: new Date().toISOString(),
     }]);
     feitos += 1;
@@ -325,33 +376,83 @@ async function coletar(opcoes, arquivos) {
 
 /* ---------------------------------------------------------------- exportação */
 
-async function exportarCsv(origem, destino, colunas) {
+/**
+ * Lê o NDJSON linha a linha e chama `visitar` em cada registro. Streaming de
+ * propósito: uma varredura das três esferas passa de um milhão de linhas, e
+ * carregar o arquivo inteiro na memória mataria a corrida no fim.
+ */
+async function percorrerNdjson(caminho, visitar) {
+  if (!existsSync(caminho)) return 0;
+  const linhas = createInterface({ input: createReadStream(caminho), crlfDelay: Infinity });
+  let total = 0;
+  for await (const linha of linhas) {
+    const texto = linha.trim();
+    if (!texto) continue;
+    visitar(JSON.parse(texto));
+    total += 1;
+  }
+  return total;
+}
+
+/**
+ * Identidade de um lançamento e de um agregado, para a deduplicação.
+ * sqOrigemRecurso é o id do próprio TSE; quando ele vem vazio, a combinação
+ * de doador, data, valor e documento é o que sobra de identificador.
+ */
+const chaveDoacao = (linha) => (linha.sq_origem_recurso
+  ? `${linha.codigo_prestador}|${linha.sq_origem_recurso}`
+  : `${linha.codigo_prestador}|${linha.doador_documento}|${linha.data}|${linha.valor}|${linha.numero_documento}`);
+const chaveDoador = (linha) => `${linha.codigo_prestador}|${linha.doador_documento}`;
+
+/**
+ * O NDJSON é append-only, então --atualizar deixa o mesmo lançamento gravado
+ * mais de uma vez. A deduplicação acontece na exportação, ficando com a
+ * ÚLTIMA versão de cada chave, que é a mais recente. Sem --atualizar não há
+ * repetição e o caminho continua sendo streaming puro.
+ */
+async function exportarCsv(origem, destino, colunas, chave = null) {
   if (!existsSync(origem)) return 0;
   // O arquivo destino é zerado ANTES de abrir a leitura: o readline começa a
   // emitir linhas assim que a interface existe, e qualquer await entre uma
   // coisa e outra faz o iterador perder as primeiras linhas de arquivos curtos.
   await writeFile(destino, '');
-  const linhas = createInterface({ input: createReadStream(origem), crlfDelay: Infinity });
   const pedacos = [cabecalhoCsv(colunas)];
   let total = 0;
-  for await (const linha of linhas) {
-    const texto = linha.trim();
-    if (!texto) continue;
-    pedacos.push(linhaCsv(JSON.parse(texto), colunas));
+  const escrever = async (registro) => {
+    pedacos.push(linhaCsv(registro, colunas));
     total += 1;
     if (pedacos.length >= 5000) {
       await appendFile(destino, `${pedacos.join('\n')}\n`);
       pedacos.length = 0;
     }
+  };
+
+  if (chave) {
+    const unicos = new Map();
+    await percorrerNdjson(origem, (registro) => unicos.set(chave(registro), registro));
+    for (const registro of unicos.values()) await escrever(registro);
+  } else {
+    const fila = [];
+    await percorrerNdjson(origem, (registro) => fila.push(registro));
+    for (const registro of fila) await escrever(registro);
   }
+
   if (pedacos.length > 0) await appendFile(destino, `${pedacos.join('\n')}\n`);
   return total;
 }
 
 async function exportar(opcoes, arquivos) {
-  const lancamentos = await exportarCsv(arquivos.doacoes, arquivos.doacoesCsv, COLUNAS_DOACOES);
-  const agregados = await exportarCsv(arquivos.doadores, arquivos.doadoresCsv, COLUNAS_DOADORES);
-  const concluidos = await lerNdjson(arquivos.concluidos);
+  const dedupe = opcoes.atualizar;
+  const lancamentos = await exportarCsv(
+    arquivos.doacoes, arquivos.doacoesCsv, COLUNAS_DOACOES, dedupe ? chaveDoacao : null,
+  );
+  const agregados = await exportarCsv(
+    arquivos.doadores, arquivos.doadoresCsv, COLUNAS_DOADORES, dedupe ? chaveDoador : null,
+  );
+  // Com --atualizar o mesmo prestador aparece mais de uma vez; vale o último.
+  const concluidos = [...new Map(
+    (await lerNdjson(arquivos.concluidos)).map((c) => [c.codigoPrestador, c]),
+  ).values()];
 
   const comReceita = concluidos.filter((c) => c.totalReceita > 0);
   const divergentes = concluidos.filter((c) => c.divergencia !== null && Math.abs(c.divergencia) > 0.01);
@@ -403,6 +504,60 @@ async function exportar(opcoes, arquivos) {
     registrar(`Atenção: ${incompletos.length} prestadores cujo ranking não alcançou o total declarado.`);
   }
   registrar(`Arquivos em ${arquivos.pasta}`);
+}
+
+/* ---------------------------------------------------------------- painel */
+
+/** dd/mm/aaaa hh:mm:ss do TSE em algo que dá para comparar. */
+const paraOrdenavel = (data) => (data || '').replace(
+  /^(\d{2})\/(\d{2})\/(\d{4})(.*)$/, '$3-$2-$1$4',
+);
+
+/**
+ * Escreve o JSON que /doadores/partidos/ lê no build. Só os números: o marco
+ * legal e o estado das contas de 2025 vivem em data/spcaContexto.json, que é
+ * escrito à mão e que este script nunca toca.
+ */
+async function escreverPainel(opcoes, arquivos) {
+  const unicos = new Map();
+  await percorrerNdjson(arquivos.doacoes, (linha) => unicos.set(chaveDoacao(linha), linha));
+  const lancamentos = [...unicos.values()];
+
+  const prestadores = [...new Map(
+    (await lerNdjson(arquivos.concluidos)).map((c) => [c.codigoPrestador, c]),
+  ).values()];
+
+  const { dados: partidosDoExercicio } = await buscar(
+    urlPartidos(opcoes.exercicio, 'BR'), { tentativas: opcoes.tentativas },
+  );
+
+  let fefcTotal = null;
+  try {
+    fefcTotal = JSON.parse(await readFile(join(raizProjeto, 'data', 'fefc2026.json'), 'utf8')).total;
+  } catch {
+    registrar('  aviso: data/fefc2026.json não foi lido; o total do FEFC sai nulo');
+  }
+
+  const atualizacaoTse = (await lerNdjson(arquivos.prestadores))
+    .map((p) => p.atualizadoEm).filter(Boolean)
+    .sort((a, b) => (paraOrdenavel(a) < paraOrdenavel(b) ? 1 : -1))[0] || null;
+
+  const contexto = JSON.parse(await readFile(join(raizProjeto, 'data', 'spcaContexto.json'), 'utf8'));
+
+  const painel = montarPainel({
+    exercicio: opcoes.exercicio,
+    lancamentos,
+    prestadores,
+    partidosDoExercicio: Array.isArray(partidosDoExercicio) ? partidosDoExercicio : [],
+    mesesExcluir: contexto.meses_excluir || [],
+    fefcTotal,
+    atualizacaoTse,
+  });
+
+  const destino = isAbsolute(opcoes.painel) ? opcoes.painel : join(raizProjeto, opcoes.painel);
+  await writeFile(destino, `${JSON.stringify(painel, null, 2)}\n`);
+  registrar(`Painel escrito em ${destino}`);
+  return painel;
 }
 
 /* --------------------------------------------------------------------- estado */
@@ -464,6 +619,7 @@ async function principal() {
 
   if (opcoes.soExportar) {
     await exportar(opcoes, arquivos);
+    if (opcoes.painel) await escreverPainel(opcoes, arquivos);
     return;
   }
 
@@ -480,6 +636,7 @@ async function principal() {
 
   await coletar(opcoes, arquivos);
   await exportar(opcoes, arquivos);
+  if (opcoes.painel) await escreverPainel(opcoes, arquivos);
   registrar(`Tempo total: ${Math.round((Date.now() - inicio) / 1000)}s`);
 }
 

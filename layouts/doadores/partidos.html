@@ -13,10 +13,15 @@
 */}}
 {{ partial "head.html" . }}
 
+{{/* Duas fontes de propósito: spcaDoadoresPartidos2026.json é gerado pelo
+     coletor todo dia e só tem número; spcaContexto.json é escrito à mão e tem
+     a lei, o estado das contas de 2025 e as exclusões editoriais. Nenhum job
+     automático reescreve uma frase sobre a lei. */}}
 {{ $d := hugo.Data.spcaDoadoresPartidos2026 }}
+{{ $ctx := hugo.Data.spcaContexto }}
 {{ $t := $d.totais }}
-{{ $legal := $d.marco_legal }}
-{{ $s25 := $d.status_2025 }}
+{{ $legal := $ctx.marco_legal }}
+{{ $s25 := $ctx.status_2025 }}
 
 {{/* As três fatias da receita, na ordem em que a barra as mostra. O "resto"
      não é sobra de conta: são rendimentos de aplicação e receitas diversas,
@@ -230,7 +235,15 @@
           </tbody>
         </table>
       </div>
-      <p class="dpartidos__figcaption">{{ i18n "partyDonorsTableFoot" }}</p>
+      <p class="dpartidos__figcaption">
+        {{ i18n "partyDonorsTableFootLead" }}
+        {{ with $d.sem_prestacao_aberta }}
+          {{ i18n "partyDonorsTableFootNoAccount" }} {{ delimit . ", " }}.
+        {{ end }}
+        {{ with $d.sem_movimento_declarado }}
+          {{ i18n "partyDonorsTableFootNoMovement" }} {{ delimit . ", " }}.
+        {{ end }}
+      </p>
     </section>
 
     {{/* ---- Os doadores --------------------------------------------------- */}}
@@ -311,7 +324,7 @@
          lançamentos no dia da coleta: a média de um mês pela metade achatava
          todas as outras barras. */}}
     {{ $meses := slice }}
-    {{ range $d.meses_privado_sem_pt }}
+    {{ range $d.meses_privado }}
       {{ if ge (float (index . 2)) 20.0 }}
         {{ $meses = $meses | append (dict "mes" (index . 0) "valor" (float (index . 1)) "lanc" (float (index . 2))) }}
       {{ end }}
@@ -372,7 +385,12 @@
           </div>
         {{ end }}
       </div>
-      <p class="dpartidos__figcaption">{{ i18n "partyDonorsMonthsCaption" }}</p>
+      <p class="dpartidos__figcaption">
+        {{ i18n "partyDonorsMonthsCaption" }}
+        {{ with $d.meses_excluidos }}
+          {{ i18n "partyDonorsMonthsExcluded" }} {{ delimit . ", " }}.
+        {{ end }}
+      </p>
       <p class="dpartidos__warning">{{ i18n "partyDonorsWhyCaveat" }}</p>
     </section>
 
@@ -544,11 +562,11 @@
         <div>
           <h3>{{ i18n "partyDonorsMethodSourceTitle" }}</h3>
           <p>{{ i18n "partyDonorsMethodSource" }}</p>
-          <p>{{ $d._escopo }}</p>
+          <p>{{ $ctx._escopo }}</p>
         </div>
         <div>
           <h3>{{ i18n "partyDonorsMethodCheckTitle" }}</h3>
-          <p>{{ $d._reconciliacao }}</p>
+          <p>{{ $ctx._reconciliacao }}</p>
           <p>{{ i18n "partyDonorsMethodPagination" }}</p>
         </div>
         <div>

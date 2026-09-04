@@ -14,6 +14,7 @@ const representacao = readJson('data', 'representacao2026.json');
 const candidaturas = readJson('data', 'candidaturas2026.json');
 const historico = readJson('data', 'declaracaoHistorico.json');
 const spca = readJson('data', 'spcaDoadoresPartidos2026.json');
+const spcaContexto = readJson('data', 'spcaContexto.json');
 const geral = readJson('data', 'filters', 'general.json').filters;
 const municipal = readJson('data', 'filters', 'municipal.json').filters;
 
@@ -276,7 +277,7 @@ test('spca: nenhum CPF ou CNPJ no arquivo', () => {
 });
 
 test('spca: o estado das contas de 2025 é coerente', () => {
-  const s = spca.status_2025;
+  const s = spcaContexto.status_2025;
   assert.ok(s.nacionais_entregues <= s.nacionais_total);
   assert.ok(s.estaduais_entregues <= s.estaduais_com_diretorio);
   assert.equal(s.estaduais_sem_entrega.length, s.estaduais_com_diretorio - s.estaduais_entregues);
@@ -294,5 +295,30 @@ test('spca: todo partido com doador tem valor, e todo valor tem doador', () => {
       `${party.sigla}: ${party.doadores} doadores e ${party.privado} em doação`,
     );
     assert.ok(party.privado <= party.total, `${party.sigla} recebeu mais de doador do que declarou`);
+  }
+});
+
+test('spca: o arquivo gerado não guarda texto curado, e vice-versa', () => {
+  // O gerador sobrescreve spcaDoadoresPartidos2026.json inteiro todo dia. Se
+  // uma frase sobre a lei estiver lá dentro, ela some na primeira execução.
+  for (const chave of ['marco_legal', 'status_2025', 'meses_excluir']) {
+    assert.ok(!(chave in spca), `${chave} está no arquivo gerado e vai ser apagado`);
+    assert.ok(chave in spcaContexto || chave === 'meses_excluir', `${chave} sumiu do contexto`);
+  }
+  assert.ok(Array.isArray(spcaContexto.meses_excluir));
+  assert.deepEqual(
+    spca.meses_excluidos, spcaContexto.meses_excluir,
+    'o gerado tem que refletir a exclusão que o contexto pediu',
+  );
+});
+
+test('spca: o contexto tem os campos que a página imprime como texto', () => {
+  const legal = spcaContexto.marco_legal;
+  for (const campo of ['obrigacao', 'prazo_anual', 'sem_prazo_durante_o_ano', 'prazo_campanha',
+    'doacao_pj_vedada', 'teto_doacao_partido', 'sancao_nao_prestacao', 'quem_pode_impugnar']) {
+    assert.ok((legal[campo] || '').length > 40, `marco_legal.${campo} vazio ou curto demais`);
+  }
+  for (const campo of ['_escopo', '_reconciliacao']) {
+    assert.ok((spcaContexto[campo] || '').length > 40, `${campo} vazio`);
   }
 });

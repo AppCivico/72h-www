@@ -362,7 +362,7 @@
 - id: partyDonorsMonthAverage
   translation: "por lançamento, em"
 - id: partyDonorsMonthsCaption
-  translation: "Valor médio por lançamento, mês a mês. A série exclui o PT, que declarou só até abril e sozinho tem quase metade dos doadores: incluí-lo faria o gráfico medir atraso de declaração em vez de comportamento de doador. Setembro também fica de fora, com três lançamentos no dia da coleta."
+  translation: "Valor médio por lançamento, mês a mês. Meses com menos de vinte lançamentos ficam de fora, e também os diretórios que pararam de declarar cedo e fariam o gráfico medir atraso de declaração em vez de comportamento de doador."
 - id: partyDonorsOriginEyebrow
   translation: "De onde vem"
 - id: partyDonorsOriginLead
@@ -395,8 +395,14 @@
   translation: "Doadores"
 - id: partyDonorsTableEyebrow
   translation: "Partido a partido"
-- id: partyDonorsTableFoot
-  translation: "Três pessoas doaram para mais de um diretório, então a soma da coluna de doadores passa em três o total de doadores distintos. Quatro partidos não têm prestação aberta em 2026 (PCB, PRTB, PCO e UP) e três abriram sem declarar movimento (PP, Cidadania e Democrata)."
+- id: partyDonorsMonthsExcluded
+  translation: "Fora da série:"
+- id: partyDonorsTableFootNoAccount
+  translation: "Sem prestação aberta neste exercício:"
+- id: partyDonorsTableFootNoMovement
+  translation: "Com prestação aberta e sem movimento declarado:"
+- id: partyDonorsTableFootLead
+  translation: "Um doador que aparece em mais de um diretório conta uma vez no total, por isso a soma da coluna de doadores passa do total de doadores distintos."
 - id: partyDonorsTableLead
   translation: "A lista está ordenada pela fatia da receita que veio de doador, do maior para o menor. Ordenar por valor absoluto responderia outra pergunta, a de quem é grande. Assim os extremos ficam nas duas pontas: em cima, partidos que se sustentam só de doação; embaixo, partidos que praticamente só recebem dinheiro público."
 - id: partyDonorsTableParty

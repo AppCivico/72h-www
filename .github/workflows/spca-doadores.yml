@@ -1,0 +1,121 @@
+name: Doadores dos partidos (SPCA)
+
+# Atualiza data/spcaDoadoresPartidos2026.json, que alimenta /doadores/partidos/,
+# e commita na master. O push é o que dispara o deploy: nenhum token do Netlify
+# aqui, mesmo desenho do workflow do painel.
+#
+# NÃO toca em data/spcaContexto.json. Lá vivem a lei, o estado das contas de
+# 2025 e as exclusões editoriais da série mensal, tudo escrito à mão. Um job
+# diário não decide o que a lei diz.
+#
+# Roda 1x/dia às 09:30 UTC (6h30 em Brasília), depois da republicação do
+# DivulgaSPCA, que sai por volta das 5h.
+#
+# Para atualizar AGORA: aba Actions -> "Doadores dos partidos (SPCA)" ->
+# "Run workflow".
+
+on:
+  schedule:
+    - cron: '30 9 * * *'
+  workflow_dispatch:
+    inputs:
+      recomecar:
+        description: 'Ignorar o cache e recoletar tudo do zero'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: spca-doadores
+  cancel-in-progress: false
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    # Com cache quente e nada novo no TSE, o job leva segundos. Sem cache, é
+    # uma coleta nacional inteira: ~13 mil requisições, uns 15 minutos.
+    timeout-minutes: 60
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # O coletor usa só módulos nativos do Node, então não há npm install.
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # O estado da coleta anterior é o que torna a rodada diária barata: com
+      # ele, cada prestador custa UMA chamada para saber se mudou. Sem ele, o
+      # coletor refaz tudo, o que também funciona, só demora.
+      - name: Recuperar o estado da coleta
+        if: ${{ !inputs.recomecar }}
+        uses: actions/cache@v4
+        with:
+          path: spca-out
+          key: spca-2026-${{ github.run_id }}
+          restore-keys: spca-2026-
+
+      - name: Coletar e gerar o painel
+        run: |
+          node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/scrape-spca-donors.mjs \
+            --exercicio 2026 \
+            --esferas nacional \
+            --atualizar \
+            --painel data/spcaDoadoresPartidos2026.json
+
+      # O coletor confere as somas contra a API durante a corrida. Aqui a
+      # pergunta é outra: sobrou um JSON que a página consegue ler?
+      - name: Validar o painel
+        run: |
+          node -e "
+            const p = require('./data/spcaDoadoresPartidos2026.json');
+            const t = p.totais;
+            if (!Array.isArray(p.partidos) || p.partidos.length === 0) throw new Error('sem partidos');
+            if (!(t.total_declarado > 0)) throw new Error('total declarado zerado');
+            if (!(t.doadores > 0)) throw new Error('nenhum doador');
+            if (p.top_doadores.length === 0) throw new Error('ranking vazio');
+            const soma = p.partidos.reduce((s, x) => s + x.total, 0);
+            if (Math.abs(soma - t.total_declarado) > 1) {
+              throw new Error('a soma dos partidos não fecha: ' + soma + ' contra ' + t.total_declarado);
+            }
+            const porFaixa = p.faixas_doador.reduce((s, f) => s + f.doadores, 0);
+            if (porFaixa !== t.doadores) throw new Error('as faixas não cobrem todos os doadores');
+            if (/\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}|\\b\\d{11}\\b/.test(JSON.stringify(p))) {
+              throw new Error('documento de pessoa vazou para o painel');
+            }
+            console.log(p.partidos.length + ' partidos, ' + t.doadores + ' doadores, gerado em ' + p._gerado_em);
+          "
+
+      # Sem mudança de número, sem commit: evita deploy à toa. O _gerado_em
+      # muda toda execução, então sai da comparação.
+      - name: Commitar se os números mudaram
+        run: |
+          if git diff --quiet -- data/spcaDoadoresPartidos2026.json; then
+            echo "Arquivo idêntico; nada a fazer."
+            exit 0
+          fi
+          semCarimbo() {
+            node -e "
+              let raw = '';
+              process.stdin.on('data', (c) => { raw += c; }).on('end', () => {
+                try { const p = JSON.parse(raw); delete p._gerado_em; console.log(JSON.stringify(p)); }
+                catch { console.log('sem-versao-anterior'); }
+              });
+            "
+          }
+          ATUAL=$(git show HEAD:data/spcaDoadoresPartidos2026.json 2>/dev/null | semCarimbo)
+          NOVO=$(cat data/spcaDoadoresPartidos2026.json | semCarimbo)
+          if [ "$ATUAL" = "$NOVO" ]; then
+            echo "Só o carimbo de geração mudou; descartando para não gerar deploy."
+            git checkout -- data/spcaDoadoresPartidos2026.json
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/spcaDoadoresPartidos2026.json
+          git commit \
+            -m "chore(doadores): atualiza os doadores dos diretórios nacionais" \
+            -m "Gerado por .github/workflows/spca-doadores.yml a partir do DivulgaSPCA do TSE. O texto curado de data/spcaContexto.json nao e tocado por este job."
+          git push

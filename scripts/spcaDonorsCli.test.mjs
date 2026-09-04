@@ -37,9 +37,23 @@ const TOTAL_NACIONAL = DOADORES.reduce((s, d) => s + d.valorTotalReceita, 0);
 const TOTAL_ESTADUAL = DOADORES.slice(0, 2).reduce((s, d) => s + d.valorTotalReceita, 0);
 const RENDIMENTOS = 12345.67;
 
-const doadoresDe = (codigo) => (codigo === 123 ? DOADORES : (codigo === 232 ? DOADORES.slice(0, 2) : []));
+// Doação que aparece só depois que o teste liga `doacaoNova`: é assim que a
+// corrida com --atualizar tem o que reencontrar.
+const DOACAO_NOVA = {
+  cpfCnpjDoador: '99999999999',
+  nomeRazaoDoador: 'DOADORA TARDIA',
+  quantidadeTotal: 1,
+  valorTotalReceita: 777,
+  porcentagem: 1,
+};
+let doacaoNova = false;
+
+const doadoresDe = (codigo) => {
+  if (codigo === 123) return doacaoNova ? [...DOADORES, DOACAO_NOVA] : DOADORES;
+  return codigo === 232 ? DOADORES.slice(0, 2) : [];
+};
 const totalDe = (codigo) => ({
-  123: TOTAL_NACIONAL + RENDIMENTOS,
+  123: TOTAL_NACIONAL + RENDIMENTOS + (doacaoNova ? DOACAO_NOVA.valorTotalReceita : 0),
   232: TOTAL_ESTADUAL,
 }[codigo] || 0);
 
@@ -93,6 +107,9 @@ function criarMock() {
         // é a diferença que o coletor precisa descontar antes de reclamar.
         valorReceitaRendimentosAplicacoesFinanceiras: codigo === 123 ? RENDIMENTOS : 0,
         valorReceitaOutrasReceitas: 0,
+        valorReceitaRecursosRONIFinanceiro: 0,
+        valorTotalDespesa: 42,
+        valorDespesaDoacoesPartidosCandidatos: 7,
       });
     }
 
@@ -121,10 +138,10 @@ function criarMock() {
       }
       if (caminho.startsWith('detalhe/')) {
         const documento = caminho.slice('detalhe/'.length);
-        const doador = DOADORES.find((d) => d.cpfCnpjDoador === documento);
+        const doador = doadoresDe(codigo).find((d) => d.cpfCnpjDoador === documento);
         if (!doador) return responder(res, 200, []);
         return responder(res, 200, [0, 1].map((i) => ({
-          sqOrigemRecurso: Number(documento) + i,
+          sqOrigemRecurso: (Number(documento) * 10) + i,
           dataEntrada: `2026-0${i + 1}-15`,
           nomeRazaoDoador: doador.nomeRazaoDoador,
           nomeRazaoDoadorReceita: doador.nomeRazaoDoador,
@@ -232,5 +249,88 @@ describe('coletor do DivulgaSPCA de ponta a ponta', () => {
     assert.ok(doadores.includes('***.'));
     assert.ok(!/\d{3}\.\d{3}\.\d{3}-\d{2}/.test(doadores), 'nenhum CPF inteiro pode sobrar');
     assert.equal(JSON.parse(arquivo('resumo.json', 'mascarada')).lancamentos, 0);
+  });
+});
+
+describe('painel e atualização diária', () => {
+  let servidor;
+  let base;
+  let pasta;
+
+  before(async () => {
+    servidor = criarMock();
+    await new Promise((pronto) => { servidor.listen(0, '127.0.0.1', pronto); });
+    base = `http://127.0.0.1:${servidor.address().port}/rest`;
+    pasta = mkdtempSync(join(tmpdir(), 'spca-painel-'));
+    doacaoNova = false;
+  });
+
+  after(() => {
+    servidor.close();
+    rmSync(pasta, { recursive: true, force: true });
+    doacaoNova = false;
+  });
+
+  const rodar = (args) => new Promise((resolve) => {
+    const filho = spawn(process.execPath, [cli, ...args], {
+      env: { ...process.env, SPCA_API_BASE: base },
+    });
+    let saida = '';
+    filho.stdout.on('data', (d) => { saida += d; });
+    filho.stderr.on('data', (d) => { saida += d; });
+    filho.on('close', (codigo) => resolve({ codigo, saida }));
+  });
+
+  const painelPath = () => join(pasta, 'painel.json');
+  const lerPainel = () => JSON.parse(readFileSync(painelPath(), 'utf8'));
+
+  it('escreve o painel com os números da coleta', async () => {
+    const { codigo, saida } = await rodar([
+      '--saida', join(pasta, 'colheita'), '--ufs', 'SP', '--esferas', 'nacional',
+      '--painel', painelPath(),
+    ]);
+    assert.equal(codigo, 0, saida);
+
+    const painel = lerPainel();
+    assert.equal(painel._exercicio, 2026);
+    assert.equal(painel.totais.doadores, 150);
+    assert.equal(painel.partidos.length, 1, 'só o diretório nacional foi coletado');
+    assert.equal(painel.partidos[0].sigla, 'PT');
+    assert.ok(painel.top_doadores.length > 0);
+    assert.ok(painel.totais.fefc_2026_para_campanhas > 0, 'leu data/fefc2026.json');
+    assert.ok(!('marco_legal' in painel), 'o gerado não pode carregar texto curado');
+    assert.equal(
+      JSON.stringify(painel).match(/\d{3}\.\d{3}\.\d{3}-\d{2}/g), null,
+      'CPF vazou para o painel',
+    );
+  });
+
+  it('sem mudança na API, --atualizar não recoleta ninguém', async () => {
+    const { codigo, saida } = await rodar([
+      '--saida', join(pasta, 'colheita'), '--ufs', 'SP', '--esferas', 'nacional',
+      '--atualizar', '--painel', painelPath(),
+    ]);
+    assert.equal(codigo, 0, saida);
+    assert.match(saida, /0 prestadores pendentes/);
+    assert.equal(lerPainel().totais.doadores, 150);
+  });
+
+  it('quando o total muda, recoleta só o prestador que mudou e o painel acompanha', async () => {
+    doacaoNova = true;
+    const { codigo, saida } = await rodar([
+      '--saida', join(pasta, 'colheita'), '--ufs', 'SP', '--esferas', 'nacional',
+      '--atualizar', '--painel', painelPath(),
+    ]);
+    assert.equal(codigo, 0, saida);
+    assert.match(saida, /1 prestadores pendentes/);
+
+    const painel = lerPainel();
+    assert.equal(painel.totais.doadores, 151, 'a doadora nova entrou');
+    assert.ok(
+      painel.top_doadores.some((linha) => linha[1] === 'DOADORA TARDIA'),
+      'a doadora nova precisa aparecer no ranking',
+    );
+    // O NDJSON é append-only: sem deduplicação a coleta repetida dobraria tudo.
+    assert.equal(painel.totais.lancamentos_privados, 302, '151 doadores x 2 lançamentos');
   });
 });

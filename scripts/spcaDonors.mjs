@@ -333,6 +333,8 @@ export const PADROES = {
   soDescoberta: false,
   soColeta: false,
   soExportar: false,
+  atualizar: false,
+  painel: null,
   recomecar: false,
   minReceita: 0,
 };
@@ -358,6 +360,8 @@ export function parseArgs(argv) {
       case '--so-descoberta': opcoes.soDescoberta = true; break;
       case '--so-coleta': opcoes.soColeta = true; break;
       case '--so-exportar': opcoes.soExportar = true; break;
+      case '--atualizar': opcoes.atualizar = true; break;
+      case '--painel': opcoes.painel = valor(); break;
       case '--recomecar': opcoes.recomecar = true; break;
       case '--ajuda':
       case '-h': opcoes.ajuda = true; break;
@@ -388,6 +392,170 @@ export function receitaEsperadaNoRanking(totalizadores) {
   const rendimentos = totalizadores.valorReceitaRendimentosAplicacoesFinanceiras || 0;
   const outras = totalizadores.valorReceitaOutrasReceitas || 0;
   return Number((total - rendimentos - outras).toFixed(2));
+}
+
+/* ------------------------------------------------------ painel da página */
+
+/**
+ * As faixas em que a página agrupa doador, pela soma do que a pessoa deu no
+ * ano. A borda de cima de uma é o piso da seguinte, e a última é aberta:
+ * tests/data/dataFiles.test.mjs cobra esse encaixe.
+ */
+export const FAIXAS_DOADOR = [
+  [0, 200], [200, 1000], [1000, 10000], [10000, 50000], [50000, 200000], [200000, null],
+];
+
+/** Doação e contribuição de gente, ou seja, tudo que não é repasse do TSE. */
+const ehPrivado = (lancamento) => lancamento.fonte !== 'Fundo Partidário';
+
+const somar = (lista, campo) => lista.reduce((total, item) => total + (item[campo] || 0), 0);
+const arredondar = (valor) => Number(valor.toFixed(2));
+
+function mediana(valores) {
+  if (valores.length === 0) return 0;
+  const ordenados = [...valores].sort((a, b) => a - b);
+  return ordenados[Math.floor(ordenados.length / 2)];
+}
+
+/**
+ * Monta o JSON que /doadores/partidos/ lê no build. Só aritmética: tudo que
+ * é juízo editorial (o marco legal, o estado das contas de 2025, quais
+ * partidos ficam fora da série mensal) vive em data/spcaContexto.json e é
+ * escrito à mão. Um job diário não pode reescrever sozinho uma frase sobre
+ * a lei nem decidir qual partido distorce um gráfico.
+ */
+export function montarPainel({
+  exercicio, lancamentos, prestadores, partidosDoExercicio = [],
+  mesesExcluir = [], fefcTotal = null, atualizacaoTse = null, geradoEm = null,
+}) {
+  const comMovimento = prestadores.filter((p) => (p.totalReceita || 0) > 0);
+  const privados = lancamentos.filter(ehPrivado);
+
+  const ultimoPorSigla = new Map();
+  for (const l of lancamentos) {
+    const atual = ultimoPorSigla.get(l.partido_sigla);
+    if (l.data && (!atual || l.data > atual)) ultimoPorSigla.set(l.partido_sigla, l.data);
+  }
+
+  const privadoPorSigla = new Map();
+  const doadoresPorSigla = new Map();
+  for (const l of privados) {
+    privadoPorSigla.set(l.partido_sigla, (privadoPorSigla.get(l.partido_sigla) || 0) + (l.valor || 0));
+    if (!doadoresPorSigla.has(l.partido_sigla)) doadoresPorSigla.set(l.partido_sigla, new Set());
+    doadoresPorSigla.get(l.partido_sigla).add(l.doador_documento);
+  }
+
+  const partidos = comMovimento
+    .map((p) => ({
+      sigla: p.partido,
+      total: Math.round(p.totalReceita || 0),
+      privado: Math.round(privadoPorSigla.get(p.partido) || 0),
+      doadores: (doadoresPorSigla.get(p.partido) || new Set()).size,
+      repasses: Math.round(p.repasses || 0),
+      ultimo: ultimoPorSigla.get(p.partido) || null,
+    }))
+    .sort((a, b) => b.total - a.total);
+
+  // Doador é a pessoa, não o par pessoa-e-partido: quem doou para dois
+  // diretórios conta uma vez na faixa, na escada e no ranking.
+  const porDoador = new Map();
+  for (const l of privados) {
+    const chave = l.doador_documento;
+    const atual = porDoador.get(chave) || {
+      nome: '', tipo: l.doador_tipo, valor: 0, doacoes: 0, partidos: new Set(),
+    };
+    atual.valor += l.valor || 0;
+    atual.doacoes += 1;
+    atual.partidos.add(l.partido_sigla);
+    if ((l.doador_nome || '').length > atual.nome.length) atual.nome = l.doador_nome;
+    porDoador.set(chave, atual);
+  }
+  const doadores = [...porDoador.values()].sort((a, b) => b.valor - a.valor);
+  const totalPrivado = somar(privados, 'valor');
+
+  const faixas = FAIXAS_DOADOR.map(([de, ate]) => {
+    const dentro = doadores.filter((d) => d.valor >= de && (ate === null || d.valor < ate));
+    return {
+      de, ate, doadores: dentro.length, valor: Math.round(somar(dentro, 'valor')),
+    };
+  });
+
+  const quantosPara = (alvo) => {
+    let soma = 0;
+    for (let i = 0; i < doadores.length; i += 1) {
+      soma += doadores[i].valor;
+      if (soma / totalPrivado >= alvo) return i + 1;
+    }
+    return doadores.length;
+  };
+
+  const porClasse = new Map();
+  for (const l of privados) porClasse.set(l.classificacao, (porClasse.get(l.classificacao) || 0) + (l.valor || 0));
+
+  const pj = doadores.filter((d) => d.tipo === 'PJ');
+
+  const excluir = new Set(mesesExcluir);
+  const porMes = new Map();
+  for (const l of privados) {
+    if (excluir.has(l.partido_sigla) || !l.data) continue;
+    const mes = l.data.slice(0, 7);
+    const atual = porMes.get(mes) || { valor: 0, lancamentos: 0 };
+    atual.valor += l.valor || 0;
+    atual.lancamentos += 1;
+    porMes.set(mes, atual);
+  }
+
+  const siglasComPrestacao = new Set(prestadores.map((p) => p.partido));
+  const siglasComMovimento = new Set(comMovimento.map((p) => p.partido));
+
+  return {
+    _gerado_em: geradoEm || new Date().toISOString(),
+    _exercicio: exercicio,
+    _atualizacao_tse: atualizacaoTse,
+    totais: {
+      diretorios_nacionais: partidosDoExercicio.length,
+      com_prestacao_aberta: prestadores.length,
+      com_movimento: comMovimento.length,
+      total_declarado: arredondar(somar(prestadores, 'totalReceita')),
+      fundo_partidario_detalhado: arredondar(somar(lancamentos.filter((l) => !ehPrivado(l)), 'valor')),
+      doadores_privados: arredondar(totalPrivado),
+      rendimentos_aplicacoes: arredondar(somar(prestadores, 'rendimentos')),
+      outras_receitas: arredondar(somar(prestadores, 'outrasReceitas')),
+      origem_nao_identificada: arredondar(somar(prestadores, 'roni')),
+      despesa_total: arredondar(somar(prestadores, 'despesa')),
+      repassado_a_candidatos_e_partidos: arredondar(somar(prestadores, 'repasses')),
+      lancamentos: lancamentos.length,
+      lancamentos_privados: privados.length,
+      doadores: doadores.length,
+      mediana_por_doador: arredondar(mediana(doadores.map((d) => d.valor))),
+      fefc_2026_para_campanhas: fefcTotal,
+    },
+    partidos,
+    sem_prestacao_aberta: partidosDoExercicio
+      .filter((p) => !siglasComPrestacao.has(p.sigla)).map((p) => p.sigla).sort(),
+    sem_movimento_declarado: partidosDoExercicio
+      .filter((p) => siglasComPrestacao.has(p.sigla) && !siglasComMovimento.has(p.sigla))
+      .map((p) => p.sigla).sort(),
+    classes_privadas: [...porClasse.entries()]
+      .sort((a, b) => b[1] - a[1]).map(([nome, valor]) => [nome, arredondar(valor)]),
+    faixas_doador: faixas,
+    concentracao: {
+      p10: quantosPara(0.1),
+      p25: quantosPara(0.25),
+      p50: quantosPara(0.5),
+      p75: quantosPara(0.75),
+      p90: quantosPara(0.9),
+      doadores: doadores.length,
+    },
+    // Sem documento: o TSE publica o CPF inteiro, e esta página não repete.
+    top_doadores: doadores.slice(0, 25).map((d, i) => [
+      i + 1, d.nome, arredondar(d.valor), d.doacoes, [...d.partidos].sort().join(', '),
+    ]),
+    pagadores_pj: { quantos: pj.length, valor: arredondar(somar(pj, 'valor')) },
+    meses_privado: [...porMes.entries()].sort()
+      .map(([mes, o]) => [mes, arredondar(o.valor), o.lancamentos]),
+    meses_excluidos: [...excluir].sort(),
+  };
 }
 
 export function formatarReais(valor) {
