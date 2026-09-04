@@ -6,7 +6,7 @@
 {{- $ssrYear := default $.Site.Params.run .Params.year -}}
 {{- $ssrData := dict -}}
 {{- $ssrURL := printf "%sindex?year=%d&days=all" $.Site.Params.apiDomain $ssrYear -}}
-{{- $ssrResult := try (resources.GetRemote $ssrURL) -}}
+{{- $ssrResult := partial "fetchRemote.html" $ssrURL -}}
 {{- if and (not $ssrResult.Err) $ssrResult.Value -}}
   {{- $ssrData = transform.Unmarshal $ssrResult.Value -}}
 {{- else -}}

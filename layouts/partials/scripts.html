@@ -25,7 +25,7 @@
 {{- range $.Site.Params.years -}}
   {{- $year := . -}}
   {{- $url := printf "%sfilters?year=%d" $.Site.Params.apiDomain $year -}}
-  {{- $result := try (resources.GetRemote $url) -}}
+  {{- $result := partial "fetchRemote.html" $url -}}
   {{- $remoteByYear = merge $remoteByYear (dict (printf "%d" $year) $result) -}}
   {{- if and (not $result.Err) $result.Value -}}
     {{- $type := mod $year 4 -}}

@@ -14,7 +14,7 @@
 {{- $threshold := 50000 -}}
 {{- $url := printf "%sdonors/summary?year=%d&threshold=%d" site.Params.apiDomain site.Params.run $threshold -}}
 {{- $out := false -}}
-{{- $result := try (resources.GetRemote $url) -}}
+{{- $result := partial "fetchRemote.html" $url -}}
 {{- if and (not $result.Err) $result.Value -}}
   {{- $data := $result.Value | transform.Unmarshal -}}
   {{- $big := $data.tiers.big -}}

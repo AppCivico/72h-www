@@ -1,0 +1,25 @@
+{{/* Um único ponto de entrada para tudo que o build busca na API.
+
+     Existe por causa do tempo, não da rede. Quando um endpoint devolve 5xx, o
+     Hugo insiste por um minuto inteiro antes de desistir, e o build tem onze
+     dessas chamadas: com a API doente, são onze minutos parados esperando. Em
+     04/09/2026 isso estourou o timeout de 25 minutos do job de e2e e o GitHub
+     matou a execução, embora o site tivesse sido gerado corretamente com os
+     caminhos de reserva.
+
+     Com HUGO_SKIP_REMOTE ligada, nenhuma chamada sai: quem chamou recebe o
+     mesmo formato de sempre, com Err preenchido, e cai no caminho de reserva
+     que já existia. É o que o CI quer, e é literalmente o cenário que o
+     comentário do ci.yml diz que o build precisa aguentar. Em produção a
+     variável não existe e nada muda.
+
+     O nome precisa começar com HUGO_ porque é só isso que o getenv de
+     config/_default/security.yaml libera.
+
+     Uso: {{ $res := partial "fetchRemote.html" $url }} */}}
+{{- $url := . -}}
+{{- $result := dict "Err" "pulado: HUGO_SKIP_REMOTE" "Value" false -}}
+{{- if not (getenv "HUGO_SKIP_REMOTE") -}}
+  {{- $result = try (resources.GetRemote $url) -}}
+{{- end -}}
+{{- return $result -}}

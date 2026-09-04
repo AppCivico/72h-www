@@ -99,8 +99,17 @@ jobs:
       # dependem da API e têm o seu próprio workflow. O build aqui é o do
       # site em si — e ele PRECISA passar mesmo com a API fora do ar, que
       # é o caminho que os testes de filtros cobrem.
+      #
+      # HUGO_SKIP_REMOTE faz esse caminho ser o único: nenhuma chamada à API
+      # sai daqui. Não é economia de rede, é de relógio. Endpoint doente faz o
+      # Hugo insistir um minuto antes de desistir, e são onze chamadas: em
+      # 04/09/2026 o job levou onze minutos só esperando 502 e estourou o
+      # timeout, com o site já gerado. O CI passou a exercitar sempre a
+      # reserva, que é o que ele deveria testar de qualquer jeito.
       - name: Construir o site
         run: npm run site:for-tests
+        env:
+          HUGO_SKIP_REMOTE: '1'
 
       - name: Smoke do HTML publicado
         run: npm run test:build
