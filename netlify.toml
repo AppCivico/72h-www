@@ -4,6 +4,19 @@
 
 [build.environment]
   HUGO_VERSION = "0.164.0"
+
+  # MITIGAÇÃO TEMPORÁRIA, ligada em 04/09/2026. Desliga as chamadas que o
+  # build faz à API (ver layouts/partials/fetchRemote.html). Não é economia de
+  # rede, é de relógio: com o /v1/index devolvendo 502 para os anos anteriores
+  # e para reelection=1, são onze chamadas insistindo um minuto cada, e o build
+  # do Netlify estourava o limite antes de terminar. O site parou de publicar.
+  #
+  # O preço é que a home sai sem os números de pré-hidratação e a isca do
+  # rodapé sai sem cifra. O Vue continua buscando os números no cliente, então
+  # quem abre a página com JavaScript vê tudo normalmente.
+  #
+  # REMOVER assim que o backend consertar o /v1/index. É uma linha só.
+  HUGO_SKIP_REMOTE = "1"
   DART_SASS_VERSION = "1.101.0"
   NODE_VERSION = "24.18.0"
 
