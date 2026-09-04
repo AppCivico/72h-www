@@ -18,6 +18,7 @@ const carregar = (nome) => JSON.parse(readFileSync(path.join(AQUI, nome), 'utf8'
 export const INDEX = carregar('index.json');
 export const CANDIDATES = carregar('candidates.json');
 export const PERSON = carregar('person.json');
+export const DONORS = carregar('donors.json');
 
 const json = (route, body) => route.fulfill({
   status: 200,
@@ -63,6 +64,18 @@ export async function mockApi(page, { onIndex } = {}) {
       chamadas.people.push(url);
       return json(route, PERSON);
     }
+
+    // /doadores pede seis endpoints. Devolver {} para eles fazia a página
+    // montar com um summary vazio, que passa em todo v-if="summary" e estoura
+    // no render — e o E2E acusava isso como erro de console, que era a página
+    // certa reclamando de uma fixture errada. O /donors sem sufixo vem por
+    // último, senão engole os outros cinco.
+    if (caminho.endsWith('/donors/summary')) return json(route, DONORS.summary);
+    if (caminho.endsWith('/donors/breakdown')) return json(route, DONORS.breakdown);
+    if (caminho.endsWith('/donors/concentration')) return json(route, DONORS.concentration);
+    if (caminho.endsWith('/donors/timeline')) return json(route, DONORS.timeline);
+    if (caminho.endsWith('/donors/candidacies')) return json(route, DONORS.candidacies);
+    if (caminho.endsWith('/donors')) return json(route, DONORS.ranking);
     return json(route, {});
   });
 

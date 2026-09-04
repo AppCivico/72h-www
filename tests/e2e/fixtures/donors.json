@@ -1,0 +1,337 @@
+{
+  "_fixture": "Respostas de /v1/donors* para year=2026 e threshold=50000, com a forma medida na API real em 03/09/2026. summary, breakdown e concentration trazem os números reais da coleta; timeline, candidacies e ranking vêm vazios de propósito — as seções que dependem deles são v-if e o que interessa aqui é a página montar inteira com os dados que ela lê de verdade. Alterar aqui muda o que os E2E consideram 'a API certa'.",
+  "summary": {
+    "bands": [],
+    "individuals": {
+      "donors": 15925,
+      "transfers": 18401,
+      "value": 145079294.48
+    },
+    "threshold": 50000,
+    "tiers": {
+      "big": {
+        "candidacies_reached": 443,
+        "donors": 412,
+        "mean_total": "181493.02",
+        "median_total": "100000.00",
+        "mode_transfer": "50000",
+        "share_of_individuals": "0.515409",
+        "single_candidacy_share": "0.55915648430968012844",
+        "transfers": 858,
+        "value": 74775125.02
+      },
+      "medium": {
+        "candidacies_reached": 2258,
+        "donors": 6039,
+        "mean_total": "10779.36",
+        "median_total": "6500.00",
+        "mode_transfer": "5000",
+        "single_candidacy_share": "0.93865734520245045711",
+        "transfers": 7471,
+        "value": "65096559.86"
+      },
+      "small": {
+        "candidacies_reached": 1722,
+        "donors": 9474,
+        "mean_total": "549.67",
+        "median_total": "220.00",
+        "mode_transfer": "1000",
+        "single_candidacy_share": "0.97511806568602992052",
+        "transfers": 10072,
+        "value": "5207609.60"
+      }
+    }
+  },
+  "breakdown": {
+    "gender": [
+      {
+        "big": {
+          "donors": 559,
+          "value": "63654803.41"
+        },
+        "candidacies_registered": 2461,
+        "id": 1,
+        "medium": {
+          "donors": 5081,
+          "value": "51995797.46"
+        },
+        "name": "Masculino",
+        "small": {
+          "donors": 7696,
+          "value": "4116171.51"
+        }
+      },
+      {
+        "big": {
+          "donors": 156,
+          "value": "11120321.61"
+        },
+        "candidacies_registered": 935,
+        "id": 2,
+        "medium": {
+          "donors": 1298,
+          "value": "13100762.40"
+        },
+        "name": "Feminino",
+        "small": {
+          "donors": 1904,
+          "value": "1091438.09"
+        }
+      }
+    ],
+    "intersection": [
+      {
+        "big": {
+          "donors": 41,
+          "value": "2072700"
+        },
+        "candidacies_registered": 345,
+        "id": 1,
+        "medium": {
+          "donors": 403,
+          "value": "3770857.13"
+        },
+        "name": "Mulheres negras",
+        "small": {
+          "donors": 680,
+          "value": "427966.84"
+        }
+      },
+      {
+        "big": {
+          "donors": 113,
+          "value": "8937621.61"
+        },
+        "candidacies_registered": 575,
+        "id": 2,
+        "medium": {
+          "donors": 878,
+          "value": "9221641.27"
+        },
+        "name": "Mulheres brancas",
+        "small": {
+          "donors": 1186,
+          "value": "644251.11"
+        }
+      },
+      {
+        "big": {
+          "donors": 106,
+          "value": "11691038.21"
+        },
+        "candidacies_registered": 762,
+        "id": 3,
+        "medium": {
+          "donors": 1166,
+          "value": "12308194.93"
+        },
+        "name": "Homens negros",
+        "small": {
+          "donors": 1529,
+          "value": "1058791.01"
+        }
+      },
+      {
+        "big": {
+          "donors": 447,
+          "value": "51673765.20"
+        },
+        "candidacies_registered": 1682,
+        "id": 4,
+        "medium": {
+          "donors": 3887,
+          "value": "39386747.53"
+        },
+        "name": "Homens brancos",
+        "small": {
+          "donors": 6134,
+          "value": "3027973.85"
+        }
+      },
+      {
+        "big": {
+          "donors": 8,
+          "value": "400000"
+        },
+        "candidacies_registered": 32,
+        "id": 5,
+        "medium": {
+          "donors": 45,
+          "value": "409119"
+        },
+        "name": "Outras",
+        "small": {
+          "donors": 71,
+          "value": "48626.79"
+        }
+      }
+    ],
+    "race": [
+      {
+        "big": {
+          "donors": 6,
+          "value": "290000"
+        },
+        "candidacies_registered": 17,
+        "id": 1,
+        "medium": {
+          "donors": 32,
+          "value": "286919"
+        },
+        "name": "Amarela",
+        "small": {
+          "donors": 27,
+          "value": "19834.2"
+        }
+      },
+      {
+        "big": {
+          "donors": 560,
+          "value": "60611386.81"
+        },
+        "candidacies_registered": 2257,
+        "id": 2,
+        "medium": {
+          "donors": 4765,
+          "value": "48608388.80"
+        },
+        "name": "Branca",
+        "small": {
+          "donors": 7320,
+          "value": "3672224.96"
+        }
+      },
+      {
+        "big": {
+          "donors": 2,
+          "value": "110000"
+        },
+        "candidacies_registered": 15,
+        "id": 3,
+        "medium": {
+          "donors": 13,
+          "value": "122200"
+        },
+        "name": "Indígena",
+        "small": {
+          "donors": 44,
+          "value": "28792.59"
+        }
+      },
+      {
+        "big": {
+          "donors": 112,
+          "value": "12131749.01"
+        },
+        "candidacies_registered": 826,
+        "id": 4,
+        "medium": {
+          "donors": 1192,
+          "value": "12754665.41"
+        },
+        "name": "Parda",
+        "small": {
+          "donors": 1445,
+          "value": "1005721.57"
+        }
+      },
+      {
+        "big": {
+          "donors": 35,
+          "value": "1631989.2"
+        },
+        "candidacies_registered": 281,
+        "id": 5,
+        "medium": {
+          "donors": 377,
+          "value": "3324386.65"
+        },
+        "name": "Preta",
+        "small": {
+          "donors": 764,
+          "value": "481036.28"
+        }
+      }
+    ],
+    "threshold": 50000
+  },
+  "concentration": {
+    "big": [
+      {
+        "bucket": "1",
+        "donors": 270
+      },
+      {
+        "bucket": "2",
+        "donors": 80
+      },
+      {
+        "bucket": "3-5",
+        "donors": 50
+      },
+      {
+        "bucket": "6-10",
+        "donors": 9
+      },
+      {
+        "bucket": "11+",
+        "donors": 3
+      }
+    ],
+    "medium": [
+      {
+        "bucket": "1",
+        "donors": 5789
+      },
+      {
+        "bucket": "2",
+        "donors": 193
+      },
+      {
+        "bucket": "3-5",
+        "donors": 51
+      },
+      {
+        "bucket": "6-10",
+        "donors": 6
+      },
+      {
+        "bucket": "11+",
+        "donors": 0
+      }
+    ],
+    "small": [
+      {
+        "bucket": "1",
+        "donors": 9354
+      },
+      {
+        "bucket": "2",
+        "donors": 115
+      },
+      {
+        "bucket": "3-5",
+        "donors": 5
+      },
+      {
+        "bucket": "6-10",
+        "donors": 0
+      },
+      {
+        "bucket": "11+",
+        "donors": 0
+      }
+    ],
+    "threshold": 50000
+  },
+  "timeline": {
+    "days": []
+  },
+  "candidacies": {
+    "candidacies": []
+  },
+  "ranking": {
+    "donors": [],
+    "has_more": false
+  }
+}

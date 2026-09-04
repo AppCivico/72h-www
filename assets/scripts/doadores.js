@@ -906,6 +906,15 @@ window.$vueDoadores = Vue.createApp({
 
         if (ticket !== this.requestId) return;
 
+        // Um 200 com o corpo errado não é dado. Sem `tiers`, o `summary` vira
+        // um objeto vazio que passa em todo `v-if="summary"` do template, e a
+        // manchete estoura lendo `tiers[2].donors` — a página quebra em vez de
+        // mostrar o estado honesto de indisponível. Tratar como falha põe o
+        // erro na tela pelo caminho que já existe.
+        if (!summary?.tiers?.big) {
+          throw new Error('donors/summary veio sem os portes');
+        }
+
         this.summary = summary;
         this.breakdown = breakdown;
         this.concentration = concentration;
